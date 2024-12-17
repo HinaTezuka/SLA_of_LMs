@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# scripts
+scripts
+
 # activated_neuron/pickles/
 activated_neuron/pickles/
 # /home/s2410121/proj_LA/activated_neuron/gpt2/pickles
