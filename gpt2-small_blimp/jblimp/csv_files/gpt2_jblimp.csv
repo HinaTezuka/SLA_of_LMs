@@ -1,0 +1,12 @@
+Model,Task,Accuracy
+rinna/japanese-gpt2-small,island effects,0.6363636363636364
+rinna/japanese-gpt2-small,binding,0.38461538461538464
+rinna/japanese-gpt2-small,argument structure,0.8428571428571429
+rinna/japanese-gpt2-small,ellipsis,0.7368421052631579
+rinna/japanese-gpt2-small,verbal agreement,0.4262295081967213
+rinna/japanese-gpt2-small,filler-gap,0.5555555555555556
+rinna/japanese-gpt2-small,morphology,0.7714285714285715
+rinna/japanese-gpt2-small,nominal structure,0.8695652173913043
+rinna/japanese-gpt2-small,quantifiers,0.7142857142857143
+rinna/japanese-gpt2-small,NPI licensing,0.25
+rinna/japanese-gpt2-small,control/raising,0.0
