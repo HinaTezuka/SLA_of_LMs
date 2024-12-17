@@ -6,7 +6,7 @@ __pycache__/
 # activated_neuron/pickles/
 activated_neuron/pickles/
 # /home/s2410121/proj_LA/activated_neuron/gpt2/pickles
-/home/s2410121/proj_LA/activated_neuron/gpt2/pickles
+activated_neuron/gpt2/pickles
 
 # C extensions
 *.so
