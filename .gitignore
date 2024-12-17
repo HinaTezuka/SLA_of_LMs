@@ -6,6 +6,11 @@ __pycache__/
 # scripts
 scripts
 
+# pickles
+activated_neuron/new_neurons/pickles
+# all pckles
+echo "*.pkl" >> .gitignore
+
 # activated_neuron/pickles/
 activated_neuron/pickles/
 # /home/s2410121/proj_LA/activated_neuron/gpt2/pickles
