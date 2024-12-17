@@ -1,0 +1,13 @@
+Model,Task,Accuracy
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,adjunct_island,0.85
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,anaphor_gender_agreement,0.98
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,anaphor_number_agreement,0.989
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,animate_subject_passive,0.669
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,animate_subject_trans,0.757
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,causative,0.688
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,adjunct_island,0.862
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,anaphor_gender_agreement,0.98
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,anaphor_number_agreement,0.99
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,animate_subject_passive,0.731
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,animate_subject_trans,0.781
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,causative,0.733

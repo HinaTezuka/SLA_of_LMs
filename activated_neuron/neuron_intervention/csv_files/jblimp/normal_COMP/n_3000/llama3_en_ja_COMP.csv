@@ -1,0 +1,12 @@
+Model,Task,Accuracy
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,island effects,0.9090909090909091
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,binding,0.5384615384615384
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,argument structure,0.9071428571428571
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,ellipsis,0.7368421052631579
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,verbal agreement,0.5573770491803278
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,filler-gap,0.5555555555555556
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,morphology,0.8285714285714286
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,nominal structure,0.9565217391304348
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,quantifiers,0.6428571428571429
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,NPI licensing,0.5
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,control/raising,0.5

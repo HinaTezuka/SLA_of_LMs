@@ -1,0 +1,5 @@
+Model,Task,Accuracy
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,adjunct_island,0.853
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,anaphor_gender_agreement,0.977
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,adjunct_island,0.867
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,anaphor_gender_agreement,0.983
