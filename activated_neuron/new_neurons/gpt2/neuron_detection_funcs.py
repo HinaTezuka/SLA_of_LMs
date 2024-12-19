@@ -116,7 +116,6 @@ def track_neurons_with_text_data(model, model_name, device, tokenizer, data, act
             activated_neurons_L1_layer = torch.nonzero(torch.abs(mlp_activation_L1[layer_idx]) > active_THRESHOLD).cpu().numpy()
             # condider activations only for last token
             activated_neurons_L1_layer = activated_neurons_L1_layer[activated_neurons_L1_layer[:, 1] == token_len_L1 - 1]
-            activated_neurons_L1.append((layer_idx, activated_neurons_L1_layer))
             # 発火頻度の保存（layer, neuronごと）
             for neuron_idx in activated_neurons_L1_layer[:, 2]:
                 act_freq_L1[layer_idx][neuron_idx] += 1
@@ -125,7 +124,6 @@ def track_neurons_with_text_data(model, model_name, device, tokenizer, data, act
 
             activated_neurons_L2_layer = torch.nonzero(torch.abs(mlp_activation_L2[layer_idx]) > active_THRESHOLD).cpu().numpy()
             activated_neurons_L2_layer = activated_neurons_L2_layer[activated_neurons_L2_layer[:, 1] == token_len_L2 - 1]
-            activated_neurons_L2.append((layer_idx, activated_neurons_L2_layer))
             """ 発火頻度の保存（layer, neuronごと） """
             for neuron_idx in activated_neurons_L2_layer[:, 2]:
                 act_freq_L2[layer_idx][neuron_idx] += 1
@@ -133,15 +131,14 @@ def track_neurons_with_text_data(model, model_name, device, tokenizer, data, act
             activated_neurons_L2_vis[layer_idx].append(len(activated_neurons_L2_layer[:, 2]))
 
             # Non-activated neurons for L1 and L2(shared neuronsの算出のために必要)
-            non_activated_neurons_L1_layer = torch.nonzero(torch.abs(mlp_activation_L1[layer_idx]) <= non_active_THRESHOLD).cpu().numpy()
+            non_activated_neurons_L1_layer = torch.nonzero(torch.abs(mlp_activation_L1[layer_idx]) <= active_THRESHOLD).cpu().numpy()
             non_activated_neurons_L1_layer = non_activated_neurons_L1_layer[non_activated_neurons_L1_layer[:, 1] == token_len_L1 - 1]
 
-            non_activated_neurons_L2_layer = torch.nonzero(torch.abs(mlp_activation_L2[layer_idx]) <= non_active_THRESHOLD).cpu().numpy()
+            non_activated_neurons_L2_layer = torch.nonzero(torch.abs(mlp_activation_L2[layer_idx]) <= active_THRESHOLD).cpu().numpy()
             non_activated_neurons_L2_layer = non_activated_neurons_L2_layer[non_activated_neurons_L2_layer[:, 1] == token_len_L2 - 1]
 
             # Shared neurons
             shared_neurons_layer = np.intersect1d(activated_neurons_L1_layer[:, 2], activated_neurons_L2_layer[:, 2])
-            shared_neurons.append((layer_idx, shared_neurons_layer))
             """ 発火頻度の保存（layer, neuronごと） """
             for neuron_idx in shared_neurons_layer:
                 act_freq_shared[layer_idx][neuron_idx] += 1
@@ -169,7 +166,6 @@ def track_neurons_with_text_data(model, model_name, device, tokenizer, data, act
 
             # Specific neurons
             specific_neurons_L1_layer = np.intersect1d(activated_neurons_L1_layer[:, 2], non_activated_neurons_L2_layer[:, 2])
-            specific_neurons_L1.append((layer_idx, specific_neurons_L1_layer))
             """ 発火頻度の保存（layer, neuronごと） """
             # L1 only
             for neuron_idx in specific_neurons_L1_layer:
@@ -178,7 +174,6 @@ def track_neurons_with_text_data(model, model_name, device, tokenizer, data, act
             specific_neurons_L1_vis[layer_idx].append(len(specific_neurons_L1_layer))
 
             specific_neurons_L2_layer = np.intersect1d(activated_neurons_L2_layer[:, 2], non_activated_neurons_L1_layer[:, 2])
-            specific_neurons_L2.append((layer_idx, specific_neurons_L2_layer))
             """ 発火頻度の保存（layer, neuronごと） """
             # L2 only
             for neuron_idx in specific_neurons_L2_layer:

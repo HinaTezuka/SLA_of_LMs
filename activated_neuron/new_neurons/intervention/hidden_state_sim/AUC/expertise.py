@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.metrics import average_precision_score
-from sklearn.preprocessing import StandardScaler
 
 from expertise_funcs import (
     track_neurons_with_text_data,
@@ -26,6 +25,9 @@ from expertise_funcs import (
 """ parameters setting """
 activation_type = "abs"
 # activation_type = "product"
+norm_type = "no"
+# norm_type = "min_max"
+# norm_type = "sigmoid"
 L2 = "ja"
 
 """ unfreeze activation_dicts """
@@ -33,14 +35,15 @@ pkl_path_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/
 pkl_path_non_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/non_same_semantics/en_{L2}.pkl"
 act_same_semantics_dict = unfreeze_pickle(pkl_path_same_semantics)
 act_non_same_semantics_dict = unfreeze_pickle(pkl_path_non_same_semantics)
+print("unfreezed pickles.")
 
 """ calc AP and sort. """
 sorted_neurons, ap_scores = compute_ap_and_sort(act_same_semantics_dict, act_non_same_semantics_dict)
 
 """ pickle operations and test outputs. """
 # save as pickle file
-sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/sorted_neurons_{L2}.pkl"
-ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/ap_scores_{L2}.pkl"
+sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
 save_as_pickle(sorted_neurons_path, sorted_neurons)
 save_as_pickle(ap_scores_path, ap_scores)
 

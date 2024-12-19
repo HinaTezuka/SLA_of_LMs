@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 nums_of_neurons_llama3 = 3072 # nums of all neurons (GPT2-small: MLP)
 
-def visualize_neurons_with_line_plot_mean(
+def visualize_neurons_with_line_plot(
                                     L1,
                                     L2,
                                     # main
@@ -19,7 +19,7 @@ def visualize_neurons_with_line_plot_mean(
                                     # base
                                     shared_neurons_base,
                                     ):
-    # nums of all layers(LLaMA-3-8B)
+    # nums of all layers(GPT2-small)
     num_layers = 12
 
     """ main """
@@ -30,7 +30,6 @@ def visualize_neurons_with_line_plot_mean(
     specific_L1_counts = [0] * num_layers
     """ base line """
     shared_counts_base = [0] * num_layers
-
     shared_counts_std = [0] * num_layers  # Standard deviation for shared neurons
 
     # counting activate/non-activate counts(culc mean)
@@ -46,7 +45,8 @@ def visualize_neurons_with_line_plot_mean(
 
         """ Calculate the standard deviation for shared neurons (used for error bars) """
         shared_counts_std[layer_idx] = np.array(shared_neurons[layer_idx]).std()
-
+    # print(shared_counts)
+    # sys.exit()
     # plot
     plt.figure(figsize=(15, 10))
 
@@ -73,5 +73,5 @@ def visualize_neurons_with_line_plot_mean(
     plt.grid()
 
     # グラフの保存
-    plt.savefig(f'/home/s2410121/proj_LA/activated_neuron/gpt2/images/{folder}/activated_neuron_{L1}_{L2}.png')
+    plt.savefig(f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/activations/gpt2/{folder}/{L1}_{L2}.png')
     plt.close()

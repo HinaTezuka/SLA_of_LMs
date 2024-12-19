@@ -36,6 +36,9 @@ if __name__ == "__main__":
     }
     """ parameters """
     # active_THRESHOLD = 0.01
+    activation_type = "abs"
+    # activation_type = "product"
+    norm_type = "no"
 
     for L2, model_name in model_names.items():
 
@@ -46,8 +49,9 @@ if __name__ == "__main__":
         # act_sum_shared = act_sum_dict["shared_neurons"] # 現時点では非対訳ペアに発火しているshared neuronsとの重複も含む。
 
         """ shared_neuronsのうち、AP上位nコ """
-        pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/ap_scores/sorted_neurons_{L2}.pkl"
+        pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
         sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
+        print(sorted_neurons_AP)
 
         """
         list[(layer_idx, neuron_idx), ...] <= 介入実験用
@@ -75,16 +79,13 @@ if __name__ == "__main__":
 
         """ どのくらい介入するか(n) """
         # intervention_num = count_shared_ONLY
-        intervention_num = 1000
+        intervention_num = 5000
         sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
         # half_num = intervention_num // 2
-        # sorted_neurons_AP = sorted_neurons_AP[:half_num] + sorted_neurons_AP[-half_num:]
+        # sorted_neurons_AP_main = sorted_neurons_AP[:half_num] + sorted_neurons_AP[-half_num:]
         sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
         sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
-        print(sorted_neurons_AP_main)
-        print(len(sorted_neurons_AP_main))
-        print(len(sorted_neurons_AP_baseline))
-        # sys.exit()
+        print(sorted_neurons_AP_main[:20])
 
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
@@ -125,7 +126,7 @@ if __name__ == "__main__":
         for layer_idx in range(32): # ３２ layers
             final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-        plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC", f"n_{intervention_num}")
+        plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC", activation_type, f"n_{intervention_num}")
 
         """ deactivate shared_neurons(same semantics(including non_same_semantics)) """
         similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
@@ -135,7 +136,7 @@ if __name__ == "__main__":
         for layer_idx in range(32): # ３２ layers
             final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-        plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC_baseline", f"n_{intervention_num}")
+        plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC_baseline", activation_type, f"n_{intervention_num}")
 
         # delete some cache
         del model

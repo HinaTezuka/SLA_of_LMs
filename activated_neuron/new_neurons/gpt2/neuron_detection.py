@@ -14,14 +14,14 @@ from neuron_detection_funcs import (
     unfreeze_pickle,
 )
 from visualization_funcs import (
-    visualize_neurons_with_line_plot_mean,
+    visualize_neurons_with_line_plot,
 )
 
 """ parameters setting """
 # GPT-2-small
 model_names = {
     # "base": "gpt2",
-    "ja": "rinna/japanese-gpt2-small", # ja
+    # "ja": "rinna/japanese-gpt2-small", # ja
     # "de": "ml6team/gpt2-small-german-finetune-oscar", # ger
     "nl": "GroNLP/gpt2-small-dutch", # du
     "it": "GroNLP/gpt2-small-italian", # ita
@@ -31,7 +31,7 @@ model_names = {
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
 L1 = "en" # L1 is fixed to english.
-active_THRESHOLD = 0.01
+active_THRESHOLD = 0.1
 
 for L2, model_name in model_names.items():
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -65,35 +65,29 @@ for L2, model_name in model_names.items():
         en_base_ds_idx += 1
 
     """ tracking neurons """
-    neuron_detection_dict, neuron_detection_dict_vis, freq_dict, act_sum_dict = track_neurons_with_text_data(model, 'gpt2', device, tokenizer, tatoeba_data, active_THRESHOLD)
-    _, neuron_detection_base_dict_vis, freq_base_dict, _ = track_neurons_with_text_data(model, 'gpt2', tokenizer, device, random_data, active_THRESHOLD)
+    neuron_detection_dict_vis, freq_dict, act_sum_dict = track_neurons_with_text_data(model, 'gpt2', device, tokenizer, tatoeba_data, active_THRESHOLD)
+    neuron_detection_base_dict_vis, freq_base_dict, act_sum_base_dict = track_neurons_with_text_data(model, 'gpt2', device, tokenizer, random_data, active_THRESHOLD)
 
     # delete some cache
     del model
     torch.cuda.empty_cache()
 
-    # for visualization
+    """ for visualization """
     # 各文ペア、各層、各ニューロンの発火ニューロン数
     activated_neurons_L1_vis = neuron_detection_dict_vis["activated_neurons_L1"]
     activated_neurons_L2_vis = neuron_detection_dict_vis["activated_neurons_L2"]
     shared_neurons_vis = neuron_detection_dict_vis["shared_neurons"]
     specific_neurons_L1_vis = neuron_detection_dict_vis["specific_neurons_L1"]
     specific_neurons_L2_vis = neuron_detection_dict_vis["specific_neurons_L2"]
-
-    """ for base line """
-    # for visualization
-    activated_neurons_L1_base_vis = neuron_detection_base_dict_vis["activated_neurons_L1"]
-    activated_neurons_L2_base_vis = neuron_detection_base_dict_vis["activated_neurons_L2"]
+    # for baseline
     shared_neurons_base_vis = neuron_detection_base_dict_vis["shared_neurons"]
-    specific_neurons_L1_base_vis = neuron_detection_base_dict_vis["specific_neurons_L1"]
-    specific_neurons_L2_base_vis = neuron_detection_base_dict_vis["specific_neurons_L2"]
 
     """
     (初回だけ)pickleでfileにshared_neurons(track_dict)を保存
     freq dict: (2000対訳ペアを入れた時の） 各種ニューロンの発火頻度
     sum dict: 各種ニューロンの発火値の合計
     """
-    # 対訳ペア(freq_dict)
+    # # 対訳ペア(freq_dict)
     pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/same_semantics/act_freq/{active_THRESHOLD}_th/en_{L2}.pkl"
     save_as_pickle(pkl_file_path, freq_dict)
     print("pickle file saved: freq_dict.")

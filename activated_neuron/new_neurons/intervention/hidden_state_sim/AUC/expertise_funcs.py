@@ -45,6 +45,7 @@ import torch
 from baukit import Trace, TraceDict
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, AutoModel
 from datasets import load_dataset
+from sklearn.metrics import average_precision_score
 
 def get_out_llama3_act_fn(model, prompt, device, index):
     model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
@@ -278,11 +279,11 @@ def compute_ap_and_sort(label1_dict, label2_dict):
     final_scores = {}
     for (layer_idx, neuron_idx), activations in neuron_responses.items():
         labels = neuron_labels[(layer_idx, neuron_idx)]
-
         # normalization
-        normalized_activations = sigmoid_normalization(activations)
+        # normalized_activations = activations
+
         # calc AP score
-        ap = average_precision_score(y_true=labels, y_score=normalized_activations)
+        ap = average_precision_score(y_true=labels, y_score=activations)
         # save total score
         final_scores[(layer_idx, neuron_idx)] = ap
 
