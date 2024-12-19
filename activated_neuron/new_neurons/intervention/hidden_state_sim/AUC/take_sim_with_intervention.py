@@ -35,7 +35,7 @@ if __name__ == "__main__":
         # "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     """ parameters """
-    active_THRESHOLD = 0.01
+    # active_THRESHOLD = 0.01
 
     for L2, model_name in model_names.items():
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
         """ どのくらい介入するか(n) """
         # intervention_num = count_shared_ONLY
-        intervention_num = 500
+        intervention_num = 1000
         sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
         # half_num = intervention_num // 2
         # sorted_neurons_AP = sorted_neurons_AP[:half_num] + sorted_neurons_AP[-half_num:]
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-        """ deactivate shared_neurons(same semantics only) """
+        """ deactivate shared_neurons(same semantics expert neurons) """
         similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
         similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
         final_results_same_semantics = defaultdict(float)

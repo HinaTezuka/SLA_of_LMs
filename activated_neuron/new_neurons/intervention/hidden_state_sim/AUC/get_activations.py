@@ -7,9 +7,8 @@ import dill as pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from expertise_funcs import (
     track_neurons_with_text_data,
@@ -62,10 +61,13 @@ for L2, model_name in model_names.items():
         en_base_ds_idx += 1
 
     """ tracking neurons """
+    # activation_type = "abs"
+    activation_type = "product"
+
     # 対訳ペア
-    activation_dict_same_semantics = track_neurons_with_text_data(model, device, 'llama', tokenizer, tatoeba_data, True, 0.01)
+    activation_dict_same_semantics = track_neurons_with_text_data(model, device, 'llama', tokenizer, tatoeba_data, True, activation_type)
     # 非対訳ペア
-    activation_dict_non_same_semantics = track_neurons_with_text_data(model, device, 'llama', tokenizer, random_data, False, 0.01)
+    activation_dict_non_same_semantics = track_neurons_with_text_data(model, device, 'llama', tokenizer, random_data, False, activation_type)
 
     # delete some cache
     del model
@@ -76,17 +78,17 @@ for L2, model_name in model_names.items():
     freq dict: (2000対訳ペアを入れた時の） 各種ニューロンの発火頻度
     sum dict: 各種ニューロンの発火値の合計
     """
-    active_THRESHOLD = 0.01
+    # active_THRESHOLD = 0.01
 
     # translation pair (same_semantics)
-    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/same_semantics/{active_THRESHOLD}_th/en_{L2}.pkl"
+    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/same_semantics/en_{L2}.pkl"
     save_as_pickle(pkl_file_path, activation_dict_same_semantics)
-    print("pickle file saved: activation_dict(same_semantics).")
+    print(f"pickle file saved: activation_dict(same_semantics): en_{L2}.")
 
     # non translation pair (non_same_semantics)
-    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/non_same_semantics/{active_THRESHOLD}_th/en_{L2}.pkl"
+    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/non_same_semantics/en_{L2}.pkl"
     save_as_pickle(pkl_file_path, activation_dict_non_same_semantics)
-    print("pickle file saved: activation_dict(non_same_semantics).")
+    print(f"pickle file saved: activation_dict(non_same_semantics): en_{L2}.")
 
     # """ pickle file(shared_neurons)の解凍/読み込み """
     # with open(pkl_file_path, "rb") as f:
