@@ -31,8 +31,10 @@ GPT2LMHeadModel(
   (lm_head): Linear(in_features=768, out_features=32000, bias=False)
 )
 """
+import os
 import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/attention")
+import dill as pickle
 from collections import defaultdict
 
 import numpy as np

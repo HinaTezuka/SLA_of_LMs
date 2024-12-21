@@ -1,7 +1,6 @@
 """
 compute and extract "expert shared neurons" for: same semantics(translation pairs).
 """
-
 import os
 import itertools
 import sys
@@ -28,29 +27,30 @@ activation_type = "abs"
 norm_type = "no"
 # norm_type = "min_max"
 # norm_type = "sigmoid"
-L2 = "ja"
+# L2 = "ja"
+L2_list = ["nl", "ko", "it"]
 
-""" unfreeze activation_dicts """
-pkl_path_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/same_semantics/en_{L2}.pkl"
-pkl_path_non_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/non_same_semantics/en_{L2}.pkl"
-act_same_semantics_dict = unfreeze_pickle(pkl_path_same_semantics)
-act_non_same_semantics_dict = unfreeze_pickle(pkl_path_non_same_semantics)
-print("unfreezed pickles.")
+for L2 in L2_list:
 
-""" calc AP and sort. """
-sorted_neurons, ap_scores = compute_ap_and_sort(act_same_semantics_dict, act_non_same_semantics_dict)
+    """ unfreeze activation_dicts """
+    pkl_path_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/same_semantics/en_{L2}.pkl"
+    pkl_path_non_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/non_same_semantics/en_{L2}.pkl"
+    act_same_semantics_dict = unfreeze_pickle(pkl_path_same_semantics)
+    act_non_same_semantics_dict = unfreeze_pickle(pkl_path_non_same_semantics)
+    print(f"unfreezed pickles for {L2}.")
 
-""" pickle operations and test outputs. """
-# save as pickle file
-sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
-save_as_pickle(sorted_neurons_path, sorted_neurons)
-save_as_pickle(ap_scores_path, ap_scores)
+    """ calc AP and sort. """
+    sorted_neurons, ap_scores = compute_ap_and_sort(act_same_semantics_dict, act_non_same_semantics_dict)
 
-# unfreeze pickle
-sorted_neurons = unfreeze_pickle(sorted_neurons_path)
-ap_scores_path = unfreeze_pickle(ap_scores_path)
+    """ pickle operations and test outputs. """
+    # save as pickle file
+    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+    ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
+    save_as_pickle(sorted_neurons_path, sorted_neurons)
+    save_as_pickle(ap_scores_path, ap_scores)
 
-print(ap_scores)
-print(sorted_neurons[:30])
-# print(len(sorted_neurons))
+    # unfreeze pickle
+    sorted_neurons = unfreeze_pickle(sorted_neurons_path)
+    ap_scores_path = unfreeze_pickle(ap_scores_path)
+
+    print(f"{L2} <- completed.")
