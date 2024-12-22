@@ -31,23 +31,23 @@ if __name__ == "__main__":
         # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
         # "de": "DiscoResearch/Llama3-German-8B", # ger
         "nl": "ReBatch/Llama-3-8B-dutch", # du
-        # "it": "DeepMount00/Llama-3-8b-Ita", # ita
-        # "ko": "beomi/Llama-3-KoEn-8B", # ko
+        "it": "DeepMount00/Llama-3-8b-Ita", # ita
+        "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     """ parameters """
     # active_THRESHOLD = 0.01
     activation_type = "abs"
     # activation_type = "product"
     norm_type = "no"
-    # n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
-    n_list = [5000]
+    n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
+    # n_list = [10000]
 
     for L2, model_name in model_names.items():
 
         """ shared_neuronsのうち、AP上位nコ """
         pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
         sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
-        print(sorted_neurons_AP)
+        print(f"top 10 AP: \n {sorted_neurons_AP[:10]}")
 
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
@@ -88,7 +88,6 @@ if __name__ == "__main__":
             # sorted_neurons_AP_main = sorted_neurons_AP[:half_num] + sorted_neurons_AP[-half_num:]
             sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
             sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
-            print(sorted_neurons_AP_main[:20])
 
             """ deactivate shared_neurons(same semantics expert neurons) """
             similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
