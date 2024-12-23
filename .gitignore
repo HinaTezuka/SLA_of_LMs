@@ -8,8 +8,10 @@ scripts
 
 # pickles
 activated_neuron/new_neurons/pickles
-# all pckles
+activated_neuron/new_neurons/gpt2/pickles
+# all pckles and tmps
 echo "*.pkl" >> .gitignore
+echo "*.tmp" >> .gitignore
 
 # activated_neuron/pickles/
 activated_neuron/pickles/
