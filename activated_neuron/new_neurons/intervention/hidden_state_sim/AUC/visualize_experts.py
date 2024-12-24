@@ -52,7 +52,7 @@ for L2 in L2_list:
 
     # ヒストグラムプロット
     plt.figure(figsize=(12, 6))
-    plt.bar(layer_counts.keys(), layer_counts.values(), color="skyblue", edgecolor="black")
+    plt.bar(layer_counts.keys(), layer_counts.values(), color="skyblue", edgecolor=None)
     plt.xticks(range(max_layer), fontsize=10)
     plt.xlabel("Layer Index")
     plt.ylabel("Neurons Count")
