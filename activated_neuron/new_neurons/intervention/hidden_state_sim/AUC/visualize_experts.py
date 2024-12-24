@@ -30,7 +30,7 @@ L2_list = ["ja", "nl", "ko", "it"]
 
 for L2 in L2_list:
 
-    """ unfreeze pickles sorted on AP. """
+    """ unfreeze pickles sorted based on AP. """
     sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
     ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
     # unfreeze pickle
@@ -38,7 +38,7 @@ for L2 in L2_list:
     ap_scores = unfreeze_pickle(ap_scores_path)
 
     #
-    sorted_neurons = sorted_neurons[:5000]
+    # sorted_neurons = sorted_neurons[:5000]
     for i in sorted_neurons:
         print(ap_scores[i])
     # print(ap_scores)

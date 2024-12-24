@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # LLaMA-3
     model_names = {
         # "base": "meta-llama/Meta-Llama-3-8B"
-        # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
+        "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
         # "de": "DiscoResearch/Llama3-German-8B", # ger
         "nl": "ReBatch/Llama-3-8B-dutch", # du
         "it": "DeepMount00/Llama-3-8b-Ita", # ita
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # activation_type = "product"
     norm_type = "no"
     n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
-    # n_list = [10000]
+    # n_list = [20000]
 
     for L2, model_name in model_names.items():
 
