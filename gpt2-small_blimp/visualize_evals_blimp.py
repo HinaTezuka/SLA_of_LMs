@@ -43,10 +43,10 @@ from gpt2_visualize_blimp_eval_funcs import *
 file_path_llama3_ALL = "/home/s2410121/proj_LA/gpt2-small_blimp/csv_files_final/blimp_evaluation_results_complete2_llama3_all_final.csv"
 data_gpt2_llama3_ALL = pd.read_csv(file_path_llama3_ALL)
 acc_comparison(data_gpt2_llama3_ALL, "llama3", "llama3_ALL")
-multiple_models_acc_comparison(data_gpt2_llama3_ALL, "llama3", "llama3_ALL")
+# multiple_models_acc_comparison(data_gpt2_llama3_ALL, "llama3", "llama3_ALL")
 """en_japanese"""
 file_path_llama3_en_ja = "/home/s2410121/proj_LA/gpt2-small_blimp/csv_files_final/blimp_evaluation_results_complete2_llama3_all_fina_en_ja.csv"
 data_llama3_en_ja = pd.read_csv(file_path_llama3_en_ja)
 acc_comparison(data_llama3_en_ja, "llama3", "llama3_en_ja")
-multiple_models_acc_comparison(data_llama3_en_ja, "llama3", "llama3_en_ja")
-models_above_base_model(data_llama3_en_ja, "llama3", "llama3_en_ja")
+# multiple_models_acc_comparison(data_llama3_en_ja, "llama3", "llama3_en_ja")
+# models_above_base_model(data_llama3_en_ja, "llama3", "llama3_en_ja")

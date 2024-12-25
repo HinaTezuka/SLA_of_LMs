@@ -175,7 +175,7 @@ def track_neurons_with_text_data(model, model_name, tokenizer, data, active_THRE
                 # act_sum_shared
                 act_value_L1 = get_activation_value(neurons_L1_values, neuron_idx)
                 act_value_L2 = get_activation_value(neurons_L2_values, neuron_idx)
-                act_value = act_value_L1 + act_value_L2
+                act_value = act_value_L1 + act_value_L2 / 2
                 act_sum_shared[layer_idx][neuron_idx] += act_value
                 # act_freq_shared
                 act_freq_shared[layer_idx][neuron_idx] += 1
@@ -274,11 +274,37 @@ def get_activation_value(activations, neuron_idx):
 
     return activation_value
 
-def save_as_pickle(file_path, target_dict) -> None:
+def save_as_pickle(file_path: str, target_dict) -> None:
     """
-    save dict as pickle file.
+    Save a dictionary as a pickle file with improved safety.
     """
-    # directoryを作成（存在しない場合のみ)
+    # Create directory if it does not exist
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, "wb") as f:
-        pickle.dump(target_dict, f)
+    temp_path = file_path + ".tmp"  # Temporary file for safe writing
+
+    try:
+        # Write to a temporary file
+        with open(temp_path, "wb") as f:
+            pickle.dump(target_dict, f)
+        # Replace the original file with the temporary file
+        os.replace(temp_path, file_path)
+        print("pkl_file successfully saved.")
+    except Exception as e:
+        # Clean up temporary file if an error occurs
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        raise e  # Re-raise the exception for further handling
+
+def unfreeze_pickle(file_path: str):
+    """
+    Load a pickle file as a dictionary with error handling.
+    """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Pickle file not found: {file_path}")
+
+    try:
+        with open(file_path, "rb") as f:
+            return pickle.load(f)
+    except (pickle.UnpicklingError, EOFError) as e:
+        raise ValueError(f"Error unpickling file {file_path}: {e}")
+

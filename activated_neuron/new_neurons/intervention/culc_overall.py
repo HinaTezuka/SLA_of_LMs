@@ -3,7 +3,7 @@
 import pandas as pd
 
 # CSVファイルを読み込んでデータフレームを作成
-path = "/home/s2410121/proj_LA/gpt2-small_blimp/jblimp/csv_files/llama3_jblimp.csv"
+path = "/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/csv/llama3/AUC/jblimp/AP/n_10000/en_ja.csv"
 df = pd.read_csv(path)
 
 # 各モデルごとに正答率の平均を計算します

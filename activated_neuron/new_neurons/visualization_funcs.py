@@ -53,19 +53,19 @@ def visualize_neurons_with_line_plot(
     plt.figure(figsize=(15, 10))
 
     # L2 and L1 activated neurons with original colors (transparent)
-    plt.plot(range(num_layers), L2_counts, label=f'{L2} Activated Neurons', marker='o', alpha=0.5)
-    plt.plot(range(num_layers), L1_counts, label=f'{L1} Activated Neurons', marker='o', alpha=0.5)
+    plt.plot(range(num_layers), L2_counts, label=f'{L2} Activated Neurons', marker='o')
+    plt.plot(range(num_layers), L1_counts, label=f'{L1} Activated Neurons', marker='o')
 
     # Add error bars for shared counts (dashed line style for the error bars)
     plt.errorbar(range(num_layers), shared_counts, yerr=shared_counts_std, label='Shared Neurons(sentence pair of same meanings)',
                 fmt='o', markersize=6, linestyle='-', linewidth=4, capsize=5)
 
     # Specific neurons with normal line style
-    plt.plot(range(num_layers), specific_L2_counts, label=f'Specific to {L2}', marker='o', alpha=0.5)
-    plt.plot(range(num_layers), specific_L1_counts, label=f'Specific to {L1}', marker='o', alpha=0.5)
+    plt.plot(range(num_layers), specific_L2_counts, label=f'Specific to {L2}', marker='o')
+    plt.plot(range(num_layers), specific_L1_counts, label=f'Specific to {L1}', marker='o')
 
     # Base line with a distinct style
-    plt.plot(range(num_layers), shared_counts_base, label='Shared Neurons(base: sentence pair of different meanings)', marker='x', linewidth=2)
+    plt.plot(range(num_layers), shared_counts_base, label='Shared Neurons(base: sentence pair of different meanings)', marker='x', linewidth=4)
 
     plt.title(f'Neuron Activation Counts per Layer ({L1} and {L2})')
     plt.xlabel('Layer Index')

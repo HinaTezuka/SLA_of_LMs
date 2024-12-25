@@ -130,8 +130,9 @@ if __name__ == "__main__":
     df_comp_L1_specific.to_csv(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/csv/llama3/AUC/blimp/L1_specific/{dir_path}/en_{L2}.csv", index=False)
 
     """ print OVERALLs and Meta Info"""
-    print("============================ OVER ALL ============================")
+    print("============================ OVERALL ============================")
     print(f"AP: {overall_accuracy_main}")
+    print(f"non_translation_shared: {overall_accuracy_shared_non_translation}")
     print(f"L1_or_L2: {overall_accuracy_comp_L1_or_L2}")
     print(f"L1_specific: {overall_accuracy_comp_L1_specific}")
 

@@ -2,6 +2,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 """ 各モデルのaccuracyを単純に比較 """
+# def acc_comparison(data: pd.DataFrame, model_name: str, file_name: str) -> None:
+#     # モデルごとにフィルタリングして可視化
+#     models = data['Model'].unique()
+#     fig, ax = plt.subplots(figsize=(15, 10))
+
+#     for model in models:
+#         subset = data[data['Model'] == model]
+#         ax.barh(subset['Task'], subset['Accuracy'], label=model, alpha=0.7)
+
+#     # グラフの装飾
+#     ax.set_xlabel('Accuracy')
+#     ax.set_title('Task-wise Accuracy Comparison across Models')
+#     ax.legend(title='Model')
+
+#     # 画像ファイルとして保存
+#     plt.savefig(f'images/{model_name}/accuracy_comparison_{file_name}.png', bbox_inches='tight')
+
 def acc_comparison(data: pd.DataFrame, model_name: str, file_name: str) -> None:
     # モデルごとにフィルタリングして可視化
     models = data['Model'].unique()
@@ -16,9 +33,11 @@ def acc_comparison(data: pd.DataFrame, model_name: str, file_name: str) -> None:
     ax.set_title('Task-wise Accuracy Comparison across Models')
     ax.legend(title='Model')
 
-    # 画像ファイルとして保存
-    plt.savefig(f'images/{model_name}/accuracy_comparison_{file_name}.png', bbox_inches='tight')
+    # y軸のタスク名を完全に消す
+    ax.set_yticks([])
 
+    # 画像ファイルとして保存
+    plt.savefig(f'/home/s2410121/proj_LA/gpt2-small_blimp/images/{model_name}/accuracy_comparison_{file_name}.png', bbox_inches='tight')
 
 """ 各モデルごと """
 def multiple_models_acc_comparison(data: pd.DataFrame, model_name: str, file_name: str) -> None:
