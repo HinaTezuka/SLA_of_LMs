@@ -75,5 +75,5 @@ def visualize_neurons_with_line_plot(
     plt.grid()
 
     # グラフの保存
-    plt.savefig(f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/activations/{folder}/{L1}_{L2}.png')
+    plt.savefig(f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/activations/llama3/{folder}/{L1}_{L2}.png')
     plt.close()
