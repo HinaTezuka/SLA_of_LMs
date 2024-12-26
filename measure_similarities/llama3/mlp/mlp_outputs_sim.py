@@ -50,30 +50,30 @@ def print_accessible_modules(model) -> None:
   for name, module in model.named_modules():
     print(name)
 
-def get_out_llama3_self_att(model, prompt, device):
+def get_out_llama3_mlp(model, prompt, device):
   model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
   num_layers = model.config.num_hidden_layers  # nums of layers of the model
-  SELF_ATT_values = [f"model.layers.{i}.self_attn" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+  MLP_values = [f"model.layers.{i}.mlp" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
   with torch.no_grad():
       # trace MLP layers using TraceDict
-      with TraceDict(model, SELF_ATT_values) as ret:
+      with TraceDict(model, MLP_values) as ret:
           output = model(prompt, output_hidden_states=True, output_attentions=True)  # run inference
-      SELF_ATT_value = [ret[act_value].output for act_value in SELF_ATT_values]  # get outputs of self_att per layer
-      return SELF_ATT_value
+      MLP_value = [ret[act_value].output for act_value in MLP_values]  # get outputs of mlp per layer
+      return MLP_value
 
-def get_outputs_self_att(model, input_ids):
-  SELF_ATT_values = get_out_llama3_self_att(model, input_ids, model.device)  # Llamaのself-att直後の値を取得
-  # SELF_ATT_values = [act for act in SELF_ATT_values]
-  SELF_ATT_values = [act[0].cpu() for act in SELF_ATT_values] # act[0]: tuple(attention_output, attention_weights, cache) <- act[0](attention_output)のみが欲しいのでそれをcpu上に配置
+def get_outputs_mlp(model, input_ids):
+  MLP_values = get_out_llama3_mlp(model, input_ids, model.device)  # Llamaのself-att直後の値を取得
+  # MLP_values = [act for act in MLP_values]
+  MLP_values = [act[0].cpu() for act in MLP_values] # act[0]: tuple(attention_output, attention_weights, cache) <- act[0](attention_output)のみが欲しいのでそれをcpu上に配置
 
-  return SELF_ATT_values
+  return MLP_values
 
-def get_similarities_self_att(model, tokenizer, data) -> defaultdict(list):
+def get_similarities_mlp(model, tokenizer, data) -> defaultdict(list):
   """
-  get cosine similarities of self_att(or embeddings) block outputs of all the sentences in data (same semantics or non-same semantics pairs)
+  get cosine similarities of MLP block outputs of all the sentences in data (for same semantics or non-same semantics pairs)
 
-  block: "self_att" or "embeddings"
+  block: "mlp"
 
   return: defaultdict(list):
       {
@@ -87,8 +87,8 @@ def get_similarities_self_att(model, tokenizer, data) -> defaultdict(list):
     input_ids_L2 = tokenizer(L2_text, return_tensors="pt").input_ids.to(device)
     token_len_L2 = len(input_ids_L2[0])
 
-    output_L1 = get_outputs_self_att(model, input_ids_L1)
-    output_L2 = get_outputs_self_att(model, input_ids_L2)
+    output_L1 = get_outputs_mlp(model, input_ids_L1)
+    output_L2 = get_outputs_mlp(model, input_ids_L2)
     """
     shape of outputs: 32(layer_num) lengthのリスト。
     outputs[0]: 0層目のattentionを通った後のrepresentation
@@ -98,7 +98,7 @@ def get_similarities_self_att(model, tokenizer, data) -> defaultdict(list):
       """
       各レイヤーの最後のトークンに対応するattention_outputを取得（output_L1[layer_idx][0][token_len_L1-1]) + 2次元にreshape(2次元にreshapeしないとcos_simが測れないため。)
       """
-      similarity = cosine_similarity(output_L1[layer_idx][0][token_len_L1-1].unsqueeze(0), output_L2[layer_idx][0][token_len_L2-1].unsqueeze(0))
+      similarity = cosine_similarity(output_L1[layer_idx][token_len_L1-1].unsqueeze(0), output_L2[layer_idx][token_len_L2-1].unsqueeze(0))
       similarities[layer_idx].append(similarity[0][0]) # for instance, similarity=[[0.93852615]], so remove [[]] and extract similarity value only
 
   return similarities
@@ -119,7 +119,9 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
     plt.title(f'en_{L2}')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f"/home/s2410121/proj_LA/measure_similarities/llama3/images/attention_outputs_sim/cos_sim/llama3_attention_outputs_sim_en_{L2}.png")
+    plt.savefig(f"/home/s2410121/proj_LA/measure_similarities/llama3/images/mlp_outputs_sim/cos_sim/en_{L2}.png",
+                bbox_inches="tight",
+            )
     plt.close()
 
 
@@ -143,7 +145,7 @@ if __name__ == "__main__":
 
     """ tatoeba translation corpus """
     dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
-    # select first 100 sentences
+    # select first 2000 sentences
     num_sentences = 2000
     dataset = dataset.select(range(num_sentences))
     tatoeba_data = []
@@ -169,8 +171,8 @@ if __name__ == "__main__":
         en_base_ds_idx += 1
 
     """ calc similarities """
-    results_same_semantics = get_similarities_self_att(model, tokenizer, tatoeba_data)
-    results_non_same_semantics = get_similarities_self_att(model, tokenizer, random_data)
+    results_same_semantics = get_similarities_mlp(model, tokenizer, tatoeba_data)
+    results_non_same_semantics = get_similarities_mlp(model, tokenizer, random_data)
     final_results_same_semantics = defaultdict(float)
     final_results_non_same_semantics = defaultdict(float)
     for layer_idx in range(32): # ３２層
