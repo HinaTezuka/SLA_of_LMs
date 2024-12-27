@@ -1,7 +1,7 @@
 import os
 import itertools
 import sys
-sys.path.append("/home/s2410121/proj_LA/activated_neuron")
+sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons")
 import dill as pickle
 from typing import Any, Dict
 from collections import defaultdict

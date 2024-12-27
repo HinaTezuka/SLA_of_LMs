@@ -40,7 +40,7 @@ from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-from baukit import Trace, TraceDict
+from baukit import TraceDict
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, AutoModel, GPT2Tokenizer
 from datasets import load_dataset
 

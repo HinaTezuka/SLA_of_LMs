@@ -65,6 +65,8 @@ def get_out_llama3_mlp(model, prompt, device):
 def get_outputs_mlp(model, input_ids):
   MLP_values = get_out_llama3_mlp(model, input_ids, model.device)  # Llamaのself-att直後の値を取得
   # MLP_values = [act for act in MLP_values]
+  print(MLP_values)
+  sys.exit()
   MLP_values = [act[0].cpu() for act in MLP_values] # act[0]: tuple(attention_output, attention_weights, cache) <- act[0](attention_output)のみが欲しいのでそれをcpu上に配置
 
   return MLP_values

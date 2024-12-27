@@ -22,8 +22,8 @@ from expertise_funcs import (
 )
 
 """ parameters setting """
-activation_type = "abs"
-# activation_type = "product"
+# activation_type = "abs"
+activation_type = "product"
 norm_type = "no"
 # norm_type = "min_max"
 # norm_type = "sigmoid"
