@@ -53,7 +53,7 @@ def print_accessible_modules(model) -> None:
 def get_out_llama3_mlp(model, prompt, device):
   model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
   num_layers = model.config.num_hidden_layers  # nums of layers of the model
-  MLP_values = [f"model.layers.{i}.mlp" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+  MLP_values = [f"model.layers.{i}.mlp.down_proj" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
   with torch.no_grad():
       # trace MLP layers using TraceDict
@@ -65,8 +65,6 @@ def get_out_llama3_mlp(model, prompt, device):
 def get_outputs_mlp(model, input_ids):
   MLP_values = get_out_llama3_mlp(model, input_ids, model.device)  # Llamaのself-att直後の値を取得
   # MLP_values = [act for act in MLP_values]
-  print(MLP_values)
-  sys.exit()
   MLP_values = [act[0].cpu() for act in MLP_values] # act[0]: tuple(attention_output, attention_weights, cache) <- act[0](attention_output)のみが欲しいのでそれをcpu上に配置
 
   return MLP_values
@@ -93,12 +91,12 @@ def get_similarities_mlp(model, tokenizer, data) -> defaultdict(list):
     output_L2 = get_outputs_mlp(model, input_ids_L2)
     """
     shape of outputs: 32(layer_num) lengthのリスト。
-    outputs[0]: 0層目のattentionを通った後のrepresentation
+    outputs[0]: 0層目のmlpを通った後のrepresentation
     """
-    # attentionの出力を取得
+    # mlpの出力を取得
     for layer_idx in range(32):
       """
-      各レイヤーの最後のトークンに対応するattention_outputを取得（output_L1[layer_idx][0][token_len_L1-1]) + 2次元にreshape(2次元にreshapeしないとcos_simが測れないため。)
+      各レイヤーの最後のトークンに対応するmlp_outputを取得（output_L1[layer_idx][0][token_len_L1-1]) + 2次元にreshape(2次元にreshapeしないとcos_simが測れないため。)
       """
       similarity = cosine_similarity(output_L1[layer_idx][token_len_L1-1].unsqueeze(0), output_L2[layer_idx][token_len_L2-1].unsqueeze(0))
       similarities[layer_idx].append(similarity[0][0]) # for instance, similarity=[[0.93852615]], so remove [[]] and extract similarity value only

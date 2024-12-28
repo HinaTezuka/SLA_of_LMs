@@ -66,4 +66,3 @@ for L2 in L2_list:
 
     """ metaInfo """
     print(f"{L2} <- completed.")
-    print(ap_scores[:10])

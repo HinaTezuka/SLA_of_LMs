@@ -20,8 +20,8 @@ from expertise_funcs import (
 
 
 """ parameters setting """
-activation_type = "abs"
-# activation_type = "product"
+# activation_type = "abs"
+activation_type = "product"
 norm_type = "no"
 # norm_type = "min_max"
 # norm_type = "sigmoid"
@@ -38,10 +38,11 @@ for L2 in L2_list:
     ap_scores = unfreeze_pickle(ap_scores_path)
 
     #
-    # sorted_neurons = sorted_neurons[:5000]
-    for i in sorted_neurons:
-        print(ap_scores[i])
-    # print(ap_scores)
+    sorted_neurons = sorted_neurons[:5000]
+    print(sorted_neurons)
+    # for i in sorted_neurons:
+    #     print(ap_scores[i])
+    # sys.exit()
 
     # データ準備
     max_layer = 32
@@ -61,7 +62,7 @@ for L2 in L2_list:
 
     # 保存
     plt.savefig(
-        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{L2}.png',
+        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/{L2}.png',
         bbox_inches='tight',
         )
     plt.close()

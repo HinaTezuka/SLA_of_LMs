@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score, cross_validate, StratifiedKFold
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
 """ 
@@ -96,8 +95,9 @@ for L2, model_name in model_names.items():
         X = np.vstack([X_label1, X_label0])  # 4000ペアの特徴量
         y = np.hstack([labels_label1, labels_label0])  # 対応するラベル（1と0）
 
-        # logistic regression model
-        model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=1000, random_state=42)
+        # SVM model
+        model = SVC(kernel='linear', random_state=42) # defaultでL2正則化
+
         # cross validation
         cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
         """ check if training is going to be converge. """
@@ -123,7 +123,7 @@ for L2, model_name in model_names.items():
         print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ save scores as pkl. """
-    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
+    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/svm/en_{L2}.pkl"
     save_as_pickle(path, layer_scores)
     print(f"pkl saved.: {L2}")
     unfreeze_pickle(path)

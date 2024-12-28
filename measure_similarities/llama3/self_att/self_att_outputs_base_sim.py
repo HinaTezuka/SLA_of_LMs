@@ -15,7 +15,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 def get_out_llama3_self_att(model, prompt, device):
   model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
   num_layers = model.config.num_hidden_layers  # nums of layers of the model
-  SELF_ATT_values = [f"model.layers.{i}.self_attn" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+  SELF_ATT_values = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
   with torch.no_grad():
       # trace MLP layers using TraceDict
@@ -60,7 +60,7 @@ def get_similarities_self_att(model, tokenizer, data) -> defaultdict(list):
       """
       各レイヤーの最後のトークンに対応するattention_outputを取得（output_L1[layer_idx][0][token_len_L1-1]) + 2次元にreshape(2次元にreshapeしないとcos_simが測れないため。)
       """
-      similarity = cosine_similarity(output_L1[layer_idx][0][token_len_L1-1].unsqueeze(0), output_L2[layer_idx][0][token_len_L2-1].unsqueeze(0))
+      similarity = cosine_similarity(output_L1[layer_idx][token_len_L1-1].unsqueeze(0), output_L2[layer_idx][token_len_L2-1].unsqueeze(0))
       similarities[layer_idx].append(similarity[0][0]) # for instance, similarity=[[0.93852615]], so remove [[]] and extract similarity value only
 
   return similarities
