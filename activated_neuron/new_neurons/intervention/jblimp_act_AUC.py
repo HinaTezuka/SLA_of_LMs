@@ -132,11 +132,12 @@ if __name__ == "__main__":
     """ print OVERALLs and Meta Info"""
     print("============================ OVER ALL ============================")
     print(f"AP: {overall_accuracy_main}")
+    print(f"non_translation_shared: {overall_accuracy_shared_non_translation}")
     print(f"L1_or_L2: {overall_accuracy_comp_L1_or_L2}")
     print(f"L1_specific: {overall_accuracy_comp_L1_specific}")
 
     print("============================ META INFO ============================")
     print(f"L2: {L2}")
     print(f"intervention num: {intervention_num}")
-    print(f"intervention_num percentage: {float(intervention_num / 14336 * 32)} %.")
+    print(f"intervention_num percentage: {float(intervention_num / 14336 * 32)*100} %.")
     print("completed. saved to csv.")

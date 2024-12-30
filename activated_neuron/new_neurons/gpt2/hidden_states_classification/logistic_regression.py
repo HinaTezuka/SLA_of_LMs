@@ -122,12 +122,11 @@ for L2, model_name in model_names.items():
     # show scores
     for result in layer_scores:
         print(f"Layer {result['layer']}: test_accuracy = {np.mean(result['accuracy']):.4f} ± {np.std(result['accuracy']):.4f}")
-        # print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
-    sys.exit()
+        print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ save scores as pkl. """
-    # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
-    # save_as_pickle(path, layer_scores)
-    # print(f"pkl saved.: {L2}")
-    # unfreeze_pickle(path)
-    # print(f"successfully unfreezed: {L2}")
+    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/logistic_regression/en_{L2}.pkl"
+    save_as_pickle(path, layer_scores)
+    print(f"pkl saved.: {L2}")
+    unfreeze_pickle(path)
+    print(f"successfully unfreezed: {L2}")

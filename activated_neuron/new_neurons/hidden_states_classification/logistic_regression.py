@@ -30,9 +30,9 @@ model_names = {
     # "base": "meta-llama/Meta-Llama-3-8B",
     "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
     # "de": "DiscoResearch/Llama3-German-8B", # ger
-    "nl": "ReBatch/Llama-3-8B-dutch", # du
-    "it": "DeepMount00/Llama-3-8b-Ita", # ita
-    "ko": "beomi/Llama-3-KoEn-8B", # ko
+    # "nl": "ReBatch/Llama-3-8B-dutch", # du
+    # "it": "DeepMount00/Llama-3-8b-Ita", # ita
+    # "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -71,8 +71,8 @@ for L2, model_name in model_names.items():
     
     """ extract hidden states """
     # shape: (num_layers, num_pairs, 8192) <- layerごとに回帰モデルをつくるため.
-    features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data, is_norm=True)
-    features_label0 = get_hidden_states(model, tokenizer, device, random_data, is_norm=True)
+    features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
+    features_label0 = get_hidden_states(model, tokenizer, device, random_data)
     
     """ train & test logistic regression model """
     # parameters
@@ -93,14 +93,14 @@ for L2, model_name in model_names.items():
         X_label0 = features_label0[layer_idx] # 非対訳
 
         # label1 と label0 の特徴量を結合 (shape: (num_pairs * 2, concatenated_hiddenstates(L1/L2)_dim)
-        X = np.vstack([X_label1, X_label0])  # 4000ペアの特徴量
+        X = np.vstack([X_label1, X_label0])  # 4000ペアの特徴量(対訳+非対訳)
         y = np.hstack([labels_label1, labels_label0])  # 対応するラベル（1と0）
 
         # logistic regression model
         model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=1000, random_state=42)
         # cross validation
         cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
-        """ check if training is going to be converge. """
+        """ check if training is going to be converged. """
         # fit model with one layer's data to check convergence
         # model.fit(X, y)
         # print(f"Layer {layer_idx}: Converged: {model.n_iter_}") # ja:0層目は17回で収束
@@ -120,11 +120,11 @@ for L2, model_name in model_names.items():
     # show scores
     for result in layer_scores:
         print(f"Layer {result['layer']}: test_accuracy = {np.mean(result['accuracy']):.4f} ± {np.std(result['accuracy']):.4f}")
-        print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
+        # print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ save scores as pkl. """
-    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/logistic_regression/en_{L2}.pkl"
-    save_as_pickle(path, layer_scores)
-    print(f"pkl saved.: {L2}")
-    unfreeze_pickle(path)
-    print(f"successfully unfreezed: {L2}")
+    # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
+    # save_as_pickle(path, layer_scores)
+    # print(f"pkl saved.: {L2}")
+    # unfreeze_pickle(path)
+    # print(f"successfully unfreezed: {L2}")

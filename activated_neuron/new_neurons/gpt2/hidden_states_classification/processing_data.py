@@ -35,7 +35,7 @@ for L2, model_name in model_names.items():
     # show scores
     print(f"================================== {L2} ==================================")
     for result in regression_results:
-        # print(f"Layer {result['layer']}: test_accuracy = {np.mean(result['accuracy']):.4f} ± {np.std(result['accuracy']):.4f}")
+        print(f"Layer {result['layer']}: test_accuracy = {np.mean(result['accuracy']):.4f} ± {np.std(result['accuracy']):.4f}")
         print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ svm results """
