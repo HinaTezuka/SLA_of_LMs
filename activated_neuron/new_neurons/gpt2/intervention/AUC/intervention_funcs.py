@@ -28,7 +28,7 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     return output
 
 def take_similarities_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
-    trace_layers = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]
+    trace_layers = [f'transformer.h.{layer}.mlp.act' for layer, _ in layer_neuron_list]
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
 
         return calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, device, data)
