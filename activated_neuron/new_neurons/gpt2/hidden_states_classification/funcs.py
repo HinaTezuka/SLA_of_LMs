@@ -11,7 +11,7 @@ import torch
 
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
+from sklearn.decomposition import PCA
 
 def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
     """
@@ -41,26 +41,28 @@ def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
         last_token_index_L2 = inputs_L2["input_ids"].shape[1] - 1
 
         """ 各層の最後のトークンのhidden stateをリストに格納 + 正規化 """
-        # last_token_hidden_states_L1 = np.array([
-        #     (layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy() /
-        #     np.linalg.norm(layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy(), axis=-1, keepdims=True))
-        #     # embedding層(0層目)は排除
-        #     for layer_hidden_state in all_hidden_states_L1[1:]
-        # ])
-        # last_token_hidden_states_L2 = np.array([
-        #     (layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() /
-        #     np.linalg.norm(layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy(), axis=-1, keepdims=True))
-        #     # embedding層(0層目)は排除
-        #     for layer_hidden_state in all_hidden_states_L2[1:]
-        # ])
-        last_token_hidden_states_L1 = np.array([
-            layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy()
-            for layer_hidden_state in all_hidden_states_L1[1:]
+        if is_norm:
+            last_token_hidden_states_L1 = np.array([
+                (layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy() /
+                np.linalg.norm(layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+                # embedding層(0層目)は排除
+                for layer_hidden_state in all_hidden_states_L1[1:]
             ])
-        last_token_hidden_states_L2 = np.array([
-            layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy()
-            for layer_hidden_state in all_hidden_states_L2[1:]
+            last_token_hidden_states_L2 = np.array([
+                (layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() /
+                np.linalg.norm(layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+                # embedding層(0層目)は排除
+                for layer_hidden_state in all_hidden_states_L2[1:]
             ])
+        elif not is_norm:
+            last_token_hidden_states_L1 = np.array([
+                layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy()
+                for layer_hidden_state in all_hidden_states_L1[1:]
+                ])
+            last_token_hidden_states_L2 = np.array([
+                layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy()
+                for layer_hidden_state in all_hidden_states_L2[1:]
+                ])
         """ make features per a layer and save it to list. """
         for i in range(num_layers):
             # 1次元化
@@ -71,6 +73,13 @@ def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
             input_for_sklearn_model[i].append(features_L1_and_L2)
 
     return input_for_sklearn_model # shape: (num_layers, num_pairs, 8192)
+
+# def apply_pca(feature, n_dim):
+#     pca = PCA(n_components=n_dim)
+#     pca.fit(feature)
+#     feature_reduction = pca.transform(feature)
+
+#     return feature_reduction
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """

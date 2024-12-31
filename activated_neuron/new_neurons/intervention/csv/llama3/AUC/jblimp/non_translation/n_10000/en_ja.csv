@@ -1,12 +1,12 @@
 Model,Task,Accuracy
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,island effects,0.5454545454545454
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,binding,0.38461538461538464
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,argument structure,0.5928571428571429
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,ellipsis,0.42105263157894735
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,island effects,0.6363636363636364
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,binding,0.3076923076923077
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,argument structure,0.6214285714285714
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,ellipsis,0.3684210526315789
 tokyotech-llm/Llama-3-Swallow-8B-v0.1,verbal agreement,0.5409836065573771
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,filler-gap,0.1111111111111111
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,morphology,0.5428571428571428
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,nominal structure,0.7391304347826086
-tokyotech-llm/Llama-3-Swallow-8B-v0.1,quantifiers,0.2857142857142857
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,filler-gap,0.3333333333333333
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,morphology,0.6285714285714286
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,nominal structure,0.782608695652174
+tokyotech-llm/Llama-3-Swallow-8B-v0.1,quantifiers,0.35714285714285715
 tokyotech-llm/Llama-3-Swallow-8B-v0.1,NPI licensing,0.75
 tokyotech-llm/Llama-3-Swallow-8B-v0.1,control/raising,1.0
