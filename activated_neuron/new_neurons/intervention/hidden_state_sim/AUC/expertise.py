@@ -22,11 +22,11 @@ from expertise_funcs import (
 )
 
 """ parameters setting """
-# activation_type = "abs"
-activation_type = "product"
-norm_type = "no"
+activation_type = "abs"
+# activation_type = "product"
+# norm_type = "no"
 # norm_type = "min_max"
-# norm_type = "sigmoid"
+norm_type = "sigmoid"
 # L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
 
@@ -40,7 +40,7 @@ for L2 in L2_list:
     print(f"unfreezed pickles for {L2}.")
 
     """ calc AP and sort. """
-    sorted_neurons, ap_scores = compute_ap_and_sort(act_same_semantics_dict, act_non_same_semantics_dict)
+    sorted_neurons, ap_scores = compute_ap_and_sort(act_same_semantics_dict, act_non_same_semantics_dict, norm_type)
 
     """ pickle operations and test outputs. """
     # save as pickle file

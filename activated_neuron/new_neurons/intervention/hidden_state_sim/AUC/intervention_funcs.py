@@ -82,7 +82,7 @@ def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_
     return similarities
 
 # visualization
-def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, folder1:str, folder2: str, folder3: str) -> None:
+def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, activation_type: str, norm_type: str, intervention_num: str) -> None:
     # convert keys and values into list
     keys = list(dict1.keys())
     values1 = list(dict1.values())
@@ -97,7 +97,7 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, fol
     plt.title(f'en_{L2}')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{folder1}/{folder2}/{folder3}/en_{L2}.png")
+    plt.savefig(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{AUC_or_AUC_baseline}/{activation_type}/{norm_type}/{intervention_num}/en_{L2}.png")
     plt.close()
 
 def save_as_pickle(file_path, target_dict) -> None:

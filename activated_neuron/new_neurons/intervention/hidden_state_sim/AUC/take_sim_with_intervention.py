@@ -36,9 +36,10 @@ if __name__ == "__main__":
     }
     """ parameters """
     # active_THRESHOLD = 0.01
-    # activation_type = "abs"
-    activation_type = "product"
-    norm_type = "no"
+    activation_type = "abs"
+    # activation_type = "product"
+    # norm_type = "no"
+    norm_type = "sigmoid"
     n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
     # n_list = [20000]
 
@@ -97,7 +98,7 @@ if __name__ == "__main__":
             for layer_idx in range(32): # ３２ layers
                 final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                 final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-            plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC", activation_type, f"n_{intervention_num}")
+            plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC", activation_type, norm_type, f"n_{intervention_num}")
 
             """ deactivate shared_neurons(same semantics(including non_same_semantics)) """
             similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
@@ -107,7 +108,7 @@ if __name__ == "__main__":
             for layer_idx in range(32): # ３２ layers
                 final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                 final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-            plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC_baseline", activation_type, f"n_{intervention_num}")
+            plot_hist(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC_baseline", activation_type, norm_type, f"n_{intervention_num}")
 
             print(f"intervention_num: {n} <- completed.")
 

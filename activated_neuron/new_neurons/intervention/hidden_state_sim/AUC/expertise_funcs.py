@@ -246,7 +246,7 @@ def sigmoid_normalization(activations):
     activations = np.array(activations)  # NumPy配列に変換
     return 1 / (1 + np.exp(-activations))  # シグモイド関数を適用
 
-def compute_ap_and_sort(label1_dict, label2_dict):
+def compute_ap_and_sort(label1_dict, label2_dict, norm_type):
     """
     calc APscore and sort (considering nums_of_label).
 
@@ -280,7 +280,8 @@ def compute_ap_and_sort(label1_dict, label2_dict):
     for (layer_idx, neuron_idx), activations in neuron_responses.items():
         labels = neuron_labels[(layer_idx, neuron_idx)]
         # normalization
-        # normalized_activations = activations
+        if norm_type == "sigmoid":
+            activations = sigmoid_normalization(activations)
 
         # calc AP score
         ap = average_precision_score(y_true=labels, y_score=activations)
