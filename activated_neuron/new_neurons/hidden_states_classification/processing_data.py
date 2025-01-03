@@ -38,6 +38,4 @@ for L2, model_name in model_names.items():
         # print(f"Layer {result['layer']}: test_accuracy = {np.mean(result['accuracy']):.4f} ± {np.std(result['accuracy']):.4f}")
         print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
-    """ svm results """
-    # svm_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/svm/en_{L2}.pkl"
-    # svm_results = unfreeze_pickle(svm_path)
+    
