@@ -97,10 +97,10 @@ for L2, model_name in model_names.items():
         y = np.hstack([labels_label1, labels_label0])  # 対応するラベル（1と0）
 
         # logistic regression model
-        model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=1000, random_state=42)
+        model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=10000, random_state=42)
         # cross validation
         cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
-        """ check if training is going to be converged. """
+        """ check if trainings were converged. """
         # fit model with one layer's data to check convergence
         # model.fit(X, y)
         # print(f"Layer {layer_idx}: Converged: {model.n_iter_}") # ja:0層目は17回で収束
@@ -123,8 +123,8 @@ for L2, model_name in model_names.items():
         # print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ save scores as pkl. """
-    # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
-    # save_as_pickle(path, layer_scores)
-    # print(f"pkl saved.: {L2}")
-    # unfreeze_pickle(path)
-    # print(f"successfully unfreezed: {L2}")
+    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
+    save_as_pickle(path, layer_scores)
+    print(f"pkl saved.: {L2}")
+    unfreeze_pickle(path)
+    print(f"successfully unfreezed: {L2}")
