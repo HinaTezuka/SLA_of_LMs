@@ -84,39 +84,47 @@ def calc_euclidean_distances(last_token_hidden_states_L1: list, last_token_hidde
 
 def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> None:
     # convert keys and values into list
-    keys = list(dict1.keys())
+    keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
-    # plot hist
-    plt.bar(keys, values1, alpha=1, label='same semantics')
-    plt.bar(keys, values2, alpha=1, label='different semantics')
+    offset = 0.2 # バーをずらす用
 
-    plt.xlabel('Layer index')
-    plt.ylabel('Cosine Similarity')
+    # plot hist
+    plt.bar(keys-offset, values1, alpha=1, label='same semantics')
+    plt.bar(keys+offset, values2, alpha=1, label='different semantics')
+
+    plt.xlabel('Layer index', fontsize=25)
+    plt.ylabel('Cosine Similarity', fontsize=25)
     plt.title(f'en_{L2}')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f"/home/s2410121/proj_LA/measure_similarities/llama3/images/hidden_state_sim/normalized/llama3_hidden_state_sim_en_{L2}.png")
+    plt.savefig(
+        f"/home/s2410121/proj_LA/measure_similarities/llama3/images/hidden_state_sim/normalized/en_{L2}.png",
+        bbox_inches="tight"
+        )
     plt.close()
 
-def plot_hist_L2(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> None:
-    # convert keys and values into list
-    keys = list(dict1.keys())
-    values1 = list(dict1.values())
-    values2 = list(dict2.values())
+# def plot_hist_L2(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> None:
+#     # convert keys and values into list
+#     keys = list(dict1.keys())
+#     values1 = list(dict1.values())
+#     values2 = list(dict2.values())
 
-    # plot hist
-    plt.bar(keys, values1, alpha=1, label='same semantics', zorder=2)
-    plt.bar(keys, values2, alpha=1, label='different semantics', zorder=1)
+#     # plot hist
+#     plt.bar(keys, values1, alpha=1, label='same semantics', zorder=2)
+#     plt.bar(keys, values2, alpha=1, label='different semantics', zorder=1)
 
-    plt.xlabel('Layer index')
-    plt.ylabel('L2 distance')
-    plt.title('L2 distance between translation pairs and non translation pairs')
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(f"/home/s2410121/proj_LA/measure_similarities/llama3/images/hidden_state_sim/L2_dist/llama3_hidden_state_sim_en_{L2}.png")
-    plt.close()
+#     plt.xlabel('Layer index')
+#     plt.ylabel('L2 distance')
+#     plt.title('L2 distance between translation pairs and non translation pairs')
+#     plt.legend()
+#     plt.grid(True)
+#     plt.savefig(
+#         f"/home/s2410121/proj_LA/measure_similarities/llama3/images/hidden_state_sim/L2_dist/llama3_hidden_state_sim_en_{L2}.png",
+#         bbox_inches="tight"
+#         )
+#     plt.close()
 
 if __name__ == "__main__":
     """ model configs """
@@ -125,9 +133,9 @@ if __name__ == "__main__":
         # "base": "meta-llama/Meta-Llama-3-8B",
         "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
         # "de": "DiscoResearch/Llama3-German-8B", # ger
-        "nl": "ReBatch/Llama-3-8B-dutch", # du
-        "it": "DeepMount00/Llama-3-8b-Ita", # ita
-        "ko": "beomi/Llama-3-KoEn-8B", # ko
+        # "nl": "ReBatch/Llama-3-8B-dutch", # du
+        # "it": "DeepMount00/Llama-3-8b-Ita", # ita
+        # "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -139,8 +147,8 @@ if __name__ == "__main__":
 
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
-        # select first 100 sentences
-        num_sentences = 2000
+        # select first 2000 sentences
+        num_sentences = 10
         dataset = dataset.select(range(num_sentences))
         tatoeba_data = []
         for item in dataset:
