@@ -46,9 +46,9 @@ for L2 in L2_list:
     ap_scores_gpt2 = unfreeze_pickle(gpt2_path)
 
     # makind dataframe for visualization
-    for i in range(len(sorted_neurons_llama3[:30000])):
+    for i in range(len(sorted_neurons_llama3[:15000])):
         data.append({"Model": "LLaMA-3", "Language": L2, "Neuron": i, "AP_Score": ap_scores_llama3[sorted_neurons_llama3[i]]})
-    for i in range(len(sorted_neurons_gpt2[:30000])):
+    for i in range(len(sorted_neurons_gpt2[:15000])):
         data.append({"Model": "GPT-2", "Language": L2, "Neuron": i, "AP_Score": ap_scores_gpt2[sorted_neurons_gpt2[i]]})
 
 # convert pandas DataFrame

@@ -56,7 +56,7 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
             for layer_hidden_state in all_hidden_states_L2
         ]
         # cos_sim
-        similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
+        similarities = calc_cosine_sim(last_token_hidden_states_L1[1:], last_token_hidden_states_L2[1:], similarities)
         # L2 distance
         # similarities = calc_euclidean_distances(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
 
@@ -84,25 +84,28 @@ def calc_euclidean_distances(last_token_hidden_states_L1: list, last_token_hidde
 
 def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> None:
     # convert keys and values into list
-    keys = np.array(list(dict1.keys()))
+    # keys = np.array(list(dict1.keys()))
+    keys = list(dict1.keys())
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
-    offset = 0.2 # バーをずらす用
+    # offset = 0.2 # バーをずらす用
 
     # plot hist
-    plt.bar(keys-offset, values1, alpha=1, label='same semantics')
-    plt.bar(keys+offset, values2, alpha=1, label='different semantics')
+    # plt.bar(keys-offset, values1, alpha=1, label='same semantics')
+    # plt.bar(keys+offset, values2, alpha=1, label='different semantics')
+    plt.bar(keys, values1, alpha=1, label='same semantics')
+    plt.bar(keys, values2, alpha=1, label='different semantics')
 
-    plt.xlabel('Layer index', fontsize=20)
-    plt.ylabel('Cosine Similarity', fontsize=20)
+    plt.xlabel('Layer index', fontsize=10)
+    plt.ylabel('Cosine Similarity', fontsize=10)
     plt.title(f'en_{L2}')
-    plt.tick_params(axis='x', labelsize=20)  # x軸の目盛りフォントサイズ
-    plt.tick_params(axis='y', labelsize=20)
+    # plt.tick_params(axis='x', labelsize=20)  # x軸の目盛りフォントサイズ
+    # plt.tick_params(axis='y', labelsize=20)
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/llama3/images/hidden_state_sim/normalized/en_{L2}.png",
+        f"/home/s2410121/proj_LA/measure_similarities/llama3/images/hidden_state_sim/normalized/llama3_hidden_state_sim_en_{L2}.png",
         bbox_inches="tight"
         )
     plt.close()
@@ -179,7 +182,7 @@ if __name__ == "__main__":
         results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data)
         final_results_same_semantics = defaultdict(float)
         final_results_non_same_semantics = defaultdict(float)
-        for layer_idx in range(33): # embedding層＋３２層
+        for layer_idx in range(32): # embedding層＋３２層
             final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
 
