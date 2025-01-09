@@ -81,11 +81,11 @@ sns.lineplot(
 )
 
 # グラフの装飾
-plt.xlabel("Neuron Index", fontsize=20)
-plt.ylabel("AP Score", fontsize=20)
+plt.xlabel("Neuron Index", fontsize=25)
+plt.ylabel("AP Score", fontsize=25)
 plt.title("AP Scores for LLaMA-3 and GPT-2", fontsize=25)
-plt.tick_params(axis='x', labelsize=18)
-plt.tick_params(axis='y', labelsize=18)
+plt.tick_params(axis='x', labelsize=25)
+plt.tick_params(axis='y', labelsize=25)
 plt.legend(title=f"Language & Model", fontsize=20, title_fontsize=18)
 plt.grid(True, linestyle="--", alpha=0.6)
 
