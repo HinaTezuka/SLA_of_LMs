@@ -81,8 +81,8 @@ sns.lineplot(
 )
 
 # グラフの装飾
-plt.xlabel("Top N", fontsize=30)
-plt.ylabel("AP Score", fontsize=30)
+plt.xlabel("Top N", fontsize=35)
+plt.ylabel("AP Score", fontsize=35)
 plt.title("AP Scores for LLaMA-3 and GPT-2", fontsize=25)
 plt.tick_params(axis='x', labelsize=30)
 plt.tick_params(axis='y', labelsize=30)
