@@ -53,7 +53,7 @@ for L2 in L2_list:
 
 # convert pandas DataFrame
 df = pd.DataFrame(data)
-
+df.index = df.index + 1
 # AP_Score を数値に変換
 df['AP_Score'] = pd.to_numeric(df['AP_Score'], errors='coerce')
 
@@ -76,7 +76,7 @@ sns.lineplot(
     # dashes=False,
     dashes={"GPT-2": [2, 2], "LLaMA-3": [1, 0]},
     palette=sns.color_palette("tab10"),  # カラーパレット設定
-    linewidth=5,
+    linewidth=10,
     alpha=1,
 )
 
