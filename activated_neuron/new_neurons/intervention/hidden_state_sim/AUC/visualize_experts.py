@@ -38,7 +38,7 @@ for L2 in L2_list:
     ap_scores = unfreeze_pickle(ap_scores_path)
 
     #
-    sorted_neurons = sorted_neurons[:10000]
+    sorted_neurons = sorted_neurons[:15000]
     # print(sorted_neurons)
     
     """ 上位10件を表示 """
