@@ -94,9 +94,11 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
     plt.bar(keys+offset, values2, alpha=1, label='different semantics')
 
-    plt.xlabel('Layer index', fontsize=35)
-    plt.ylabel('Cosine Similarity', fontsize=35)
+    plt.xlabel('Layer index', fontsize=30)
+    plt.ylabel('Cosine Similarity', fontsize=30)
     plt.title(f'en_{L2}')
+    plt.tick_params(axis='x', labelsize=25)  # x軸の目盛りフォントサイズ
+    plt.tick_params(axis='y', labelsize=25)
     plt.legend()
     plt.grid(True)
     plt.savefig(
