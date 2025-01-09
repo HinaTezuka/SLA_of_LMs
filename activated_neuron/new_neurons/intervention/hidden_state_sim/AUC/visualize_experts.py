@@ -38,35 +38,35 @@ for L2 in L2_list:
     ap_scores = unfreeze_pickle(ap_scores_path)
 
     #
-    # sorted_neurons = sorted_neurons[:5000]
+    sorted_neurons = sorted_neurons[:10000]
     # print(sorted_neurons)
     
     """ 上位10件を表示 """
     print(f"======================== {L2} ========================")
-    for i in sorted_neurons[:10]:
-        print(ap_scores[i])
-    print(f"30000番目: {ap_scores[sorted_neurons[29999]]}")
+    # for i in sorted_neurons[:10]:
+    #     print(ap_scores[i])
+    # print(f"30000番目: {ap_scores[sorted_neurons[29999]]}")
     # sys.exit()
 
-    # # データ準備
-    # max_layer = 32
-    # layers = [layer for layer, neuron in sorted_neurons]  # 層のみ抽出
+    # データ準備
+    max_layer = 32
+    layers = [layer for layer, neuron in sorted_neurons]  # 層のみ抽出
 
-    # # 層ごとのカウント
-    # layer_counts = Counter(layers)
+    # 層ごとのカウント
+    layer_counts = Counter(layers)
 
-    # # ヒストグラムプロット
-    # plt.figure(figsize=(12, 6))
-    # plt.bar(layer_counts.keys(), layer_counts.values(), color="skyblue", edgecolor=None)
-    # plt.xticks(range(max_layer), fontsize=10)
-    # plt.xlabel("Layer Index")
-    # plt.ylabel("Neurons Count")
-    # plt.title("Same Semantic Expert Shared Neurons Distribution")
-    # plt.grid(axis="y", linestyle="--", alpha=0.7)
+    # ヒストグラムプロット
+    plt.figure(figsize=(12, 6))
+    plt.bar(layer_counts.keys(), layer_counts.values(), color="skyblue", edgecolor=None)
+    plt.xticks(range(max_layer), fontsize=10)
+    plt.xlabel("Layer Index")
+    plt.ylabel("Neurons Count")
+    plt.title("Same Semantic Expert Shared Neurons Distribution")
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
 
-    # # 保存
-    # plt.savefig(
-    #     f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/{L2}.png',
-    #     bbox_inches='tight',
-    #     )
+    # 保存
+    plt.savefig(
+        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/{L2}.png',
+        bbox_inches='tight',
+        )
     # plt.close()
