@@ -38,10 +38,10 @@ if __name__ == "__main__":
     # active_THRESHOLD = 0.01
     activation_type = "abs"
     # activation_type = "product"
-    # norm_type = "no"
-    norm_type = "sigmoid"
-    n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
-    # n_list = [20000]
+    norm_type = "no"
+    # norm_type = "sigmoid"
+    # n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
+    n_list = [15000]
 
     for L2, model_name in model_names.items():
 

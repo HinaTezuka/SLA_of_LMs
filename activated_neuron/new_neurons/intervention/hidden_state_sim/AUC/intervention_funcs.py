@@ -84,7 +84,7 @@ def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_
 # visualization
 def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, activation_type: str, norm_type: str, intervention_num: str) -> None:
     # convert keys and values into list
-    keys = list(dict1.keys())
+    keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
@@ -92,16 +92,39 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC
     plt.bar(keys, values1, alpha=1, label='same semantics')
     plt.bar(keys, values2, alpha=1, label='different semantics')
 
-    plt.xlabel('Layer index')
-    plt.ylabel('Cosine Similarity')
+    plt.xlabel('Layer index', fontsize=20)
+    plt.ylabel('Cosine Similarity', fontsize=20)
     plt.title(f'en_{L2}')
+    plt.tick_params(axis='x', labelsize=20)  # x軸の目盛りフォントサイズ
+    plt.tick_params(axis='y', labelsize=20)
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{AUC_or_AUC_baseline}/{activation_type}/{norm_type}/{intervention_num}/en_{L2}.png",
+        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{AUC_or_AUC_baseline}/{activation_type}/{norm_type}/{intervention_num}/en_{L2}_rev.png",
         bbox_inches="tight"
     )
     plt.close()
+
+# def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, activation_type: str, norm_type: str, intervention_num: str) -> None:
+#     # convert keys and values into list
+#     keys = list(dict1.keys())
+#     values1 = list(dict1.values())
+#     values2 = list(dict2.values())
+
+#     # plot hist
+#     plt.bar(keys, values1, alpha=1, label='same semantics')
+#     plt.bar(keys, values2, alpha=1, label='different semantics')
+
+#     plt.xlabel('Layer index')
+#     plt.ylabel('Cosine Similarity')
+#     plt.title(f'en_{L2}')
+#     plt.legend()
+#     plt.grid(True)
+#     plt.savefig(
+#         f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{AUC_or_AUC_baseline}/{activation_type}/{norm_type}/{intervention_num}/en_{L2}.png",
+#         bbox_inches="tight"
+#     )
+#     plt.close()
 
 def save_as_pickle(file_path, target_dict) -> None:
     """
