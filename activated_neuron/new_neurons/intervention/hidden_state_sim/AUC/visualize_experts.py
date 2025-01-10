@@ -59,8 +59,8 @@ for L2 in L2_list:
     plt.figure(figsize=(12, 6))
     plt.bar(layer_counts.keys(), layer_counts.values(), color="purple", edgecolor=None)
     plt.xticks(range(max_layer))
-    plt.xlabel("Layer Index", fontsize=35)
-    plt.ylabel("Neurons Count", fontsize=35)
+    plt.xlabel("Layer Index", fontsize=40)
+    plt.ylabel("Neurons Count", fontsize=40)
     plt.title("Same Semantic Expert Shared Neurons Distribution")
     plt.grid(axis="y", linestyle="--", alpha=0.7)
 
