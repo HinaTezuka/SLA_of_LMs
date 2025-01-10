@@ -106,17 +106,21 @@ def get_similarities_mlp(model, tokenizer, data) -> defaultdict(list):
 # cosine similarity
 def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> None:
     # convert keys and values into list
-    keys = list(dict1.keys())
+    keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
-    # plot hist
-    plt.bar(keys, values1, alpha=1, label='same semantics')
-    plt.bar(keys, values2, alpha=1, label='different semantics')
+    offset = 0.2 # バーをずらす用
 
-    plt.xlabel('Layer index')
-    plt.ylabel('Cosine Similarity')
+    # plot hist
+    plt.bar(keys-offset, values1, alpha=1, label='same semantics')
+    plt.bar(keys+offset, values2, alpha=1, label='different semantics')
+
+    plt.xlabel('Layer index', fontsize=35)
+    plt.ylabel('Cosine Similarity', fontsize=35)
     plt.title(f'en_{L2}')
+    plt.tick_params(axis='x', labelsize=15)  # x軸の目盛りフォントサイズ
+    plt.tick_params(axis='y', labelsize=15)
     plt.legend()
     plt.grid(True)
     plt.savefig(f"/home/s2410121/proj_LA/measure_similarities/llama3/images/mlp_outputs_sim/cos_sim/en_{L2}.png",
