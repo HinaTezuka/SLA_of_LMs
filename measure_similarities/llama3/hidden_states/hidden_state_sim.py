@@ -138,9 +138,9 @@ if __name__ == "__main__":
         # "base": "meta-llama/Meta-Llama-3-8B",
         "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
         # "de": "DiscoResearch/Llama3-German-8B", # ger
-        # "nl": "ReBatch/Llama-3-8B-dutch", # du
-        # "it": "DeepMount00/Llama-3-8b-Ita", # ita
-        # "ko": "beomi/Llama-3-KoEn-8B", # ko
+        "nl": "ReBatch/Llama-3-8B-dutch", # du
+        "it": "DeepMount00/Llama-3-8b-Ita", # ita
+        "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences
-        num_sentences = 20
+        num_sentences = 2000
         dataset = dataset.select(range(num_sentences))
         tatoeba_data = []
         for item in dataset:
