@@ -88,6 +88,8 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
+    offset = 0.2 # バーをずらす用
+
     # plot hist
     plt.bar(keys, values1, alpha=1, label='same semantics')
     plt.bar(keys, values2, alpha=1, label='different semantics')
