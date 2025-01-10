@@ -76,8 +76,9 @@ sns.lineplot(
     # dashes=False,
     dashes={"GPT-2": [2, 2], "LLaMA-3": [1, 0]},
     palette=sns.color_palette("tab10"),  # カラーパレット設定
-    linewidth=10,
+    linewidth=5,
     alpha=1,
+    ci=None,
 )
 
 # グラフの装飾
