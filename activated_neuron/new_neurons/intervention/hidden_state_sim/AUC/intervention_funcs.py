@@ -91,8 +91,10 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC
     offset = 0.2 # バーをずらす用
 
     # plot hist
-    plt.bar(keys, values1, alpha=1, label='same semantics')
-    plt.bar(keys, values2, alpha=1, label='different semantics')
+    plt.bar(keys-offset, values1, alpha=1, label='same semantics')
+    plt.bar(keys+offset, values2, alpha=1, label='different semantics')
+    # plt.bar(keys, values1, alpha=1, label='same semantics')
+    # plt.bar(keys, values2, alpha=1, label='different semantics')
 
     plt.xlabel('Layer index', fontsize=20)
     plt.ylabel('Cosine Similarity', fontsize=20)
