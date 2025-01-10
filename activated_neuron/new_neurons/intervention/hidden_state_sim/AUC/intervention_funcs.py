@@ -104,7 +104,7 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{AUC_or_AUC_baseline}/{activation_type}/{norm_type}/{intervention_num}/en_{L2}_rev.png",
+        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_sim/intervention/llama3/{AUC_or_AUC_baseline}/{activation_type}/{norm_type}/{intervention_num}/en_{L2}.png",
         bbox_inches="tight"
     )
     plt.close()
