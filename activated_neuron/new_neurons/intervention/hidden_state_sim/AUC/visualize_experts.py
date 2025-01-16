@@ -4,6 +4,7 @@ visualize experts for same semantics as a sentence.
 import os
 import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/hidden_state_sim/AUC")
+sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/intervention/hidden_state_sim/AUC")
 import dill as pickle
 from collections import Counter, defaultdict
 
@@ -20,8 +21,10 @@ from expertise_funcs import (
 
 
 """ parameters setting """
-activation_type = "abs"
-# activation_type = "product"
+model = "llama"
+# model = "gpt2"
+# activation_type = "abs"
+activation_type = "product"
 norm_type = "no"
 # norm_type = "min_max"
 # norm_type = "sigmoid"
@@ -49,7 +52,7 @@ for L2 in L2_list:
     # sys.exit()
 
     # データ準備
-    max_layer = 32
+    max_layer = 32 if model == "llama" else 12
     layers = [layer for layer, neuron in sorted_neurons]  # 層のみ抽出
 
     # 層ごとのカウント
