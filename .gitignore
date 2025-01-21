@@ -12,6 +12,9 @@ activated_neuron/new_neurons/gpt2/pickles
 # all pckles and tmps
 echo "*.pkl" >> .gitignore
 echo "*.tmp" >> .gitignore
+# jsons
+activated_neuron/new_neurons/logit_lens/results
+echo "*.json" >> .gitignore
 
 # activated_neuron/pickles/
 activated_neuron/pickles/

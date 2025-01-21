@@ -46,7 +46,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from funcs import (
   project_value_to_vocab,
   get_embedding_for_token,
-  unfreeze_pickle,
+  save_as_json
+  unfreeze_json,
 )
 
 """ model configs """
@@ -59,34 +60,54 @@ model_names = {
     "it": "DeepMount00/Llama-3-8b-Ita", # ita
     "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model = AutoModelForCausalLM.from_pretrained(model_names["ja"]).to(device)
-tokenizer = AutoTokenizer.from_pretrained(model_names["ja"])
 
 """ params """
+device = "cuda" if torch.cuda.is_available() else "cpu"
 layer_nums = 32
 activation_type = "abs"
-activation_type = "product"
+# activation_type = "product"
 norm_type = "no"
-L2 = "ja"
-top_n = 15000
+top_n = 500
+# L2 = "ja"
 
-# get top AP neurons (layer_idx, neuron_idx)
-pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
-# baseline
-sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n+1:], len(sorted_neurons_AP[top_n+1:]))
+for L2, model_name in model_names.items():
+  model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+  tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-""" get value_predictions """
-value_predictions = {}
-# for top_n AP neurons
-for neuron in sorted_neurons_AP[:30]:
-  value_preds = project_value_to_vocab(model, tokenizer, neuron[0], neuron[1], top_k=20, normed=True)
-  value_predictions[(neuron[0], neuron[1])] = value_preds
-  print(f"================ {(neuron[0], neuron[1])} ================")
-  print(value_preds)
+  # get top AP neurons (layer_idx, neuron_idx)
+  pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+  sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
+  # baseline
+  sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n+1:], len(sorted_neurons_AP[top_n+1:]))
 
-# for baselines
-# value_prodictions_baseline = {}
-# for neuron in sorted_neurons_AP_baseline[:10]:
-#   print(project_value_to_vocab(model, tokenizer, neuron[0], neuron[1], normed=True))
+  """ get value_predictions """
+  value_predictions = {}
+  # for top_n AP neurons
+  for neuron in sorted_neurons_AP:
+    layer_idx, neuron_idx = neuron[0], neuron[1]
+    value_preds = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
+    value_predictions[(layer_idx, neuron_idx)] = value_preds
+    # print(f"================ {(neuron[0], neuron[1])} ================")
+    # print(value_preds, "\n")
+
+  # for baselines
+  value_predictions_baseline = {}
+  for neuron in sorted_neurons_AP_baseline:
+    layer_idx, neuron_idx = neuron[0], neuron[1]
+    value_preds_baseline = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, normed=True)
+    value_predictions_baseline[(layer_idx, neuron_idx)] = value_preds_baseline
+    # print(f"================ {(neuron[0], neuron[1])} ================")
+    # print(value_preds_baseline, "\n")
+
+  """ save as json. """
+  # value_predictions(AP).
+  save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/logit_lens/results/llama/{activation_type}/n_{top_n}"
+  file_name_with_path = os.path.join(save_dir, f"{L2}_value_predictions.json")
+  save_as_json(value_predictions, file_name_with_path)
+  # value_predictions_baseline.
+  file_name_with_path_baseline = os.path.join(save_dir, f"{L2}_value_predictions_baseline.json")
+  save_as_json(value_predictions_baseline, file_name_with_path_baseline)
+
+  # unfreeze for confirmation.
+  unfreeze_json(file_name_with_path))
+  unfreeze_json(file_name_with_path_baseline)

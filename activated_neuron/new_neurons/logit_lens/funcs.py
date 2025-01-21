@@ -1,11 +1,12 @@
 import os
 import sys
 import dill as pickle
+import json
 
 import numpy as np
 import torch
 import torch.nn.functional as F
-from tqdm import tqdm
+
 
 def project_value_to_vocab(model, tokenizer, layer_idx, value_idx, top_k=10, normed=False):
   value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[value_idx]
@@ -26,27 +27,6 @@ def project_value_to_vocab(model, tokenizer, layer_idx, value_idx, top_k=10, nor
 
   return value_preds
 
-# def project_value_to_vocab_2(model, tokenizer, top_k=10, AP_list) -> dict:
-
-#     def get_all_profected_values(model, E):
-#         layer_down_proj_vals = [
-#             model[f"model.layers.{layer_idx}.mlp.down_proj"].T
-#             for layer_idx in range(32)
-#         ]
-#         values = []
-#         for layer_idx in range(32):
-#             for dim in range(4096):
-#                 values.append(layer_down_proj_vals[layer][dim].unsqueeze(0))
-#         values = torch.cat(values)
-#         logits = E.matmul(values.T).T.numpy()
-
-#         return logits.detach().cpu().numpy()
-    
-#     projections = {}
-#     for neuron in AP_list:
-#         ids = np.argsort(-logits[])
-
-
 def get_embedding_for_token(token_idx):
     # get embeddings from token_idx.
     embedding = model.model.embed_tokens.weight[token_idx]
@@ -64,3 +44,45 @@ def unfreeze_pickle(file_path: str):
             return pickle.load(f)
     except (pickle.UnpicklingError, EOFError) as e:
         raise ValueError(f"Error unpickling file {file_path}: {e}")
+
+def save_as_json(data: dict, file_name_with_path: str) -> None:
+    # Check if the directory exists (create it if not)
+    output_dir = os.path.dirname(file_name_with_path)
+    os.makedirs(output_dir, exist_ok=True)
+
+    temp_file_path = file_name_with_path + ".tmp"
+
+    try:
+        # Write data to the temporary file
+        with open(temp_file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+        # If writing is successful, rename the temporary file to the original file
+        os.rename(temp_file_path, file_name_with_path)
+        print("Saving completed.")
+
+    except Exception as e:
+        # Error handling: remove the temporary file if it exists
+        print(f"Error saving JSON: {e}")
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+
+def unfreeze_json(file_name_with_path: str) -> dict:
+    # Check if the file exists
+    if not os.path.exists(file_name_with_path):
+        raise FileNotFoundError(f"JSON file not found: {file_name_with_path}")
+
+    try:
+        # Open and read the JSON file
+        with open(file_name_with_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        print("Successfully unfreezed json.")
+        return data
+    
+    except json.JSONDecodeError as e:
+        # Handle any errors related to JSON decoding
+        raise ValueError(f"Error decoding JSON file {file_name_with_path}: {e}")
+
+
+if __name__ == "__main__":
+    print()
