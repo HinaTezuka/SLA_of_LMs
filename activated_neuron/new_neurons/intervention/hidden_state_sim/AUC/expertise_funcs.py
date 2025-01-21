@@ -1,6 +1,5 @@
 """
 neuron detection for MLP Block of LLaMA-3(8B).
-some codes were copied from: https://github.com/weixuan-wang123/multilingual-neurons/blob/main/neuron-behavior.ipynb
 """
 """
 LlamaForCausalLM(

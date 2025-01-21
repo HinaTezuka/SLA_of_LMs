@@ -1,0 +1,71 @@
+Layer 0: test_accuracy = 0.9398 ± 0.0057
+Layer 0: test_f1 = 0.9412 ± 0.0055
+Layer 1: test_accuracy = 0.9545 ± 0.0046
+Layer 1: test_f1 = 0.9553 ± 0.0044
+Layer 2: test_accuracy = 0.9670 ± 0.0066
+Layer 2: test_f1 = 0.9675 ± 0.0063
+Layer 3: test_accuracy = 0.9742 ± 0.0061
+Layer 3: test_f1 = 0.9745 ± 0.0060
+Layer 4: test_accuracy = 0.9790 ± 0.0063
+Layer 4: test_f1 = 0.9792 ± 0.0062
+Layer 5: test_accuracy = 0.9815 ± 0.0058
+Layer 5: test_f1 = 0.9816 ± 0.0058
+Layer 6: test_accuracy = 0.9775 ± 0.0072
+Layer 6: test_f1 = 0.9778 ± 0.0071
+Layer 7: test_accuracy = 0.9805 ± 0.0056
+Layer 7: test_f1 = 0.9807 ± 0.0054
+Layer 8: test_accuracy = 0.9790 ± 0.0048
+Layer 8: test_f1 = 0.9792 ± 0.0047
+Layer 9: test_accuracy = 0.9807 ± 0.0047
+Layer 9: test_f1 = 0.9809 ± 0.0046
+Layer 10: test_accuracy = 0.9805 ± 0.0070
+Layer 10: test_f1 = 0.9807 ± 0.0068
+Layer 11: test_accuracy = 0.9807 ± 0.0045
+Layer 11: test_f1 = 0.9809 ± 0.0044
+Layer 12: test_accuracy = 0.9812 ± 0.0041
+Layer 12: test_f1 = 0.9814 ± 0.0040
+Layer 13: test_accuracy = 0.9788 ± 0.0048
+Layer 13: test_f1 = 0.9789 ± 0.0047
+Layer 14: test_accuracy = 0.9783 ± 0.0056
+Layer 14: test_f1 = 0.9784 ± 0.0055
+Layer 15: test_accuracy = 0.9800 ± 0.0063
+Layer 15: test_f1 = 0.9802 ± 0.0063
+Layer 16: test_accuracy = 0.9772 ± 0.0071
+Layer 16: test_f1 = 0.9775 ± 0.0070
+Layer 17: test_accuracy = 0.9755 ± 0.0072
+Layer 17: test_f1 = 0.9758 ± 0.0071
+Layer 18: test_accuracy = 0.9762 ± 0.0085
+Layer 18: test_f1 = 0.9764 ± 0.0085
+Layer 19: test_accuracy = 0.9795 ± 0.0061
+Layer 19: test_f1 = 0.9797 ± 0.0060
+Layer 20: test_accuracy = 0.9785 ± 0.0067
+Layer 20: test_f1 = 0.9787 ± 0.0067
+Layer 21: test_accuracy = 0.9780 ± 0.0070
+Layer 21: test_f1 = 0.9782 ± 0.0069
+Layer 22: test_accuracy = 0.9768 ± 0.0051
+Layer 22: test_f1 = 0.9769 ± 0.0051
+Layer 23: test_accuracy = 0.9772 ± 0.0061
+Layer 23: test_f1 = 0.9775 ± 0.0059
+Layer 24: test_accuracy = 0.9738 ± 0.0061
+Layer 24: test_f1 = 0.9740 ± 0.0060
+Layer 25: test_accuracy = 0.9742 ± 0.0069
+Layer 25: test_f1 = 0.9745 ± 0.0067
+Layer 26: test_accuracy = 0.9740 ± 0.0078
+Layer 26: test_f1 = 0.9743 ± 0.0076
+Layer 27: test_accuracy = 0.9755 ± 0.0047
+Layer 27: test_f1 = 0.9757 ± 0.0046
+Layer 28: test_accuracy = 0.9740 ± 0.0075
+Layer 28: test_f1 = 0.9742 ± 0.0074
+Layer 29: test_accuracy = 0.9747 ± 0.0065
+Layer 29: test_f1 = 0.9749 ± 0.0065
+Layer 30: test_accuracy = 0.9730 ± 0.0066
+Layer 30: test_f1 = 0.9732 ± 0.0066
+Layer 31: test_accuracy = 0.9712 ± 0.0088
+Layer 31: test_f1 = 0.9715 ± 0.0086
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=30420344kb,walltime=03:46:00,ncpus=26,cpupercent=273,vmem=53980408kb
+============================================================================================

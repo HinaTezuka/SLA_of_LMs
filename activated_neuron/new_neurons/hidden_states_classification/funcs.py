@@ -2,13 +2,12 @@ import os
 import sys
 # sys.path.append("/home/s2410121/proj_LA/activated_neuron")
 import dill as pickle
-
 from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-
+from baukit import TraceDict
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.decomposition import PCA
@@ -20,7 +19,7 @@ def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
 
     return: np.array for input of sklearn classification models.
     """
-    num_layers = 12
+    num_layers = 32
     # return
     input_for_sklearn_model = [[] for _ in range(num_layers)] # [layer_idx: 2000 pairs(translation or non translation)]
 
@@ -73,6 +72,31 @@ def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
             input_for_sklearn_model[i].append(features_L1_and_L2)
 
     return input_for_sklearn_model # shape: (num_layers, num_pairs, 8192)
+
+""" func for editing activation values """
+def edit_activation(output, layer, layer_idx_and_neuron_idx):
+    """
+    edit activation value of neurons(indexed layer_idx and neuron_idx)
+    output: activation values
+    layer: sth like 'model.layers.{layer_idx}.mlp.act_fn'
+    layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
+    """
+    for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+            output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
+
+    return output
+
+def get_hidden_states_intervention(model, tokenizer, device, data, deactivation_list, is_norm=False) -> list:
+    """
+    extract hidden states only for last tokens, while deactivating expert neurons(high AP score neurons).
+    is_norm: whether normalization of hidden states is required or not.
+
+    return: np.array for input of sklearn classification models.
+    """
+    trace_layers = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in deactivation_list]
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, deactivation_list)) as tr:
+        return get_hidden_states(model, tokenizer, device, data, is_norm)
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """

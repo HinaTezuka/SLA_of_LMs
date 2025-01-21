@@ -13,16 +13,18 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score, cross_validate, StratifiedKFold
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
-""" 
-層化分割交差検証（Stratified fold cross-validation): 各分割内でのクラスの比率が全体の比率と同じになるように分割(ラベル分布を維持)
-"""
 from funcs import (
     get_hidden_states,
     save_as_pickle,
     unfreeze_pickle,
+    get_hidden_states_intervention,
 )
+""" 
+make logistic regression model do classification task,
+while intervening some expert neurons(in term of AP score).
 
-""" extract hidden states (only for last token) and make inputs for the model. """
+extract hidden states (only for last token) and make inputs for the model. 
+"""
 
 """ model configs """
 # LLaMA-3(8B)
@@ -30,9 +32,9 @@ model_names = {
     # "base": "meta-llama/Meta-Llama-3-8B",
     "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
     # "de": "DiscoResearch/Llama3-German-8B", # ger
-    "nl": "ReBatch/Llama-3-8B-dutch", # du
-    "it": "DeepMount00/Llama-3-8b-Ita", # ita
-    "ko": "beomi/Llama-3-KoEn-8B", # ko
+    # "nl": "ReBatch/Llama-3-8B-dutch", # du
+    # "it": "DeepMount00/Llama-3-8b-Ita", # ita
+    # "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -68,11 +70,21 @@ for L2, model_name in model_names.items():
     for item in dataset:
         random_data.append((random_data_en["text"][en_base_ds_idx], item["translation"][L2]))
         en_base_ds_idx += 1
+
+    """ params. """
+    activation_type = "abs"
+    norm_type = "no"
+    deactivation_num = 15000
+
+    """ get deactivation list. """
+    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+    deactivation_list = unfreeze_pickle(sorted_neurons_path)
+    deactivation_list = deactivation_list[:deactivation_num]
     
-    """ extract hidden states """
+    """ extract hidden states while deactivating expert neurons. """
     # shape: (num_layers, num_pairs, 8192) <- layerごとに回帰モデルをつくるため.
-    features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
-    features_label0 = get_hidden_states(model, tokenizer, device, random_data)
+    features_label1 = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, deactivation_list)
+    features_label0 = get_hidden_states_intervention(model, tokenizer, device, random_data, deactivation_list)
     
     """ train & test logistic regression model """
     # parameters
@@ -118,13 +130,12 @@ for L2, model_name in model_names.items():
             'f1': scores['test_f1'],
         })
     # show scores
-    print(f"=================== {L2} ===================")
     for result in layer_scores:
         print(f"Layer {result['layer']}: test_accuracy = {np.mean(result['accuracy']):.4f} ± {np.std(result['accuracy']):.4f}")
         print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ save scores as pkl. """
-    # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
+    # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}_deactivation.pkl"
     # save_as_pickle(path, layer_scores)
     # print(f"pkl saved.: {L2}")
     # unfreeze_pickle(path)
