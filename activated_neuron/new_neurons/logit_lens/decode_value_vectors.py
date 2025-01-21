@@ -46,7 +46,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from funcs import (
   project_value_to_vocab,
   get_embedding_for_token,
-  save_as_json
+  unfreeze_pickle,
+  save_as_json,
   unfreeze_json,
 )
 
@@ -83,7 +84,7 @@ for L2, model_name in model_names.items():
   """ get value_predictions """
   value_predictions = {}
   # for top_n AP neurons
-  for neuron in sorted_neurons_AP:
+  for neuron in sorted_neurons_AP[:top_n]:
     layer_idx, neuron_idx = neuron[0], neuron[1]
     value_preds = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
     value_predictions[(layer_idx, neuron_idx)] = value_preds
@@ -92,7 +93,7 @@ for L2, model_name in model_names.items():
 
   # for baselines
   value_predictions_baseline = {}
-  for neuron in sorted_neurons_AP_baseline:
+  for neuron in sorted_neurons_AP_baseline[:top_n]:
     layer_idx, neuron_idx = neuron[0], neuron[1]
     value_preds_baseline = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, normed=True)
     value_predictions_baseline[(layer_idx, neuron_idx)] = value_preds_baseline
@@ -109,5 +110,5 @@ for L2, model_name in model_names.items():
   save_as_json(value_predictions_baseline, file_name_with_path_baseline)
 
   # unfreeze for confirmation.
-  unfreeze_json(file_name_with_path))
+  unfreeze_json(file_name_with_path)
   unfreeze_json(file_name_with_path_baseline)
