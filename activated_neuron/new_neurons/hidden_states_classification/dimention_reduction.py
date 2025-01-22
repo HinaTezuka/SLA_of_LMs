@@ -3,6 +3,7 @@ import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/hidden_states_classification")
 import dill as pickle
 from collections import defaultdict
+import random
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,6 +39,10 @@ model_names = {
     # "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
+activation_type = "abs"
+# activation_type = "product"
+norm_type = "no"
+top_n = 15000
 
 for L2, model_name in model_names.items():
     L1 = "en" # L1 is fixed to english.
@@ -75,20 +80,21 @@ for L2, model_name in model_names.items():
     """ get top AP neurons (layer_idx, neuron_idx) """
     pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
     AP_list = unfreeze_pickle(pkl_file_path)
+    AP_list = AP_list[:top_n]
     # baseline
-    AP_baseline = random.sample(sorted_neurons_AP[top_n+1:], len(sorted_neurons_AP[top_n+1:]))
+    AP_baseline = random.sample(AP_list[top_n+1:], len(AP_list[top_n+1:]))
+    AP_baseline = AP_baseline[:top_n]
     """ extract hidden states """
     # shape: (num_layers, num_pairs, 8192) <- layerごとに回帰モデルをつくるため.
     # features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
     # features_label0 = get_hidden_states(model, tokenizer, device, random_data)
-    features_label1_intervention = get_hidden_states_intervention(model, tokenizer, device, AP_list, tatoeba_data)
-    features_label0_intervention = get_hidden_states_intervention(model, tokenizer, device, AP_list, random_data)
-    features_label1_base = get_hidden_states_intervention(model, tokenizer, device, AP_baseline, tatoeba_data)
-    features_label0_base = get_hidden_states_intervention(model, tokenizer, device, AP_baseline, random_data)
+    features_label1_intervention = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, AP_list)
+    features_label0_intervention = get_hidden_states_intervention(model, tokenizer, device, random_data, AP_list)
+    features_label1_base = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, AP_baseline)
+    features_label0_base = get_hidden_states_intervention(model, tokenizer, device, random_data, AP_baseline)
 
-    # delete some cache
+    # delete model (for saving memory).
     del model
-    torch.cuda.empty_cache()
 
     """ plot with dimention reduction. """
     # normal
