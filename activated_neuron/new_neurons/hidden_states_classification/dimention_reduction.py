@@ -18,6 +18,9 @@ from sklearn.decomposition import PCA
 
 from funcs import (
     get_hidden_states,
+    get_hidden_states_intervention,
+    plot_pca,
+    plot_umap,
     save_as_pickle,
     unfreeze_pickle,
 )
@@ -69,110 +72,31 @@ for L2, model_name in model_names.items():
         random_data.append((random_data_en["text"][en_base_ds_idx], item["translation"][L2]))
         en_base_ds_idx += 1
     
+    """ get top AP neurons (layer_idx, neuron_idx) """
+    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+    AP_list = unfreeze_pickle(pkl_file_path)
+    # baseline
+    AP_baseline = random.sample(sorted_neurons_AP[top_n+1:], len(sorted_neurons_AP[top_n+1:]))
     """ extract hidden states """
     # shape: (num_layers, num_pairs, 8192) <- layerごとに回帰モデルをつくるため.
-    features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
-    features_label0 = get_hidden_states(model, tokenizer, device, random_data)
-    
-    def plot_pca(features_label1, features_label0):
-        """
-        PCAで次元削減し、結果をプロットする関数。
+    # features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
+    # features_label0 = get_hidden_states(model, tokenizer, device, random_data)
+    features_label1_intervention = get_hidden_states_intervention(model, tokenizer, device, AP_list, tatoeba_data)
+    features_label0_intervention = get_hidden_states_intervention(model, tokenizer, device, AP_list, random_data)
+    features_label1_base = get_hidden_states_intervention(model, tokenizer, device, AP_baseline, tatoeba_data)
+    features_label0_base = get_hidden_states_intervention(model, tokenizer, device, AP_baseline, random_data)
 
-        Args:
-            features_label1: ラベル1に対応する特徴量（リストまたはNumPy配列）。
-            features_label0: ラベル0に対応する特徴量（リストまたはNumPy配列）。
-        """
-        # 入力をNumPy配列に変換
-        features_label1 = np.array(features_label1)
-        features_label0 = np.array(features_label0)
+    # delete some cache
+    del model
+    torch.cuda.empty_cache()
 
-        for layer_idx in range(32):
+    """ plot with dimention reduction. """
+    # normal
+    # plot_umap(features_label1, features_label0, "no")
+    # intervention
+    plot_umap(features_label1_intervention, features_label0_intervention, "yes")
+    # for baseline
+    plot_umap(features_label1_base, features_label0_base, "base")
 
-            # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
-            features_label1_layer = features_label1[layer_idx, : :]
-            features_label0_layer = features_label0[layer_idx, :, :]
-
-            """ PCA after concat """
-            # # 2つのデータセットを結合
-            # all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
-            # print(all_features.shape)
-
-            # pca = PCA(n_components=2)
-            # all_features_2d = pca.fit_transform(all_features)
-
-            # # 分割して取得
-            # features_label1_2d = all_features_2d[:len(features_label1_layer)]
-            # features_label0_2d = all_features_2d[len(features_label1_layer):]
-
-            """ PCA sepalately """
-            pca = PCA(n_components=2)
-            features_label1_2d = pca.fit_transform(features_label1_layer)
-            features_label0_2d = pca.fit_transform(features_label0_layer)
-
-            # プロット
-            plt.figure(figsize=(8, 6))
-            plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='blue', label='Label 1', alpha=0.7)
-            plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
-            plt.xlabel('PCA Dimension 1')
-            plt.ylabel('PCA Dimension 2')
-            plt.title('PCA Projection of Features')
-            plt.legend()
-            plt.grid(True)
-
-            # 画像の保存
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/layer_{layer_idx}.png"
-            plt.savefig(output_path, bbox_inches="tight")
-    
-    def plot_umap(features_label1, features_label0):
-        """
-        UMAPで次元削減し、結果をプロットする関数。
-
-        Args:
-            features_label1: ラベル1に対応する特徴量（リストまたはNumPy配列）。
-            features_label0: ラベル0に対応する特徴量（リストまたはNumPy配列）。
-            output_path: プロット画像を保存するパス（文字列）。
-        """
-        # input list to np.array
-        features_label1 = np.array(features_label1)
-        features_label0 = np.array(features_label0)
-
-        for layer_idx in range(32):
-
-            # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
-            features_label1_layer = features_label1[layer_idx, : :]
-            features_label0_layer = features_label0[layer_idx, :, :]
-            
-            """ UMAP (after concat) """
-            # # 2つのデータセットを結合
-            # all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
-            # print(all_features.shape)
-
-            # # UMAPで2次元に削減
-            # reducer = umap.UMAP(n_components=2, random_state=42)
-            # all_features_2d = reducer.fit_transform(all_features)
-
-            # # 分割して取得
-            # features_label1_2d = all_features_2d[:len(features_label1_layer)]
-            # features_label0_2d = all_features_2d[len(features_label1_layer):]
-
-            """ UMAP (separately) """
-            reducer = umap.UMAP(n_components=2, random_state=42)
-            features_label1_2d = reducer.fit_transform(features_label1_layer)
-            features_label0_2d = reducer.fit_transform(features_label0_layer)
-
-            # プロット
-            plt.figure(figsize=(8, 6))
-            plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='blue', label='Label 1', alpha=0.7)
-            plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
-            plt.xlabel('UMAP Dimension 1')
-            plt.ylabel('UMAP Dimension 2')
-            plt.title('UMAP Projection of Features')
-            plt.legend()
-            plt.grid(True)
-
-            # 画像の保存
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/layer_{layer_idx}.png"
-            plt.savefig(output_path, bbox_inches="tight")
-
-    # plot_pca(features_label1, features_label0)
-    plot_umap(features_label1, features_label0)
+    # delete cache
+    torch.cuda.empty_cache()

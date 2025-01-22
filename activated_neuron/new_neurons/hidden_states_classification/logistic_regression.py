@@ -77,11 +77,11 @@ for L2, model_name in model_names.items():
     """ train & test logistic regression model """
     # parameters
     num_layers = 32
-    num_pairs = 2000
+    # num_sentences = 2000
 
     # define labels
-    labels_label1 = np.ones((num_pairs)) # 対訳ペアのラベル(1)
-    labels_label0 = np.zeros((num_pairs)) # 対訳ペアのラベル(0)
+    labels_label1 = np.ones((num_sentences)) # 対訳ペアのラベル(1)
+    labels_label0 = np.zeros((num_sentences)) # 対訳ペアのラベル(0)
 
     # layerごとに回帰モデルをtrain & test.
     layer_scores = []

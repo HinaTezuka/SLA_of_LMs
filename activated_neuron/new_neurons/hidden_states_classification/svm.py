@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from sklearn.svm import SVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn.model_selection import cross_val_score, cross_validate, StratifiedKFold
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
 """ 
@@ -74,13 +74,11 @@ for L2, model_name in model_names.items():
     features_label0 = get_hidden_states(model, tokenizer, device, random_data, is_norm=True)
     
     """ train & test logistic regression model """
-    # parameters
     num_layers = 32
-    num_pairs = 2000
 
     # define labels
-    labels_label1 = np.ones((num_pairs)) # 対訳ペアのラベル(1)
-    labels_label0 = np.zeros((num_pairs)) # 対訳ペアのラベル(0)
+    labels_label1 = np.ones((num_sentences)) # 対訳ペアのラベル(1)
+    labels_label0 = np.zeros((num_sentences)) # 対訳ペアのラベル(0)
 
     # layerごとに回帰モデルをtrain & test.
     layer_scores = []
@@ -97,6 +95,7 @@ for L2, model_name in model_names.items():
 
         # SVM model
         model = SVC(kernel='linear', random_state=42) # defaultでL2正則化
+        # model = LinearSVC(penalty='l1', dual=False, random_state=42, max_iter=10000) # L1正則化
 
         # cross validation
         cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)

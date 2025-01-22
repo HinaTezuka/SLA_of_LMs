@@ -131,3 +131,92 @@ def unfreeze_pickle(file_path: str):
             return pickle.load(f)
     except (pickle.UnpicklingError, EOFError) as e:
         raise ValueError(f"Error unpickling file {file_path}: {e}")
+
+def plot_pca(features_label1, features_label0):
+    features_label1 = np.array(features_label1)
+    features_label0 = np.array(features_label0)
+
+    for layer_idx in range(32):
+
+        # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
+        features_label1_layer = features_label1[layer_idx, : :]
+        features_label0_layer = features_label0[layer_idx, :, :]
+
+        """ PCA after concat """
+        # # 2つのデータセットを結合
+        # all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
+        # print(all_features.shape)
+
+        # pca = PCA(n_components=2)
+        # all_features_2d = pca.fit_transform(all_features)
+
+        # # 分割して取得
+        # features_label1_2d = all_features_2d[:len(features_label1_layer)]
+        # features_label0_2d = all_features_2d[len(features_label1_layer):]
+
+        """ PCA sepalately """
+        pca = PCA(n_components=2)
+        features_label1_2d = pca.fit_transform(features_label1_layer)
+        features_label0_2d = pca.fit_transform(features_label0_layer)
+
+        # プロット
+        plt.figure(figsize=(8, 6))
+        plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='blue', label='Label 1', alpha=0.7)
+        plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
+        plt.xlabel('PCA Dimension 1')
+        plt.ylabel('PCA Dimension 2')
+        plt.title('PCA Projection of Features')
+        plt.legend()
+        plt.grid(True)
+
+        # 画像の保存
+        output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/layer_{layer_idx}.png"
+        plt.savefig(output_path, bbox_inches="tight")
+
+def plot_umap(features_label1, features_label0, intervention=None):
+    # input list to np.array
+    features_label1 = np.array(features_label1)
+    features_label0 = np.array(features_label0)
+
+    for layer_idx in range(32):
+
+        # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
+        features_label1_layer = features_label1[layer_idx, : :]
+        features_label0_layer = features_label0[layer_idx, :, :]
+        
+        """ UMAP (after concat) """
+        # # 2つのデータセットを結合
+        # all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
+        # print(all_features.shape)
+
+        # # UMAPで2次元に削減
+        # reducer = umap.UMAP(n_components=2, random_state=42)
+        # all_features_2d = reducer.fit_transform(all_features)
+
+        # # 分割して取得
+        # features_label1_2d = all_features_2d[:len(features_label1_layer)]
+        # features_label0_2d = all_features_2d[len(features_label1_layer):]
+
+        """ UMAP (separately) """
+        reducer = umap.UMAP(n_components=2, random_state=42)
+        features_label1_2d = reducer.fit_transform(features_label1_layer)
+        features_label0_2d = reducer.fit_transform(features_label0_layer)
+
+        # プロット
+        plt.figure(figsize=(8, 6))
+        plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='blue', label='Label 1', alpha=0.7)
+        plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
+        plt.xlabel('UMAP Dimension 1')
+        plt.ylabel('UMAP Dimension 2')
+        plt.title('UMAP Projection of Features')
+        plt.legend()
+        plt.grid(True)
+
+        # 画像の保存
+        if intervention == "no":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/layer_{layer_idx}.png"
+        elif intervention == "yes":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/intervention/layer_{layer_idx}.png"           
+        elif intervention == "base":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/intervention_baseline/layer_{layer_idx}.png"
+        plt.savefig(output_path, bbox_inches="tight")

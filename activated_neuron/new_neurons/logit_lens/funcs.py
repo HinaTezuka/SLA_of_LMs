@@ -53,9 +53,11 @@ def save_as_json(data: dict, file_name_with_path: str) -> None:
     temp_file_path = file_name_with_path + ".tmp"
 
     try:
+        # Convert keys to strings for serialization
+        serializable_data = {str(key): value for key, value in data.items()}
         # Write data to the temporary file
         with open(temp_file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+            json.dump(serializable_data, f, ensure_ascii=False, indent=4)
 
         # If writing is successful, rename the temporary file to the original file
         os.rename(temp_file_path, file_name_with_path)
@@ -67,20 +69,17 @@ def save_as_json(data: dict, file_name_with_path: str) -> None:
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
 
+
 def unfreeze_json(file_name_with_path: str) -> dict:
-    # Check if the file exists
     if not os.path.exists(file_name_with_path):
         raise FileNotFoundError(f"JSON file not found: {file_name_with_path}")
 
     try:
-        # Open and read the JSON file
         with open(file_name_with_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        print("Successfully unfreezed json.")
-        return data
-    
+        # Convert string keys back to tuples
+        return {eval(key): value for key, value in data.items()}
     except json.JSONDecodeError as e:
-        # Handle any errors related to JSON decoding
         raise ValueError(f"Error decoding JSON file {file_name_with_path}: {e}")
 
 
