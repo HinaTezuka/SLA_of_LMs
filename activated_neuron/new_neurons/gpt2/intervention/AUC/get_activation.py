@@ -23,9 +23,9 @@ model_names = {
     # "de": "ml6team/gpt2-small-german-finetune-oscar", # ger
     "nl": "GroNLP/gpt2-small-dutch", # du
     "it": "GroNLP/gpt2-small-italian", # ita
-    "fr": "dbddv01/gpt2-french-small", # fre
+    # "fr": "dbddv01/gpt2-french-small", # fre
     "ko": "skt/kogpt2-base-v2", # ko
-    "es": "datificate/gpt2-small-spanish" # spa
+    # "es": "datificate/gpt2-small-spanish" # spa
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -63,8 +63,8 @@ for L2, model_name in model_names.items():
         en_base_ds_idx += 1
 
     """ tracking neurons """
-    activation_type = "abs"
-    # activation_type = "product"
+    # activation_type = "abs"
+    activation_type = "product"
 
     # 対訳ペア
     activation_dict_same_semantics = track_neurons_with_text_data(model, device, 'gpt2', tokenizer, tatoeba_data, True, activation_type)

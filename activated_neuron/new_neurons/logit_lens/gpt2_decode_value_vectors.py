@@ -44,7 +44,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from funcs import (
-  project_value_to_vocab,
+  project_value_to_vocab_gpt2,
   get_embedding_for_token,
   unfreeze_pickle,
   save_as_json,
@@ -55,13 +55,13 @@ from funcs import (
 # GPT-2-small
 model_names = {
     # "base": "gpt2",
-    # "ja": "rinna/japanese-gpt2-small", # ja
+    "ja": "rinna/japanese-gpt2-small", # ja
     # "de": "ml6team/gpt2-small-german-finetune-oscar", # ger
     "nl": "GroNLP/gpt2-small-dutch", # du
     "it": "GroNLP/gpt2-small-italian", # ita
-    "fr": "dbddv01/gpt2-french-small", # fre
+    # "fr": "dbddv01/gpt2-french-small", # fre
     "ko": "skt/kogpt2-base-v2", # ko
-    "es": "datificate/gpt2-small-spanish" # spa
+    # "es": "datificate/gpt2-small-spanish" # spa
 }
 
 """ params """
@@ -70,7 +70,8 @@ layer_nums = 12
 activation_type = "abs"
 # activation_type = "product"
 norm_type = "no"
-top_n = 500
+top_n = 10
+top_n_for_baseline = 15000
 # L2 = "ja"
 
 for L2, model_name in model_names.items():
@@ -78,39 +79,48 @@ for L2, model_name in model_names.items():
   tokenizer = AutoTokenizer.from_pretrained(model_name)
 
   # get top AP neurons (layer_idx, neuron_idx)
-  pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+  pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
   sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
   # baseline
-  sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n+1:], len(sorted_neurons_AP[top_n+1:]))
+  sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
 
   """ get value_predictions """
   value_predictions = {}
   # for top_n AP neurons
   for neuron in sorted_neurons_AP[:top_n]:
     layer_idx, neuron_idx = neuron[0], neuron[1]
-    value_preds = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
+    value_preds = project_value_to_vocab_gpt2(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
     value_predictions[(layer_idx, neuron_idx)] = value_preds
-    # print(f"================ {(neuron[0], neuron[1])} ================")
-    # print(value_preds, "\n")
+    print(f"================ {(layer_idx, neuron_idx)} ================")
+    print(value_preds, "\n")
+  sys.exit()
 
   # for baselines
   value_predictions_baseline = {}
   for neuron in sorted_neurons_AP_baseline[:top_n]:
     layer_idx, neuron_idx = neuron[0], neuron[1]
-    value_preds_baseline = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, normed=True)
+    value_preds_baseline = project_value_to_vocab_gpt2(model, tokenizer, layer_idx, neuron_idx, normed=True)
     value_predictions_baseline[(layer_idx, neuron_idx)] = value_preds_baseline
-    # print(f"================ {(neuron[0], neuron[1])} ================")
-    # print(value_preds_baseline, "\n")
+  #   print(f"================ {(neuron[0], neuron[1])} ================")
+  #   print(value_preds_baseline, "\n")
+  # sys.exit()
 
-  """ save as json. """
+  """ delete model (for saving memory). """
+  del model
+
+  """ save as pickle. """
   # value_predictions(AP).
-  save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/logit_lens/results/llama/{activation_type}/n_{top_n}"
-  file_name_with_path = os.path.join(save_dir, f"{L2}_value_predictions.json")
-  save_as_json(value_predictions, file_name_with_path)
+  save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/logit_lens/results/gpt2/{activation_type}/n_{top_n}/{L2}_value_predictions.pkl"
+  save_as_pickle(save_dir, value_predictions)
   # value_predictions_baseline.
-  file_name_with_path_baseline = os.path.join(save_dir, f"{L2}_value_predictions_baseline.json")
-  save_as_json(value_predictions_baseline, file_name_with_path_baseline)
+  save_dir_baseline = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/logit_lens/results/gpt2/{activation_type}/n_{top_n}/{L2}_value_predictions_baseline.pkl"
+  save_as_pickle(save_dir_baseline, value_predictions_baseline)
 
   # unfreeze for confirmation.
-  unfreeze_json(file_name_with_path)
-  unfreeze_json(file_name_with_path_baseline)
+  print(f"====================== {L2} ======================\n\n")
+  unfreeze_json(save_dir)
+  print("====================== baseline ======================\n\n")
+  unfreeze_json(save_dir_baseline)
+
+  # delete chache
+  torch.cuda.empty_cache()

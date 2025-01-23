@@ -66,6 +66,7 @@ def track_neurons_with_text_data(model, device, model_name, tokenizer, data, is_
         input_ids_L2 = tokenizer(L2_text, return_tensors="pt").input_ids.to(device)
         token_len_L2 = len(input_ids_L2[0])
         mlp_activation_L2 = act_gpt2(model, input_ids_L2)
+
         """
         L1/L2 shared neurons
         """
@@ -80,11 +81,11 @@ def track_neurons_with_text_data(model, device, model_name, tokenizer, data, is_
             for neuron_idx in range(num_neurons):
                 if activation_type == "abs":
                     act_value_L1 = abs(mlp_activation_L1[layer_idx][neuron_idx])
-                    act_value_L2 = abs(mlp_activation_L1[layer_idx][neuron_idx])
+                    act_value_L2 = abs(mlp_activation_L2[layer_idx][neuron_idx])
                     activation_value = (act_value_L1 + act_value_L2) / 2
                 elif activation_type == "product":
-                    act_value_L1 = abs(mlp_activation_L1[layer_idx][neuron_idx])
-                    act_value_L2 = abs(mlp_activation_L1[layer_idx][neuron_idx])
+                    act_value_L1 = mlp_activation_L1[layer_idx][neuron_idx]
+                    act_value_L2 = mlp_activation_L2[layer_idx][neuron_idx]
                     activation_value = act_value_L1 * act_value_L2
                 # activation_dictに追加
                 activation_dict[pair_idx][layer_idx].append((neuron_idx, activation_value))

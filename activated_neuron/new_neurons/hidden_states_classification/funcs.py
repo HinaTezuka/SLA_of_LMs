@@ -7,6 +7,7 @@ from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
+import umap.umap_ as umap
 from baukit import TraceDict
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -132,7 +133,7 @@ def unfreeze_pickle(file_path: str):
     except (pickle.UnpicklingError, EOFError) as e:
         raise ValueError(f"Error unpickling file {file_path}: {e}")
 
-def plot_pca(features_label1, features_label0):
+def plot_pca(features_label1, features_label0, L2):
     features_label1 = np.array(features_label1)
     features_label0 = np.array(features_label0)
 
@@ -173,7 +174,7 @@ def plot_pca(features_label1, features_label0):
         output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/layer_{layer_idx}.png"
         plt.savefig(output_path, bbox_inches="tight")
 
-def plot_umap(features_label1, features_label0, intervention=None):
+def plot_umap(features_label1, features_label0, L2, intervention=None):
     # input list to np.array
     features_label1 = np.array(features_label1)
     features_label0 = np.array(features_label0)

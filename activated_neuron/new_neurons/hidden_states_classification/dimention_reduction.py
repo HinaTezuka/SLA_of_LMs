@@ -8,14 +8,12 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-import umap.umap_ as umap
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score, cross_validate, StratifiedKFold
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
-from sklearn.decomposition import PCA
 
 from funcs import (
     get_hidden_states,
@@ -100,9 +98,9 @@ for L2, model_name in model_names.items():
     # normal
     # plot_umap(features_label1, features_label0, "no")
     # intervention
-    plot_umap(features_label1_intervention, features_label0_intervention, "yes")
+    plot_umap(features_label1_intervention, features_label0_intervention, L2, "yes")
     # for baseline
-    plot_umap(features_label1_base, features_label0_base, "base")
+    plot_umap(features_label1_base, features_label0_base, L2, "base")
 
     # delete cache
     torch.cuda.empty_cache()
