@@ -1,0 +1,23 @@
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_ja.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_ja.
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_nl.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_nl.
+unfreezed pickles for ja.
+pkl_file successfully saved.
+pkl_file successfully saved.
+ja <- completed.
+unfreezed pickles for nl.
+pkl_file successfully saved.
+pkl_file successfully saved.
+nl <- completed.
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=380767396kb,walltime=20:09:30,ncpus=26,cpupercent=166,vmem=396170756kb
+============================================================================================

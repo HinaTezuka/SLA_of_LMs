@@ -90,8 +90,8 @@ for L2, model_name in model_names.items():
     layer_idx, neuron_idx = neuron[0], neuron[1]
     value_preds = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
     value_predictions[(layer_idx, neuron_idx)] = value_preds
-    print(f"================ {(layer_idx, neuron_idx)} ================")
-    print(value_preds, "\n")
+    # print(f"================ {(layer_idx, neuron_idx)} ================")
+    # print(value_preds, "\n")
 
   # for baselines
   print(f"================ baseline. ================")
@@ -100,9 +100,9 @@ for L2, model_name in model_names.items():
     layer_idx, neuron_idx = neuron[0], neuron[1]
     value_preds_baseline = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, normed=True)
     value_predictions_baseline[(layer_idx, neuron_idx)] = value_preds_baseline
-    print(f"================ {(layer_idx, neuron_idx)} ================")
-    print(value_preds_baseline, "\n")
-  sys.exit()
+  #   print(f"================ {(layer_idx, neuron_idx)} ================")
+  #   print(value_preds_baseline, "\n")
+  # sys.exit()
 
   """ delete model (for saving memory). """
   del model

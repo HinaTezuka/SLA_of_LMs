@@ -97,7 +97,7 @@ for L2, model_name in model_names.items():
         y = np.hstack([labels_label1, labels_label0])  # 対応するラベル（1と0）
 
         # logistic regression model
-        model = LogisticRegression(penalty='l1', solver='liblinear', max_iter=10000, random_state=42)
+        model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=10000, random_state=42)
         # cross validation
         cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
         """ check if trainings were converged. """
