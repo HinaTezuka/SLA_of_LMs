@@ -19,6 +19,7 @@ from funcs import (
     get_hidden_states,
     get_hidden_states_intervention,
     plot_pca,
+    plot_plsr,
     plot_umap,
     save_as_pickle,
     unfreeze_pickle,
@@ -32,9 +33,9 @@ model_names = {
     # "base": "meta-llama/Meta-Llama-3-8B",
     # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
     # "de": "DiscoResearch/Llama3-German-8B", # ger
-    # "nl": "ReBatch/Llama-3-8B-dutch", # du
+    "nl": "ReBatch/Llama-3-8B-dutch", # du
     "it": "DeepMount00/Llama-3-8b-Ita", # ita
-    # "ko": "beomi/Llama-3-KoEn-8B", # ko
+    "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
 activation_type = "abs"
@@ -75,32 +76,36 @@ for L2, model_name in model_names.items():
         random_data.append((random_data_en["text"][en_base_ds_idx], item["translation"][L2]))
         en_base_ds_idx += 1
     
-    """ get top AP neurons (layer_idx, neuron_idx) """
-    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    AP_list = unfreeze_pickle(pkl_file_path)
-    AP_list = AP_list[:top_n]
-    # baseline
-    AP_baseline = random.sample(AP_list[top_n+1:], len(AP_list[top_n+1:]))
-    AP_baseline = AP_baseline[:top_n]
     """ extract hidden states """
     # shape: (num_layers, num_pairs, 8192) <- layerごとに回帰モデルをつくるため.
-    # features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
-    # features_label0 = get_hidden_states(model, tokenizer, device, random_data)
-    features_label1_intervention = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, AP_list)
-    features_label0_intervention = get_hidden_states_intervention(model, tokenizer, device, random_data, AP_list)
-    features_label1_base = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, AP_baseline)
-    features_label0_base = get_hidden_states_intervention(model, tokenizer, device, random_data, AP_baseline)
+    features_label1 = get_hidden_states(model, tokenizer, device, tatoeba_data)
+    features_label0 = get_hidden_states(model, tokenizer, device, random_data)
+    
+    """ get top AP neurons (layer_idx, neuron_idx) """
+    # pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+    # AP_list = unfreeze_pickle(pkl_file_path)
+    # AP_list = AP_list[:top_n]
+    # # baseline
+    # AP_baseline = random.sample(AP_list[top_n+1:], len(AP_list[top_n+1:]))
+    # AP_baseline = AP_baseline[:top_n]
+
+    # # intervention of high AP neurons
+    # features_label1_intervention = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, AP_list)
+    # features_label0_intervention = get_hidden_states_intervention(model, tokenizer, device, random_data, AP_list)
+    # # intervention of baseline
+    # features_label1_base = get_hidden_states_intervention(model, tokenizer, device, tatoeba_data, AP_baseline)
+    # features_label0_base = get_hidden_states_intervention(model, tokenizer, device, random_data, AP_baseline)
 
     # delete model (for saving memory).
     del model
 
     """ plot with dimention reduction. """
     # normal
-    # plot_umap(features_label1, features_label0, "no")
+    plot_plsr(features_label1, features_label0, L2)
     # intervention
-    plot_umap(features_label1_intervention, features_label0_intervention, L2, "yes")
+    # plot_plsr(features_label1_intervention, features_label0_intervention, L2, "yes")
     # for baseline
-    plot_umap(features_label1_base, features_label0_base, L2, "base")
+    # plot_plsr(features_label1_base, features_label0_base, L2, "base")
 
     # delete cache
     torch.cuda.empty_cache()

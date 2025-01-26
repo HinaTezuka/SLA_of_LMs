@@ -11,7 +11,9 @@ import umap.umap_ as umap
 from baukit import TraceDict
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.cross_decomposition import PLSRegression
 
 def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
     """
@@ -166,15 +168,69 @@ def plot_pca(features_label1, features_label0, L2):
         plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
         plt.xlabel('PCA Dimension 1')
         plt.ylabel('PCA Dimension 2')
-        plt.title('PCA Projection of Features')
+        plt.title(f'PCA Layer_{layer_idx+1}')
         plt.legend()
         plt.grid(True)
 
         # 画像の保存
-        output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/layer_{layer_idx}.png"
+        if intervention == "no":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/layer_{layer_idx+1}.png"
+        elif intervention == "yes":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/intervention/layer_{layer_idx+1}.png"
+        elif intervention == "base":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/pca/{L2}/intervention_baseline/layer_{layer_idx+1}.png"
         plt.savefig(output_path, bbox_inches="tight")
+        plt.close()
 
-def plot_umap(features_label1, features_label0, L2, intervention=None):
+def plot_plsr(features_label1, features_label0, L2, intervention="no"):
+    features_label1 = np.array(features_label1)
+    features_label0 = np.array(features_label0)
+
+    for layer_idx in range(32):
+        # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
+        features_label1_layer = features_label1[layer_idx, :, :]
+        features_label0_layer = features_label0[layer_idx, :, :]
+
+        # データを結合
+        all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
+        all_labels = np.concatenate([
+            np.ones(features_label1_layer.shape[0]),  # Label 1: 1
+            np.zeros(features_label0_layer.shape[0])  # Label 0: 0
+        ])
+
+        # # データのスケーリング
+        # scaler = StandardScaler()
+        # all_features_scaled = scaler.fit_transform(all_features)
+
+        # PLSRを適用
+        pls = PLSRegression(n_components=2)
+        all_features_2d = pls.fit_transform(all_features, all_labels)[0]
+
+        # 元のデータに分割
+        features_label1_2d = all_features_2d[:features_label1_layer.shape[0]]
+        features_label0_2d = all_features_2d[features_label1_layer.shape[0]:]
+
+        # プロット
+        plt.figure(figsize=(8, 6))
+        plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='green', label='Label 1', alpha=0.7)
+        plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='purple', label='Label 0', alpha=0.7)
+        plt.xlabel('PLSR Dimension 1')
+        plt.ylabel('PLSR Dimension 2')
+        plt.title(f'PLSR Layer_{layer_idx+1}')
+        plt.legend()
+        plt.grid(True)
+
+        # 画像の保存
+        if intervention == "no":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/layer_{layer_idx+1}.png"
+        elif intervention == "yes":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention/layer_{layer_idx+1}.png"
+        elif intervention == "base":
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention_baseline/layer_{layer_idx+1}.png"
+        plt.savefig(output_path, bbox_inches="tight")
+        plt.close()
+
+def plot_umap(features_label1, features_label0, L2, intervention="no"):
     # input list to np.array
     features_label1 = np.array(features_label1)
     features_label0 = np.array(features_label0)
@@ -209,15 +265,15 @@ def plot_umap(features_label1, features_label0, L2, intervention=None):
         plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
         plt.xlabel('UMAP Dimension 1')
         plt.ylabel('UMAP Dimension 2')
-        plt.title('UMAP Projection of Features')
+        plt.title(f'UMAP Layer_{layer_idx+1}')
         plt.legend()
         plt.grid(True)
 
         # 画像の保存
         if intervention == "no":
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/layer_{layer_idx}.png"
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/layer_{layer_idx+1}.png"
         elif intervention == "yes":
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/intervention/layer_{layer_idx}.png"           
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/intervention/layer_{layer_idx+1}.png"           
         elif intervention == "base":
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/intervention_baseline/layer_{layer_idx}.png"
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/umap/{L2}/intervention_baseline/layer_{layer_idx+1}.png"
         plt.savefig(output_path, bbox_inches="tight")
