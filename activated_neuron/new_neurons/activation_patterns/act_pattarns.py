@@ -18,7 +18,6 @@ from funcs import (
     unfreeze_pickle,
 )
 
-# L1 = english
 L1 = "en"
 """ model configs """
 # LLaMA-3
@@ -30,12 +29,10 @@ model_names = {
     "it": "DeepMount00/Llama-3-8b-Ita", # ita
     "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
-""" parameters """
-activation_type = "abs"
-# activation_type = "product"
+# params
+activation_types = ["abs", "product"]
 norm_type = "no"
-# n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
-n_list = [15000]
+intervention_num = 15000
 
 for L2, model_name in model_names.items():
     """ get curpus and models """
@@ -80,25 +77,24 @@ for L2, model_name in model_names.items():
     # plot activation patterns.
     activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "no")
 
-    """
-    get act_patterns as cos_sim (with high AP neurons intervention).
-    """
-    # unfreeze AP_list.
-    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
+    for activation_type in activation_types: # abs, product両方のAP上位を試す.
+        """
+        get act_patterns as cos_sim (with high AP neurons intervention).
+        """
+        # unfreeze AP_list.
+        pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+        sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
 
-    for n in n_list:
-        """ どのくらい介入するか(n) """
-        intervention_num = n
-        sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
+        """ どのくらい介入するか(intervention_num) """
+        sorted_neurons_AP = sorted_neurons_AP[:intervention_num]
         # baseline
         sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
         sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 
         """ deactivate high AP neurons. """
         # get activation list
-        act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
-        act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_main, random_data)
+        act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, tatoeba_data)
+        act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, random_data)
         # plot activation patterns.
         activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "yes")
 
@@ -109,7 +105,7 @@ for L2, model_name in model_names.items():
         # plot activation patterns.
         activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "baseline")
 
-        print(f"intervention_num: {n} <- completed.")
+        print(f"intervention_num: {intervention_num} <- completed.")
 
     # delete model and some cache
     del model

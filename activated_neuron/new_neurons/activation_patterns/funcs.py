@@ -1,7 +1,8 @@
 import os
 import random
 import sys
-import pickle
+import dill as pickle
+from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,6 +12,42 @@ from baukit import TraceDict
 from datasets import get_dataset_config_names, load_dataset
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoTokenizer, AutoModelForCausalLM
+
+def get_out_llama3_act_fn(model, prompt, device, index):
+    model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
+    num_layers = model.config.num_hidden_layers  # nums of layers of the model
+    MLP_act = [f"model.layers.{i}.mlp.act_fn" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+
+    with torch.no_grad():
+        # trace MLP layers using TraceDict
+        with TraceDict(model, MLP_act) as ret:
+            output = model(prompt, output_hidden_states=True, output_attentions=True)  # モデルを実行
+        MLP_act_value = [ret[act_value].output for act_value in MLP_act]  # 各MLP層の出力を取得
+        return MLP_act_value
+
+def get_out_llama3_up_proj(model, prompt, device, index):
+    model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
+    num_layers = model.config.num_hidden_layers  # nums of layers of the model
+    MLP_act = [f"model.layers.{i}.mlp.up_proj" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+
+    with torch.no_grad():
+        # trace MLP layers using TraceDict
+        with TraceDict(model, MLP_act) as ret:
+            output = model(prompt, output_hidden_states=True, output_attentions=True)
+        MLP_act_value = [ret[act_value].output for act_value in MLP_act]
+        return MLP_act_value
+
+def act_llama3(model, input_ids):
+    act_fn_values = get_out_llama3_act_fn(model, input_ids, model.device, -1)  # LlamaのMLP活性化を取得
+    act_fn_values = [act.to("cpu") for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
+    up_proj_values = get_out_llama3_up_proj(model, input_ids, model.device, -1)
+    up_proj_values = [act.to("cpu") for act in up_proj_values]
+
+    return act_fn_values, up_proj_values
+
+# act_fn(x)とup_proj(x)の要素積を計算(=neuronとする)
+def calc_element_wise_product(act_fn_value, up_proj_value):
+    return act_fn_value * up_proj_value
 
 """ func for editing activation values """
 def edit_activation(output, layer, layer_idx_and_neuron_idx):
@@ -34,7 +71,7 @@ def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron
 def get_act_patterns(model, tokenizer, device, data):
 
     # layers_num
-    num_layers = 32 if model_name == "llama" else 12
+    num_layers = 32
     # nums of total neurons (per a layer)
     num_neurons = 14336
 
@@ -44,7 +81,7 @@ def get_act_patterns(model, tokenizer, device, data):
         layer_idx: [cos_sim1, cos_sim2, ....] <- act_pattern(cos_sim of act_values): list
     }
     """
-    act_patterns_dict = {}
+    act_patterns_dict = defaultdict(list)
 
     # Track neurons with tatoeba
     for L1_text, L2_text in data:
@@ -113,11 +150,11 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activa
     
     # Plot act_patterns
     plt.plot(all_layer_idxs, means1, marker='o', linestyle='-', color='blue', label="Same Semantics")
-    plt.fill_between(all_layer_idxs, means1 - std_devs1, means1 + std_devs1, color='blue', alpha=0.2, label="Same_S Std Dev")
+    plt.fill_between(all_layer_idxs, means1 - std_devs1, means1 + std_devs1, color='blue', alpha=0.2)
 
     # Plot baseline
-    plt.plot(all_layer_idxs, means2, marker='s', linestyle='-', color='red', label="Different Semantics")
-    plt.fill_between(all_layer_idxs, means2 - std_devs2, means2 + std_devs2, color='red', alpha=0.2, label="diff_S Std Dev")
+    plt.plot(all_layer_idxs, means2, marker='s', linestyle='--', color='red', label="Different Semantics")
+    plt.fill_between(all_layer_idxs, means2 - std_devs2, means2 + std_devs2, color='red', alpha=0.2)
 
     # Labels and title
     plt.xlabel("Layer Index", fontsize=35)
