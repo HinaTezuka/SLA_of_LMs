@@ -64,7 +64,6 @@ for L2, model_name in model_names.items():
 
     """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model_name = model_names[L2]
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
