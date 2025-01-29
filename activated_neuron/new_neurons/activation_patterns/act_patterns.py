@@ -67,16 +67,16 @@ for L2, model_name in model_names.items():
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    """
-    get act_pattenrs as cos_sim (with no intervention).
-    """
-    # get activation list
-    act_patterns = get_act_patterns(model, tokenizer, device, tatoeba_data)
-    act_patterns_baseline = get_act_patterns(model, tokenizer, device, random_data)
-    # plot activation patterns.
-    activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "no")
-
     for activation_type in activation_types: # abs, product両方のAP上位を試す.
+        """
+        get act_pattenrs as cos_sim (with no intervention).
+        """
+        # get activation list
+        act_patterns = get_act_patterns(model, tokenizer, device, tatoeba_data)
+        act_patterns_baseline = get_act_patterns(model, tokenizer, device, random_data)
+        # plot activation patterns.
+        activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "no")
+        
         """
         get act_patterns as cos_sim (with high AP neurons intervention).
         """
