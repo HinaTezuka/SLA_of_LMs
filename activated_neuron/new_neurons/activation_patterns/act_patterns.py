@@ -71,11 +71,12 @@ for L2, model_name in model_names.items():
         """
         get act_pattenrs as cos_sim (with no intervention).
         """
-        # get activation list
-        act_patterns = get_act_patterns(model, tokenizer, device, tatoeba_data)
-        act_patterns_baseline = get_act_patterns(model, tokenizer, device, random_data)
-        # plot activation patterns.
-        activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "no")
+        if activation_type == "abs":
+            # get activation list
+            act_patterns = get_act_patterns(model, tokenizer, device, tatoeba_data)
+            act_patterns_baseline = get_act_patterns(model, tokenizer, device, random_data)
+            # plot activation patterns.
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "no")
         
         """
         get act_patterns as cos_sim (with high AP neurons intervention).
@@ -95,14 +96,14 @@ for L2, model_name in model_names.items():
         act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, tatoeba_data)
         act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, random_data)
         # plot activation patterns.
-        activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "yes")
+        activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, intervention_num, "yes")
 
         """ deactivate baseline neurons. """
         # get activation list
         act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
         act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
         # plot activation patterns.
-        activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, "baseline")
+        activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, intervention_num, "baseline")
 
         print(f"intervention_num: {intervention_num} <- completed.")
 

@@ -99,7 +99,7 @@ def get_act_patterns(model, tokenizer, device, data):
         token_len_L2 = len(input_ids_L2[0])
         act_fn_value_L2, up_proj_value_L2 = act_llama3(model, input_ids_L2)
         """
-        neurons(in llama3 MLP): up_proj(x) * act_fn(gate_proj(x)) <- input to down_proj()
+        neurons(in llama3 MLP): act_fn(gate_proj(x)) * up_proj(x) <- input to down_proj()
         L1/L2 shared neurons
         """
         for layer_idx in range(len(act_fn_value_L1)):
@@ -110,7 +110,7 @@ def get_act_patterns(model, tokenizer, device, data):
             # L2
             act_fn_value_L2[layer_idx] = act_fn_value_L2[layer_idx][:, token_len_L2 - 1, :]
             up_proj_value_L2[layer_idx] = up_proj_value_L2[layer_idx][:, token_len_L2 - 1, :]
-            """ get neuron activation values: up_proj(x) * act_fn(x) """
+            """ get neuron activation values: act_fn(gate_proj(x)) * up_proj(x) """
             neurons_L1_values = calc_element_wise_product(act_fn_value_L1[layer_idx], up_proj_value_L1[layer_idx]) # torch.Tensor
             neurons_L2_values = calc_element_wise_product(act_fn_value_L2[layer_idx], up_proj_value_L2[layer_idx])
             """ calc act_patterns (cos_sim). """ 
@@ -120,7 +120,7 @@ def get_act_patterns(model, tokenizer, device, data):
     return act_patterns_dict
 
 
-def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, intervention="no"):
+def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activation_type, intervention_num, intervention="no"):
     """
     Plots line plots of cosine similarity means(Activation Patterns) per each layer for two dictionaries(main and baseline),
     with variance (standard deviation) as a shaded region.
@@ -168,13 +168,13 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activa
     if intervention == "no":
         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/{L2}.png"
     elif intervention == "yes":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention/{L2}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention/{L2}_n{intervention_num}.png"
     elif intervention == "baseline":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention_baseline/{L2}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention_baseline/{L2}_n{intervention_num}.png"
     
     plt.savefig(
         save_path,
-        bbox_inches="tight"
+        bbox_inches="tight",
         )
     plt.close()
 
