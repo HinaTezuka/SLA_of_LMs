@@ -63,8 +63,8 @@ for L2, model_name in model_names.items():
         en_base_ds_idx += 1
 
     """ tracking neurons """
-    # activation_type = "abs"
-    activation_type = "product"
+    activation_type = "abs"
+    # activation_type = "product"
 
     # 対訳ペア
     activation_dict_same_semantics = track_neurons_with_text_data(model, device, 'gpt2', tokenizer, tatoeba_data, True, activation_type)
