@@ -32,7 +32,7 @@ model_names = {
 # params
 activation_types = ["abs", "product"]
 norm_type = "no"
-intervention_num = 15000
+intervention_num = 20000
 
 for L2, model_name in model_names.items():
     """ get curpus and models """

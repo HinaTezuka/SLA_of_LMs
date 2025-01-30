@@ -133,7 +133,7 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activa
     all_layer_idxs = [i for i in range(32)]
 
     def compute_stats(data_dict, layers):
-        """Compute mean and standard deviation for each layer index."""
+        """ Compute mean and standard deviation for each layer index. """
         means, std_devs = [], []
         for layer in layers:
             values = data_dict.get(layer)
