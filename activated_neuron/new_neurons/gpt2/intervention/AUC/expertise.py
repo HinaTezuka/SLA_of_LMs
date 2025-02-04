@@ -39,7 +39,8 @@ norm_type = "no"
 # norm_type = "min_max"
 # norm_type = "sigmoid"
 # L2 = "ja"
-L2_list = ["ja", "nl", "ko", "it"]
+# L2_list = ["ja", "nl", "ko", "it"]
+L2_list = ["ko", "it"]
 
 for L2 in L2_list:
 
