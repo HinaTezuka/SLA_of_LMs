@@ -1,3 +1,3 @@
-# Investigating Language-Agnostic Processing of Multilingual LLMs.
+# Investigating Language-Agnostic Processing in Multilingual LLMs.
 
 ongoing project...

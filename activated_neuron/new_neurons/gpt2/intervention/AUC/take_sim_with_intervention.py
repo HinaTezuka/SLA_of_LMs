@@ -37,8 +37,8 @@ if __name__ == "__main__":
         # "es": "datificate/gpt2-small-spanish" # spa
     }
     """ parameters """
-    activation_type = "abs"
-    # activation_type = "product"
+    # activation_type = "abs"
+    activation_type = "product"
     norm_type = "no"
     n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
     # n_list = [100]
