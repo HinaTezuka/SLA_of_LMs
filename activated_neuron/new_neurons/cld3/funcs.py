@@ -98,8 +98,12 @@ def plot_lang_distribution(lang_distribution, activation_type: str, intervention
     plt.xlabel('Layer Index')
     plt.ylabel('Language')
     plt.show()
+    if intervention_type == "normal":
+        save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/cld3/{activation_type}/{intervention_type}/{L2}.png'
+    else:
+        save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/cld3/{activation_type}/{intervention_type}/{L2}_n{intervention_num}.png'
     plt.savefig(
-        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/cld3/{activation_type}/{intervention_type}/{L2}_n{intervention_num}.png',
+        save_path,
         bbox_inches='tight',
     )
 
