@@ -1,7 +1,5 @@
 import os
 import sys
-import dill as pickle
-import json
 
 import cld3
 import numpy as np
@@ -94,75 +92,20 @@ def plot_lang_distribution(lang_distribution, activation_type: str, intervention
     lang_matrix = np.array([en_values, non_en_values])
     
     fig, ax = plt.subplots(figsize=(12, 4))
-    sns.heatmap(lang_matrix, ax=ax, xticklabels=layers, yticklabels=[L1, L2], cmap='Blues', annot=True)
+    sns.heatmap(lang_matrix, ax=ax, xticklabels=layers, yticklabels=[L1, L2], cmap='Blues', annot=False)
     plt.title('Layerwise Language Distribution')
     plt.xlabel('Layer Index')
     plt.ylabel('Language')
     plt.show()
     plt.savefig(
         f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/cld3/{activation_type}/{intervention_type}/{L2}_n{intervention_num}.png',
-        bbox_inches='tight'
+        bbox_inches='tight',
     )
 
-def save_as_pickle(file_path, target_dict) -> None:
+def unfreeze_pickle(file_path: str) -> dict:
     """
-    save dict as pickle file.
+    unfreeze pickle file as dict.
     """
-    # directoryを作成（存在しない場合のみ)
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, "wb") as f:
-        pickle.dump(target_dict, f)
-
-def unfreeze_pickle(file_path: str):
-    """
-    Load a pickle file as a dictionary with error handling.
-    """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Pickle file not found: {file_path}")
-
-    try:
-        with open(file_path, "rb") as f:
-            return pickle.load(f)
-    except (pickle.UnpicklingError, EOFError) as e:
-        raise ValueError(f"Error unpickling file {file_path}: {e}")
-
-def save_as_json(data: dict, file_name_with_path: str) -> None:
-    # Check if the directory exists (create it if not)
-    output_dir = os.path.dirname(file_name_with_path)
-    os.makedirs(output_dir, exist_ok=True)
-
-    temp_file_path = file_name_with_path + ".tmp"
-
-    try:
-        # Convert keys to strings for serialization
-        serializable_data = {str(key): value for key, value in data.items()}
-        # Write data to the temporary file
-        with open(temp_file_path, "w", encoding="utf-8") as f:
-            json.dump(serializable_data, f, ensure_ascii=False, indent=4)
-
-        # If writing is successful, rename the temporary file to the original file
-        os.rename(temp_file_path, file_name_with_path)
-        print("Saving completed.")
-
-    except Exception as e:
-        # Error handling: remove the temporary file if it exists
-        print(f"Error saving JSON: {e}")
-        if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
-
-
-def unfreeze_json(file_name_with_path: str) -> dict:
-    if not os.path.exists(file_name_with_path):
-        raise FileNotFoundError(f"JSON file not found: {file_name_with_path}")
-
-    try:
-        with open(file_name_with_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        # Convert string keys back to tuples
-        return {eval(key): value for key, value in data.items()}
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Error decoding JSON file {file_name_with_path}: {e}")
-
-
-if __name__ == "__main__":
-    print()
+    with open(file_path, "rb") as f:
+        return_dict = pickle.load(f)
+    return return_dict
