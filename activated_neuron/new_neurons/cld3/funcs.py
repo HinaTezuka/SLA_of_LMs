@@ -1,5 +1,6 @@
 import os
 import sys
+import dill as pickle
 
 import cld3
 import numpy as np

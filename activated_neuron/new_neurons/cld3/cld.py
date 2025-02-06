@@ -1,8 +1,9 @@
 import sys
 import dill as pickle
+import random
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 import torch
 import torch.nn.functional as F
@@ -16,6 +17,7 @@ from funcs import (
     layerwise_lang_distribution,
     plot_lang_distribution,
     print_tokens,
+    unfreeze_pickle,
 )
 
 """ prompts """
