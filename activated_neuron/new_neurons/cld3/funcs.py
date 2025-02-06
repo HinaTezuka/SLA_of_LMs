@@ -6,49 +6,56 @@ import json
 import numpy as np
 import torch
 import torch.nn.functional as F
+from baukit import TraceDict
 
-def project_value_to_vocab(model, tokenizer, layer_idx, value_idx, top_k=10, normed=False):
-    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[value_idx]
-    # normalization if it's required.
-    value_vector = model.model.norm(value_vector) if normed else value_vector
-    # get logits.
-    logits = torch.matmul(model.lm_head.weight, value_vector.T)
-    # make distribution based on logits.
-    probs = F.softmax(logits, dim=-1)
-    probs = torch.reshape(probs, (-1,)).cpu().detach().numpy()
+def project_hidden_emb_to_vocab(model, tokenizer, hidden_states: torch.Tensor, last_token_index: int, top_k: int) -> dict:
+    token_preds_dict = {} # {layer_idx: [token1, token2, ...]}
+    for layer_idx in range(1, 33): # <- remove embedding layer(0th layer).
+        hidden_state = hidden_states[layer_idx][0, last_token_index]
+        # normalization
+        normed = model.model.norm(hidden_state)
+        # get logits
+        logits = torch.matmul(model.lm_head.weight, normed.T)
+        # make distribution
+        probs = F.softmax(logits, dim=-1)
+        probs = torch.reshape(probs, (-1,)).cpu().detach().numpy()
 
-    probs_ = [] # [ (token_idx, probability), (), ..., () ]
-    for index, prob in enumerate(probs):
-        probs_.append((index, prob))
+        probs_ = [] # [ (token_idx, probability), (), ..., () ]
+        for index, prob in enumerate(probs):
+            probs_.append((index, prob))
 
-    top_k = sorted(probs_, key=lambda x: x[1], reverse=True)[:top_k]
-    value_preds = [(tokenizer.decode(t[0]), t[0]) for t in top_k]
+        top_k_tokens = sorted(probs_, key=lambda x: x[1], reverse=True)[:top_k]
+        token_preds = [tokenizer.decode(t[0]) for t in top_k_tokens]
 
-    return value_preds
+        token_preds_dict[layer_idx] = token_preds
 
-def project_value_to_vocab_gpt2(model, tokenizer, layer_idx, value_idx, top_k=10, normed=False):
-    value_vector = model.transformer.h[layer_idx].mlp.c_proj.weight.data[value_idx]
-    # normalization if it's required.
-    value_vector = model.transformer.ln_f(value_vector) if normed else value_vector
-    # get logits.
-    logits = torch.matmul(model.lm_head.weight, value_vector.T)
-    # make distribution based on logits.
-    probs = F.softmax(logits, dim=-1)
-    probs = torch.reshape(probs, (-1,)).cpu().detach().numpy()
+    return token_preds_dict
 
-    probs_ = [] # [ (token_idx, probability), (), ..., () ]
-    for index, prob in enumerate(probs):
-        probs_.append((index, prob))
+def edit_activation(output, layer, layer_idx_and_neuron_idx):
+    """
+    edit activation value of neurons(indexed layer_idx and neuron_idx)
+    output: activation values
+    layer: sth like 'model.layers.{layer_idx}.mlp.act_fn'
+    layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
+    """
+    for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+            output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
 
-    top_k_tokens = sorted(probs_, key=lambda x: x[1], reverse=True)[:top_k]
-    value_preds = [(tokenizer.decode(t[0]), t[0]) for t in top_k_tokens]
+    return output
 
-    return value_preds
+def get_hidden_states_with_edit_activation(model, inputs, layer_neuron_list):
+    trace_layers = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+        # run inference
+        with torch.no_grad():
+            output = model(**inputs, output_hidden_states=True)
+    return output.hidden_states
 
-def get_embedding_for_token(token_idx):
-    # get embeddings from token_idx.
-    embedding = model.model.embed_tokens.weight[token_idx]
-    return embedding
+def print_tokens(token_dict):
+    for k, v in token_dict.items():
+        print(f"=========================== {k} ===========================")
+        print(v, "\n")
 
 def save_as_pickle(file_path, target_dict) -> None:
     """
