@@ -65,7 +65,7 @@ def layerwise_lang_stats(token_dict, L2, L1="en"):
         lang_stats[layer] = {'total_count': 0, L1: 0, L2: 0}
         for token in tokens:
             lang_pred = cld3.get_language(token)
-            if lang_pred and lang_pred.is_reliable:
+            if lang_pred and lang_pred.is_reliable and lang_pred.language in [L1, L2]:
                 lang_stats[layer]['total_count'] += 1
                 if lang_pred.language == L1:
                     lang_stats[layer][L1] += 1
@@ -87,13 +87,13 @@ def layerwise_lang_distribution(lang_stats, L2, L1="en"):
 
 def plot_lang_distribution(lang_distribution, activation_type: str, intervention_type: str, intervention_num: int, L2: str, L1="en"):
     layers = sorted(lang_distribution.keys())
-    en_values = [lang_distribution[layer][L1] for layer in layers]
-    non_en_values = [lang_distribution[layer][L2] for layer in layers]
+    L1_values = [lang_distribution[layer][L1] for layer in layers]
+    L2_values = [lang_distribution[layer][L2] for layer in layers]
     
-    lang_matrix = np.array([en_values, non_en_values])
+    lang_matrix = np.array([L1_values, L2_values])
     
     fig, ax = plt.subplots(figsize=(12, 4))
-    sns.heatmap(lang_matrix, ax=ax, xticklabels=layers, yticklabels=[L1, L2], cmap='Blues', annot=False)
+    sns.heatmap(lang_matrix, ax=ax, xticklabels=layers, yticklabels=[L1, L2], cmap='Blues', annot=False, vmin=0, vmax=1)
     plt.title('Layerwise Language Distribution')
     plt.xlabel('Layer Index')
     plt.ylabel('Language')
