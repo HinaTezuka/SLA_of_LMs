@@ -45,6 +45,9 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from funcs import (
     project_hidden_emb_to_vocab,
     get_hidden_states_with_edit_activation,
+    layerwise_lang_stats,
+    layerwise_lang_distribution,
+    plot_lang_distribution,
     print_tokens,
     unfreeze_pickle,
 )
@@ -112,6 +115,13 @@ prompts = {
         "혼자 여행하는 사람들에게 적합한 가성비 좋은 여행지 세 곳을 추천해 줄 수 있나요?"
     ]
 }
+prompts = {
+    "en": "What are some popular tourist attractions in New York City?",
+    "ja": "ニューヨーク市で人気の観光名所はどこですか？",
+    "nl": "Wat zijn enkele populaire toeristische attracties in New York City?",
+    "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City?",
+    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요?"
+}
 
 """ model configs """
 # LLaMA-3(8B)
@@ -127,106 +137,71 @@ model_names = {
 """ params """
 device = "cuda" if torch.cuda.is_available() else "cpu"
 layer_nums = 32
-activation_type = "abs"
-# activation_type = "product"
+activation_types = ["abs", "product"]
 norm_type = "no"
 top_n = 20000
 top_n_for_baseline = 50000
 # L2 = "ja"
 
-for L2, model_name in model_names.items():
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+for activation_type in activation_types:
+  for L2, model_name in model_names.items():
+      model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+      tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    """ test prompt. """
-    test_prompt = "日本の首都はどこですか？"
-    # test_prompt = "今日の天気は"
+      """ get hidden states of all layers. """
+      inputs = tokenizer(prompts[L2], return_tensors="pt").to(device)
+      last_token_index = inputs["input_ids"].shape[1] - 1 # index corrensponding to the last token of the inputs.
+      
+      # run inference
+      with torch.no_grad():
+          output = model(**inputs, output_hidden_states=True)
+      # ht
+      all_hidden_states = output.hidden_states
+      
+      """ get topk tokens per each hidden state. """
+      top_k = 100 # token nums to decode.
+      # get hidden state of the layer(last token only).
+      tokens_dict = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states, last_token_index, top_k=top_k)
+      print_tokens(tokens_dict)
+      # sys.exit()
 
-    """ get hidden states of all layers. """
-    inputs = tokenizer(test_prompt, return_tensors="pt").to(device)
-    last_token_index = inputs["input_ids"].shape[1] - 1 # index corrensponding to the last token of the inputs.
-    
-    # run inference
-    with torch.no_grad():
-        output = model(**inputs, output_hidden_states=True)
-    # ht
-    all_hidden_states = output.hidden_states
-    
-    """ get topk tokens per each hidden state. """
-    top_k = 100 # token nums to decode.
-    # get hidden state of the layer(last token only).
-    tokens_dict = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states, last_token_index, top_k=top_k)
-    print_tokens(tokens_dict)
-    # sys.exit()
+      """ intervention with high AP neurons and baseline. """
+      # get top AP neurons (layer_idx, neuron_idx)
+      pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+      sorted_neurons_AP = unfreeze_pickle(pkl_file_path)[:top_n]
+      # baseline
+      sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
+      sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:top_n]
 
-    """ intervention with high AP neurons and baseline. """
-    # get top AP neurons (layer_idx, neuron_idx)
-    pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    sorted_neurons_AP = unfreeze_pickle(pkl_file_path)[:top_n]
-    # baseline
-    sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
-    sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:top_n]
+      # get hidden states with neurons intervention(high APs)
+      all_hidden_states_high_AP_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP)
+      # intervention (high APs.)
+      tokens_dict_high_AP_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_high_AP_intervention, last_token_index, top_k=top_k)
+      print("============================================================== high APs ==============================================================\n")
+      print_tokens(tokens_dict_high_AP_intervention)
 
-    # get hidden states with neurons intervention(high APs)
-    all_hidden_states_high_AP_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP)
-    # intervention (high APs.)
-    tokens_dict_high_AP_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_high_AP_intervention, last_token_index, top_k=top_k)
-    print("============================================================== high APs ==============================================================\n")
-    print_tokens(tokens_dict_high_AP_intervention)
+      all_hidden_states_baseline_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP_baseline)
+      tokens_dict_baseline_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_baseline_intervention, last_token_index, top_k=top_k)
+      print("============================================================== baseline ==============================================================\n")
+      print_tokens(tokens_dict_baseline_intervention)
 
-    # all_hidden_states_baseline_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP_baseline)
-    # tokens_dict_baseline_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_baseline_intervention, last_token_index, top_k=top_k)
-    # print("============================================================== baseline ==============================================================\n")
-    # print_tokens(tokens_dict_baseline_intervention)
-
-    def layerwise_lang_stats(token_dict, candidate_langs=['en']):
-        lang_stats = {}
-        for layer, tokens in token_dict.items():
-            lang_stats[layer] = {'total_count': 0, 'en': 0, 'non-en': 0}
-            for token in tokens:
-                lang_pred = cld3.get_language(token)
-                if lang_pred and lang_pred.is_reliable:
-                    lang_stats[layer]['total_count'] += 1
-                    if lang_pred.language == "en":
-                        lang_stats[layer]['en'] += 1
-                    elif lang_pred.language == "ja":
-                        lang_stats[layer]['non-en'] += 1
-        return lang_stats
-
-    def layerwise_lang_distribution(lang_stats):
-        lang_distribution = {}
-        for layer, stats in lang_stats.items():
-            if stats['total_count'] > 0:
-                lang_distribution[layer] = {
-                    'en': stats['en'] / stats['total_count'],
-                    'non-en': stats['non-en'] / stats['total_count']
-                }
-            else:
-                lang_distribution[layer] = {'en': 0, 'non-en': 0}
-        return lang_distribution
-
-    def plot_lang_distribution(lang_distribution):
-        layers = sorted(lang_distribution.keys())
-        en_values = [lang_distribution[layer]['en'] for layer in layers]
-        non_en_values = [lang_distribution[layer]['non-en'] for layer in layers]
-        
-        lang_matrix = np.array([en_values, non_en_values])
-        
-        fig, ax = plt.subplots(figsize=(12, 4))
-        sns.heatmap(lang_matrix, ax=ax, xticklabels=layers, yticklabels=['English', 'Non-English'], cmap='Blues', annot=True)
-        plt.title('Layerwise Language Distribution')
-        plt.xlabel('Layer Index')
-        plt.ylabel('Language')
-        plt.show()
-        plt.savefig('/home/s2410121/proj_LA/activated_neuron/new_neurons/images/cld3/normal/lang_distribution.png')
-    
-
-    lang_stats = layerwise_lang_stats(tokens_dict)
-    lang_distribution = layerwise_lang_distribution(lang_stats)
-    plot_lang_distribution(lang_distribution)
-
-    sys.exit()
-    
-
-
-
+      """ visualization """
+      if activation_type == "abs":
+        # normal
+        lang_stats = layerwise_lang_stats(tokens_dict, L2)
+        lang_distribution = layerwise_lang_distribution(lang_stats, L2)
+        plot_lang_distribution(lang_distribution, activation_type, "normal", top_n, L2)
+      
+      # high APs intervention
+      lang_stats = layerwise_lang_stats(tokens_dict_high_AP_intervention, L2)
+      lang_distribution = layerwise_lang_distribution(lang_stats, L2)
+      plot_lang_distribution(lang_distribution, activation_type, "AP_intervention", top_n, L2)
+      
+      # baseline intervention
+      lang_stats = layerwise_lang_stats(tokens_dict_baseline_intervention, L2)
+      lang_distribution = layerwise_lang_distribution(lang_stats, L2)
+      plot_lang_distribution(lang_distribution, activation_type, "baseline_intervention", top_n, L2)
+      
+      # delete caches
+      del model
+      torch.cuda.empty_cache()

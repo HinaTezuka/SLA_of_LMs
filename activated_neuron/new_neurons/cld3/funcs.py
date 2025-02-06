@@ -3,7 +3,10 @@ import sys
 import dill as pickle
 import json
 
+import cld3
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 import torch
 import torch.nn.functional as F
 from baukit import TraceDict
@@ -56,6 +59,50 @@ def print_tokens(token_dict):
     for k, v in token_dict.items():
         print(f"=========================== {k} ===========================")
         print(v, "\n")
+
+def layerwise_lang_stats(token_dict, L2, L1="en"):
+    lang_stats = {}
+    for layer, tokens in token_dict.items():
+        lang_stats[layer] = {'total_count': 0, L1: 0, L2: 0}
+        for token in tokens:
+            lang_pred = cld3.get_language(token)
+            if lang_pred and lang_pred.is_reliable:
+                lang_stats[layer]['total_count'] += 1
+                if lang_pred.language == L1:
+                    lang_stats[layer][L1] += 1
+                elif lang_pred.language == L2:
+                    lang_stats[layer][L2] += 1
+    return lang_stats
+
+def layerwise_lang_distribution(lang_stats, L2, L1="en"):
+    lang_distribution = {}
+    for layer, stats in lang_stats.items():
+        if stats['total_count'] > 0:
+            lang_distribution[layer] = {
+                L1: stats[L1] / stats['total_count'],
+                L2: stats[L2] / stats['total_count']
+            }
+        else:
+            lang_distribution[layer] = {L1: 0, L2: 0}
+    return lang_distribution
+
+def plot_lang_distribution(lang_distribution, activation_type: str, intervention_type: str, intervention_num: int, L2: str, L1="en"):
+    layers = sorted(lang_distribution.keys())
+    en_values = [lang_distribution[layer][L1] for layer in layers]
+    non_en_values = [lang_distribution[layer][L2] for layer in layers]
+    
+    lang_matrix = np.array([en_values, non_en_values])
+    
+    fig, ax = plt.subplots(figsize=(12, 4))
+    sns.heatmap(lang_matrix, ax=ax, xticklabels=layers, yticklabels=[L1, L2], cmap='Blues', annot=True)
+    plt.title('Layerwise Language Distribution')
+    plt.xlabel('Layer Index')
+    plt.ylabel('Language')
+    plt.show()
+    plt.savefig(
+        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/cld3/{activation_type}/{intervention_type}/{L2}_n{intervention_num}.png',
+        bbox_inches='tight'
+    )
 
 def save_as_pickle(file_path, target_dict) -> None:
     """
