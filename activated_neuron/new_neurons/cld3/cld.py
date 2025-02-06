@@ -160,10 +160,11 @@ for activation_type in activation_types:
       
       """ get topk tokens per each hidden state. """
       top_k = 100 # token nums to decode.
-      # get hidden state of the layer(last token only).
-      tokens_dict = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states, last_token_index, top_k=top_k)
-      print_tokens(tokens_dict)
-      # sys.exit()
+
+      if activation_type == "abs":
+        # get hidden state of the layer(last token only).
+        tokens_dict = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states, last_token_index, top_k=top_k)
+        print_tokens(tokens_dict)
 
       """ intervention with high AP neurons and baseline. """
       # get top AP neurons (layer_idx, neuron_idx)
@@ -196,7 +197,7 @@ for activation_type in activation_types:
       lang_stats = layerwise_lang_stats(tokens_dict_high_AP_intervention, L2)
       lang_distribution = layerwise_lang_distribution(lang_stats, L2)
       plot_lang_distribution(lang_distribution, activation_type, "AP_intervention", top_n, L2)
-      
+
       # baseline intervention
       lang_stats = layerwise_lang_stats(tokens_dict_baseline_intervention, L2)
       lang_distribution = layerwise_lang_distribution(lang_stats, L2)
