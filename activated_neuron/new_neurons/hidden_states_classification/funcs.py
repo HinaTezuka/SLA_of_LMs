@@ -14,6 +14,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cross_decomposition import PLSRegression
+from sklearn.model_selection import train_test_split
 
 def get_hidden_states(model, tokenizer, device, data, is_norm=False) -> list:
     """
@@ -182,41 +183,53 @@ def plot_pca(features_label1, features_label0, L2):
         plt.savefig(output_path, bbox_inches="tight")
         plt.close()
 
-def plot_plsr(features_label1, features_label0, L2, intervention="no"):
+def plot_plsr(features_label1, features_label0, L2, intervention="no", test_size=0.2, random_state=42):
+    """Perform PLSR on train data and visualize test data in 2D space."""
+    
     features_label1 = np.array(features_label1)
     features_label0 = np.array(features_label0)
 
     for layer_idx in range(32):
-        # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
+        # 各レイヤーの特徴量を取得
         features_label1_layer = features_label1[layer_idx, :, :]
         features_label0_layer = features_label0[layer_idx, :, :]
 
-        # データを結合
-        all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
-        all_labels = np.concatenate([
-            np.ones(features_label1_layer.shape[0]),  # Label 1: 1
-            np.zeros(features_label0_layer.shape[0])  # Label 0: 0
+        # 訓練・テストデータに分割
+        train_label1, test_label1 = train_test_split(features_label1_layer, test_size=test_size, random_state=random_state)
+        train_label0, test_label0 = train_test_split(features_label0_layer, test_size=test_size, random_state=random_state)
+
+        # 訓練データの準備
+        all_train_features = np.concatenate([train_label1, train_label0], axis=0)
+        all_train_labels = np.concatenate([
+            np.ones(train_label1.shape[0]),  # Label 1: 1
+            np.zeros(train_label0.shape[0])  # Label 0: 0
         ])
 
-        # # データのスケーリング
-        # scaler = StandardScaler()
-        # all_features_scaled = scaler.fit_transform(all_features)
+        # テストデータの準備
+        all_test_features = np.concatenate([test_label1, test_label0], axis=0)
+        all_test_labels = np.concatenate([
+            np.ones(test_label1.shape[0]),
+            np.zeros(test_label0.shape[0])
+        ])
 
-        # PLSRを適用
+        # PLSRの学習
         pls = PLSRegression(n_components=2)
-        all_features_2d = pls.fit_transform(all_features, all_labels)[0]
+        pls.fit(all_train_features, all_train_labels)
 
-        # 元のデータに分割
-        features_label1_2d = all_features_2d[:features_label1_layer.shape[0]]
-        features_label0_2d = all_features_2d[features_label1_layer.shape[0]:]
+        # テストデータの次元削減
+        all_test_2d = pls.transform(all_test_features)
+
+        # 元のラベルごとに分割
+        test_label1_2d = all_test_2d[:test_label1.shape[0]]
+        test_label0_2d = all_test_2d[test_label1.shape[0]:]
 
         # プロット
         plt.figure(figsize=(8, 6))
-        plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='green', label='Label 1', alpha=0.7)
-        plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='purple', label='Label 0', alpha=0.7)
+        plt.scatter(test_label1_2d[:, 0], test_label1_2d[:, 1], color='blue', label='Label 1 (Test)', alpha=0.7)
+        plt.scatter(test_label0_2d[:, 0], test_label0_2d[:, 1], color='red', label='Label 0 (Test)', alpha=0.7)
         plt.xlabel('PLSR Dimension 1')
         plt.ylabel('PLSR Dimension 2')
-        plt.title(f'PLSR Layer_{layer_idx+1}')
+        plt.title(f'PLSR Layer_{layer_idx+1} (Test Data)')
         plt.legend()
         plt.grid(True)
 
@@ -229,6 +242,54 @@ def plot_plsr(features_label1, features_label0, L2, intervention="no"):
             output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention_baseline/layer_{layer_idx+1}.png"
         plt.savefig(output_path, bbox_inches="tight")
         plt.close()
+
+# def plot_plsr(features_label1, features_label0, L2, intervention="no"):
+#     features_label1 = np.array(features_label1)
+#     features_label0 = np.array(features_label0)
+
+#     for layer_idx in range(32):
+#         # 2次元配列に変換 (flatten: 各データを1次元ベクトル化)
+#         features_label1_layer = features_label1[layer_idx, :, :]
+#         features_label0_layer = features_label0[layer_idx, :, :]
+
+#         # データを結合
+#         all_features = np.concatenate([features_label1_layer, features_label0_layer], axis=0)
+#         all_labels = np.concatenate([
+#             np.ones(features_label1_layer.shape[0]),  # Label 1: 1
+#             np.zeros(features_label0_layer.shape[0])  # Label 0: 0
+#         ])
+
+#         # # データのスケーリング
+#         # scaler = StandardScaler()
+#         # all_features_scaled = scaler.fit_transform(all_features)
+
+#         # PLSRを適用
+#         pls = PLSRegression(n_components=2)
+#         all_features_2d = pls.fit_transform(all_features, all_labels)[0]
+
+#         # 元のデータに分割
+#         features_label1_2d = all_features_2d[:features_label1_layer.shape[0]]
+#         features_label0_2d = all_features_2d[features_label1_layer.shape[0]:]
+
+#         # プロット
+#         plt.figure(figsize=(8, 6))
+#         plt.scatter(features_label1_2d[:, 0], features_label1_2d[:, 1], color='blue', label='Label 1', alpha=0.7)
+#         plt.scatter(features_label0_2d[:, 0], features_label0_2d[:, 1], color='red', label='Label 0', alpha=0.7)
+#         plt.xlabel('PLSR Dimension 1')
+#         plt.ylabel('PLSR Dimension 2')
+#         plt.title(f'PLSR Layer_{layer_idx+1}')
+#         plt.legend()
+#         plt.grid(True)
+
+#         # 画像の保存
+#         if intervention == "no":
+#             output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/layer_{layer_idx+1}.png"
+#         elif intervention == "yes":
+#             output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention/layer_{layer_idx+1}.png"
+#         elif intervention == "base":
+#             output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention_baseline/layer_{layer_idx+1}.png"
+#         plt.savefig(output_path, bbox_inches="tight")
+#         plt.close()
 
 def plot_umap(features_label1, features_label0, L2, intervention="no"):
     # input list to np.array
