@@ -229,7 +229,7 @@ def plot_plsr(features_label1, features_label0, L2, intervention="no", test_size
         plt.scatter(test_label0_2d[:, 0], test_label0_2d[:, 1], color='red', label='Label 0 (Test)', alpha=0.7)
         plt.xlabel('PLSR Dimension 1')
         plt.ylabel('PLSR Dimension 2')
-        plt.title(f'PLSR Layer_{layer_idx+1} (Test Data)')
+        plt.title(f'PLSR Layer_{layer_idx+1}')
         plt.legend()
         plt.grid(True)
 
