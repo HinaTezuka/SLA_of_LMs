@@ -88,7 +88,14 @@ prompts = {
     "ja": "ニューヨーク市で人気の観光名所はどこですか？ 答え: ",
     "nl": "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: ",
     "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City? Risposta: ",
-    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요? 답변: "
+    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요? 답변: ",
+}
+prompts = {
+    "en": "The capital of Japan is ",
+    "ja": "日本の首都は",
+    "nl": "De hoofdstad van Japan is ",
+    "it": "La capitale del Giappone è ",
+    "ko": "일본의 수도는 ",
 }
 
 """ model configs """
