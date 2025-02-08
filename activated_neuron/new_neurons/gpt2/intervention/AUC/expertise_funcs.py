@@ -115,18 +115,13 @@ def save_as_pickle(file_path: str, target_dict) -> None:
             os.remove(temp_path)
         raise e  # Re-raise the exception for further handling
 
-def unfreeze_pickle(file_path: str):
+def unfreeze_pickle(file_path: str) -> dict:
     """
-    Load a pickle file as a dictionary with error handling.
+    unfreeze pickle file as dict.
     """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Pickle file not found: {file_path}")
-
-    try:
-        with open(file_path, "rb") as f:
-            return pickle.load(f)
-    except (pickle.UnpicklingError, EOFError) as e:
-        raise ValueError(f"Error unpickling file {file_path}: {e}")
+    with open(file_path, "rb") as f:
+        return_dict = pickle.load(f)
+    return return_dict
 
 """ AUC calculation setting """
 def compute_ap_and_sort(label1_dict, label2_dict):
