@@ -145,12 +145,12 @@ if __name__ == "__main__":
     L1 = "en" # L1 is fixed to english.
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device).eval()
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
     """ tatoeba translation corpus """
     dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
     # select first 2000 sentences
-    total_sentence_num = 5000
+    total_sentence_num = 2000 if L2 == "ko" else 5000
     num_sentences = 2000
     dataset = dataset.select(range(total_sentence_num))
     tatoeba_data = []
@@ -165,9 +165,13 @@ if __name__ == "__main__":
     baseとして、対訳関係のない1文ずつのペアを作成
     """
     random_data = []
+    if L2 == "ko": # koreanはデータ数が足りない
+        dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
     for sentence_idx, item in enumerate(dataset):
         if sentence_idx == num_sentences: break
-        if dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+        if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+            random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
+        elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
             random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
     print(f'non-translation pair: {random_data[-10:]}')
