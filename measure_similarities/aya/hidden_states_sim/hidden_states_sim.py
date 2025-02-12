@@ -1,30 +1,29 @@
 """
-GPT2LMHeadModel(
-  (transformer): GPT2Model(
-    (wte): Embedding(100000, 5120)
-    (wpe): Embedding(2048, 5120)
-    (drop): Dropout(p=0.1, inplace=False)
-    (h): ModuleList(
-      (0-39): 40 x GPT2Block(
-        (ln_1): LayerNorm((5120,), eps=1e-05, elementwise_affine=True)
-        (attn): GPT2SdpaAttention(
-          (c_attn): Linear8bitLt(in_features=5120, out_features=15360, bias=True)
-          (c_proj): Linear8bitLt(in_features=5120, out_features=5120, bias=True)
-          (attn_dropout): Dropout(p=0.1, inplace=False)
-          (resid_dropout): Dropout(p=0.1, inplace=False)
+CohereForCausalLM(
+  (model): CohereModel(
+    (embed_tokens): Embedding(256000, 4096, padding_idx=0)
+    (layers): ModuleList(
+      (0-31): 32 x CohereDecoderLayer(
+        (self_attn): CohereSdpaAttention(
+          (q_proj): Linear(in_features=4096, out_features=4096, bias=False)
+          (k_proj): Linear(in_features=4096, out_features=1024, bias=False)
+          (v_proj): Linear(in_features=4096, out_features=1024, bias=False)
+          (o_proj): Linear(in_features=4096, out_features=4096, bias=False)
+          (rotary_emb): CohereRotaryEmbedding()
         )
-        (ln_2): LayerNorm((5120,), eps=1e-05, elementwise_affine=True)
-        (mlp): GPT2MLP(
-          (c_fc): Linear8bitLt(in_features=5120, out_features=20480, bias=True)
-          (c_proj): Linear8bitLt(in_features=20480, out_features=5120, bias=True)
-          (act): NewGELUActivation()
-          (dropout): Dropout(p=0.1, inplace=False)
+        (mlp): CohereMLP(
+          (gate_proj): Linear(in_features=4096, out_features=14336, bias=False)
+          (up_proj): Linear(in_features=4096, out_features=14336, bias=False)
+          (down_proj): Linear(in_features=14336, out_features=4096, bias=False)
+          (act_fn): SiLU()
         )
+        (input_layernorm): CohereLayerNorm()
       )
     )
-    (ln_f): LayerNorm((5120,), eps=1e-05, elementwise_affine=True)
+    (norm): CohereLayerNorm()
+    (rotary_emb): CohereRotaryEmbedding()
   )
-  (lm_head): Linear(in_features=5120, out_features=100000, bias=False)
+  (lm_head): Linear(in_features=4096, out_features=256000, bias=False)
 )
 """
 
@@ -131,12 +130,12 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
     plt.xlabel('Layer index', fontsize=35)
     plt.ylabel('Cosine Sim', fontsize=35)
     plt.title(f'en_{L2}')
-    plt.tick_params(axis='x', labelsize=15)  # x軸の目盛りフォントサイズ
+    plt.tick_params(axis='x', labelsize=15)
     plt.tick_params(axis='y', labelsize=15)
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/mgpt/images/hidden_state_sim/{L2}.png",
+        f"/home/s2410121/proj_LA/measure_similarities/aya/images/hidden_states_sim/cos_sim/{L2}.png",
         bbox_inches="tight"
         )
     plt.close()
@@ -162,7 +161,7 @@ def plot_hist_L2(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) 
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/mgpt/images/hidden_state_sim/L2_dist/{L2}.png",
+        f"/home/s2410121/proj_LA/measure_similarities/aya/images/hidden_states_sim/L2_dist/{L2}.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -170,20 +169,12 @@ def plot_hist_L2(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) 
 if __name__ == "__main__":
     """ model configs """
     # mGPT
-    model_name = "ai-forever/mGPT-13B"
+    model_name = "CohereForAI/aya-expanse-8b"
     L2_patterns = ["ja", "nl", "ko", "it"]
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    quantization_config = BitsAndBytesConfig(
-        load_in_16bit=True,  # 8bit quantization
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype="auto",
-        quantization_config=quantization_config,
-        device_map=device,
-    )
-    num_layers = 40
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    num_layers = 32
     L1 = "en" # L1 is fixed to english.
 
     for L2 in L2_patterns:
@@ -247,7 +238,7 @@ if __name__ == "__main__":
             results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data, measure_type)
             final_results_same_semantics = defaultdict(float)
             final_results_non_same_semantics = defaultdict(float)
-            for layer_idx in range(num_layers):
+            for layer_idx in range(len(results_non_same_semantics.keys())):
                 final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
                 final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
             
