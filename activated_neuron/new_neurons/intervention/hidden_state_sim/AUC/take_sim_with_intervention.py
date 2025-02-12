@@ -39,37 +39,31 @@ if __name__ == "__main__":
     # activation_type = "abs"
     # activation_type = "product"
     norm_type = "no"
-    n_list = [100, 1000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
+    n_list = [100, 1000, 2000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
 
     for L2, model_name in model_names.items():
-        for activation_type in activation_types:
+        # """ tatoeba translation corpus """
+        # dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
+        # # select first 2000 sentences
+        # total_sentence_num = 5000
+        # num_sentences = 2000
+        # dataset = dataset.select(range(total_sentence_num))
+        # tatoeba_data = []
+        # for sentence_idx, item in enumerate(dataset):
+        #     if sentence_idx == num_sentences: break
+        #     # check if there are empty sentences.
+        #     if item['translation'][L1] != '' and item['translation'][L2] != '':
+        #         tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
+        # tatoeba_data_len = len(tatoeba_data)
 
-            """ shared_neuronsのうち、AP上位nコ """
-            pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}_revised.pkl"
-            sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
-
-            # """ tatoeba translation corpus """
-            # dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
-            # # select first 2000 sentences
-            # total_sentence_num = 5000
-            # num_sentences = 2000
-            # dataset = dataset.select(range(total_sentence_num))
-            # tatoeba_data = []
-            # for sentence_idx, item in enumerate(dataset):
-            #     if sentence_idx == num_sentences: break
-            #     # check if there are empty sentences.
-            #     if item['translation'][L1] != '' and item['translation'][L2] != '':
-            #         tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
-            # tatoeba_data_len = len(tatoeba_data)
-
-            # """
-            # baseとして、対訳関係のない1文ずつのペアを作成
-            # """
-            # random_data = []
-            # for sentence_idx, item in enumerate(dataset):
-            #     if sentence_idx == num_sentences: break
-            #     if dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
-            #         random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
+        # """
+        # baseとして、対訳関係のない1文ずつのペアを作成
+        # """
+        # random_data = []
+        # for sentence_idx, item in enumerate(dataset):
+        #     if sentence_idx == num_sentences: break
+        #     if dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+        #         random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
@@ -98,11 +92,16 @@ if __name__ == "__main__":
             elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
-            """ model and device configs """
-            device = "cuda" if torch.cuda.is_available() else "cpu"
-            model_name = model_names[L2]
-            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
+        """ model and device configs """
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model_name = model_names[L2]
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+        for activation_type in activation_types:
+            """ shared_neuronsのうち、AP上位nコ """
+            pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}_revised.pkl"
+            sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
 
             for n in n_list:
                 """ どのくらい介入するか(n) """

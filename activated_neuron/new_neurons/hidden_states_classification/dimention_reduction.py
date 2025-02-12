@@ -76,6 +76,7 @@ for L2, model_name in model_names.items():
             random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
         elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
             random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
+            
     # """ tatoeba translation corpus """
     # dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
     # # select first 2000 sentences
@@ -128,7 +129,8 @@ for L2, model_name in model_names.items():
 
     """ plot with dimention reduction. """
     # normal
-    plot_plsr(features_label1, features_label0, L2)
+    plot_umap(features_label1, features_label0, L2)
+    # plot_plsr(features_label1, features_label0, L2)
     # # intervention
     # plot_plsr(features_label1_intervention, features_label0_intervention, L2, "yes")
     # # for baseline
