@@ -45,7 +45,7 @@ if __name__ == "__main__":
         for activation_type in activation_types:
 
             """ shared_neuronsのうち、AP上位nコ """
-            pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+            pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}_revised.pkl"
             sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
 
             # """ tatoeba translation corpus """
@@ -71,30 +71,32 @@ if __name__ == "__main__":
             #     if dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
             #         random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
-            """ tatoeba translation corpus """
-            dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
-            num_sentences = 2000
-            dataset = dataset.select(range(num_sentences))
-            tatoeba_data = []
-            for item in dataset:
-                # check if there are empty sentences.
-                if item['translation'][L1] != '' and item['translation'][L2] != '':
-                    tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
-            # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
-            tatoeba_data_len = len(tatoeba_data)
-            """
-            baseとして、対訳関係のない1文ずつのペアを作成
-            (L1(en)はhttps://huggingface.co/datasets/agentlans/high-quality-english-sentences,
-            L2はtatoebaの該当データを使用)
-            """
-            random_data = []
-            # L1(en)
-            en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
-            random_data_en = en_base_ds["train"][:num_sentences]
-            en_base_ds_idx = 0
-            for item in dataset:
-                random_data.append((random_data_en["text"][en_base_ds_idx], item["translation"][L2]))
-                en_base_ds_idx += 1
+        """ tatoeba translation corpus """
+        dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
+        # select first 2000 sentences.
+        total_sentence_num = 2000 if L2 == "ko" else 5000
+        num_sentences = 2000
+        dataset = dataset.select(range(total_sentence_num))
+        tatoeba_data = []
+        for sentence_idx, item in enumerate(dataset):
+            if sentence_idx == num_sentences: break
+            # check if there are empty sentences.
+            if item['translation'][L1] != '' and item['translation'][L2] != '':
+                tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
+        tatoeba_data_len = len(tatoeba_data)
+
+        """
+        baseとして、対訳関係のない1文ずつのペアを作成
+        """
+        random_data = []
+        if L2 == "ko": # koreanはデータ数が足りない
+            dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
+        for sentence_idx, item in enumerate(dataset):
+            if sentence_idx == num_sentences: break
+            if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+                random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
+            elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+                random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
             """ model and device configs """
             device = "cuda" if torch.cuda.is_available() else "cpu"

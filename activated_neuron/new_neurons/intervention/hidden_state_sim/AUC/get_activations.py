@@ -32,10 +32,11 @@ L1 = "en" # L1 is fixed to english.
 for L2, model_name in model_names.items():
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+
     """ tatoeba translation corpus """
     dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
     # select first 2000 sentences
-    total_sentence_num = 5000
+    total_sentence_num = 2000 if L2 == "ko" else 5000
     num_sentences = 2000
     dataset = dataset.select(range(total_sentence_num))
     tatoeba_data = []
@@ -44,22 +45,19 @@ for L2, model_name in model_names.items():
         # check if there are empty sentences.
         if item['translation'][L1] != '' and item['translation'][L2] != '':
             tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
-    # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
     tatoeba_data_len = len(tatoeba_data)
 
     """
     baseとして、対訳関係のない1文ずつのペアを作成
-    (L1(en)はhttps://huggingface.co/datasets/agentlans/high-quality-english-sentences,
-    L2はtatoebaの該当データを使用)
     """
     random_data = []
-    # L1(en)
-    en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
-    random_data_en = en_base_ds["train"][:num_sentences]
-    en_base_ds_idx = 0
+    if L2 == "ko": # koreanはデータ数が足りない
+        dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
     for sentence_idx, item in enumerate(dataset):
         if sentence_idx == num_sentences: break
-        if dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+        if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+            random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
+        elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
             random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
     
     # """ tatoeba translation corpus """

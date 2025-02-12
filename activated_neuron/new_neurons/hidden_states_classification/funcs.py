@@ -235,11 +235,11 @@ def plot_plsr(features_label1, features_label0, L2, intervention="no", test_size
 
         # 画像の保存
         if intervention == "no":
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/layer_{layer_idx+1}.png"
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/revised_layer_{layer_idx+1}.png"
         elif intervention == "yes":
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention/layer_{layer_idx+1}.png"
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention/revised_layer_{layer_idx+1}.png"
         elif intervention == "base":
-            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention_baseline/layer_{layer_idx+1}.png"
+            output_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/hidden_state_classification/plsr/{L2}/intervention_baseline/revised_layer_{layer_idx+1}.png"
         plt.savefig(output_path, bbox_inches="tight")
         plt.close()
 

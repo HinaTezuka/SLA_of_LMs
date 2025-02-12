@@ -166,11 +166,11 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, activa
     plt.grid(True)
     # save_path
     if intervention == "no":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/{L2}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/{L2}_revised.png"
     elif intervention == "yes":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention/{L2}_n{intervention_num}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention/{L2}_n{intervention_num}_revised.png"
     elif intervention == "baseline":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention_baseline/{L2}_n{intervention_num}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/act_patterns/llama3/act_{activation_type}/intervention_baseline/{L2}_n{intervention_num}_revised.png"
     
     plt.savefig(
         save_path,

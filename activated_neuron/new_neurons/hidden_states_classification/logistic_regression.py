@@ -41,33 +41,60 @@ for L2, model_name in model_names.items():
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device).eval()
-    
+
     """ tatoeba translation corpus """
     dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
     # select first 2000 sentences
+    total_sentence_num = 2000 if L2 == "ko" else 5000
     num_sentences = 2000
-    dataset = dataset.select(range(num_sentences))
+    dataset = dataset.select(range(total_sentence_num))
     tatoeba_data = []
-    for item in dataset:
+    for sentence_idx, item in enumerate(dataset):
+        if sentence_idx == num_sentences: break
         # check if there are empty sentences.
         if item['translation'][L1] != '' and item['translation'][L2] != '':
             tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
-    # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
     tatoeba_data_len = len(tatoeba_data)
 
     """
-    baselineとして、対訳関係のない1文ずつのペアを作成
-    (L1(en)はhttps://huggingface.co/datasets/agentlans/high-quality-english-sentences,
-    L2はtatoebaの該当データを使用)
+    baseとして、対訳関係のない1文ずつのペアを作成
     """
     random_data = []
-    # L1(en)
-    en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
-    random_data_en = en_base_ds["train"][:num_sentences]
-    en_base_ds_idx = 0
-    for item in dataset:
-        random_data.append((random_data_en["text"][en_base_ds_idx], item["translation"][L2]))
-        en_base_ds_idx += 1
+    if L2 == "ko": # koreanはデータ数が足りない
+        dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
+    for sentence_idx, item in enumerate(dataset):
+        if sentence_idx == num_sentences: break
+        if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+            random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
+        elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+            random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
+    
+    # """ tatoeba translation corpus """
+    # dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
+    # # select first 2000 sentences
+    # num_sentences = 2000
+    # dataset = dataset.select(range(num_sentences))
+    # tatoeba_data = []
+    # for item in dataset:
+    #     # check if there are empty sentences.
+    #     if item['translation'][L1] != '' and item['translation'][L2] != '':
+    #         tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
+    # # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
+    # tatoeba_data_len = len(tatoeba_data)
+
+    # """
+    # baselineとして、対訳関係のない1文ずつのペアを作成
+    # (L1(en)はhttps://huggingface.co/datasets/agentlans/high-quality-english-sentences,
+    # L2はtatoebaの該当データを使用)
+    # """
+    # random_data = []
+    # # L1(en)
+    # en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
+    # random_data_en = en_base_ds["train"][:num_sentences]
+    # en_base_ds_idx = 0
+    # for item in dataset:
+    #     random_data.append((random_data_en["text"][en_base_ds_idx], item["translation"][L2]))
+    #     en_base_ds_idx += 1
     
     """ extract hidden states """
     # shape: (num_layers, num_pairs, 8192) <- layerごとに回帰モデルをつくるため.
@@ -124,8 +151,8 @@ for L2, model_name in model_names.items():
         print(f"Layer {result['layer']}: test_f1 = {np.mean(result['f1']):.4f} ± {np.std(result['f1']):.4f}")
 
     """ save scores as pkl. """
-    # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}.pkl"
-    # save_as_pickle(path, layer_scores)
-    # print(f"pkl saved.: {L2}")
-    # unfreeze_pickle(path)
-    # print(f"successfully unfreezed: {L2}")
+    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/logistic_regression/en_{L2}_revised.pkl"
+    save_as_pickle(path, layer_scores)
+    print(f"pkl saved.: {L2}")
+    unfreeze_pickle(path)
+    print(f"successfully unfreezed: {L2}")

@@ -32,8 +32,8 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
             output_L1 = model(**inputs_L1, output_hidden_states=True)
             output_L2 = model(**inputs_L2, output_hidden_states=True)
 
-        all_hidden_states_L1 = output_L1.hidden_states
-        all_hidden_states_L2 = output_L2.hidden_states
+        all_hidden_states_L1 = output_L1.hidden_states[1:]
+        all_hidden_states_L2 = output_L2.hidden_states[1:]
         # 最後のtokenのhidden_statesのみ取得
         last_token_index_L1 = inputs_L1["input_ids"].shape[1] - 1
         last_token_index_L2 = inputs_L2["input_ids"].shape[1] - 1
@@ -113,10 +113,10 @@ if __name__ == "__main__":
     # LLaMA-3
     model_names = {
         # "base": "meta-llama/Meta-Llama-3-8B",
-        "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
-        # "de": "DiscoResearch/Llama3-German-8B", # ger
-        "nl": "ReBatch/Llama-3-8B-dutch", # du
-        "it": "DeepMount00/Llama-3-8b-Ita", # ita
+        # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
+        # # "de": "DiscoResearch/Llama3-German-8B", # ger
+        # "nl": "ReBatch/Llama-3-8B-dutch", # du
+        # "it": "DeepMount00/Llama-3-8b-Ita", # ita
         "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -130,7 +130,7 @@ if __name__ == "__main__":
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences
-        total_sentence_num = 5000
+        total_sentence_num = 2000 if L2 == "ko" else 5000
         num_sentences = 2000
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
@@ -150,9 +150,13 @@ if __name__ == "__main__":
         # en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
         # random_data_en = en_base_ds["train"][:num_sentences]
         # en_base_ds_idx = 0
+        if L2 == "ko":
+            dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
         for sentence_idx, item in enumerate(dataset):
             if sentence_idx == num_sentences: break
-            if dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+            if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+                random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
+            elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
             # en_base_ds_idx += 1
 
@@ -161,7 +165,7 @@ if __name__ == "__main__":
         results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data)
         final_results_same_semantics = defaultdict(float)
         final_results_non_same_semantics = defaultdict(float)
-        for layer_idx in range(32): # embedding層＋３２層
+        for layer_idx in range(32):
             final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
 
