@@ -23,14 +23,8 @@ from expertise_funcs import (
 
 """ parameters setting """
 activation_types = ["abs", "product"]
-# activation_type = "abs"
-# activation_type = "product"
 norm_type = "no"
-# norm_type = "min_max"
-# norm_type = "sigmoid"
-# L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
-L2_list = ["ja"]
 
 for L2 in L2_list:
     for activation_type in activation_types:
@@ -39,7 +33,6 @@ for L2 in L2_list:
         pkl_path_non_same_semantics = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/non_same_semantics/en_{L2}_revised.pkl"
         act_same_semantics_dict = unfreeze_pickle(pkl_path_same_semantics)
         act_non_same_semantics_dict = unfreeze_pickle(pkl_path_non_same_semantics)
-        print(f"unfreezed pickles for {L2}.")
 
         """ calc AP and sort. """
         sorted_neurons, ap_scores = compute_ap_and_sort(act_same_semantics_dict, act_non_same_semantics_dict, norm_type)
@@ -55,6 +48,5 @@ for L2 in L2_list:
         sorted_neurons = unfreeze_pickle(sorted_neurons_path)
         ap_scores = unfreeze_pickle(ap_scores_path)
         print(f'top_10 AP Neurons ({L2}) {activation_type} : {sorted_neurons[:10]}')
-        print(f'top_10 AP ({L2}) {activation_type} : {ap_scores[layer_neuron_idx] for layer_neuron_idx in sorted_neurons[:10]}')
-        
-        print(f"{L2} <- completed.")
+        print(f'top_1, top_100 AP ({L2}) {activation_type} : {ap_scores[sorted_neurons[0]]}, {ap_scores[sorted_neurons[99]]}')
+        print(f"{L2} <- completed. ({activation_type})")

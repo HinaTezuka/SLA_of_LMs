@@ -148,6 +148,7 @@ def track_neurons_with_text_data(model, device, model_name, tokenizer, data, is_
                     act_value_L1 = get_activation_value(neurons_L1_values, neuron_idx) # normal value
                     act_value_L2 = get_activation_value(neurons_L2_values, neuron_idx)
                     activation_value = act_value_L1 * act_value_L2
+
                 # activation_dictに追加
                 activation_dict[pair_idx][layer_idx].append((neuron_idx, activation_value))
 
