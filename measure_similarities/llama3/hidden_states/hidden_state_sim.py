@@ -3,7 +3,6 @@
 """
 import os
 import sys
-# sys.path.append("/home/s2410121/proj_LA/activated_neuron")
 import dill as pickle
 
 from collections import defaultdict
@@ -108,16 +107,29 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
         )
     plt.close()
 
+def unfreeze_pickle(file_path: str):
+    """
+    Load a pickle file as a dictionary with error handling.
+    """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Pickle file not found: {file_path}")
+
+    try:
+        with open(file_path, "rb") as f:
+            return pickle.load(f)
+    except (pickle.UnpicklingError, EOFError) as e:
+        raise ValueError(f"Error unpickling file {file_path}: {e}")
+
 if __name__ == "__main__":
     """ model configs """
     # LLaMA-3
     model_names = {
         # "base": "meta-llama/Meta-Llama-3-8B",
-        # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
-        # # "de": "DiscoResearch/Llama3-German-8B", # ger
+        "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
+        # "de": "DiscoResearch/Llama3-German-8B", # ger
         # "nl": "ReBatch/Llama-3-8B-dutch", # du
         # "it": "DeepMount00/Llama-3-8b-Ita", # ita
-        "ko": "beomi/Llama-3-KoEn-8B", # ko
+        # "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -125,40 +137,41 @@ if __name__ == "__main__":
         L1 = "en" # L1 is fixed to english.
 
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device).eval()
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
-        """ tatoeba translation corpus """
-        dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
-        # select first 2000 sentences
-        total_sentence_num = 2000 if L2 == "ko" else 5000
         num_sentences = 2000
-        dataset = dataset.select(range(total_sentence_num))
-        tatoeba_data = []
-        for sentence_idx, item in enumerate(dataset):
-            if sentence_idx == num_sentences: break
-            # check if there are empty sentences.
-            if item['translation'][L1] != '' and item['translation'][L2] != '':
-                tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
-        # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
-        tatoeba_data_len = len(tatoeba_data)
+        same_semantics_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/sentence_pairs/same_semantics/{L2}.pkl"
+        diff_semantics_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/sentence_pairs/different_semantics/{L2}.pkl"
+        tatoeba_data = unfreeze_pickle(same_semantics_path)[:num_sentences]
+        random_data = unfreeze_pickle(diff_semantics_path)[:num_sentences]
 
-        """
-        baseとして、対訳関係のない1文ずつのペアを作成
-        """
-        random_data = []
-        # L1(en)
-        # en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
-        # random_data_en = en_base_ds["train"][:num_sentences]
-        # en_base_ds_idx = 0
-        if L2 == "ko":
-            dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
-        for sentence_idx, item in enumerate(dataset):
-            if sentence_idx == num_sentences: break
-            if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
-                random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
-            elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
-                random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
-            # en_base_ds_idx += 1
+        # """ tatoeba translation corpus """
+        # dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
+        # # select first 2000 sentences
+        # total_sentence_num = 2000 if L2 == "ko" else 5000
+        # num_sentences = 2000
+        # dataset = dataset.select(range(total_sentence_num))
+        # tatoeba_data = []
+        # for sentence_idx, item in enumerate(dataset):
+        #     if sentence_idx == num_sentences: break
+        #     # check if there are empty sentences.
+        #     if item['translation'][L1] != '' and item['translation'][L2] != '':
+        #         tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
+        # # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
+        # tatoeba_data_len = len(tatoeba_data)
+
+        # """
+        # baseとして、対訳関係のない1文ずつのペアを作成
+        # """
+        # random_data = []
+        # if L2 == "ko":
+        #     dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
+        # for sentence_idx, item in enumerate(dataset):
+        #     if sentence_idx == num_sentences: break
+        #     if L2 == "ko" and dataset2['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+        #         random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
+        #     elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
+        #         random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         """ calc similarities """
         results_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, tatoeba_data)

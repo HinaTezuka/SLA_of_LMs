@@ -30,6 +30,7 @@ norm_type = "no"
 # norm_type = "sigmoid"
 # L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
+L2_list = ["ja"]
 
 for L2 in L2_list:
     for activation_type in activation_types:
@@ -53,7 +54,7 @@ for L2 in L2_list:
         # unfreeze pickle
         sorted_neurons = unfreeze_pickle(sorted_neurons_path)
         ap_scores = unfreeze_pickle(ap_scores_path)
-        print(f'top_10 AP ({L2}) {activation_type} : {ap_scores[:10]}')
         print(f'top_10 AP Neurons ({L2}) {activation_type} : {sorted_neurons[:10]}')
-
+        print(f'top_10 AP ({L2}) {activation_type} : {ap_scores[layer_neuron_idx] for layer_neuron_idx in sorted_neurons[:10]}')
+        
         print(f"{L2} <- completed.")

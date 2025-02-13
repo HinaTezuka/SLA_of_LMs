@@ -130,35 +130,39 @@ if __name__ == "__main__":
         "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    # base model
-    model = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B").to(device).eval()
-    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B")
-
 
     for L2, model_name in model_names.items():
         L1 = "en" # L1 is fixed to english.
+        # base model
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
 
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
-        # select first 100 sentences
+        # select first 2000 sentences
         num_sentences = 2000
         dataset = dataset.select(range(num_sentences))
         tatoeba_data = []
         for item in dataset:
             # check if there are empty sentences.
             if item['translation'][L1] != '' and item['translation'][L2] != '':
+                print(item['translation'][L1])
                 tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
         # tatoeba_data = [(item['translation'][L1], item['translation'][L2]) for item in dataset]
         tatoeba_data_len = len(tatoeba_data)
+        sys.exit()
 
         """
         baseとして、対訳関係のない1文ずつのペアを作成
-        (L1(en)はhttps://huggingface.co/datasets/agentlans/high-quality-english-sentences,
+        (L1(en)はhttps://huggingface.co/datasets/Rogendo/English-Swahili-Sentence-Pairs,
         L2はtatoebaの該当データを使用)
         """
         random_data = []
         # L1(en)
-        en_base_ds = load_dataset("agentlans/high-quality-english-sentences")
+        en_base_ds = load_dataset("Rogendo/English-Swahili-Sentence-Pairs")["train"]
+        # print(en_base_ds["English sentence"])
+        print(len(en_base_ds["English sentence"][12:2012]))
+        sys.exit()
         random_data_en = en_base_ds["train"][:num_sentences]
         en_base_ds_idx = 0
         for item in dataset:

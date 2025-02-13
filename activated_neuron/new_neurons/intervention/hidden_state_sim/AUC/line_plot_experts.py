@@ -29,14 +29,15 @@ top_n = 30000
 # norm_type = "sigmoid"
 # L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
+# L2_list = ["ja"]
 
 # データを格納するリスト
 data = []
 
 for L2 in L2_list:
     # LLaMA-3 unfreezing
-    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    llama3_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
+    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}_revised.pkl"
+    llama3_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}_revised.pkl"
     sorted_neurons_llama3 = unfreeze_pickle(sorted_neurons_path)
     ap_scores_llama3 = unfreeze_pickle(llama3_path)
 
@@ -94,6 +95,6 @@ plt.grid(True, linestyle="--", alpha=0.6)
 # 保存と表示
 plt.tight_layout()
 plt.savefig(
-    f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/ap_scores_comparison.png",
+    f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/ap_scores_comparison_revised.png",
     bbox_inches="tight"
 )

@@ -172,14 +172,6 @@ def get_activation_value_abs(activations, neuron_idx):
 
     return activation_value
 
-# def save_as_pickle(file_path, target_dict) -> None:
-#     """
-#     save dict as pickle file.
-#     """
-#     # directoryを作成（存在しない場合のみ)
-#     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-#     with open(file_path, "wb") as f:
-#         pickle.dump(target_dict, f)
 def save_as_pickle(file_path: str, target_dict) -> None:
     """
     Save a dictionary as a pickle file with improved safety.
@@ -201,13 +193,6 @@ def save_as_pickle(file_path: str, target_dict) -> None:
             os.remove(temp_path)
         raise e  # Re-raise the exception for further handling
 
-# def unfreeze_pickle(file_path: str) -> dict:
-#     """
-#     unfreeze pickle file as dict.
-#     """
-#     with open(file_path, "rb") as f:
-#         return_dict = pickle.load(f)
-#     return return_dict
 def unfreeze_pickle(file_path: str):
     """
     Load a pickle file as a dictionary with error handling.

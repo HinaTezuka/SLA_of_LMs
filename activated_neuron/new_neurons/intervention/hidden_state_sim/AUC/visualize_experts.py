@@ -23,32 +23,37 @@ from expertise_funcs import (
 """ parameters setting """
 model = "llama"
 # model = "gpt2"
-# activation_type = "abs"
-activation_type = "product"
+activation_type = "abs"
+# activation_type = "product"
 norm_type = "no"
 # norm_type = "min_max"
-# norm_type = "sigmoid"
+norm_type = "sigmoid"
 # L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
 
 for L2 in L2_list:
 
     """ unfreeze pickles sorted based on AP. """
-    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
+    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}_revised.pkl"
+    ap_scores_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}_revised.pkl"
     # unfreeze pickle
     sorted_neurons = unfreeze_pickle(sorted_neurons_path)
     ap_scores = unfreeze_pickle(ap_scores_path)
 
     #
     sorted_neurons = sorted_neurons[:15000]
+    # sorted_neurons = sorted_neurons
     # print(sorted_neurons)
     
     """ 上位10件を表示 """
     print(f"======================== {L2} ========================")
-    # for i in sorted_neurons[:10]:
-    #     print(ap_scores[i])
-    # print(f"30000番目: {ap_scores[sorted_neurons[29999]]}")
+    for i in sorted_neurons[:10]:
+        print(ap_scores[i])
+    print(f"=====================================================")
+    for i in sorted_neurons[-10:]:
+        print(ap_scores[i])
+    sys.exit()
+    print(f"30000番目: {ap_scores[sorted_neurons[10000]]}")
     # sys.exit()
 
     # データ準備
@@ -69,7 +74,8 @@ for L2 in L2_list:
 
     # 保存
     plt.savefig(
-        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/{L2}.png',
+        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/same_semantic_experts/{activation_type}/{L2}_revised.png',
         bbox_inches='tight',
         )
     # plt.close()
+    sys.exit()
