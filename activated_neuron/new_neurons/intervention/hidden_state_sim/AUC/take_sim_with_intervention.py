@@ -1,6 +1,5 @@
 import os
 import sys
-# sys.path.append("/home/s2410121/proj_LA/activated_neuron")
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/hidden_state_sim")
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/hidden_state_sim/AUC")
 import random
@@ -35,7 +34,7 @@ if __name__ == "__main__":
         "ko": "beomi/Llama-3-KoEn-8B", # ko
     }
     """ parameters """
-    activation_types = ["abs", "product"]
+    activation_types = ["product", "abs"]
     norm_type = "no"
     n_list = [100, 1000, 2000, 3000, 4000, 5000, 7000, 10000, 15000, 20000, 30000] # patterns of intervention_num
 

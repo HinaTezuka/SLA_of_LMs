@@ -61,7 +61,7 @@ for L2, model_name in model_names.items():
             random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
     """ tracking neurons """
-    activation_types = ["abs", "product"]
+    activation_types = ["product", "abs"]
 
     for activation_type in activation_types:
         # 対訳ペア

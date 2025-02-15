@@ -174,6 +174,9 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    for name, module in model.named_modules():
+        print(name, module)
+    sys.exit()
     num_layers = 32
     L1 = "en" # L1 is fixed to english.
 

@@ -22,7 +22,7 @@ from expertise_funcs import (
 )
 
 """ parameters setting """
-activation_types = ["abs", "product"]
+activation_types = ["product", "abs"]
 norm_type = "no"
 L2_list = ["ja", "nl", "ko", "it"]
 

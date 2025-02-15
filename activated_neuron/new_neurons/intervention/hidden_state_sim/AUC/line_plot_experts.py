@@ -22,14 +22,14 @@ from expertise_funcs import (
 
 """ parameters setting """
 activation_type = "abs"
-# activation_type = "product"
+activation_type = "product"
 norm_type = "no"
-top_n = 30000
+top_n = 1000
 # norm_type = "min_max"
 # norm_type = "sigmoid"
 # L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
-# L2_list = ["ja"]
+L2_list = ["ja"]
 
 # データを格納するリスト
 data = []
@@ -77,7 +77,7 @@ sns.lineplot(
     markers=False,
     # dashes=False,
     dashes={"GPT-2": [2, 2], "LLaMA-3": [1, 0]},
-    palette=sns.color_palette("tab10"),  # カラーパレット設定
+    palette=sns.color_palette("tab10"),
     linewidth=5,
     alpha=1,
     ci=None,
