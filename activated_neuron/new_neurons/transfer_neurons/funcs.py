@@ -130,20 +130,20 @@ def act_llama3(model, input_ids):
 def calc_element_wise_product(act_fn_value, up_proj_value):
     return act_fn_value * up_proj_value
 
-def track_neurons_with_text_data(model, device, tokenizer, data):
-
+def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx):
     # layers_num
     num_layers = 32
     # nums of total neurons (per a layer)
     num_neurons = 14336
     # return dict for saving activation values.
-    activation_dict = defaultdict(lambda: defaultdict(list))
+    activation_dict = defaultdict(list)
+    labels = []
     """
     activation_dict
     {
-        text_idx:
-            layer_idx: [(neuron_idx, act_value), (neuron_idx, act_value), ....]
+    (layer_idx, neuron_idx): [act_value1, act_value2, ...]
     }
+    labels: [1, 1, ..., 0, 0, ...]
     """
 
     # Track neurons with tatoeba
@@ -171,15 +171,20 @@ def track_neurons_with_text_data(model, device, tokenizer, data):
                 act_values_per_token.append(act_values)
             
             """ calc average act_values of all tokens """
-            act_values_per_token = np.array(act_values_per_token)
-            means = np.mean(act_values_per_token, axis=0)
+            act_values_all_token = np.array(act_values_per_token)
+            means = np.mean(act_values_all_token, axis=0)
 
             # save in activation_dict
             for neuron_idx in range(num_neurons):
                 mean_act_value = means[neuron_idx]
-                activation_dict[text_idx][layer_idx].append((neuron_idx, mean_act_value))
+                activation_dict[(layer_idx, neuron_idx)].append(mean_act_value)
+        # labels list
+        if text_idx >= start_idx and text_idx < end_idx:
+            labels.append(1)
+        else:
+            labels.append(0)
 
-    return activation_dict
+    return activation_dict, labels
 
 def get_hidden_states(model, tokenizer, device, num_layers, data):
     """
@@ -275,7 +280,7 @@ def unfreeze_pickle(file_path: str):
     except (pickle.UnpicklingError, EOFError) as e:
         raise ValueError(f"Error unpickling file {file_path}: {e}")
 
-def compute_ap_and_sort(activations_dict, start_label1: int, num_sentences_per_L2: int):
+def compute_ap_and_sort(activations_dict: defaultdict(list), labels: list):
     """
     calc APscore and sort (considering nums_of_label) for detecting L2-specific neurons.
 
@@ -286,26 +291,10 @@ def compute_ap_and_sort(activations_dict, start_label1: int, num_sentences_per_L
     Returns:
         sorted_neurons list, ニューロンごとのAPスコア辞書
     """
-    # 各ニューロンごとの活性化値とラベルを収集
-    neuron_responses = defaultdict(list)  # { (layer_idx, neuron_idx): [activation_values, ...] }
-    neuron_labels = defaultdict(list)     # { (layer_idx, neuron_idx): [labels, ...] }
-    end_label1 = start_label1 + num_sentences_per_L2
-
-    # pairs for label:1
-    for sentence_idx, layer_data in activations_dict.items():
-        for layer_idx, neuron_activations in layer_data.items():
-            for neuron_idx, activation_value in neuron_activations:
-                neuron_responses[(layer_idx, neuron_idx)].append(activation_value)
-                if sentence_idx >= start_label1 and sentence_idx < end_label1: # check if sentence_idx is in label1 sentences.
-                    neuron_labels[(layer_idx, neuron_idx)].append(1)  # label1: L2 sentence.
-                else:
-                    neuron_labels[(layer_idx, neuron_idx)].append(0)  # label0: sentence in other langs.
 
     # calc AP score for each shared neuron and calc total score which consider nums of label
     final_scores = {}
-    for (layer_idx, neuron_idx), activations in neuron_responses.items():
-        labels = neuron_labels[(layer_idx, neuron_idx)]
-
+    for (layer_idx, neuron_idx), activations in activations_dict.items():
         # calc AP score
         ap = average_precision_score(y_true=labels, y_score=activations)
         # save total score
@@ -315,3 +304,44 @@ def compute_ap_and_sort(activations_dict, start_label1: int, num_sentences_per_L
     sorted_neurons = sorted(final_scores.keys(), key=lambda x: final_scores[x], reverse=True)
 
     return sorted_neurons, final_scores
+
+# def compute_ap_and_sort(activations_dict, start_label1: int, num_sentences_per_L2: int):
+#     """
+#     calc APscore and sort (considering nums_of_label) for detecting L2-specific neurons.
+
+#     Args:
+#         activations: activation_value for each sentences.
+#         start_label1: indicating idx where label1(corresponding to L2) sentences bigin.
+
+#     Returns:
+#         sorted_neurons list, ニューロンごとのAPスコア辞書
+#     """
+#     # 各ニューロンごとの活性化値とラベルを収集
+#     neuron_responses = defaultdict(list)  # { (layer_idx, neuron_idx): [activation_values, ...] }
+#     neuron_labels = defaultdict(list)     # { (layer_idx, neuron_idx): [labels, ...] }
+#     end_label1 = start_label1 + num_sentences_per_L2
+
+#     # pairs for label:1
+#     for sentence_idx, layer_data in activations_dict.items():
+#         for layer_idx, neuron_activations in layer_data.items():
+#             for neuron_idx, activation_value in neuron_activations:
+#                 neuron_responses[(layer_idx, neuron_idx)].append(activation_value)
+#                 if sentence_idx >= start_label1 and sentence_idx < end_label1: # check if sentence_idx is in label1 sentences.
+#                     neuron_labels[(layer_idx, neuron_idx)].append(1)  # label1: L2 sentence.
+#                 else:
+#                     neuron_labels[(layer_idx, neuron_idx)].append(0)  # label0: sentence in other langs.
+
+#     # calc AP score for each shared neuron and calc total score which consider nums of label
+#     final_scores = {}
+#     for (layer_idx, neuron_idx), activations in neuron_responses.items():
+#         labels = neuron_labels[(layer_idx, neuron_idx)]
+
+#         # calc AP score
+#         ap = average_precision_score(y_true=labels, y_score=activations)
+#         # save total score
+#         final_scores[(layer_idx, neuron_idx)] = ap
+
+#     # sort: based on total score of each neuron
+#     sorted_neurons = sorted(final_scores.keys(), key=lambda x: final_scores[x], reverse=True)
+
+#     return sorted_neurons, final_scores

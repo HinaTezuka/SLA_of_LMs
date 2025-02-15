@@ -41,11 +41,13 @@ for L2, model_name in model_names.items():
     }
     """
     # unfreeze activations.
-    file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
-    activations = unfreeze_pickle(file_path)
+    path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
+    path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/labels/{L2}.pkl"
+    activations = unfreeze_pickle(path_activations)
+    labels = unfreeze_pickle(path_labels)
     
     # calc AP scores.
-    sorted_neurons, ap_scores = compute_ap_and_sort(activations, start_indics[L2], num_sentences_per_L2)
+    sorted_neurons, ap_scores = compute_ap_and_sort(activations, labels)
 
     # save AP scores as pkl.
     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"

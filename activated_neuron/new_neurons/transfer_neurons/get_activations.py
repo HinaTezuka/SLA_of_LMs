@@ -4,6 +4,7 @@ detect language specific neurons
 import sys
 import dill as pickle
 
+import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
@@ -15,7 +16,8 @@ from funcs import (
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
-multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs) # 2500 sentences(500 for each lang).
+num_sentences = 500
+multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences) # 2500 sentences(500 for each lang).
 print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
 # LLaMA-3(8B) models.
@@ -28,18 +30,32 @@ model_names = {
     "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
+start_indics = {
+    "ja": 0,
+    "nl": 500,
+    "ko": 1000,
+    "it": 1500,
+    "en": 2000,
+}
 
 """ get activaitons and save as pkl. """
 for L2, model_name in model_names.items():
     # model and tokenizer.
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    activations = track_neurons_with_text_data(model, device, tokenizer, multilingual_sentences)
+
+    # start and end indices.
+    start_idx = start_indics[L2]
+    end_idx = start_idx + num_sentences
+    # get activations and corresponding labels.
+    activations, labels = track_neurons_with_text_data(model, device, tokenizer, multilingual_sentences, start_idx, end_idx)
 
     # save activations as pickle file.
-    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
-    save_as_pickle(save_path, activations)
-    print(f"successfully saved activations of {L2} model as pkl.")
+    save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
+    save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/labels/{L2}.pkl"
+    save_as_pickle(save_path_activations, activations)
+    save_as_pickle(save_path_labels, labels)
+    print(f"successfully saved activations and labels of {L2} model as pkl.")
 
     # clean cache.
     del model
