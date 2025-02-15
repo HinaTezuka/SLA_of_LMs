@@ -190,7 +190,7 @@ def unfreeze_pickle(file_path: str):
     except (pickle.UnpicklingError, EOFError) as e:
         raise ValueError(f"Error unpickling file {file_path}: {e}")
 
-def compute_ap_and_sort(activations, start_label1: int, num_sentences_per_L2: int):
+def compute_ap_and_sort(activations_dict, start_label1: int, num_sentences_per_L2: int):
     """
     calc APscore and sort (considering nums_of_label) for detecting L2-specific neurons.
 
@@ -207,11 +207,11 @@ def compute_ap_and_sort(activations, start_label1: int, num_sentences_per_L2: in
     end_label1 = start_label1 + num_sentences_per_L2
 
     # pairs for label:1
-    for sentence_idx, layer_data in activations.items():
+    for sentence_idx, layer_data in activations_dict.items():
         for layer_idx, neuron_activations in layer_data.items():
             for neuron_idx, activation_value in neuron_activations:
                 neuron_responses[(layer_idx, neuron_idx)].append(activation_value)
-                if sentence_idx >= start_label1 and sentence_idx <= end_label1:
+                if sentence_idx >= start_label1 and sentence_idx < end_label1: # check if sentence_idx is in label1 sentences.
                     neuron_labels[(layer_idx, neuron_idx)].append(1)  # label1: L2 sentence.
                 else:
                     neuron_labels[(layer_idx, neuron_idx)].append(0)  # label0: sentence in other langs.

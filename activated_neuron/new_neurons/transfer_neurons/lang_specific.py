@@ -11,7 +11,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from funcs import (
     unfreeze_pickle,
-
+    compute_ap_and_sort,
 )
 
 # LLaMA-3
@@ -23,7 +23,16 @@ model_names = {
     "it": "DeepMount00/Llama-3-8b-Ita", # ita
     "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
+# params
 device = "cuda" if torch.cuda.is_available() else "cpu"
+# indices where each L2 sentences begin.
+start_indics = {
+    "ja": 0,
+    "nl": 500,
+    "ko": 1000,
+    "it": 1500,
+}
+num_sentences_per_L2 = 500
 
 for L2, model_name in model_names.items():
     """
@@ -35,9 +44,14 @@ for L2, model_name in model_names.items():
     }
     """
     # unfreeze activations.
-    # file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
-    # activations = unfreeze_pickle(file_path)
+    file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
+    activations = unfreeze_pickle(file_path)
     
     # calc AP scores.
-    sorted_neurons, 
-    
+    sorted_neurons, ap_scores = compute_ap_and_sort(activations, start_indics[L2], num_sentences_per_L2)
+
+    # save AP scores as pkl.
+    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
+    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}.pkl"
+    save_as_pickle(save_path_sorted_neurons, sorted_neurons)
+    save_as_pickle(save_path_ap_scores, ap_scores)
