@@ -4,10 +4,7 @@ detect language specific neurons.
 import sys
 import dill as pickle
 
-import numpy as np
 import torch
-from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from funcs import (
     unfreeze_pickle,
@@ -55,3 +52,7 @@ for L2, model_name in model_names.items():
     save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}.pkl"
     save_as_pickle(save_path_sorted_neurons, sorted_neurons)
     save_as_pickle(save_path_ap_scores, ap_scores)
+    
+    print(L2, "\n")
+    for neuron in sorted_neurons[:10]:
+        print(ap_scores[neuron])

@@ -1,7 +1,6 @@
 """
 neuron detection for MLP Block of LLaMA-3(8B).
-"""
-"""
+
 LlamaForCausalLM(
   (model): LlamaModel(
     (embed_tokens): Embedding(128256, 4096)
@@ -35,6 +34,7 @@ import itertools
 import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron")
 import dill as pickle
+import random
 from typing import Any, Dict
 from collections import defaultdict
 
@@ -46,26 +46,51 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, 
 from datasets import load_dataset
 from sklearn.metrics import average_precision_score
 
-def multilingual_dataset(langs: list, num_sentences=500) -> list:
+def multilingual_dataset_for_lang_specific_detection(langs: list, num_sentences=500) -> list:
     """
     making tatoeba translation corpus for lang-specific neuron detection.
     """
-    L1 = "en"
 
     tatoeba_data = []
     for lang in langs:
-        if lang == "en":
+        if "en" in langs and lang == "en":
             dataset = load_dataset("tatoeba", lang1="en", lang2="ja", split="train")
-            dataset = dataset.select(range(num_sentences)) 
+            # select random num_sentences samples from top 2500.
+            dataset = dataset.select(range(2500))
+            random_indices = random.sample(range(2500), num_sentences)
+            dataset = dataset.select(random_indices)
             for item in dataset:
-                if item['translation'][lang] != '':
-                    tatoeba_data.append(item['translation'][lang])
+                tatoeba_data.append(item['translation'][lang])
             continue
         dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
-        dataset = dataset.select(range(num_sentences))
+        dataset = dataset.select(range(2500))
+        random_indices = random.sample(range(2500), num_sentences)
+        dataset = dataset.select(random_indices)
         for sentence_idx, item in enumerate(dataset):
-            if item['translation'][lang] != '':
-                tatoeba_data.append(item['translation'][lang])
+            tatoeba_data.append(item['translation'][lang])
+    
+    return tatoeba_data
+
+def multilingual_dataset_for_centroid_detection(langs: list, num_sentences=500) -> list:
+    """
+    making tatoeba translation corpus for lang-specific neuron detection.
+    return_dict(tatoeba_data):
+    {
+        lang: [text1, text2, ...]
+    }
+    """
+
+    tatoeba_data = defaultdict(list)
+    for lang in langs:
+        dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
+        dataset = dataset.select(range(2500))
+        random_indices = random.sample(range(2500), num_sentences)
+        dataset = dataset.select(random_indices)
+        for sentence_idx, item in enumerate(dataset):
+            en_txt = item['translation']['en']
+            l2_txt = item['translation'][lang]
+            if en_txt != '' and l2_txt != '':
+                tatoeba_data[lang].append((en_txt, l2_txt))
     
     return tatoeba_data
 
@@ -155,6 +180,66 @@ def track_neurons_with_text_data(model, device, tokenizer, data):
                 activation_dict[text_idx][layer_idx].append((neuron_idx, mean_act_value))
 
     return activation_dict
+
+def get_hidden_states(model, tokenizer, device, num_layers, data):
+    """
+    """
+    # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en-L2).
+    c_hidden_states = defaultdict(list)
+
+    for text1, text2 in data:
+        inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
+        inputs2 = tokenizer(text2, return_tensors="pt").to(device) # L2 text
+
+        # get hidden_states
+        with torch.no_grad():
+            output1 = model(**inputs1, output_hidden_states=True)
+            output2 = model(**inputs2, output_hidden_states=True)
+
+        all_hidden_states1 = output1.hidden_states[1:] # remove embedding layer
+        all_hidden_states2 = output2.hidden_states[1:]
+        last_token_index1 = inputs1["input_ids"].shape[1] - 1
+        last_token_index2 = inputs2["input_ids"].shape[1] - 1
+
+        """  """
+        for layer_idx in range(num_layers):
+            hs1 = all_hidden_states1[layer_idx][:, last_token_index1, :].squeeze().detach().cpu().numpy()
+            hs2 = all_hidden_states2[layer_idx][:, last_token_index2, :].squeeze().detach().cpu().numpy()
+            # save mean of (en_ht, L2_ht). <- estimated shared point in shared semantic space.
+            c = np.stack([hs1, hs2])
+            c = np.mean(c, axis=0)
+            c_hidden_states[layer_idx].append(c)
+
+    return c_hidden_states
+
+def get_centroid_of_shared_space(hidden_states: defaultdict(list)):
+    centroids = [] # [c1, c2, ] len = layer_num(32layers: 0-31)
+    for layer_idx, c in hidden_states.items():
+        final_c = np.mean(c, axis=0) # calc mean of c(shared point per text) of all text.
+        centroids.append(final_c)
+    
+    return centroids
+
+# def get_centroids_per_L2(hidden_states: defaultdict(list)):
+#     centroids = [] # [c1, c2, ...] c1: centroid of layer1.
+#     for layer_idx, hidden_states_layer in hidden_states.items():
+#         hidden_states_layer = np.array(hidden_states_layer)
+#         centroids.append(np.mean(hidden_states_layer, axis=0))
+    
+#     return centroids
+
+# def get_centroids_of_shared_space(centroids: dict, num_layers: int):
+#     # c_langs = centroids.values()
+#     # print(len(c_langs))
+#     c_ja = centroids["ja"]
+#     c_nl = centroids["nl"]
+#     c_ko = centroids["ko"]
+#     c_it = centroids["it"]
+#     stacked_centroids_all_langs = np.stack([c_ja, c_nl, c_ko, c_it])
+
+#     c_shared_space = np.mean(stacked_centroids_all_langs, axis=0)
+
+#     return c_shared_space
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """

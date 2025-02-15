@@ -8,14 +8,15 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from funcs import (
-    multilingual_dataset,
+    multilingual_dataset_for_lang_specific_detection,
     track_neurons_with_text_data,
     save_as_pickle,
 )
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
-multilingual_sentences = multilingual_dataset(langs) # 2500 sentences(500 for each lang).
+multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs) # 2500 sentences(500 for each lang).
+print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
 # LLaMA-3(8B) models.
 model_names = {
