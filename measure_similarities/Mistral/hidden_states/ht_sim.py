@@ -169,8 +169,6 @@ if __name__ == "__main__":
             final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
 
-        # delete some cache
-        del model
         torch.cuda.empty_cache()
 
         """ plot """

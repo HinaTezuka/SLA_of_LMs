@@ -100,5 +100,4 @@ for L2 in model_langs:
 
     # clean cache.
     del activations, labels
-    del model
     torch.cuda.empty_cache()

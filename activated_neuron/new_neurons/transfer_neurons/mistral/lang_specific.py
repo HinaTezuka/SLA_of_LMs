@@ -55,6 +55,5 @@ for L2 in model_langs:
         print(L2, "\n")
         for neuron in sorted_neurons[:10]:
             print(ap_scores[neuron])
-    
-    del model
+
     torch.cuda.empty_cache()
