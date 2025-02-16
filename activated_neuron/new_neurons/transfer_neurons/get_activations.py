@@ -2,7 +2,6 @@
 detect language specific neurons
 """
 import sys
-# import dill as pickle
 import pickle
 
 import torch
@@ -19,7 +18,21 @@ from funcs import (
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
-num_sentences = 1000
+num_sentences = 500
+start_indics = {
+    "ja": 0,
+    "nl": 500,
+    "ko": 1000,
+    "it": 1500,
+    "en": 2000,
+}
+# start_indics = {
+#     "ja": 0,
+#     "nl": 1000,
+#     "ko": 2000,
+#     "it": 3000,
+#     "en": 4000,
+# }
 multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences) # 2500 sentences(500 for each lang).
 print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
@@ -33,13 +46,6 @@ model_names = {
     "ko": "beomi/Llama-3-KoEn-8B", # ko
 }
 device = "cuda" if torch.cuda.is_available() else "cpu"
-start_indics = {
-    "ja": 0,
-    "nl": 1000,
-    "ko": 2000,
-    "it": 3000,
-    "en": 4000,
-}
 is_last_token_only = True
 """ get activaitons and save as pkl. """
 for L2, model_name in model_names.items():
@@ -55,8 +61,8 @@ for L2, model_name in model_names.items():
         model, 
         device, 
         tokenizer, 
-        multilingual_sentences, 
-        start_idx, 
+        multilingual_sentences,
+        start_idx,
         end_idx, 
         is_last_token_only,
         )

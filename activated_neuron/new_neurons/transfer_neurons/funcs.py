@@ -349,7 +349,7 @@ def compute_scores(model, tokenizer, device, data, neurons, centroids):
             act_fn_value = act_fn_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
             up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
-            acts.append(act_values)    
+            acts.append(act_values)
         
         print(atts[0])
         print(hts[0])

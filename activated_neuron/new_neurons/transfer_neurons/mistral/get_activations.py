@@ -45,9 +45,6 @@ from funcs import (
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
 num_sentences = 500
-multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences) # 2500 sentences(500 for each lang).
-print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
-
 start_indics = {
     "ja": 0,
     "nl": 500,
@@ -62,6 +59,9 @@ start_indics = {
 #     "it": 3000,
 #     "en": 4000,
 # }
+multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences) # 2500 sentences(500 for each lang).
+print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
+
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_name = "mistralai/Mistral-7B-v0.3"
