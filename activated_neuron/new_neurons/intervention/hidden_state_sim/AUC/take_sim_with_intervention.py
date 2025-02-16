@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # LLaMA-3
     model_names = {
         # "base": "meta-llama/Meta-Llama-3-8B"
-        "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
+        # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
         # "de": "DiscoResearch/Llama3-German-8B", # ger
         "nl": "ReBatch/Llama-3-8B-dutch", # du
         "it": "DeepMount00/Llama-3-8b-Ita", # ita

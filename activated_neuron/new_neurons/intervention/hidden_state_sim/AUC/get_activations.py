@@ -2,7 +2,7 @@
 import os
 import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/hidden_state_sim/AUC")
-import dill as pickle
+import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ from expertise_funcs import (
 # LLaMA-3
 model_names = {
     # "base": "meta-llama/Meta-Llama-3-8B",
-    "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
+    # "ja": "tokyotech-llm/Llama-3-Swallow-8B-v0.1", # ja
     # "de": "DiscoResearch/Llama3-German-8B", # ger
     "nl": "ReBatch/Llama-3-8B-dutch", # du
     "it": "DeepMount00/Llama-3-8b-Ita", # ita

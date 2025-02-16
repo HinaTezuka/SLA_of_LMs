@@ -30,21 +30,35 @@ LlamaForCausalLM(
 )
 """
 import os
-import itertools
 import sys
-sys.path.append("/home/s2410121/proj_LA/activated_neuron")
-import dill as pickle
+import pickle
 import random
-from typing import Any, Dict
 from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-from baukit import Trace, TraceDict
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, AutoModel
+from baukit import TraceDict
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 from sklearn.metrics import average_precision_score
+from sklearn.metrics.pairwise import cosine_similarity
+
+def monolingual_dataset(lang: str, num_sentences: int) -> list:
+    """
+    making tatoeba translation corpus for lang-specific neuron detection.
+    """
+
+    tatoeba_data = []
+    dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
+    dataset = dataset.select(range(2500))
+    random.seed(42)
+    random_indices = random.sample(range(2500), num_sentences)
+    dataset = dataset.select(random_indices)
+    for sentence_idx, item in enumerate(dataset):
+        tatoeba_data.append(item['translation'][lang])
+    
+    return tatoeba_data
 
 def multilingual_dataset_for_lang_specific_detection(langs: list, num_sentences=500) -> list:
     """
@@ -57,6 +71,7 @@ def multilingual_dataset_for_lang_specific_detection(langs: list, num_sentences=
             dataset = load_dataset("tatoeba", lang1="en", lang2="ja", split="train")
             # select random num_sentences samples from top 2500.
             dataset = dataset.select(range(2500))
+            random.seed(42)
             random_indices = random.sample(range(2500), num_sentences)
             dataset = dataset.select(random_indices)
             for item in dataset:
@@ -64,6 +79,7 @@ def multilingual_dataset_for_lang_specific_detection(langs: list, num_sentences=
             continue
         dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
         dataset = dataset.select(range(2500))
+        random.seed(42)
         random_indices = random.sample(range(2500), num_sentences)
         dataset = dataset.select(random_indices)
         for sentence_idx, item in enumerate(dataset):
@@ -84,6 +100,7 @@ def multilingual_dataset_for_centroid_detection(langs: list, num_sentences=500) 
     for lang in langs:
         dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
         dataset = dataset.select(range(2500))
+        random.seed(42)
         random_indices = random.sample(range(2500), num_sentences)
         dataset = dataset.select(random_indices)
         for sentence_idx, item in enumerate(dataset):
@@ -92,7 +109,7 @@ def multilingual_dataset_for_centroid_detection(langs: list, num_sentences=500) 
             if en_txt != '' and l2_txt != '':
                 tatoeba_data[lang].append((en_txt, l2_txt))
     
-    return tatoeba_data
+    return dict(tatoeba_data)
 
 def get_out_llama3_act_fn(model, prompt, device, index):
     model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
@@ -130,7 +147,7 @@ def act_llama3(model, input_ids):
 def calc_element_wise_product(act_fn_value, up_proj_value):
     return act_fn_value * up_proj_value
 
-def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx):
+def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False):
     # layers_num
     num_layers = 32
     # nums of total neurons (per a layer)
@@ -160,19 +177,26 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
         neurons(in llama3 MLP): up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
         """
         for layer_idx in range(len(act_fn_values)):
-            """ consider average of all tokens """
-            act_values_per_token = []
-            for token_idx in range(token_len):
-                act_fn_value = act_fn_values[layer_idx][:, token_idx, :][0]
-                up_proj_value = up_proj_values[layer_idx][:, token_idx, :][0]
+            # consider means of all token activations.
+            if not is_last_token_only:
+                """ consider average of all tokens """
+                act_values_per_token = []
+                for token_idx in range(token_len):
+                    act_fn_value = act_fn_values[layer_idx][:, token_idx, :][0]
+                    up_proj_value = up_proj_values[layer_idx][:, token_idx, :][0]
 
-                """ calc and extract neurons: up_proj(x) * act_fn(x) """
-                act_values = calc_element_wise_product(act_fn_value, up_proj_value)
-                act_values_per_token.append(act_values)
-            
-            """ calc average act_values of all tokens """
-            act_values_all_token = np.array(act_values_per_token)
-            means = np.mean(act_values_all_token, axis=0)
+                    """ calc and extract neurons: up_proj(x) * act_fn(x) """
+                    act_values = calc_element_wise_product(act_fn_value, up_proj_value)
+                    act_values_per_token.append(act_values)
+                
+                """ calc average act_values of all tokens """
+                act_values_all_token = np.array(act_values_per_token)
+                means = np.mean(act_values_all_token, axis=0)
+            # consider last token activations only.
+            elif is_last_token_only:
+                act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
+                up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
+                means = calc_element_wise_product(act_fn_value, up_proj_value)
 
             # save in activation_dict
             for neuron_idx in range(num_neurons):
@@ -184,7 +208,7 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
         else:
             labels.append(0)
 
-    return activation_dict, labels
+    return dict(activation_dict), labels
 
 def get_hidden_states(model, tokenizer, device, num_layers, data):
     """
@@ -215,9 +239,9 @@ def get_hidden_states(model, tokenizer, device, num_layers, data):
             c = np.mean(c, axis=0)
             c_hidden_states[layer_idx].append(c)
 
-    return c_hidden_states
+    return dict(c_hidden_states)
 
-def get_centroid_of_shared_space(hidden_states: defaultdict(list)):
+def get_centroid_of_shared_space(hidden_states: dict):
     centroids = [] # [c1, c2, ] len = layer_num(32layers: 0-31)
     for layer_idx, c in hidden_states.items():
         final_c = np.mean(c, axis=0) # calc mean of c(shared point per text) of all text.
@@ -245,6 +269,65 @@ def get_centroid_of_shared_space(hidden_states: defaultdict(list)):
 #     c_shared_space = np.mean(stacked_centroids_all_langs, axis=0)
 
 #     return c_shared_space
+
+def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
+    model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
+    num_layers = model.config.num_hidden_layers  # nums of layers of the model
+    ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+
+    with torch.no_grad():
+        # trace MLP layers using TraceDict
+        with TraceDict(model, ATT_act) as ret:
+            output = model(prompt, output_hidden_states=True, output_attentions=True)
+        ATT_act_value = [ret[act_value].output for act_value in ATT_act]
+        return ATT_act_value
+
+def post_attention_llama3(model, input_ids):
+    values = get_out_llama3_post_attention_layernorm(model, input_ids, model.device, -1)
+    values = [value.to("cpu") for value in values]
+
+    return values
+
+def compute_scores(model, tokenizer, device, data, neurons, centroids):
+    """
+    data: texts in specific L2 ([txt1, txt2, ...]).
+    neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
+    """
+    num_layers = model.config.num_hidden_layers
+    scores = defaultdict(list) # { (l, i): [score1, score2, ...] }
+    for text in data:
+        inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
+        inputs_for_att = inputs_for_ht.input_ids
+
+        token_len = len(inputs_for_att[0])
+        last_token_idx = token_len-1
+        # get ht
+        hts = [] # hidden_states: [ht_layer1, ht_layer2, ...]
+        atts = [] # post_att_LN_outputs: [atts_layer1, atts_layer2, ...]
+        acts = [] # activation_values: [acts_layer1, acts_layer2, ...]
+        with torch.no_grad():
+            outputs = model(**inputs_for_ht, output_hidden_states=True)
+        ht_all_layer = outputs.hidden_states[1:]
+        # get representation(right after post_att_LN).
+        post_attention_layernorm_values = post_attention_llama3(model, inputs_for_att)
+        # get activation_values(in MLP).
+        act_fn_values, up_proj_values = act_llama3(model, inputs_for_att)
+
+        for layer_idx in range(num_layers):
+            # hidden states
+            hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
+            # post attention
+            atts.append(post_attention_layernorm_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
+            # act_value * up_proj
+            act_fn_value = act_fn_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+            up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+            act_values = calc_element_wise_product(act_fn_value, up_proj_value)
+            acts.append(act_values)    
+        
+        print(atts[0])
+        print(hts[0])
+        print(acts[0])
+        sys.exit()
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """
@@ -280,7 +363,7 @@ def unfreeze_pickle(file_path: str):
     except (pickle.UnpicklingError, EOFError) as e:
         raise ValueError(f"Error unpickling file {file_path}: {e}")
 
-def compute_ap_and_sort(activations_dict: defaultdict(list), labels: list):
+def compute_ap_and_sort(activations_dict: dict, labels: list):
     """
     calc APscore and sort (considering nums_of_label) for detecting L2-specific neurons.
 
@@ -305,43 +388,98 @@ def compute_ap_and_sort(activations_dict: defaultdict(list), labels: list):
 
     return sorted_neurons, final_scores
 
-# def compute_ap_and_sort(activations_dict, start_label1: int, num_sentences_per_L2: int):
-#     """
-#     calc APscore and sort (considering nums_of_label) for detecting L2-specific neurons.
+# visualization
+def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, intervention_num: str) -> None:
+    # convert keys and values into list
+    keys = np.array(list(dict1.keys()))
+    values1 = list(dict1.values())
+    values2 = list(dict2.values())
 
-#     Args:
-#         activations: activation_value for each sentences.
-#         start_label1: indicating idx where label1(corresponding to L2) sentences bigin.
+    offset = 0.1 # バーをずらす用
 
-#     Returns:
-#         sorted_neurons list, ニューロンごとのAPスコア辞書
-#     """
-#     # 各ニューロンごとの活性化値とラベルを収集
-#     neuron_responses = defaultdict(list)  # { (layer_idx, neuron_idx): [activation_values, ...] }
-#     neuron_labels = defaultdict(list)     # { (layer_idx, neuron_idx): [labels, ...] }
-#     end_label1 = start_label1 + num_sentences_per_L2
+    # plot hist
+    plt.bar(keys-offset, values1, alpha=1, label='same semantics')
+    plt.bar(keys+offset, values2, alpha=1, label='different semantics')
+    # plt.bar(keys, values1, alpha=1, label='same semantics')
+    # plt.bar(keys, values2, alpha=1, label='different semantics')
 
-#     # pairs for label:1
-#     for sentence_idx, layer_data in activations_dict.items():
-#         for layer_idx, neuron_activations in layer_data.items():
-#             for neuron_idx, activation_value in neuron_activations:
-#                 neuron_responses[(layer_idx, neuron_idx)].append(activation_value)
-#                 if sentence_idx >= start_label1 and sentence_idx < end_label1: # check if sentence_idx is in label1 sentences.
-#                     neuron_labels[(layer_idx, neuron_idx)].append(1)  # label1: L2 sentence.
-#                 else:
-#                     neuron_labels[(layer_idx, neuron_idx)].append(0)  # label0: sentence in other langs.
+    plt.xlabel('Layer index', fontsize=35)
+    plt.ylabel('Cosine Sim', fontsize=35)
+    plt.title(f'en_{L2}')
+    plt.tick_params(axis='x', labelsize=15)  # x軸の目盛りフォントサイズ
+    plt.tick_params(axis='y', labelsize=15)
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(
+        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/{L2}.png",
+        bbox_inches="tight"
+    )
+    plt.close()
 
-#     # calc AP score for each shared neuron and calc total score which consider nums of label
-#     final_scores = {}
-#     for (layer_idx, neuron_idx), activations in neuron_responses.items():
-#         labels = neuron_labels[(layer_idx, neuron_idx)]
+""" func for editing activation values """
+def edit_activation(output, layer, layer_idx_and_neuron_idx):
+    """
+    edit activation value of neurons(indexed layer_idx and neuron_idx)
+    output: activation values
+    layer: sth like 'model.layers.{layer_idx}.mlp.act_fn'
+    layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
+    """
+    for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+            output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
 
-#         # calc AP score
-#         ap = average_precision_score(y_true=labels, y_score=activations)
-#         # save total score
-#         final_scores[(layer_idx, neuron_idx)] = ap
+    return output
 
-#     # sort: based on total score of each neuron
-#     sorted_neurons = sorted(final_scores.keys(), key=lambda x: final_scores[x], reverse=True)
+def take_similarities_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
+    trace_layers = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
 
-#     return sorted_neurons, final_scores
+        return calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, device, data)
+
+def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, device, data):
+    """
+    各層について、2000文ペアそれぞれのhidden_statesの類似度の平均を計算
+    """
+    similarities = defaultdict(list) # {layer_idx: mean_sim_of_each_sentences}
+
+    for L1_txt, L2_txt in data:
+        hidden_states = defaultdict(torch.Tensor)
+        inputs_L1 = tokenizer(L1_txt, return_tensors="pt").to(device)
+        inputs_L2 = tokenizer(L2_txt, return_tensors="pt").to(device)
+
+        # get hidden_states
+        with torch.no_grad():
+            output_L1 = model(**inputs_L1, output_hidden_states=True)
+            output_L2 = model(**inputs_L2, output_hidden_states=True)
+
+        all_hidden_states_L1 = output_L1.hidden_states
+        all_hidden_states_L2 = output_L2.hidden_states
+        # 最後のtokenのhidden_statesのみ取得
+        last_token_index_L1 = inputs_L1["input_ids"].shape[1] - 1
+        last_token_index_L2 = inputs_L2["input_ids"].shape[1] - 1
+
+        """各層の最後のトークンの hidden state をリストに格納 + 正規化 """
+        last_token_hidden_states_L1 = [
+            (layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy() /
+            np.linalg.norm(layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+            for layer_hidden_state in all_hidden_states_L1
+        ]
+        last_token_hidden_states_L2 = [
+            (layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() /
+            np.linalg.norm(layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+            for layer_hidden_state in all_hidden_states_L2
+        ]
+        # cos_sim
+        similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
+
+    return similarities
+
+def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_L2: list, similarities: defaultdict(float)) -> defaultdict(float):
+    """
+    層ごとの類似度を計算
+    """
+    for layer_idx, (hidden_state_L1, hidden_state_L2) in enumerate(zip(last_token_hidden_states_L1, last_token_hidden_states_L2)):
+        sim = cosine_similarity(hidden_state_L1, hidden_state_L2)[0, 0] # <- [[0.50695133]] のようになっているので、数値の部分だけ抽出
+        similarities[layer_idx].append(sim)
+
+    return similarities

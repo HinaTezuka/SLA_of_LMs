@@ -34,7 +34,7 @@ import os
 import itertools
 import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron")
-import dill as pickle
+import pickle
 from typing import Any, Dict
 from collections import defaultdict
 
@@ -154,7 +154,7 @@ def track_neurons_with_text_data(model, device, model_name, tokenizer, data, is_
 
         pair_idx += 1
 
-    return activation_dict
+    return dict(activation_dict)
 
 def get_activation_value(activations, neuron_idx):
     """

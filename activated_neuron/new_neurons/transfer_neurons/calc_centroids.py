@@ -3,7 +3,8 @@ calc centroid.
 centroid: center point of Language-Agnostic Space.
 """
 import sys
-import dill as pickle
+# import dill as pickle
+import pickle
 
 import torch
 from datasets import load_dataset

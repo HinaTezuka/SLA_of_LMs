@@ -2,7 +2,8 @@
 detect language specific neurons
 """
 import sys
-import dill as pickle
+# import dill as pickle
+import pickle
 
 import torch
 from datasets import load_dataset
@@ -12,11 +13,13 @@ from funcs import (
     multilingual_dataset_for_lang_specific_detection,
     track_neurons_with_text_data,
     save_as_pickle,
+    compute_ap_and_sort,
+    unfreeze_pickle,
 )
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
-num_sentences = 500
+num_sentences = 1000
 multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences) # 2500 sentences(500 for each lang).
 print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
@@ -32,12 +35,12 @@ model_names = {
 device = "cuda" if torch.cuda.is_available() else "cpu"
 start_indics = {
     "ja": 0,
-    "nl": 500,
-    "ko": 1000,
-    "it": 1500,
-    "en": 2000,
+    "nl": 1000,
+    "ko": 2000,
+    "it": 3000,
+    "en": 4000,
 }
-
+is_last_token_only = True
 """ get activaitons and save as pkl. """
 for L2, model_name in model_names.items():
     # model and tokenizer.
@@ -48,15 +51,28 @@ for L2, model_name in model_names.items():
     start_idx = start_indics[L2]
     end_idx = start_idx + num_sentences
     # get activations and corresponding labels.
-    activations, labels = track_neurons_with_text_data(model, device, tokenizer, multilingual_sentences, start_idx, end_idx)
+    activations, labels = track_neurons_with_text_data(
+        model, 
+        device, 
+        tokenizer, 
+        multilingual_sentences, 
+        start_idx, 
+        end_idx, 
+        is_last_token_only,
+        )
 
     # save activations as pickle file.
-    save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}.pkl"
-    save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/labels/{L2}.pkl"
+    if not is_last_token_only:
+        save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}_normal.pkl"
+        save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/labels/{L2}_normal.pkl"
+    if is_last_token_only:
+        save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/{L2}_last_token.pkl"
+        save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/labels/{L2}_last_token.pkl"
     save_as_pickle(save_path_activations, activations)
     save_as_pickle(save_path_labels, labels)
     print(f"successfully saved activations and labels of {L2} model as pkl.")
 
     # clean cache.
+    del activations, labels
     del model
     torch.cuda.empty_cache()

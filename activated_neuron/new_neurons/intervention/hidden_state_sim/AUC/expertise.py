@@ -5,7 +5,7 @@ import os
 import itertools
 import sys
 sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/intervention/hidden_state_sim/AUC")
-import dill as pickle
+import pickle
 from collections import defaultdict
 
 import numpy as np
@@ -23,8 +23,10 @@ from expertise_funcs import (
 
 """ parameters setting """
 activation_types = ["product", "abs"]
+# activation_type = ["product"]
 norm_type = "no"
-L2_list = ["ja", "nl", "ko", "it"]
+# L2_list = ["ja", "nl", "ko", "it"]
+L2_list = ["nl", "ko", "it"]
 
 for L2 in L2_list:
     for activation_type in activation_types:
