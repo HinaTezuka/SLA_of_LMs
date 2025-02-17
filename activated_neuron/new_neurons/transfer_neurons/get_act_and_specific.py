@@ -18,21 +18,21 @@ from funcs import (
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
-num_sentences = 100
-# start_indics = {
-#     "ja": 0,
-#     "nl": 500,
-#     "ko": 1000,
-#     "it": 1500,
-#     "en": 2000,
-# }
+num_sentences = 500
 start_indics = {
     "ja": 0,
-    "nl": 100,
-    "ko": 200,
-    "it": 300,
-    "en": 400,
+    "nl": 500,
+    "ko": 1000,
+    "it": 1500,
+    "en": 2000,
 }
+# start_indics = {
+#     "ja": 0,
+#     "nl": 100,
+#     "ko": 200,
+#     "it": 300,
+#     "en": 400,
+# }
 multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences) # 2500 sentences(500 for each lang).
 # LLaMA-3(8B) models.
 model_names = {

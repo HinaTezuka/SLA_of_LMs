@@ -105,7 +105,7 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/Mistral/images/ht_sim/{L2}.png",
+        f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}.png",
         bbox_inches="tight"
         )
     plt.close()
@@ -126,8 +126,8 @@ def unfreeze_pickle(file_path: str):
 if __name__ == "__main__":
     """ model configs """
     langs = ["ja", "nl", "ko", "it"]
-    # Mistral-7B
-    model_name = "mistralai/Mistral-7B-v0.3"
+    # original llama
+    model_name = "meta-llama/Meta-Llama-3-8B"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
@@ -138,7 +138,7 @@ if __name__ == "__main__":
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 20
+        num_sentences = 2000
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):

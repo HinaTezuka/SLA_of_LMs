@@ -69,7 +69,7 @@ from baukit import TraceDict
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 from sklearn.metrics import average_precision_score
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 
 def monolingual_dataset(lang: str, num_sentences: int) -> list:
     """
@@ -164,9 +164,9 @@ def get_out_llama3_up_proj(model, prompt, device, index):
 
 def act_llama3(model, input_ids):
     act_fn_values = get_out_llama3_act_fn(model, input_ids, model.device, -1)  # LlamaのMLP活性化を取得
-    act_fn_values = [act.to("cpu") for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
+    act_fn_values = [act.to("cpu").half() for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
     up_proj_values = get_out_llama3_up_proj(model, input_ids, model.device, -1)
-    up_proj_values = [act.to("cpu") for act in up_proj_values]
+    up_proj_values = [act.to("cpu").half() for act in up_proj_values]
 
     return act_fn_values, up_proj_values
 
@@ -218,12 +218,12 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
                     act_values_per_token.append(act_values)
                 """ calc average act_values of all tokens """
                 act_values_all_token = np.array(act_values_per_token)
-                means = np.mean(act_values_all_token, axis=0)
+                means = np.mean(act_values_all_token, axis=0).to(torch.float16)
             # consider last token activations only.
             elif is_last_token_only:
                 act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
                 up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
-                means = calc_element_wise_product(act_fn_value, up_proj_value)
+                means = calc_element_wise_product(act_fn_value, up_proj_value).to(torch.float16)
             # save in activation_dict
             for neuron_idx in range(num_neurons):
                 mean_act_value = means[neuron_idx]
@@ -280,8 +280,38 @@ def get_centroid_of_shared_space(hidden_states: dict):
     for layer_idx, c in hidden_states.items():
         final_c = np.mean(c, axis=0) # calc mean of c(shared point per text) of all text.
         centroids.append(final_c)
-    
     return centroids
+
+def get_hidden_states_for_eng(model, tokenizer, device, num_layers, data):
+    """
+    """
+    # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en-L2).
+    c_hidden_states = defaultdict(list)
+
+    for text1, text2 in data:
+        inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
+        inputs2 = tokenizer(text2, return_tensors="pt").to(device) # L2 text
+
+        # get hidden_states
+        with torch.no_grad():
+            output1 = model(**inputs1, output_hidden_states=True)
+            output2 = model(**inputs2, output_hidden_states=True)
+
+        all_hidden_states1 = output1.hidden_states[1:] # remove embedding layer
+        all_hidden_states2 = output2.hidden_states[1:]
+        last_token_index1 = inputs1["input_ids"].shape[1] - 1
+        last_token_index2 = inputs2["input_ids"].shape[1] - 1
+
+        """  """
+        for layer_idx in range(num_layers):
+            hs1 = all_hidden_states1[layer_idx][:, last_token_index1, :].squeeze().detach().cpu().numpy()
+            hs2 = all_hidden_states2[layer_idx][:, last_token_index2, :].squeeze().detach().cpu().numpy()
+            # save mean of (en_ht, L2_ht). <- estimated shared point in shared semantic space.
+            c = np.stack([hs1, hs2])
+            c = np.mean(c, axis=0)
+            c_hidden_states[layer_idx].append(c)
+
+    return dict(c_hidden_states)
 
 # def get_centroids_per_L2(hidden_states: defaultdict(list)):
 #     centroids = [] # [c1, c2, ...] c1: centroid of layer1.
@@ -318,17 +348,18 @@ def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
 
 def post_attention_llama3(model, input_ids):
     values = get_out_llama3_post_attention_layernorm(model, input_ids, model.device, -1)
-    values = [value.to("cpu") for value in values]
+    values = [value.to("cpu").half() for value in values]
 
     return values
 
-def compute_scores(model, tokenizer, device, data, neurons, centroids):
+def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids):
     """
     data: texts in specific L2 ([txt1, txt2, ...]).
-    neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
+    candidate_neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
     """
     num_layers = model.config.num_hidden_layers
-    scores = defaultdict(list) # { (l, i): [score1, score2, ...] }
+    final_scores = {} # { (l, i): [score1, score2, ...] }
+
     for text in data:
         inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
         inputs_for_att = inputs_for_ht.input_ids
@@ -357,11 +388,28 @@ def compute_scores(model, tokenizer, device, data, neurons, centroids):
             up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
             acts.append(act_values)
+
+        # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+        c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+        for layer_idx, neurons in candidate_neurons.items():
+            layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+            layer_score = euclidean_distances(layer_score, c)[0, 0]
+            for neuron_idx in neurons:
+                value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+                # print(value_vector)
+                score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+                # score = value_vector.reshape(1, -1)
+                score = euclidean_distances(score, c)[0, 0]
+                score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
+                final_scores.setdefault((layer_idx, neuron_idx), []).append(score)             
+
+    # 
+    for layer_neuron_idx, scores in final_scores.items():
+        mean_score = np.mean(scores)
+        final_scores[layer_neuron_idx] = mean_score
+
+    return final_scores
         
-        print(atts[0])
-        print(hts[0])
-        print(acts[0])
-        sys.exit()
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """
@@ -445,7 +493,7 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/{L2}.png",
+        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/{L2}_n{intervention_num}.png",
         bbox_inches="tight"
     )
     plt.close()

@@ -40,7 +40,8 @@ model_name = "meta-llama/Meta-Llama-3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 is_last_token_onlys = [True, False]
-model_langs = ["ja", "nl", "ko", "it"]
+# model_langs = ["ja", "nl", "ko", "it"]
+model_langs = ["ko", "it"]
 
 """ get activaitons and save as pkl. """
 for L2 in model_langs:
