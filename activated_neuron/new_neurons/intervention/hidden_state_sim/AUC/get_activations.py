@@ -69,8 +69,6 @@ for L2, model_name in model_names.items():
         # 非対訳ペア
         activation_dict_non_same_semantics = track_neurons_with_text_data(model, device, 'llama', tokenizer, random_data, False, activation_type)
 
-        # delete some cache
-        del model
         torch.cuda.empty_cache()
 
         # translation pair (same_semantics)
@@ -83,9 +81,6 @@ for L2, model_name in model_names.items():
         save_as_pickle(pkl_file_path, activation_dict_non_same_semantics)
         print(f"pickle file saved: activation_dict(non_same_semantics): en_{L2} saccessfully saved.")
 
-        # """ pickle file(shared_neurons)の解凍/読み込み """
-        # with open(pkl_file_path, "rb") as f:
-        #     loaded_dict = pickle.load(f)
-        # print("unfold pickle")
-        # print(loaded_dict[2019][31])
-        # sys.exit()
+    # delete some cache
+    del model
+    torch.cuda.empty_cache()

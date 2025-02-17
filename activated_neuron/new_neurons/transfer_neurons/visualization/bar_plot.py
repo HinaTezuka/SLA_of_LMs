@@ -20,33 +20,41 @@ from funcs import (
 
 """ parameters setting """
 model = "llama"
+model = "llama3"
+# model = "mistral"
 # model = "gpt2"
-activation_type = "abs"
-# activation_type = "product"
-norm_type = "no"
-# norm_type = "min_max"
-norm_type = "sigmoid"
-# L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
-L2_list = ["ko"]
+L2_list = ["ja"]
+is_last_token_only = False
 
 for L2 in L2_list:
-
     # L2-specific neurons
-    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
-    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}.pkl"
+    if model == "llama":
+        if not is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
+            save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}.pkl"
+        elif is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+            save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}_last_token.pkl"
+    else:
+        if not is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/ap_lang_specific/sorted_neurons_{L2}.pkl"
+            save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/ap_lang_specific/ap_scores_{L2}.pkl"
+        elif is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+            save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/ap_lang_specific/ap_scores_{L2}_last_token.pkl"
     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
     ap_scores = unfreeze_pickle(save_path_ap_scores)
 
     # #
     sorted_neurons = sorted_neurons[:1000] + sorted_neurons[-1000:]
-    # # sorted_neurons = sorted_neurons
+    sorted_neurons = sorted_neurons[:2000]
     # # print(sorted_neurons)
     
-    # """ 上位10件を表示 """
-    # print(f"======================== {L2} ========================")
-    # for i in sorted_neurons[:10]:
-    #     print(ap_scores[i])
+    """ 上位10件を表示 """
+    print(f"======================== {L2} ========================")
+    for i in sorted_neurons[:10]:
+        print(ap_scores[i])
     # print(f"=====================================================")
     # for i in sorted_neurons[-10:]:
     #     print(ap_scores[i])
@@ -70,10 +78,13 @@ for L2 in L2_list:
     plt.title("Ja specific neuorns")
     plt.grid(axis="y", linestyle="--", alpha=0.7)
 
+    if not is_last_token_only:
+        path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dist/{model}/{L2}.png'
+    elif is_last_token_only:
+        path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dist/{model}/{L2}_last_token.png'
+
     # 保存
     plt.savefig(
-        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/{L2}.png',
+        path,
         bbox_inches='tight',
         )
-    # plt.close()
-    sys.exit()

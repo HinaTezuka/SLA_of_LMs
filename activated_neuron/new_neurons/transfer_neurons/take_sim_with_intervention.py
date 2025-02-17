@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # activation_types = ["product", "abs"]
     norm_type = "no"
     n_list = [100, 1000, 1500] # patterns of intervention_num
-    n_list = [1000]
+    n_list = [2000]
 
     for L2, model_name in model_names.items():
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-        save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
+        save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
         sorted_neurons_AP = unfreeze_pickle(save_path_sorted_neurons)
         
         for n in n_list:

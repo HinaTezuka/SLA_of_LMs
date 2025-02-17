@@ -20,14 +20,6 @@ model_langs = ["ja", "nl", "ko", "it"]
 is_last_token_onlys = [False, True]
 
 for L2 in model_langs:
-    """
-    activations for L2.
-    activation_dict
-    {
-        text_idx:
-            layer_idx: [(neuron_idx, act_value), (neuron_idx, act_value), ....]
-    }
-    """
     for is_last_token_only in is_last_token_onlys:
         # unfreeze activations.
         if not is_last_token_only:

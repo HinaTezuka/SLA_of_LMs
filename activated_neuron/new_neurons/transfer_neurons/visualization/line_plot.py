@@ -21,24 +21,19 @@ from expertise_funcs import (
 
 
 """ parameters setting """
-activation_type = "abs"
-activation_type = "product"
-norm_type = "no"
-top_n = 2000
-# norm_type = "min_max"
-# norm_type = "sigmoid"
-# L2 = "ja"
+top_n = 1000
 L2_list = ["ja", "nl", "ko", "it"]
-# L2_list = ["ja", "nl"]
+# L2_list = ["ja", "nl", "it"]
 
 # データを格納するリスト
 data = []
 
 for L2 in L2_list:
     # LLaMA-3 unfreezing
-    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
-    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}.pkl"
+    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}_last_token.pkl"
     sorted_neurons_llama3 = unfreeze_pickle(save_path_sorted_neurons)[:top_n]
+    # sorted_neurons_llama3 = unfreeze_pickle(save_path_sorted_neurons)
     ap_scores_llama3 = unfreeze_pickle(save_path_ap_scores)
 
     # GPT-2 unfreezing

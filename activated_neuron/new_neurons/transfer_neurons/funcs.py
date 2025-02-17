@@ -174,13 +174,14 @@ def act_llama3(model, input_ids):
 def calc_element_wise_product(act_fn_value, up_proj_value):
     return act_fn_value * up_proj_value
 
-def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False):
+def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False, is_bilingual=False):
     # layers_num
     num_layers = 32
     # nums of total neurons (per a layer)
     num_neurons = 14336
     # return dict for saving activation values.
-    activation_dict = defaultdict(list)
+    # activation_dict = defaultdict(list)
+    activation_dict = {}
     labels = []
     """
     activation_dict
@@ -203,7 +204,7 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
         """
         neurons(in llama3 MLP): up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
         """
-        for layer_idx in range(len(act_fn_values)):
+        for layer_idx in range(num_layers):
             # consider means of all token activations.
             if not is_last_token_only:
                 """ consider average of all tokens """
@@ -215,7 +216,6 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
                     """ calc and extract neurons: up_proj(x) * act_fn(x) """
                     act_values = calc_element_wise_product(act_fn_value, up_proj_value)
                     act_values_per_token.append(act_values)
-                
                 """ calc average act_values of all tokens """
                 act_values_all_token = np.array(act_values_per_token)
                 means = np.mean(act_values_all_token, axis=0)
@@ -224,18 +224,25 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
                 act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
                 up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
                 means = calc_element_wise_product(act_fn_value, up_proj_value)
-
             # save in activation_dict
             for neuron_idx in range(num_neurons):
                 mean_act_value = means[neuron_idx]
-                activation_dict[(layer_idx, neuron_idx)].append(mean_act_value)
-        # labels list
-        if text_idx >= start_idx and text_idx < end_idx:
-            labels.append(1)
-        else:
-            labels.append(0)
+                # activation_dict[(layer_idx, neuron_idx)].append(mean_act_value)
+                activation_dict.setdefault((layer_idx, neuron_idx), []).append(mean_act_value)
 
-    return dict(activation_dict), labels
+        # labels list
+        if not is_bilingual:
+            if text_idx >= start_idx and text_idx < end_idx:
+                labels.append(1)
+            else:
+                labels.append(0)
+        elif is_bilingual:
+            if (text_idx >= start_idx and text_idx < end_idx) or (text_idx >= 400 and text_idx < 500):
+                labels.append(1)
+            else:
+                labels.append(0)            
+
+    return activation_dict, labels
 
 def get_hidden_states(model, tokenizer, device, num_layers, data):
     """
