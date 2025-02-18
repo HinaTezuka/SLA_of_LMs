@@ -406,97 +406,179 @@ def get_hidden_states_for_eng(model, tokenizer, device, num_layers, data):
 
 #     return c_shared_space
 
-def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
-    model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
-    num_layers = model.config.num_hidden_layers  # nums of layers of the model
-    ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+def get_all_outputs_llama3_mistral(model, prompt, device):
+    model.eval()
+    num_layers = model.config.num_hidden_layers
+    MLP_act = [f"model.layers.{i}.mlp.act_fn" for i in range(num_layers)]
+    MLP_up_proj = [f"model.layers.{i}.mlp.up_proj" for i in range(num_layers)]
+    ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]
 
     with torch.no_grad():
-        # trace MLP layers using TraceDict
-        with TraceDict(model, ATT_act) as ret:
-            output = model(prompt, output_hidden_states=True, output_attentions=True)
-        ATT_act_value = [ret[act_value].output for act_value in ATT_act]
-        return ATT_act_value
-
-def post_attention_llama3(model, input_ids):
-    values = get_out_llama3_post_attention_layernorm(model, input_ids, model.device, -1)
-    values = [value.to("cpu").half() for value in values]
-
-    return values
+        # TraceDictで必要な出力をまとめて取得
+        with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:
+            outputs = model(prompt, output_hidden_states=True, output_attentions=True)
+        
+        MLP_act_values = [ret[act].output for act in MLP_act]
+        up_proj_values = [ret[proj].output for proj in MLP_up_proj]
+        ATT_values = [ret[att].output for att in ATT_act]
+        
+        return MLP_act_values, up_proj_values, ATT_values, outputs
 
 def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
     """
-    data: texts in specific L2 ([txt1, txt2, ...]).
-    candidate_neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
+    Optimized function to compute scores using batched inference.
     """
     num_layers = model.config.num_hidden_layers
-    final_scores = {} # { (l, i): [score1, score2, ...] }
+    num_neurons = 14336
+    final_scores_save = np.zeros((num_layers, num_neurons, len(data))) # final_scoreを計算する前の保存用
+    final_scores = np.zeros((num_layers, num_neurons, 1))
 
-    for text in data:
-        inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
-        inputs_for_att = inputs_for_ht.input_ids
+    for text_idx, text in enumerate(data):
+        # Tokenize all input data at once
+        inputs = tokenizer(text, return_tensors="pt").to(device)
 
-        token_len = len(inputs_for_att[0])
-        last_token_idx = token_len-1
-        # get ht
-        hts = [] # hidden_states: [ht_layer1, ht_layer2, ...]
-        atts = [] # post_att_LN_outputs: [atts_layer1, atts_layer2, ...]
-        acts = [] # activation_values: [acts_layer1, acts_layer2, ...]
-        with torch.no_grad():
-            outputs = model(**inputs_for_ht, output_hidden_states=True)
+        # Perform the forward pass once to get all necessary values
+        MLP_act_values, up_proj_values, post_attention_values, outputs = get_all_outputs_llama3_mistral(model, inputs.input_ids, device)
+
+        # Extract hidden states (ht), attention layer outputs, and MLP activations
         ht_all_layer = outputs.hidden_states[1:]
-        # get representation(right after post_att_LN).
-        post_attention_layernorm_values = post_attention_llama3(model, inputs_for_att)
-        # get activation_values(in MLP).
-        act_fn_values, up_proj_values = act_llama3(model, inputs_for_att)
+        token_len = inputs.input_ids.size(1)
+        last_token_idx = token_len - 1
 
+        # Initialize lists to store the values
+        hts, atts, acts = [], [], []
+
+        # For each layer, extract the necessary values and calculate element-wise products
         for layer_idx in range(num_layers):
-            # hidden states
-            hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
-            # post attention
-            atts.append(post_attention_layernorm_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
-            # act_value * up_proj
-            act_fn_value = act_fn_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
-            up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+            hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy())
+            atts.append(post_attention_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy())
+
+            act_fn_value = MLP_act_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
+            up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
             acts.append(act_values)
 
-        if score_type == "L2_dis":
-            # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
-            c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
-            for layer_idx, neurons in candidate_neurons.items():
-                layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
-                layer_score = euclidean_distances(layer_score, c)[0, 0]
-                for neuron_idx in neurons:
-                    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
-                    # print(value_vector)
-                    score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
-                    # score = value_vector.reshape(1, -1)
-                    score = euclidean_distances(score, c)[0, 0]
-                    score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
-                    final_scores.setdefault((layer_idx, neuron_idx), []).append(score)
-        elif score_type == "cos_sim":
-            # calc scores: cos_sim((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
-            c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
-            for layer_idx, neurons in candidate_neurons.items():
-                layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
-                layer_score = cosine_similarity(layer_score, c)[0, 0]
-                for neuron_idx in neurons:
-                    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
-                    # print(value_vector)
-                    score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
-                    # score = value_vector.reshape(1, -1)
-                    score = cosine_similarity(score, c)[0, 0]
-                    score = abs(layer_score - score) if score >= layer_score else abs(layer_score - score)*-1
-                    final_scores.setdefault((layer_idx, neuron_idx), []).append(score)            
+        # Score calculation based on type (L2 distance or cosine similarity)
+        c = np.mean(centroids[5:21], axis=0).reshape(1, -1) # centroids: mean of c for 5-20layers.
+        for layer_idx, neurons in candidate_neurons.items():
+            layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
 
-    # 
+            if score_type == "L2_dis":
+                layer_score = euclidean_distances(layer_score, c)[0, 0]
+            elif score_type == "cos_sim":
+                layer_score = cosine_similarity(layer_score, c)[0, 0]
+
+            for neuron_idx in neurons:
+                value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+
+                score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx] * value_vector)).reshape(1, -1)
+                
+                if score_type == "L2_dis":
+                    score = euclidean_distances(score, c)[0, 0]
+                    score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score) * -1
+                elif score_type == "cos_sim":
+                    score = cosine_similarity(score, c)[0, 0]
+                    score = abs(layer_score - score) if score >= layer_score else abs(layer_score - score) * -1
+
+                final_scores_save[layer_idx, neuron_idx, text_idx] = score
+
+    # Calculate mean score for each neuron
     for layer_neuron_idx, scores in final_scores.items():
-        mean_score = np.mean(scores)
-        final_scores[layer_neuron_idx] = mean_score
+        mean_score = np.mean(final_scores[layer_idx, neuron_idx, :])
+        final_scores[layer_idx, neuron_idx, 0] = mean_score
 
     return final_scores
-        
+
+# def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
+#     model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
+#     num_layers = model.config.num_hidden_layers  # nums of layers of the model
+#     ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+
+#     with torch.no_grad():
+#         # trace MLP layers using TraceDict
+#         with TraceDict(model, ATT_act) as ret:
+#             output = model(prompt, output_hidden_states=True, output_attentions=True)
+#         ATT_act_value = [ret[act_value].output for act_value in ATT_act]
+#         return ATT_act_value
+
+# def post_attention_llama3(model, input_ids):
+#     values = get_out_llama3_post_attention_layernorm(model, input_ids, model.device, -1)
+#     values = [value.to("cpu").half() for value in values]
+
+#     return values
+
+# def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
+#     """
+#     data: texts in specific L2 ([txt1, txt2, ...]).
+#     candidate_neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
+#     """
+#     num_layers = model.config.num_hidden_layers
+#     final_scores = {} # { (l, i): [score1, score2, ...] }
+
+#     for text in data:
+#         inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
+#         inputs_for_att = inputs_for_ht.input_ids
+
+#         token_len = len(inputs_for_att[0])
+#         last_token_idx = token_len-1
+#         # get ht
+#         hts = [] # hidden_states: [ht_layer1, ht_layer2, ...]
+#         atts = [] # post_att_LN_outputs: [atts_layer1, atts_layer2, ...]
+#         acts = [] # activation_values: [acts_layer1, acts_layer2, ...]
+#         with torch.no_grad():
+#             outputs = model(**inputs_for_ht, output_hidden_states=True)
+#         ht_all_layer = outputs.hidden_states[1:]
+#         # get representation(right after post_att_LN).
+#         post_attention_layernorm_values = post_attention_llama3(model, inputs_for_att)
+#         # get activation_values(in MLP).
+#         act_fn_values, up_proj_values = act_llama3(model, inputs_for_att)
+
+#         for layer_idx in range(num_layers):
+#             # hidden states
+#             hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
+#             # post attention
+#             atts.append(post_attention_layernorm_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
+#             # act_value * up_proj
+#             act_fn_value = act_fn_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+#             up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+#             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
+#             acts.append(act_values)
+
+#         if score_type == "L2_dis":
+#             # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+#             c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+#             for layer_idx, neurons in candidate_neurons.items():
+#                 layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+#                 layer_score = euclidean_distances(layer_score, c)[0, 0]
+#                 for neuron_idx in neurons:
+#                     value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+#                     # print(value_vector)
+#                     score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+#                     # score = value_vector.reshape(1, -1)
+#                     score = euclidean_distances(score, c)[0, 0]
+#                     score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
+#                     final_scores.setdefault((layer_idx, neuron_idx), []).append(score)
+#         elif score_type == "cos_sim":
+#             # calc scores: cos_sim((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+#             c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+#             for layer_idx, neurons in candidate_neurons.items():
+#                 layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+#                 layer_score = cosine_similarity(layer_score, c)[0, 0]
+#                 for neuron_idx in neurons:
+#                     value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+#                     # print(value_vector)
+#                     score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+#                     # score = value_vector.reshape(1, -1)
+#                     score = cosine_similarity(score, c)[0, 0]
+#                     score = abs(layer_score - score) if score >= layer_score else abs(layer_score - score)*-1
+#                     final_scores.setdefault((layer_idx, neuron_idx), []).append(score)            
+
+#     # 
+#     for layer_neuron_idx, scores in final_scores.items():
+#         mean_score = np.mean(scores)
+#         final_scores[layer_neuron_idx] = mean_score
+
+#     return final_scores  
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """
@@ -645,7 +727,7 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
 
 def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_L2: list, similarities: defaultdict(float)) -> defaultdict(float):
     """
-    層ごとの類似度を計算
+    calc similarity per layer.
     """
     for layer_idx, (hidden_state_L1, hidden_state_L2) in enumerate(zip(last_token_hidden_states_L1, last_token_hidden_states_L2)):
         sim = cosine_similarity(hidden_state_L1, hidden_state_L2)[0, 0] # <- [[0.50695133]] のようになっているので、数値の部分だけ抽出
@@ -654,42 +736,17 @@ def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_
     return similarities
 
 def save_np_arrays(save_path, np_array):
-    """
-    Save a numpy array safely by first writing to a temporary file (.tmp) and renaming it to .npz.
-    
-    Parameters:
-        save_path (str): The target path to save the .npz file.
-        np_array (numpy.ndarray): The numpy array to be saved.
-    """
     # Ensure the directory exists
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
-    # Temporary file path (.tmp)
-    tmp_path = save_path + ".tmp"
-    
     try:
-        # Save to a temporary file first
-        np.savez(tmp_path, data=np_array)
-        
-        # Rename .tmp to .npz (atomic operation)
-        os.replace(tmp_path, save_path)
-        
+        # Save directly to .npz
+        np.savez(save_path, data=np_array)
         print(f"Array successfully saved to {save_path}")
     except Exception as e:
         print(f"Failed to save array: {e}")
-        if os.path.exists(tmp_path):
-            os.remove(tmp_path)  # Cleanup if failed
 
 def unfreeze_np_arrays(save_path):
-    """
-    Load a numpy array from an .npz file.
-    
-    Parameters:
-        save_path (str): The path to the .npz file.
-    
-    Returns:
-        numpy.ndarray: The loaded numpy array.
-    """
     try:
         with np.load(save_path) as data:
             return data["data"]

@@ -57,17 +57,18 @@ for L2 in model_langs:
             tokenizer, 
             multilingual_sentences, 
             start_idx, 
-            end_idx, 
+            end_idx,
             is_last_token_only,
             )
 
         # save activations as pickle file.
         if not is_last_token_only:
-            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}.npz"
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}"
             save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}.pkl"
         if is_last_token_only:
-            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}_last_token.npz"
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}_last_token"
             save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}_last_token.pkl"
+        print("Started Saving....")
         save_np_arrays(save_path_activations, activations)
         save_as_pickle(save_path_labels, labels)
         print(f"successfully saved activations and labels of {L2} model as pkl, is_last_token_only:{is_last_token_only}.")
