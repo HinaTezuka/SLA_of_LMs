@@ -175,74 +175,146 @@ def calc_element_wise_product(act_fn_value, up_proj_value):
     return act_fn_value * up_proj_value
 
 def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False, is_bilingual=False):
-    # layers_num
     num_layers = 32
-    # nums of total neurons (per a layer)
     num_neurons = 14336
-    # return dict for saving activation values.
-    # activation_dict = defaultdict(list)
-    activation_dict = {}
-    labels = []
     """
-    activation_dict
-    {
-    (layer_idx, neuron_idx): [act_value1, act_value2, ...]
-    }
+    a numpy array for saving activation values (layer_idx * neuron_idx * text_idx):
+    can access activation_list of each neuron by activation_array[layer_idx, neuron_idx].
+    """
+    activation_array = np.zeros((num_layers, num_neurons, len(data)), dtype=np.float16)
+    labels = []
+
+    """
+    activation_array shape: (num_layers, num_neurons, len(data))
+    Each value represents the activation of a neuron for a given text sample.
     labels: [1, 1, ..., 0, 0, ...]
     """
 
     # Track neurons with tatoeba
     for text_idx, text in enumerate(data):
         """
-        get activation values
+        Get activation values
         mlp_activation: [torch.Tensor(batch_size, sequence_length, num_neurons) * num_layers]
         """
-        # input text
+        # Input text
         inputs = tokenizer(text, return_tensors="pt").input_ids.to(device)
         token_len = len(inputs[0])
         act_fn_values, up_proj_values = act_llama3(model, inputs)
+
         """
-        neurons(in llama3 MLP): up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
+        Neurons in LLama3 MLP:
+        up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
         """
         for layer_idx in range(num_layers):
-            # consider means of all token activations.
+            # Compute activations considering all tokens.
             if not is_last_token_only:
-                """ consider average of all tokens """
+                """ Compute the average activation across all tokens """
                 act_values_per_token = []
                 for token_idx in range(token_len):
                     act_fn_value = act_fn_values[layer_idx][:, token_idx, :][0]
                     up_proj_value = up_proj_values[layer_idx][:, token_idx, :][0]
 
-                    """ calc and extract neurons: up_proj(x) * act_fn(x) """
+                    """ Compute element-wise product """
                     act_values = calc_element_wise_product(act_fn_value, up_proj_value)
                     act_values_per_token.append(act_values)
-                """ calc average act_values of all tokens """
+                
+                """ Compute mean activation over all tokens """
                 act_values_all_token = np.array(act_values_per_token)
-                means = np.mean(act_values_all_token, axis=0).to(torch.float16)
-            # consider last token activations only.
-            elif is_last_token_only:
+                means = np.mean(act_values_all_token, axis=0)
+
+            # Compute activations for the last token only
+            else:
                 act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
                 up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
-                means = calc_element_wise_product(act_fn_value, up_proj_value).to(torch.float16)
-            # save in activation_dict
-            for neuron_idx in range(num_neurons):
-                mean_act_value = means[neuron_idx]
-                # activation_dict[(layer_idx, neuron_idx)].append(mean_act_value)
-                activation_dict.setdefault((layer_idx, neuron_idx), []).append(mean_act_value)
+                means = calc_element_wise_product(act_fn_value, up_proj_value)
 
-        # labels list
-        if not is_bilingual:
-            if text_idx >= start_idx and text_idx < end_idx:
+            # Store activation values in the numpy array
+            for neuron_idx in range(num_neurons):
+                activation_array[layer_idx, neuron_idx, text_idx] = means[neuron_idx]
+
+        # Assign labels
+        if not is_bilingual: # monolingual neurons.
+            if start_idx <= text_idx < end_idx:
                 labels.append(1)
             else:
                 labels.append(0)
-        elif is_bilingual:
-            if (text_idx >= start_idx and text_idx < end_idx) or (text_idx >= 400 and text_idx < 500):
+        else: # bilingual neurons(neurons activated for both english and L2).
+            if (start_idx <= text_idx < end_idx) or (400 <= text_idx < 500):
                 labels.append(1)
             else:
-                labels.append(0)            
+                labels.append(0)
 
-    return activation_dict, labels
+    return activation_array, labels
+
+# def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False, is_bilingual=False):
+#     # layers_num
+#     num_layers = 32
+#     # nums of total neurons (per a layer)
+#     num_neurons = 14336
+#     # return dict for saving activation values.
+#     # activation_dict = defaultdict(list)
+#     activation_dict = {}
+#     labels = []
+#     """
+#     activation_dict
+#     {
+#     (layer_idx, neuron_idx): [act_value1, act_value2, ...]
+#     }
+#     labels: [1, 1, ..., 0, 0, ...]
+#     """
+
+#     # Track neurons with tatoeba
+#     for text_idx, text in enumerate(data):
+#         """
+#         get activation values
+#         mlp_activation: [torch.Tensor(batch_size, sequence_length, num_neurons) * num_layers]
+#         """
+#         # input text
+#         inputs = tokenizer(text, return_tensors="pt").input_ids.to(device)
+#         token_len = len(inputs[0])
+#         act_fn_values, up_proj_values = act_llama3(model, inputs)
+#         """
+#         neurons(in llama3 MLP): up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
+#         """
+#         for layer_idx in range(num_layers):
+#             # consider means of all token activations.
+#             if not is_last_token_only:
+#                 """ consider average of all tokens """
+#                 act_values_per_token = []
+#                 for token_idx in range(token_len):
+#                     act_fn_value = act_fn_values[layer_idx][:, token_idx, :][0]
+#                     up_proj_value = up_proj_values[layer_idx][:, token_idx, :][0]
+
+#                     """ calc and extract neurons: up_proj(x) * act_fn(x) """
+#                     act_values = calc_element_wise_product(act_fn_value, up_proj_value)
+#                     act_values_per_token.append(act_values)
+#                 """ calc average act_values of all tokens """
+#                 act_values_all_token = np.array(act_values_per_token)
+#                 means = np.mean(act_values_all_token, axis=0).to(torch.float16)
+#             # consider last token activations only.
+#             elif is_last_token_only:
+#                 act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
+#                 up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
+#                 means = calc_element_wise_product(act_fn_value, up_proj_value).to(torch.float16)
+#             # save in activation_dict
+#             for neuron_idx in range(num_neurons):
+#                 mean_act_value = means[neuron_idx]
+#                 # activation_dict[(layer_idx, neuron_idx)].append(mean_act_value)
+#                 activation_dict.setdefault((layer_idx, neuron_idx), []).append(mean_act_value)
+
+#         # labels list
+#         if not is_bilingual:
+#             if text_idx >= start_idx and text_idx < end_idx:
+#                 labels.append(1)
+#             else:
+#                 labels.append(0)
+#         elif is_bilingual:
+#             if (text_idx >= start_idx and text_idx < end_idx) or (text_idx >= 400 and text_idx < 500):
+#                 labels.append(1)
+#             else:
+#                 labels.append(0)            
+
+#     return activation_dict, labels
 
 def get_hidden_states(model, tokenizer, device, num_layers, data):
     """
@@ -352,7 +424,7 @@ def post_attention_llama3(model, input_ids):
 
     return values
 
-def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids):
+def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
     """
     data: texts in specific L2 ([txt1, txt2, ...]).
     candidate_neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
@@ -389,19 +461,34 @@ def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids)
             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
             acts.append(act_values)
 
-        # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
-        c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
-        for layer_idx, neurons in candidate_neurons.items():
-            layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
-            layer_score = euclidean_distances(layer_score, c)[0, 0]
-            for neuron_idx in neurons:
-                value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
-                # print(value_vector)
-                score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
-                # score = value_vector.reshape(1, -1)
-                score = euclidean_distances(score, c)[0, 0]
-                score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
-                final_scores.setdefault((layer_idx, neuron_idx), []).append(score)             
+        if score_type == "L2_dis":
+            # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+            c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+            for layer_idx, neurons in candidate_neurons.items():
+                layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+                layer_score = euclidean_distances(layer_score, c)[0, 0]
+                for neuron_idx in neurons:
+                    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+                    # print(value_vector)
+                    score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+                    # score = value_vector.reshape(1, -1)
+                    score = euclidean_distances(score, c)[0, 0]
+                    score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
+                    final_scores.setdefault((layer_idx, neuron_idx), []).append(score)
+        elif score_type == "cos_sim":
+            # calc scores: cos_sim((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+            c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+            for layer_idx, neurons in candidate_neurons.items():
+                layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+                layer_score = cosine_similarity(layer_score, c)[0, 0]
+                for neuron_idx in neurons:
+                    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+                    # print(value_vector)
+                    score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+                    # score = value_vector.reshape(1, -1)
+                    score = cosine_similarity(score, c)[0, 0]
+                    score = abs(layer_score - score) if score >= layer_score else abs(layer_score - score)*-1
+                    final_scores.setdefault((layer_idx, neuron_idx), []).append(score)            
 
     # 
     for layer_neuron_idx, scores in final_scores.items():
@@ -565,3 +652,47 @@ def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_
         similarities[layer_idx].append(sim)
 
     return similarities
+
+def save_np_arrays(save_path, np_array):
+    """
+    Save a numpy array safely by first writing to a temporary file (.tmp) and renaming it to .npz.
+    
+    Parameters:
+        save_path (str): The target path to save the .npz file.
+        np_array (numpy.ndarray): The numpy array to be saved.
+    """
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    
+    # Temporary file path (.tmp)
+    tmp_path = save_path + ".tmp"
+    
+    try:
+        # Save to a temporary file first
+        np.savez(tmp_path, data=np_array)
+        
+        # Rename .tmp to .npz (atomic operation)
+        os.replace(tmp_path, save_path)
+        
+        print(f"Array successfully saved to {save_path}")
+    except Exception as e:
+        print(f"Failed to save array: {e}")
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)  # Cleanup if failed
+
+def unfreeze_np_arrays(save_path):
+    """
+    Load a numpy array from an .npz file.
+    
+    Parameters:
+        save_path (str): The path to the .npz file.
+    
+    Returns:
+        numpy.ndarray: The loaded numpy array.
+    """
+    try:
+        with np.load(save_path) as data:
+            return data["data"]
+    except Exception as e:
+        print(f"Failed to load array: {e}")
+        return None

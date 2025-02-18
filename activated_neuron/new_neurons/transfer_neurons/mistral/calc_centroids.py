@@ -22,7 +22,7 @@ from funcs import (
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it"]
-num_sentences_per_L2 = 1000
+num_sentences_per_L2 = 2000
 # mistral-7B
 model_name = "mistralai/Mistral-7B-v0.3"
 device = "cuda" if torch.cuda.is_available() else "cpu"

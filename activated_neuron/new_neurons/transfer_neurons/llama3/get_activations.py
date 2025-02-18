@@ -1,33 +1,6 @@
-"""
-MistralForCausalLM(
-  (model): MistralModel(
-    (embed_tokens): Embedding(32768, 4096)
-    (layers): ModuleList(
-      (0-31): 32 x MistralDecoderLayer(
-        (self_attn): MistralSdpaAttention(
-          (q_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (k_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (v_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (o_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (rotary_emb): MistralRotaryEmbedding()
-        )
-        (mlp): MistralMLP(
-          (gate_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (up_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (down_proj): Linear(in_features=14336, out_features=4096, bias=False)
-          (act_fn): SiLU()
-        )
-        (input_layernorm): MistralRMSNorm((4096,), eps=1e-05)
-        (post_attention_layernorm): MistralRMSNorm((4096,), eps=1e-05)
-      )
-    )
-    (norm): MistralRMSNorm((4096,), eps=1e-05)
-  )
-  (lm_head): Linear(in_features=4096, out_features=32768, bias=False)
-)
-"""
+import os
 import sys
-sys.path.append("/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pickle
 
 import torch
@@ -65,13 +38,13 @@ print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model_name = "mistralai/Mistral-7B-v0.3"
+model_name = "meta-llama/Meta-Llama-3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 is_last_token_onlys = [True, False]
 model_langs = ["ja", "nl", "ko", "it"]
 
-""" get activaitons and save as pkl. """
+""" get activaitons and save as npz and pkl. """
 for L2 in model_langs:
     # start and end indices.
     start_idx = start_indics[L2]
@@ -90,11 +63,11 @@ for L2 in model_langs:
 
         # save activations as pickle file.
         if not is_last_token_only:
-            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/{L2}.npz"
-            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/labels/{L2}.pkl"
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}.npz"
+            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}.pkl"
         if is_last_token_only:
-            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/{L2}_last_token.npz"
-            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/labels/{L2}_last_token.pkl"
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}_last_token.npz"
+            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}_last_token.pkl"
         save_np_arrays(save_path_activations, activations)
         save_as_pickle(save_path_labels, labels)
         print(f"successfully saved activations and labels of {L2} model as pkl, is_last_token_only:{is_last_token_only}.")

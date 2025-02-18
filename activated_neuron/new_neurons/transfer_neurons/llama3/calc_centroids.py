@@ -22,7 +22,7 @@ from funcs import (
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it"]
-num_sentences_per_L2 = 1000
+num_sentences_per_L2 = 2000
 # LLaMA3-8B.
 model_name = "meta-llama/Meta-Llama-3-8B"
 device = "cuda" if torch.cuda.is_available() else "cpu"

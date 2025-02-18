@@ -17,15 +17,18 @@ from funcs import (
     unfreeze_pickle,
 )
 
-# Mistral-7B.
+# Mistral
 model_name = "mistralai/Mistral-7B-v0.3"
 device = "cuda" if torch.cuda.is_available() else "cpu"
+model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 500
 langs = ["ja", "nl", "ko", "it"]
+score_types = ["L2_dis", "cos_sim"]
 
 """ candidate neurons. """
 candidates = {}
-for layer_idx in range(11):
+for layer_idx in range(16):
     for neuron_idx in range(14336):
         candidates.setdefault(layer_idx, []).append(neuron_idx)
 
@@ -42,6 +45,13 @@ for L2 in langs:
     # ap_scores = unfreeze_pickle(save_path_ap_scores)
 
     monolingual_sentences = monolingual_dataset(L2, num_sentences)
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    scores = compute_scores(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2])
+    for score_type in score_types:
+        # scores: {(layer_idx, neuron_idx): score, ....}
+        scores = compute_scores(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
+        # 降順
+        sorted_neurons = [neuron for neuron, score in sorted(scores.items(), key=lambda item: item[1], reverse=True)]
+        
+        # save as pkl.
+        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}.pkl"
+        save_as_pickle(path, sorted_neurons)
+        print("saved scores for: {L2}.")
