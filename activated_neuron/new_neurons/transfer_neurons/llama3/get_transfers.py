@@ -63,3 +63,4 @@ for L2 in langs:
         print("saved scores for: {L2}.")
         
         del scores, sorted_neurons, score_dict
+        torch.cuda.empty_cache()
