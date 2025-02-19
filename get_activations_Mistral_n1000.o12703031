@@ -1,0 +1,32 @@
+len_multilingual_sentences: 5000
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/ja_last_token.npz
+pkl_file successfully saved.
+successfully saved activations and labels of ja model as pkl, is_last_token_only:True.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/ja.npz
+pkl_file successfully saved.
+successfully saved activations and labels of ja model as pkl, is_last_token_only:False.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/nl_last_token.npz
+pkl_file successfully saved.
+successfully saved activations and labels of nl model as pkl, is_last_token_only:True.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/nl.npz
+pkl_file successfully saved.
+successfully saved activations and labels of nl model as pkl, is_last_token_only:False.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/ko_last_token.npz
+pkl_file successfully saved.
+successfully saved activations and labels of ko model as pkl, is_last_token_only:True.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/ko.npz
+pkl_file successfully saved.
+successfully saved activations and labels of ko model as pkl, is_last_token_only:False.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/it_last_token.npz
+pkl_file successfully saved.
+successfully saved activations and labels of it model as pkl, is_last_token_only:True.
+Array successfully saved to /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/it.npz
+pkl_file successfully saved.
+successfully saved activations and labels of it model as pkl, is_last_token_only:False.
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=26860320kb,walltime=09:53:01,ncpus=26,cpupercent=277,vmem=50641524kb
+============================================================================================

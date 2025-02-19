@@ -120,7 +120,7 @@ def get_act_patterns(model, tokenizer, device, data):
     return act_patterns_dict
 
 
-def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, intervention):
+def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, intervention):
     """
     Plots line plots of cosine similarity means(Activation Patterns) per each layer for two dictionaries(main and baseline),
     with variance (standard deviation) as a shaded region.
@@ -166,9 +166,9 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
     plt.grid(True)
     # save_path
     if intervention == "yes":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/intervention/{L2}_n{intervention_num}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/intervention/{L2}_n{intervention_num}.png"
     elif intervention == "baseline":
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/intervention_baseline/{L2}_n{intervention_num}.png"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}intervention_baseline/{L2}_n{intervention_num}.png"
     
     plt.savefig(
         save_path,

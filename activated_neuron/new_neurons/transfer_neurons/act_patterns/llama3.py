@@ -29,6 +29,7 @@ n_list = [1000]
 score_types = ["L2_dis"]
 langs = ["ja", "nl", "ko", "it"]
 langs = ["ja"]
+model_type = "llama3"
 
 for L2 in langs:
     """ tatoeba translation corpus """
@@ -78,7 +79,7 @@ for L2 in langs:
             act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons, tatoeba_data)
             act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons, random_data)
             # plot activation patterns.
-            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, "yes")
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "yes")
 
             """ deactivate baseline neurons. """
             # # get activation list
