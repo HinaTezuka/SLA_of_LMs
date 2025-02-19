@@ -60,7 +60,6 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    langs = ["ja"]
     norm_type = "no"
     n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000] # patterns of intervention_num
     # n_list = [20000, 30000]
@@ -82,9 +81,7 @@ if __name__ == "__main__":
                 tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
         tatoeba_data_len = len(tatoeba_data)
 
-        """
-        non-translation pair for baseline.
-        """
+        """ non-translation pair for baseline. """
         random_data = []
         if L2 == "ko": # koreanはデータ数が足りない
             dataset2 = load_dataset("tatoeba", lang1=L1, lang2="ja", split="train").select(range(5000))
