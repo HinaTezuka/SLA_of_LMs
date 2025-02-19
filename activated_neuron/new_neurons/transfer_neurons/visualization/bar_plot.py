@@ -21,10 +21,10 @@ from funcs import (
 """ parameters setting """
 # model = "llama"
 model = "llama3"
-# model = "mistral"
+model = "mistral"
 # model = "gpt2"
 L2_list = ["ja", "nl", "ko", "it"]
-L2_list = ["ja"]
+# L2_list = ["ja"]
 is_last_token_only = True
 
 for L2 in L2_list:
@@ -47,7 +47,7 @@ for L2 in L2_list:
     ap_scores = unfreeze_pickle(save_path_ap_scores)
 
     # #
-    sorted_neurons = sorted_neurons[:1000] + sorted_neurons[-1000:]
+    sorted_neurons = sorted_neurons[:2000]
     # sorted_neurons = sorted_neurons[:10000]
     # # print(sorted_neurons)
     
@@ -75,7 +75,7 @@ for L2 in L2_list:
     plt.xticks(range(max_layer))
     plt.xlabel("Layer Index", fontsize=40)
     plt.ylabel("Neurons Count", fontsize=40)
-    plt.title("Ja specific neuorns")
+    plt.title(f"{L2} specific neuorns")
     plt.grid(axis="y", linestyle="--", alpha=0.7)
 
     if not is_last_token_only:

@@ -21,7 +21,7 @@ from funcs import (
 )
 
 # visualization
-def plot_hist_mistral(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, intervention_num: str) -> None:
+def plot_hist_mistral(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, is_last_token_only: bool, intervention_num: str) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
@@ -43,8 +43,12 @@ def plot_hist_mistral(dict1: defaultdict(float), dict2: defaultdict(float), L2: 
     plt.ylim(0, 1)
     plt.legend()
     plt.grid(True)
+    if is_last_token_only:
+        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/last_token_only/{L2}_{intervention_num}.png"
+    elif not is_last_token_only:
+        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/all_tokens/{L2}_{intervention_num}.png"
     plt.savefig(
-        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/{L2}_{intervention_num}.png",
+        path,
         bbox_inches="tight"
     )
     plt.close()
@@ -56,16 +60,14 @@ if __name__ == "__main__":
     """ model configs """
     # LLaMA-3
     model_name = "mistralai/Mistral-7B-v0.3"
-    """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
     # langs = ["nl"]
-    norm_type = "no"
-    n_list = [100, 1000, 1500] # patterns of intervention_num
-    n_list = [1000, 2000, 5000]
+    n_list = [1000, 2000]
+    is_last_token_only = True
 
     for L2 in langs:
         """ tatoeba translation corpus """
@@ -95,15 +97,16 @@ if __name__ == "__main__":
             elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
-        save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+        if is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+        elif not is_last_token_only:
+            save_path_sorted_neurons = save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/ap_lang_specific/sorted_neurons_{L2}.pkl"
         sorted_neurons_AP = unfreeze_pickle(save_path_sorted_neurons)
         
         for n in n_list:
             """ n: intervention_num """
             intervention_num = n
-            sorted_neurons_AP_main = sorted_neurons_AP[:n] + sorted_neurons_AP[-n:]
             sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
-            # half_num = intervention_num // 2
             # sorted_neurons_AP_main = sorted_neurons_AP[:half_num] + sorted_neurons_AP[-half_num:]
             # sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
             # sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
@@ -116,7 +119,7 @@ if __name__ == "__main__":
             for layer_idx in range(32): # ３２ layers
                 final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                 final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-            plot_hist_mistral(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC", f"n_{intervention_num}")
+            plot_hist_mistral(final_results_same_semantics, final_results_non_same_semantics, L2, is_last_token_only, intervention_num)
 
             """ deactivate shared_neurons(same semantics(including non_same_semantics)) """
             # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
@@ -126,6 +129,6 @@ if __name__ == "__main__":
             # for layer_idx in range(32): # ３２ layers
             #     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
             #     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-            # plot_hist_mistral(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC_baseline", activation_type, norm_type, f"n_{intervention_num}")
+            # plot_hist_mistral(final_results_same_semantics, final_results_non_same_semantics, L2, is_last_token_only, intervention_num)
 
             print(f"intervention_num: {n} <- completed.")

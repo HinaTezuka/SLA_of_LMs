@@ -95,6 +95,6 @@ plt.grid(True, linestyle="--", alpha=0.6)
 # 保存と表示
 plt.tight_layout()
 plt.savefig(
-    f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dist/{model}/ap_scores_comparison_n{top_n}.png",
+    f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dist/{model}/ap_scores/n{top_n}.png",
     bbox_inches="tight"
 )

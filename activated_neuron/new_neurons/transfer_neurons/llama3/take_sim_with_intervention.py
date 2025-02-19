@@ -21,7 +21,7 @@ from funcs import (
 )
 
 # visualization
-def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, intervention_num: str) -> None:
+def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, is_last_token_only, intervention_num: str) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
@@ -43,8 +43,13 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
     plt.tick_params(axis='y', labelsize=15)
     plt.legend()
     plt.grid(True)
+    
+    if is_last_token_only: 
+        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/last_token_only/{L2}_n{intervention_num}.png"
+    elif not is_last_token_only:
+        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/all_tokens/{L2}_n{intervention_num}.png"
     plt.savefig(
-        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/{L2}_n{intervention_num}.png",
+        path,
         bbox_inches="tight"
     )
     plt.close()
@@ -56,23 +61,21 @@ if __name__ == "__main__":
     """ model configs """
     # LLaMA-3
     model_name = "meta-llama/Meta-Llama-3-8B"
-    """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    langs = ["ja"]
-    norm_type = "no"
-    n_list = [100, 1000, 1500] # patterns of intervention_num
-    n_list = [1000]
+    # langs = ["ja"]
+    n_list = [1000, 2000]
+    is_last_token_only = True
 
     for L2 in langs:
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences.
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 20
+        num_sentences = 2000
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):
@@ -94,17 +97,16 @@ if __name__ == "__main__":
                 random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
             elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
-
-        save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+        if is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+        elif not is_last_token_only:
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/ap_lang_specific/sorted_neurons_{L2}.pkl"
         sorted_neurons_AP = unfreeze_pickle(save_path_sorted_neurons)
         
         for n in n_list:
             """ n: intervention_num """
             intervention_num = n
-            sorted_neurons_AP_main = sorted_neurons_AP[:n] + sorted_neurons_AP[-n:]
-            # sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
-            # half_num = intervention_num // 2
-            # sorted_neurons_AP_main = sorted_neurons_AP[:half_num] + sorted_neurons_AP[-half_num:]
+            sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
             # sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
             # sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 
@@ -116,7 +118,7 @@ if __name__ == "__main__":
             for layer_idx in range(32): # ３２ layers
                 final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                 final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-            plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, intervention_num)
+            plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, is_last_token_only, intervention_num)
 
             """ deactivate shared_neurons(same semantics(including non_same_semantics)) """
             # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)

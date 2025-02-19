@@ -24,7 +24,7 @@ model_name = "meta-llama/Meta-Llama-3-8B"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-num_sentences = 2000
+num_sentences = 1000
 langs = ["ja", "nl", "ko", "it"]
 score_types = ["L2_dis", "cos_sim"]
 
@@ -48,7 +48,7 @@ for L2 in langs:
     # ap_scores = unfreeze_pickle(save_path_ap_scores)
 
     monolingual_sentences = monolingual_dataset(L2, num_sentences)
-   for score_type in score_types:
+    for score_type in score_types:
         # scores: {(layer_idx, neuron_idx): score, ....}
         scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
         # 降順
@@ -61,3 +61,5 @@ for L2 in langs:
         save_as_pickle(sorted_neurons_path, sorted_neurons)
         save_as_pickle(score_dict_path, score_dict)
         print("saved scores for: {L2}.")
+        
+        del scores, sorted_neurons, score_dict

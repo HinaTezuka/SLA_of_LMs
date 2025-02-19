@@ -18,7 +18,6 @@ from funcs import (
 )
 
 is_last_token_onlys = [True, False]
-is_last_token_onlys = [True]
 langs = ["ja", "nl", "ko", "it"]
 
 for L2 in langs:

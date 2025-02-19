@@ -43,6 +43,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 is_last_token_onlys = [True, False]
 model_langs = ["ja", "nl", "ko", "it"]
+model_langs = ["nl", "ko", "it"]
 
 """ get activaitons and save as npz and pkl. """
 for L2 in model_langs:

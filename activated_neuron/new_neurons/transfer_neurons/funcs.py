@@ -411,7 +411,7 @@ def get_all_outputs_llama3_mistral(model, prompt, device):
     num_layers = model.config.num_hidden_layers
     MLP_act = [f"model.layers.{i}.mlp.act_fn" for i in range(num_layers)]
     MLP_up_proj = [f"model.layers.{i}.mlp.up_proj" for i in range(num_layers)]
-    ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]
+    ATT_act = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]
 
     with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:
         with torch.no_grad():
@@ -521,7 +521,7 @@ def sort_neurons_by_score(final_scores):
 def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
     model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
     num_layers = model.config.num_hidden_layers  # nums of layers of the model
-    ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+    ATT_act = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
     with torch.no_grad():
         # trace MLP layers using TraceDict
