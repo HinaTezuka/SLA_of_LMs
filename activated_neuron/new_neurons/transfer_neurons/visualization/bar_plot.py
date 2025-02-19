@@ -20,11 +20,11 @@ from funcs import (
 
 """ parameters setting """
 # model = "llama"
-# model = "llama3"
-model = "mistral"
+model = "llama3"
+# model = "mistral"
 # model = "gpt2"
 L2_list = ["ja", "nl", "ko", "it"]
-# L2_list = ["nl"]
+L2_list = ["ja"]
 is_last_token_only = True
 
 for L2 in L2_list:

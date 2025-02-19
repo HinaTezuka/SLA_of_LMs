@@ -62,8 +62,8 @@ if __name__ == "__main__":
     langs = ["ja", "nl", "it", "ko"]
     langs = ["ja"]
     norm_type = "no"
-    n_list = [100, 1000, 1500] # patterns of intervention_num
-    n_list = [30000]
+    n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000] # patterns of intervention_num
+    # n_list = [15000]
     score_types = ["L2_dis"]
 
     for L2 in langs:
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences.
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 20
+        num_sentences = 2000
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):

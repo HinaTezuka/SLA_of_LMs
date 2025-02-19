@@ -44,5 +44,5 @@ for L2 in langs:
     centroids[L2] = shared_space_centroids
 
 # save centroids as pkl.
-save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c.pkl"
+save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_n{num_sentences_per_L2}.pkl"
 save_as_pickle(save_path, centroids)

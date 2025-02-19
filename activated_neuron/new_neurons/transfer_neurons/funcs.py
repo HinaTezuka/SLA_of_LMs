@@ -164,9 +164,9 @@ def get_out_llama3_up_proj(model, prompt, device, index):
 
 def act_llama3(model, input_ids):
     act_fn_values = get_out_llama3_act_fn(model, input_ids, model.device, -1)  # LlamaのMLP活性化を取得
-    act_fn_values = [act.to("cpu").half() for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
+    act_fn_values = [act.to("cpu") for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
     up_proj_values = get_out_llama3_up_proj(model, input_ids, model.device, -1)
-    up_proj_values = [act.to("cpu").half() for act in up_proj_values]
+    up_proj_values = [act.to("cpu") for act in up_proj_values]
 
     return act_fn_values, up_proj_values
 
@@ -413,25 +413,25 @@ def get_all_outputs_llama3_mistral(model, prompt, device):
     MLP_up_proj = [f"model.layers.{i}.mlp.up_proj" for i in range(num_layers)]
     ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]
 
-    with torch.no_grad():
-        # TraceDictで必要な出力をまとめて取得
-        with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:
+    with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:
+        with torch.no_grad():
             outputs = model(prompt, output_hidden_states=True, output_attentions=True)
-        
-        MLP_act_values = [ret[act].output for act in MLP_act]
-        up_proj_values = [ret[proj].output for proj in MLP_up_proj]
-        ATT_values = [ret[att].output for att in ATT_act]
-        
-        return MLP_act_values, up_proj_values, ATT_values, outputs
+    
+    MLP_act_values = [ret[act].output for act in MLP_act]
+    up_proj_values = [ret[proj].output for proj in MLP_up_proj]
+    ATT_values = [ret[att].output for att in ATT_act]
+    
+    return MLP_act_values, up_proj_values, ATT_values, outputs
 
-def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
+def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
     """
     Optimized function to compute scores using batched inference.
     """
     num_layers = model.config.num_hidden_layers
+    num_candidate_layers = len(candidate_neurons.keys())
     num_neurons = 14336
     final_scores_save = np.zeros((num_layers, num_neurons, len(data))) # final_scoreを計算する前の保存用
-    final_scores = np.zeros((num_layers, num_neurons, 1))
+    final_scores = np.zeros((num_candidate_layers, num_neurons, 1))
 
     for text_idx, text in enumerate(data):
         # Tokenize all input data at once
@@ -450,9 +450,10 @@ def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids,
 
         # For each layer, extract the necessary values and calculate element-wise products
         for layer_idx in range(num_layers):
+            # hidden states and post attentaion-LN outputs.
             hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy())
             atts.append(post_attention_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy())
-
+            # activation values
             act_fn_value = MLP_act_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
             up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
@@ -469,6 +470,7 @@ def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids,
                 layer_score = cosine_similarity(layer_score, c)[0, 0]
 
             for neuron_idx in neurons:
+                # get value vector cerresponding to the neuron.
                 value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
 
                 score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx] * value_vector)).reshape(1, -1)
@@ -483,102 +485,126 @@ def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids,
                 final_scores_save[layer_idx, neuron_idx, text_idx] = score
 
     # Calculate mean score for each neuron
-    for layer_neuron_idx, scores in final_scores.items():
-        mean_score = np.mean(final_scores[layer_idx, neuron_idx, :])
-        final_scores[layer_idx, neuron_idx, 0] = mean_score
+    for layer_idx in range(num_candidate_layers):
+        for neuron_idx in range(num_neurons):
+            mean_score = np.mean(final_scores[layer_idx, neuron_idx, :])
+            final_scores[layer_idx, neuron_idx, 0] = mean_score
 
     return final_scores
 
-# def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
-#     model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
-#     num_layers = model.config.num_hidden_layers  # nums of layers of the model
-#     ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+def sort_neurons_by_score(final_scores):
+    """
+    与えられたスコア配列 (layer_num, neuron_num, 1) を基に、スコアの高順リストと辞書を作成する関数。
 
-#     with torch.no_grad():
-#         # trace MLP layers using TraceDict
-#         with TraceDict(model, ATT_act) as ret:
-#             output = model(prompt, output_hidden_states=True, output_attentions=True)
-#         ATT_act_value = [ret[act_value].output for act_value in ATT_act]
-#         return ATT_act_value
+    Parameters:
+        final_scores (numpy.ndarray): 形状が (layer_num, neuron_num, 1) のスコア配列
 
-# def post_attention_llama3(model, input_ids):
-#     values = get_out_llama3_post_attention_layernorm(model, input_ids, model.device, -1)
-#     values = [value.to("cpu").half() for value in values]
+    Returns:
+        sorted_neurons (list): スコアが高い順の [(layer_idx, neuron_idx), ...] のリスト
+        score_dict (dict): {(layer_idx, neuron_idx): score} の辞書
+    """
+    # (layer_num, neuron_num, 1) → (layer_num, neuron_num) に変換
+    final_scores_2d = final_scores.squeeze(-1)
 
-#     return values
+    # {(layer_idx, neuron_idx): score} の辞書作成
+    score_dict = {
+        (layer_idx, neuron_idx): final_scores_2d[layer_idx, neuron_idx]
+        for layer_idx in range(final_scores_2d.shape[0])
+        for neuron_idx in range(final_scores_2d.shape[1])
+    }
 
-# def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
-#     """
-#     data: texts in specific L2 ([txt1, txt2, ...]).
-#     candidate_neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
-#     """
-#     num_layers = model.config.num_hidden_layers
-#     final_scores = {} # { (l, i): [score1, score2, ...] }
+    # スコアの高順ソート [(layer_idx, neuron_idx), ...] のリスト作成
+    sorted_neurons = sorted(score_dict.keys(), key=lambda x: score_dict[x], reverse=True)
 
-#     for text in data:
-#         inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
-#         inputs_for_att = inputs_for_ht.input_ids
+    return sorted_neurons, score_dict
 
-#         token_len = len(inputs_for_att[0])
-#         last_token_idx = token_len-1
-#         # get ht
-#         hts = [] # hidden_states: [ht_layer1, ht_layer2, ...]
-#         atts = [] # post_att_LN_outputs: [atts_layer1, atts_layer2, ...]
-#         acts = [] # activation_values: [acts_layer1, acts_layer2, ...]
-#         with torch.no_grad():
-#             outputs = model(**inputs_for_ht, output_hidden_states=True)
-#         ht_all_layer = outputs.hidden_states[1:]
-#         # get representation(right after post_att_LN).
-#         post_attention_layernorm_values = post_attention_llama3(model, inputs_for_att)
-#         # get activation_values(in MLP).
-#         act_fn_values, up_proj_values = act_llama3(model, inputs_for_att)
+def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
+    model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
+    num_layers = model.config.num_hidden_layers  # nums of layers of the model
+    ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
-#         for layer_idx in range(num_layers):
-#             # hidden states
-#             hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
-#             # post attention
-#             atts.append(post_attention_layernorm_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
-#             # act_value * up_proj
-#             act_fn_value = act_fn_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
-#             up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
-#             act_values = calc_element_wise_product(act_fn_value, up_proj_value)
-#             acts.append(act_values)
+    with torch.no_grad():
+        # trace MLP layers using TraceDict
+        with TraceDict(model, ATT_act) as ret:
+            output = model(prompt, output_hidden_states=True, output_attentions=True)
+        ATT_act_value = [ret[act_value].output for act_value in ATT_act]
+        return ATT_act_value
 
-#         if score_type == "L2_dis":
-#             # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
-#             c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
-#             for layer_idx, neurons in candidate_neurons.items():
-#                 layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
-#                 layer_score = euclidean_distances(layer_score, c)[0, 0]
-#                 for neuron_idx in neurons:
-#                     value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
-#                     # print(value_vector)
-#                     score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
-#                     # score = value_vector.reshape(1, -1)
-#                     score = euclidean_distances(score, c)[0, 0]
-#                     score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
-#                     final_scores.setdefault((layer_idx, neuron_idx), []).append(score)
-#         elif score_type == "cos_sim":
-#             # calc scores: cos_sim((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
-#             c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
-#             for layer_idx, neurons in candidate_neurons.items():
-#                 layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
-#                 layer_score = cosine_similarity(layer_score, c)[0, 0]
-#                 for neuron_idx in neurons:
-#                     value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
-#                     # print(value_vector)
-#                     score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
-#                     # score = value_vector.reshape(1, -1)
-#                     score = cosine_similarity(score, c)[0, 0]
-#                     score = abs(layer_score - score) if score >= layer_score else abs(layer_score - score)*-1
-#                     final_scores.setdefault((layer_idx, neuron_idx), []).append(score)            
+def post_attention_llama3(model, input_ids):
+    values = get_out_llama3_post_attention_layernorm(model, input_ids, model.device, -1)
+    values = [value.to("cpu") for value in values]
 
-#     # 
-#     for layer_neuron_idx, scores in final_scores.items():
-#         mean_score = np.mean(scores)
-#         final_scores[layer_neuron_idx] = mean_score
+    return values
 
-#     return final_scores  
+def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
+    """
+    data: texts in specific L2 ([txt1, txt2, ...]).
+    candidate_neurons: [(l, i), (l, i), ...] l: layer_idx, i: neuron_idx.
+    """
+    num_layers = model.config.num_hidden_layers
+    final_scores = {} # { (l, i): [score1, score2, ...] }
+
+    for text in data:
+        inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
+        inputs_for_att = inputs_for_ht.input_ids
+
+        token_len = len(inputs_for_att[0])
+        last_token_idx = token_len-1
+        # get ht
+        hts = [] # hidden_states: [ht_layer1, ht_layer2, ...]
+        atts = [] # post_att_LN_outputs: [atts_layer1, atts_layer2, ...]
+        acts = [] # activation_values: [acts_layer1, acts_layer2, ...]
+        with torch.no_grad():
+            outputs = model(**inputs_for_ht, output_hidden_states=True)
+        ht_all_layer = outputs.hidden_states[1:]
+        # get representation(right after post_att_LN).
+        post_attention_layernorm_values = post_attention_llama3(model, inputs_for_att)
+        # get activation_values(in MLP).
+        act_fn_values, up_proj_values = act_llama3(model, inputs_for_att)
+
+        for layer_idx in range(num_layers):
+            # hidden states
+            hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
+            # post attention
+            atts.append(post_attention_layernorm_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy())
+            # act_value * up_proj
+            act_fn_value = act_fn_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+            up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+            act_values = calc_element_wise_product(act_fn_value, up_proj_value)
+            acts.append(act_values)
+
+        if score_type == "L2_dis":
+            # calc scores: L2_dist((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+            c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+            for layer_idx, neurons in candidate_neurons.items():
+                layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+                layer_score = euclidean_distances(layer_score, c)[0, 0]
+                for neuron_idx in neurons:
+                    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+                    score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+                    score = euclidean_distances(score, c)[0, 0]
+                    score = abs(layer_score - score) if score <= layer_score else abs(layer_score - score)*-1
+                    final_scores.setdefault((layer_idx, neuron_idx), []).append(score)
+        elif score_type == "cos_sim":
+            # calc scores: cos_sim((hs^l-1 + self-att() + a^l_i*v^l_i) - c) <- layerごとにあまり差が出ないので、layerの平均からの差を見る.
+            c = np.mean(centroids[5:21], axis=0).reshape(1, -1)
+            for layer_idx, neurons in candidate_neurons.items():
+                layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+                layer_score = cosine_similarity(layer_score, c)[0, 0]
+                for neuron_idx in neurons:
+                    value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
+                    score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx]*value_vector)).reshape(1, -1)
+                    # score = value_vector.reshape(1, -1)
+                    score = cosine_similarity(score, c)[0, 0]
+                    score = abs(layer_score - score) if score >= layer_score else abs(layer_score - score)*-1
+                    final_scores.setdefault((layer_idx, neuron_idx), []).append(score)         
+
+    # 
+    for layer_neuron_idx, scores in final_scores.items():
+        mean_score = np.mean(scores)
+        final_scores[layer_neuron_idx] = mean_score
+
+    return final_scores  
 
 def save_as_pickle(file_path: str, target_dict) -> None:
     """
@@ -633,6 +659,35 @@ def compute_ap_and_sort(activations_dict: dict, labels: list):
         ap = average_precision_score(y_true=labels, y_score=activations)
         # save total score
         final_scores[(layer_idx, neuron_idx)] = ap
+
+    # sort: based on total score of each neuron
+    sorted_neurons = sorted(final_scores.keys(), key=lambda x: final_scores[x], reverse=True)
+
+    return sorted_neurons, final_scores
+
+def compute_ap_and_sort_np(activations_array: np.array, labels: list):
+    """
+    calc APscore and sort (considering nums_of_label) for detecting L2-specific neurons.
+
+    Args:
+        activations: activation_value for each sentences.
+        start_label1: indicating idx where label1(corresponding to L2) sentences bigin.
+
+    Returns:
+        sorted_neurons list, ニューロンごとのAPスコア辞書
+    """
+    num_layers = 32
+    num_neurons = 14336
+
+    # calc AP score for each shared neuron and calc total score which consider nums of label
+    final_scores = {}
+    for layer_idx in range(num_layers):
+        for neuron_idx in range(num_neurons):
+            activations = activations_array[layer_idx, neuron_idx, :]
+            # calc AP score
+            ap = average_precision_score(y_true=labels, y_score=activations)
+            # save total score
+            final_scores[(layer_idx, neuron_idx)] = ap
 
     # sort: based on total score of each neuron
     sorted_neurons = sorted(final_scores.keys(), key=lambda x: final_scores[x], reverse=True)
@@ -711,15 +766,23 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
 
         """各層の最後のトークンの hidden state をリストに格納 + 正規化 """
         last_token_hidden_states_L1 = [
-            (layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy() /
-            np.linalg.norm(layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+            layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy()
             for layer_hidden_state in all_hidden_states_L1
         ]
         last_token_hidden_states_L2 = [
-            (layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() /
-            np.linalg.norm(layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+            layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy()
             for layer_hidden_state in all_hidden_states_L2
         ]
+        # last_token_hidden_states_L1 = [
+        #     (layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy() /
+        #     np.linalg.norm(layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+        #     for layer_hidden_state in all_hidden_states_L1
+        # ]
+        # last_token_hidden_states_L2 = [
+        #     (layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() /
+        #     np.linalg.norm(layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy(), axis=-1, keepdims=True))
+        #     for layer_hidden_state in all_hidden_states_L2
+        # ]
         # cos_sim
         similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
 

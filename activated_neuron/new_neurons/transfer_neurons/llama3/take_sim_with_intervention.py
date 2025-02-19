@@ -21,7 +21,7 @@ from funcs import (
 )
 
 # visualization
-def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, intervention_num: str) -> None:
+def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, intervention_num: str) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
@@ -37,6 +37,7 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
 
     plt.xlabel('Layer index', fontsize=35)
     plt.ylabel('Cosine Sim', fontsize=35)
+    plt.ylim(0, 1)
     plt.title(f'en_{L2}')
     plt.tick_params(axis='x', labelsize=15)  # x軸の目盛りフォントサイズ
     plt.tick_params(axis='y', labelsize=15)
@@ -61,10 +62,10 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    langs = ["nl"]
+    langs = ["ja"]
     norm_type = "no"
     n_list = [100, 1000, 1500] # patterns of intervention_num
-    n_list = [5000]
+    n_list = [1000]
 
     for L2 in langs:
         """ tatoeba translation corpus """
@@ -115,7 +116,7 @@ if __name__ == "__main__":
             for layer_idx in range(32): # ３２ layers
                 final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                 final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-            plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, "AUC", f"n_{intervention_num}")
+            plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, intervention_num)
 
             """ deactivate shared_neurons(same semantics(including non_same_semantics)) """
             # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
