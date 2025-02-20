@@ -441,39 +441,34 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
         MLP_act_values, up_proj_values, post_attention_values, outputs = get_all_outputs_llama3_mistral(model, inputs.input_ids, device)
 
         # Extract hidden states (ht), attention layer outputs, and MLP activations
-        ht_all_layer = outputs.hidden_states[1:]
+        ht_all_layer = outputs.hidden_states[1:] # remove 0th layer(embedding layer).
         token_len = inputs.input_ids.size(1)
         last_token_idx = token_len - 1
-
-        # Initialize lists to store the values
-        hts, atts, acts = [], [], []
-
-        # For each layer, extract the necessary values and calculate element-wise products
-        for layer_idx in range(num_layers):
-            # hidden states and post attentaion-LN outputs.
-            hts.append(ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy())
-            atts.append(post_attention_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy())
-            # activation values
-            act_fn_value = MLP_act_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
-            up_proj_value = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
-            act_values = calc_element_wise_product(act_fn_value, up_proj_value)
-            acts.append(act_values)
 
         # Score calculation based on type (L2 distance or cosine similarity)
         c = np.mean(centroids[5:21], axis=0).reshape(1, -1) # centroids: mean of c for 5-20layers.
         for layer_idx, neurons in candidate_neurons.items():
-            layer_score = (hts[layer_idx-1] + atts[layer_idx]).reshape(1, -1)
+            # i-th layer hidden_state.
+            ht_pre = ht_all_layer[layer_idx-1][:, last_token_idx, :].squeeze().cpu().numpy()
+            # i-th layer attention output.
+            atts = post_attention_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
+            # i-th layer activation values (act_fn(x) * up_proj(x))
+            act_fn_values = MLP_act_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
+            up_proj_values = up_proj_values[layer_idx][:, last_token_idx, :].squeeze().cpu().numpy()
+            acts = calc_element_wise_product(act_fn_values, up_proj_values)
 
+            # layer_score.
+            layer_score = (ht_pre + atts).reshape(1, -1) # H^l-1 * Att^l
             if score_type == "L2_dis":
                 layer_score = euclidean_distances(layer_score, c)[0, 0]
             elif score_type == "cos_sim":
                 layer_score = cosine_similarity(layer_score, c)[0, 0]
 
+            # score for each neurons.
             for neuron_idx in neurons:
                 # get value vector cerresponding to the neuron.
                 value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].cpu().numpy()
-
-                score = (hts[layer_idx-1] + atts[layer_idx] + (acts[layer_idx][neuron_idx] * value_vector)).reshape(1, -1)
+                score = (ht_pre + atts + (acts[neuron_idx] * value_vector)).reshape(1, -1)
                 
                 if score_type == "L2_dis":
                     score = euclidean_distances(score, c)[0, 0]
@@ -493,16 +488,6 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
     return final_scores
 
 def sort_neurons_by_score(final_scores):
-    """
-    与えられたスコア配列 (layer_num, neuron_num, 1) を基に、スコアの高順リストと辞書を作成する関数。
-
-    Parameters:
-        final_scores (numpy.ndarray): 形状が (layer_num, neuron_num, 1) のスコア配列
-
-    Returns:
-        sorted_neurons (list): スコアが高い順の [(layer_idx, neuron_idx), ...] のリスト
-        score_dict (dict): {(layer_idx, neuron_idx): score} の辞書
-    """
     # (layer_num, neuron_num, 1) → (layer_num, neuron_num) に変換
     final_scores_2d = final_scores.squeeze(-1)
 
@@ -513,7 +498,7 @@ def sort_neurons_by_score(final_scores):
         for neuron_idx in range(final_scores_2d.shape[1])
     }
 
-    # スコアの高順ソート [(layer_idx, neuron_idx), ...] のリスト作成
+    # スコアの降順ソート: [(layer_idx, neuron_idx), ...]
     sorted_neurons = sorted(score_dict.keys(), key=lambda x: score_dict[x], reverse=True)
 
     return sorted_neurons, score_dict
@@ -783,6 +768,7 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
         #     np.linalg.norm(layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy(), axis=-1, keepdims=True))
         #     for layer_hidden_state in all_hidden_states_L2
         # ]
+
         # cos_sim
         similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
 
