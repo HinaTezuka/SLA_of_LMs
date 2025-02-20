@@ -25,12 +25,13 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 1000
-langs = ["ja", "nl", "ko", "it"]
+# langs = ["ja", "nl", "ko", "it"]
+langs = ["it", "nl", "ko", "ja"]
 score_types = ["L2_dis", "cos_sim"]
 
 """ candidate neurons. """
 candidates = {}
-for layer_idx in range(16):
+for layer_idx in range(32):
     for neuron_idx in range(14336):
         candidates.setdefault(layer_idx, []).append(neuron_idx)
 

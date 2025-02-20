@@ -36,7 +36,7 @@ for L2 in langs:
     dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
     # select first 2000 sentences
     total_sentence_num = 2000 if L2 == "ko" else 5000
-    num_sentences = 20
+    num_sentences = 2000
     dataset = dataset.select(range(total_sentence_num))
     tatoeba_data = []
     for sentence_idx, item in enumerate(dataset):
