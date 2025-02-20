@@ -40,7 +40,7 @@ num_sentences_for_calc_centroids = 2000
 c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_n{num_sentences_for_calc_centroids}.pkl"
 centroids = unfreeze_pickle(c_path)
 
-# calc scores.
+# calc score
 for L2 in langs:
     # L2-specific neurons
     # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
