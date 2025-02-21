@@ -25,13 +25,13 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 1000
-# langs = ["ja", "nl", "ko", "it"]
-langs = ["it", "nl", "ko", "ja"]
+langs = ["ja", "nl", "ko", "it"]
+# langs = ["it", "nl", "ja", "ko"]
 score_types = ["cos_sim", "L2_dis"]
 
 """ candidate neurons. """
 candidates = {}
-for layer_idx in range(32):
+for layer_idx in range(21):
     for neuron_idx in range(14336):
         candidates.setdefault(layer_idx, []).append(neuron_idx)
 
@@ -57,8 +57,8 @@ for L2 in langs:
         sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用
         
         # save as pkl.
-        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_np.pkl"
-        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_np.pkl"
+        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}.pkl"
+        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict.pkl"
         save_as_pickle(sorted_neurons_path, sorted_neurons)
         save_as_pickle(score_dict_path, score_dict)
         print("saved scores for: {L2}.")

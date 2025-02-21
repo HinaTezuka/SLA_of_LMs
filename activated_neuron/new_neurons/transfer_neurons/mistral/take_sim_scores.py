@@ -95,13 +95,16 @@ if __name__ == "__main__":
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         for score_type in score_types:
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_np.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_np.pkl"
-            scores_dict = unfreeze_pickle(save_path_scores)
-            for neuron in sorted_neurons[:2]:
-                print(f'{scores_dict[neuron]:.10000f}')
-            sys.exit()
+            # save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict.pkl"
+            # scores_dict = unfreeze_pickle(save_path_scores)
+            # for neuron in sorted_neurons[:2]:
+            #     print(f'{scores_dict[neuron]:.10f}')
+            # sys.exit()
+            # for ne in sorted_neurons[:10]:
+            #     print(ne)
+            # sys.exit()
             
             for n in n_list:
                 """ n: intervention_num """

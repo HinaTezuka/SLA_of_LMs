@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/lang_specific.py", line 46, in <module>
+    activations = unfreeze_pickle(path_activations)
+  File "/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/funcs.py", line 621, in unfreeze_pickle
+    raise FileNotFoundError(f"Pickle file not found: {file_path}")
+FileNotFoundError: Pickle file not found: /home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/activations/ja_last_token.pkl
