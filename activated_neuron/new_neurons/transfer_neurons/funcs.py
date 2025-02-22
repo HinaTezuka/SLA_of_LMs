@@ -508,7 +508,7 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
                 scores = euclidean_distances(scores, c).reshape(-1)
                 scores = np.where(scores <= layer_score, abs(layer_score - scores), -abs(layer_score - scores))
             elif score_type == "cos_sim":
-                scores = cosine_similarity(scores, c).reshape(-1)  # (14336,)
+                scores = cosine_similarity(scores, c).reshape(-1)
                 scores = np.where(scores >= layer_score, abs(layer_score - scores), -abs(layer_score - scores))
             # save resulting scores.
             final_scores_save[layer_idx, :, text_idx] = scores
