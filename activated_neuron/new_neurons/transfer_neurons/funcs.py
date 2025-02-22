@@ -477,7 +477,7 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
         MLP_act_values, up_proj_values, post_attention_values, outputs = get_all_outputs_llama3_mistral(model, inputs.input_ids, device)
 
         # Extract hidden states (ht), attention layer outputs, and MLP activations
-        ht_all_layer = outputs.hidden_states # including 0th layer(embedding layer). <- emb(0th) layer is needed to calc score of 1th layer.
+        ht_all_layer = outputs.hidden_states # len==33(0-32), including 0th layer(embedding layer). <- emb(0th) layer is needed to calc score of 1th layer.
         token_len = inputs.input_ids.size(1)
         last_token_idx = token_len - 1
 

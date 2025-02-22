@@ -52,7 +52,7 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
 if __name__ == "__main__":
     L1 = "en"
     """ model configs """
-    # LLaMA-3
+    # LLaMA-3(8B)
     model_name = "meta-llama/Meta-Llama-3-8B"
     """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -60,12 +60,13 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
+    langs = ["nl"]
     norm_type = "no"
     n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000] # patterns of intervention_num
     # n_list = [20000, 30000]
     # n_list = [15000]
     score_types = ["L2_dis", "cos_sim"]
-    score_types = ["cos_sim", "L2_dis"]
+    score_types = ["cos_sim"]
 
     for L2 in langs:
         """ tatoeba translation corpus """
@@ -94,14 +95,12 @@ if __name__ == "__main__":
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         for score_type in score_types:
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_first.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            # save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict.pkl"
-            # score_dict = unfreeze_pickle(save_path_score_dict)sss
-            # for neuron in sorted_neurons[-2:]:
-            #     print(f'{score_dict[neuron]:.1000f}')
-            # print(score_dict[])
-            # sys.exit()
+            save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_revised.pkl"
+            score_dict = unfreeze_pickle(save_path_score_dict)
+            for neuron in sorted_neurons[:10]:
+                print(f'{score_dict[neuron]:.10f}')
             for ne in sorted_neurons[:100]:
                 print(ne)
             sys.exit()

@@ -27,7 +27,7 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
-    offset = 0.1 # バーをずらす用
+    offset = 0.1
 
     # plot hist
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
@@ -60,11 +60,11 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    langs = ["ja"]
+    langs = ["nl"]
     norm_type = "no"
     n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000]
     score_types = ["L2_dis", "cos_sim"]
-    score_types = ["L2_dis"]
+    score_types = ["cos_sim", "L2_dis"]
 
     for L2 in langs:
         """ tatoeba translation corpus """
@@ -95,16 +95,10 @@ if __name__ == "__main__":
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         for score_type in score_types:
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_revised.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            # save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict.pkl"
+            # save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_revised.pkl"
             # scores_dict = unfreeze_pickle(save_path_scores)
-            # for neuron in sorted_neurons[:2]:
-            #     print(f'{scores_dict[neuron]:.10f}')
-            # sys.exit()
-            # for ne in sorted_neurons[:10]:
-            #     print(ne)
-            # sys.exit()
             
             for n in n_list:
                 """ n: intervention_num """
