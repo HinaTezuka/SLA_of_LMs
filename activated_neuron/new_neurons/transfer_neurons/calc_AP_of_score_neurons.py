@@ -17,9 +17,9 @@ from funcs import (
 # params
 model = 'llama3'# original llama
 # model = 'llama' # <- llama learned L2.
-# model = 'mistral'
+model = 'mistral'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['ja']
+# langs = ['ja']
 score_types = ['cos_sim', 'L2_dis']
 # score_types = ['cos_sim']
 is_last_token_only = True
@@ -38,14 +38,14 @@ def plot_histogram(data: list, model: str, n: int,  color, bins=10):
     plt.yticks(fontsize=25)
     plt.title(f"AP ({L2}-specific)", fontsize=45)
     plt.savefig(
-        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distribution/{model}/{score_type}_n{n}',
+        f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distribution/{model}/{score_type}_{L2}_n{n}',
         bbox_inches='tight',
     )
 
 for L2 in langs:
     for score_type in score_types:
         # final scores.
-        save_path_sorted_neurons = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/final_scores/{score_type}/{L2}.pkl'
+        save_path_sorted_neurons = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/final_scores/{score_type}/{L2}_revised.pkl'
         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)[:n]
         
         if is_last_token_only == True:

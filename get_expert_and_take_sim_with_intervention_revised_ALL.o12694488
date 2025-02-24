@@ -1,0 +1,105 @@
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_nl saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_nl saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_nl saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_nl saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_it saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_it saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_it saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_it saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_ko saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_ko saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(same_semantics): en_ko saccessfully saved.
+pkl_file successfully saved.
+pickle file saved: activation_dict(non_same_semantics): en_ko saccessfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+top_10 AP Neurons (nl) product : [(24, 10325), (16, 1452), (20, 6586), (13, 6516), (15, 10014), (6, 11348), (25, 7911), (16, 10123), (2, 9953), (14, 12114)]
+top_1, top_100 AP (nl) product : 0.7651517805366976, 0.7023451137814246
+nl <- completed. (product)
+pkl_file successfully saved.
+pkl_file successfully saved.
+top_10 AP Neurons (nl) abs : [(29, 6421), (18, 8003), (2, 12489), (26, 5980), (18, 11808), (18, 5581), (23, 6938), (12, 2391), (2, 12970), (29, 928)]
+top_1, top_100 AP (nl) abs : 0.6597799532997187, 0.6054661998514702
+nl <- completed. (abs)
+pkl_file successfully saved.
+pkl_file successfully saved.
+top_10 AP Neurons (ko) product : [(31, 3935), (18, 192), (0, 4573), (0, 13514), (0, 12995), (13, 1704), (31, 8384), (29, 1130), (31, 11254), (17, 14040)]
+top_1, top_100 AP (ko) product : 0.7624853933293798, 0.6912716731192876
+ko <- completed. (product)
+pkl_file successfully saved.
+pkl_file successfully saved.
+top_10 AP Neurons (ko) abs : [(31, 2856), (26, 280), (0, 1250), (27, 3491), (20, 2453), (16, 1592), (30, 9433), (28, 13948), (29, 3265), (21, 104)]
+top_1, top_100 AP (ko) abs : 0.7443201556731773, 0.6588753696833676
+ko <- completed. (abs)
+pkl_file successfully saved.
+pkl_file successfully saved.
+top_10 AP Neurons (it) product : [(0, 11345), (13, 1704), (18, 82), (0, 5382), (20, 1235), (10, 11956), (0, 3377), (0, 1035), (14, 11222), (23, 12275)]
+top_1, top_100 AP (it) product : 0.81007455901509, 0.7275554621111879
+it <- completed. (product)
+pkl_file successfully saved.
+pkl_file successfully saved.
+top_10 AP Neurons (it) abs : [(0, 7997), (0, 568), (0, 13712), (0, 11680), (31, 2562), (0, 2587), (21, 5787), (28, 9710), (0, 2746), (13, 620)]
+top_1, top_100 AP (it) abs : 0.7350816030434484, 0.6476593607482756
+it <- completed. (abs)
+intervention_num: 100 <- completed.
+intervention_num: 1000 <- completed.
+intervention_num: 2000 <- completed.
+intervention_num: 3000 <- completed.
+intervention_num: 4000 <- completed.
+intervention_num: 5000 <- completed.
+intervention_num: 7000 <- completed.
+intervention_num: 10000 <- completed.
+intervention_num: 15000 <- completed.
+intervention_num: 20000 <- completed.
+intervention_num: 30000 <- completed.
+intervention_num: 100 <- completed.
+intervention_num: 1000 <- completed.
+intervention_num: 2000 <- completed.
+intervention_num: 3000 <- completed.
+intervention_num: 4000 <- completed.
+intervention_num: 5000 <- completed.
+intervention_num: 7000 <- completed.
+intervention_num: 10000 <- completed.
+intervention_num: 15000 <- completed.
+intervention_num: 20000 <- completed.
+intervention_num: 30000 <- completed.
+intervention_num: 100 <- completed.
+intervention_num: 1000 <- completed.
+intervention_num: 2000 <- completed.
+intervention_num: 3000 <- completed.
+intervention_num: 4000 <- completed.
+intervention_num: 5000 <- completed.
+intervention_num: 7000 <- completed.
+intervention_num: 10000 <- completed.
+intervention_num: 15000 <- completed.
+intervention_num: 20000 <- completed.
+intervention_num: 30000 <- completed.
+intervention_num: 100 <- completed.
+intervention_num: 1000 <- completed.
+intervention_num: 2000 <- completed.
+intervention_num: 3000 <- completed.
+intervention_num: 4000 <- completed.
+intervention_num: 5000 <- completed.
+intervention_num: 7000 <- completed.
+intervention_num: 10000 <- completed.
+intervention_num: 15000 <- completed.
+intervention_num: 20000 <- completed.
+intervention_num: 30000 <- completed.
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=388404952kb,walltime=168:01:33,ncpus=26,cpupercent=113,vmem=428222928kb
+============================================================================================

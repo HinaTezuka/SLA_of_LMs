@@ -25,10 +25,8 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000] # patterns of intervention_num
-n_list = [1000]
-score_types = ["cos_sim"]
+score_types = ["cos_sim", "L2_dis"]
 langs = ["ja", "nl", "ko", "it"]
-langs = ["ja"]
 model_type = "llama3"
 
 for L2 in langs:
@@ -60,19 +58,23 @@ for L2 in langs:
             random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
     
     for score_type in score_types:
+        if score_type == "cos_sim":
+            act_patterns = get_act_patterns(model, tokenizer, device, tatoeba_data)
+            act_patterns_baseline = get_act_patterns(model, tokenizer, device, random_data)
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, None, model_type, "normal")
         for intervention_num in n_list:
             """
             get act_patterns as cos_sim (with high AP neurons intervention).
             """
             # unfreeze AP_list.
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
 
             """ どのくらい介入するか(intervention_num) """
             sorted_neurons = sorted_neurons[:intervention_num]
             # baseline
-            # sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
-            # sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
+            sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
+            sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 
             """ deactivate high AP neurons. """
             # get activation list
@@ -82,11 +84,11 @@ for L2 in langs:
             activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "yes")
 
             """ deactivate baseline neurons. """
-            # # get activation list
-            # act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-            # act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
-            # # plot activation patterns.
-            # activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, "baseline")
+            # get activation list
+            act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+            act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+            # plot activation patterns.
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, "baseline")
 
             print(f"intervention_num: {intervention_num} <- completed.")
 
