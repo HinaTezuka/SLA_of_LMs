@@ -104,12 +104,12 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 layer_nums = 32
 score_types = ["L2_dis", "cos_sim"]
-score_types = ["cos_sim"]
+# score_types = ["cos_sim"]
 norm_type = "no"
-top_n = 15000
+top_n = 10000
 top_n_for_baseline = 50000
 langs = ["ja", "nl", "ko", "it"]
-langs = ["nl"]
+# langs = ["nl"]
 model_type = "mistral"
 
 for score_type in score_types:
@@ -134,18 +134,18 @@ for score_type in score_types:
 
       """ intervention with transfer neurons and baseline. """
       # get top AP neurons (layer_idx, neuron_idx)
-    #   pkl_file_path = f"activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
-    #   sorted_neurons_AP = unfreeze_pickle(pkl_file_path)[:top_n]
-    #   # baseline
-    # #   sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
-    # #   sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:top_n]
+      pkl_file_path = f"activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_revised.pkl"
+      sorted_neurons_AP = unfreeze_pickle(pkl_file_path)[:top_n]
+      # baseline
+    #   sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
+    #   sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:top_n]
 
-    #   # get hidden states with neurons intervention(high APs)
-    #   all_hidden_states_high_AP_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP)
-    #   # intervention (high APs.)
-    #   tokens_dict_high_AP_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_high_AP_intervention, last_token_index, top_k=top_k)
-    #   print("============================================================== high APs ==============================================================\n")
-    #   print_tokens(tokens_dict_high_AP_intervention)
+      # get hidden states with neurons intervention(high APs)
+      all_hidden_states_high_AP_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP)
+      # intervention (high APs.)
+      tokens_dict_high_AP_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_high_AP_intervention, last_token_index, top_k=top_k)
+      print("============================================================== high APs ==============================================================\n")
+      print_tokens(tokens_dict_high_AP_intervention)
 
     #   all_hidden_states_baseline_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP_baseline)
     #   tokens_dict_baseline_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_baseline_intervention, last_token_index, top_k=top_k)
@@ -158,7 +158,6 @@ for score_type in score_types:
         lang_stats = layerwise_lang_stats(tokens_dict, L2)
         lang_distribution = layerwise_lang_distribution(lang_stats, L2)
         plot_lang_distribution(lang_distribution, "normal", model_type, top_n, L2)
-        sys.exit()
       
       # high APs intervention
       lang_stats = layerwise_lang_stats(tokens_dict_high_AP_intervention, L2)

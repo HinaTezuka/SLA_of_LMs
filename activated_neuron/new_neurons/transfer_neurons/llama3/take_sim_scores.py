@@ -58,7 +58,6 @@ if __name__ == "__main__":
     """ model configs """
     # LLaMA-3(8B)
     model_name = "meta-llama/Meta-Llama-3-8B"
-    """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -72,7 +71,7 @@ if __name__ == "__main__":
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences.
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 2000
+        num_sentences = 20
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):
@@ -98,16 +97,12 @@ if __name__ == "__main__":
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
             save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_revised.pkl"
             score_dict = unfreeze_pickle(save_path_score_dict)
-            print(f'================ {L2}_{score_type} ================')
-            for neuron in sorted_neurons[:10]:
-                print(f'{score_dict[neuron]:.10f}')
-            for ne in sorted_neurons[:100]:
-                print(ne)
             
             for n in n_list:
                 """ n: intervention_num """
                 intervention_num = n
                 sorted_neurons_AP_main = sorted_neurons[:n]
+                random.seed(42)
                 sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP_main[intervention_num+1:], len(sorted_neurons_AP_main[intervention_num+1:]))
                 sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 

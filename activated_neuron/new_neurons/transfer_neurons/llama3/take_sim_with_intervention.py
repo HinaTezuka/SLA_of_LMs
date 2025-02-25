@@ -67,7 +67,7 @@ if __name__ == "__main__":
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
     # langs = ["ja"]
-    n_list = [1000, 2000]
+    n_list = [1000]
     is_last_token_only = True
 
     for L2 in langs:
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences.
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 2000
+        num_sentences = 20
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         for n in n_list:
             """ n: intervention_num """
             intervention_num = n
-            sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num]
+            sorted_neurons_AP_main = sorted_neurons_AP[:intervention_num] + sorted_neurons_AP[-intervention_num:]
             # sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
             # sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 

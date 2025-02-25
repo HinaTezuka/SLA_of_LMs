@@ -36,9 +36,10 @@ for L2 in langs:
         labels_list = np.array(unfreeze_pickle(save_path_labels))
         # top score neurons
         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
+        # save_path_sorted_neurons = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_ja_last_token.pkl'
         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
 
-        top_n = 1000
+        top_n = 100
         corr_ratios = defaultdict(float)
         arr = []
         for (layer_i, neuron_i) in sorted_neurons[:top_n]:

@@ -84,11 +84,11 @@ prompts = {
     ]
 }
 prompts = {
-    "en": "What are some popular tourist attractions in New York City? Answer: ",
-    "ja": "ニューヨーク市で人気の観光名所はどこですか？ 答え: ",
-    "nl": "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: ",
-    "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City? Risposta: ",
-    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요? 답변: ",
+    "en": "What are some popular tourist attractions in New York City? Answer:",
+    "ja": "ニューヨーク市で人気の観光名所はどこですか？ 答え:",
+    "nl": "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord:",
+    "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City? Risposta:",
+    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요? 답변:",
 }
 prompts = {
     "en": "The capital of Japan is ",
@@ -106,10 +106,10 @@ layer_nums = 32
 score_types = ["L2_dis", "cos_sim"]
 score_types = ["cos_sim"]
 norm_type = "no"
-top_n = 1000
+top_n = 10000
 top_n_for_baseline = 50000
 langs = ["ja", "nl", "ko", "it"]
-langs = ["nl"]
+# langs = ["ja"]
 model_type = "llama3"
 
 for score_type in score_types:

@@ -63,6 +63,3 @@ for score_type in score_types:
     print(f'ja-ko: {intersection_ratio(ja_sorted_neurons, ko_sorted_neurons)}')
     print(f'nl-it: {intersection_ratio(nl_sorted_neurons, it_sorted_neurons)}')
     print(f'ja-it: {intersection_ratio(ja_sorted_neurons, it_sorted_neurons)}')
-
-
-        
