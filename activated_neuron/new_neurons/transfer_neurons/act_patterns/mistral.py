@@ -71,7 +71,7 @@ for L2 in langs:
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
 
             """ どのくらい介入するか(intervention_num) """
-            sorted_neurons = sorted_neurons[:intervention_num]
+            sorted_neurons_AP = sorted_neurons[:intervention_num]
             # baseline
             sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
             sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]

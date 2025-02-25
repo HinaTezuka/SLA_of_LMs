@@ -15,7 +15,7 @@ from funcs import (
 )
 
 # params
-model = 'llama3'# original llama
+model = 'llama3' # original llama
 # model = 'llama' # <- llama learned L2.
 model = 'mistral'
 langs = ['ja', 'nl', 'ko', 'it']

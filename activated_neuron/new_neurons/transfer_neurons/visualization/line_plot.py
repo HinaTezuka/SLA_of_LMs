@@ -30,23 +30,24 @@ data = []
 
 for L2 in L2_list:
     # LLaMA-3 unfreezing
-    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
-    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}_last_token.pkl"
-    sorted_neurons_llama3 = unfreeze_pickle(save_path_sorted_neurons)[:top_n]
+    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/ap_lang_specific/ap_scores_{L2}_last_token.pkl"
+    sorted_neurons_llama3 = unfreeze_pickle(save_path_sorted_neurons)
     # sorted_neurons_llama3 = unfreeze_pickle(save_path_sorted_neurons)
     ap_scores_llama3 = unfreeze_pickle(save_path_ap_scores)
 
-    # GPT-2 unfreezing
-    # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    # gpt2_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
-    # sorted_neurons_gpt2 = unfreeze_pickle(sorted_neurons_path)
-    # ap_scores_gpt2 = unfreeze_pickle(gpt2_path)
+    # Mistral unfreezing
+    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/ap_lang_specific/sorted_neurons_{L2}_last_token.pkl"
+    save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/ap_lang_specific/ap_scores_{L2}_last_token.pkl"
+    sorted_neurons_mistral = unfreeze_pickle(save_path_sorted_neurons)
+    # sorted_neurons_mistral = unfreeze_pickle(save_path_sorted_neurons)
+    ap_scores_mistral = unfreeze_pickle(save_path_ap_scores)
 
     # makind dataframe for visualization
     for i in range(len(sorted_neurons_llama3)):
         data.append({"Model": "LLaMA-3", "Language": L2, "Neuron": i, "AP_Score": ap_scores_llama3[sorted_neurons_llama3[i]]})
-    # for i in range(len(sorted_neurons_gpt2[:top_n])):
-    #     data.append({"Model": "GPT-2", "Language": L2, "Neuron": i, "AP_Score": ap_scores_gpt2[sorted_neurons_gpt2[i]]})
+    for i in range(len(sorted_neurons_mistral)):
+        data.append({"Model": "Mistral", "Language": L2, "Neuron": i, "AP_Score": ap_scores_mistral[sorted_neurons_mistral[i]]})
 
 # convert pandas DataFrame
 df = pd.DataFrame(data)
@@ -71,9 +72,9 @@ sns.lineplot(
     style="Model",
     markers=False,
     # dashes=False,
-    dashes={"GPT-2": [2, 2], "LLaMA-3": [1, 0]},
+    dashes={"Mistral": [2, 2], "LLaMA-3": [1, 0]},
     palette=sns.color_palette("tab10"),
-    linewidth=5,
+    linewidth=3,
     alpha=1,
     ci=None,
 )
