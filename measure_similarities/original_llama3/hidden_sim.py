@@ -69,7 +69,7 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
             layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() for layer_hidden_state in all_hidden_states_L2
         ]
         # cos_sim
-        similarities = calc_cosine_sim(last_token_hidden_states_L1[1:], last_token_hidden_states_L2[1:], similarities)
+        similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
 
     return similarities
 

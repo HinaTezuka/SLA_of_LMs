@@ -94,12 +94,12 @@ def monolingual_dataset_en(num_sentences: int) -> list:
     """
 
     tatoeba_data = []
-    dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
+    dataset = load_dataset("tatoeba", lang1="en", lang2="nl", split="train")
     dataset = dataset.select(range(2500))
     random.seed(42)
     random_indices = random.sample(range(2500), num_sentences)
     dataset = dataset.select(random_indices)
-    for sentence_idx, item in enumerate(dataset):
+    for item in dataset:
         tatoeba_data.append(item['translation']["en"])
     
     return tatoeba_data
@@ -364,43 +364,35 @@ def get_hidden_states(model, tokenizer, device, num_layers, data):
 
     return dict(c_hidden_states)
 
+def get_hidden_states_en_only(model, tokenizer, device, num_layers, data):
+    """
+    """
+    # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en).
+    c_hidden_states = defaultdict(list)
+
+    for text1 in data:
+        inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
+
+        # get hidden_states
+        with torch.no_grad():
+            output1 = model(**inputs1, output_hidden_states=True)
+
+        all_hidden_states1 = output1.hidden_states[1:] # remove embedding layer
+        last_token_index1 = inputs1["input_ids"].shape[1] - 1
+
+        """  """
+        for layer_idx in range(num_layers):
+            hs1 = all_hidden_states1[layer_idx][:, last_token_index1, :].squeeze().detach().cpu().numpy()
+            c_hidden_states[layer_idx].append(hs1)
+
+    return dict(c_hidden_states)
+
 def get_centroid_of_shared_space(hidden_states: dict):
     centroids = [] # [c1, c2, ] len = layer_num(32layers: 0-31)
     for layer_idx, c in hidden_states.items():
         final_c = np.mean(c, axis=0) # calc mean of c(shared point per text) of all text.
         centroids.append(final_c)
     return centroids
-
-def get_hidden_states_for_eng(model, tokenizer, device, num_layers, data):
-    """
-    """
-    # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en-L2).
-    c_hidden_states = defaultdict(list)
-
-    for text1, text2 in data:
-        inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
-        inputs2 = tokenizer(text2, return_tensors="pt").to(device) # L2 text
-
-        # get hidden_states
-        with torch.no_grad():
-            output1 = model(**inputs1, output_hidden_states=True)
-            output2 = model(**inputs2, output_hidden_states=True)
-
-        all_hidden_states1 = output1.hidden_states[1:] # remove embedding layer
-        all_hidden_states2 = output2.hidden_states[1:]
-        last_token_index1 = inputs1["input_ids"].shape[1] - 1
-        last_token_index2 = inputs2["input_ids"].shape[1] - 1
-
-        """  """
-        for layer_idx in range(num_layers):
-            hs1 = all_hidden_states1[layer_idx][:, last_token_index1, :].squeeze().detach().cpu().numpy()
-            hs2 = all_hidden_states2[layer_idx][:, last_token_index2, :].squeeze().detach().cpu().numpy()
-            # save mean of (en_ht, L2_ht). <- estimated shared point in shared semantic space.
-            c = np.stack([hs1, hs2])
-            c = np.mean(c, axis=0)
-            c_hidden_states[layer_idx].append(c)
-
-    return dict(c_hidden_states)
 
 # def get_centroids_per_L2(hidden_states: defaultdict(list)):
 #     centroids = [] # [c1, c2, ...] c1: centroid of layer1.

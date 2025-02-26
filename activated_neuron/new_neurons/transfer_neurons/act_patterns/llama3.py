@@ -34,7 +34,7 @@ for L2 in langs:
     dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
     # select first 2000 sentences
     total_sentence_num = 2000 if L2 == "ko" else 5000
-    num_sentences = 2000
+    num_sentences = 20
     dataset = dataset.select(range(total_sentence_num))
     tatoeba_data = []
     for sentence_idx, item in enumerate(dataset):
@@ -78,8 +78,8 @@ for L2 in langs:
 
             """ deactivate high AP neurons. """
             # get activation list
-            act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons, tatoeba_data)
-            act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons, random_data)
+            act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, tatoeba_data)
+            act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, random_data)
             # plot activation patterns.
             activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "yes")
 
@@ -88,7 +88,7 @@ for L2 in langs:
             act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
             act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
             # plot activation patterns.
-            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, "baseline")
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "baseline")
 
             print(f"intervention_num: {intervention_num} <- completed.")
 
