@@ -21,7 +21,7 @@ from funcs import (
 )
 
 # visualization
-def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, score_type: str, intervention_num: str, is_baseline=False) -> None:
+def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, score_type: str, intervention_num: str, is_en=False, is_baseline=False) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
@@ -44,10 +44,16 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
     plt.legend()
     plt.grid(True)
 
-    if not is_baseline:
-        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/{L2}_n{intervention_num}.png"
-    elif is_baseline:
-        path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
+    if is_en:
+        if not is_baseline:
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/en/{L2}_n{intervention_num}.png"
+        elif is_baseline:
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/en/baseline/{L2}_n{intervention_num}.png"
+    elif not is_en:
+        if not is_baseline:
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/{L2}_n{intervention_num}.png"
+        elif is_baseline:
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
     plt.savefig(
         path,
         bbox_inches="tight"
@@ -66,14 +72,16 @@ if __name__ == "__main__":
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
     n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000]
-    score_types = ["L2_dis", "cos_sim"]
+    n_list = [100, 1000, 3000, 5000, 8000, 10000]
+    score_types = ["cos_sim", "L2_dis"]
+    is_en = True
 
     for L2 in langs:
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences.
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 2000
+        num_sentences = 20
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):
@@ -97,9 +105,9 @@ if __name__ == "__main__":
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         for score_type in score_types:
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_revised.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_en.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_revised.pkl"
+            save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_en.pkl"
             scores_dict = unfreeze_pickle(save_path_scores)
             print(f'================ {L2}_{score_type} ================')
             for neuron in sorted_neurons[:10]:
@@ -111,8 +119,9 @@ if __name__ == "__main__":
                 """ n: intervention_num """
                 intervention_num = n
                 sorted_neurons_AP_main = sorted_neurons[:n]
-                sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP_main[intervention_num+1:], len(sorted_neurons_AP_main[intervention_num+1:]))
-                sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
+                # random.seed(42)
+                # sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP_main[intervention_num+1:], len(sorted_neurons_AP_main[intervention_num+1:]))
+                # sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 
                 """ deactivate shared_neurons(same semantics expert neurons) """
                 similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
@@ -122,16 +131,16 @@ if __name__ == "__main__":
                 for layer_idx in range(32): # ３２ layers
                     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num)
+                plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
 
                 """ deactivate shared_neurons(same semantics(including non_same_semantics)) """
-                similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-                similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
-                final_results_same_semantics = defaultdict(float)
-                final_results_non_same_semantics = defaultdict(float)
-                for layer_idx in range(32): # ３２ layers
-                    final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
-                    final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, True)
+                # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+                # similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                # final_results_same_semantics = defaultdict(float)
+                # final_results_non_same_semantics = defaultdict(float)
+                # for layer_idx in range(32): # ３２ layers
+                #     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
+                #     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
+                # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
                 print(f"intervention_num: {n} <- completed.")

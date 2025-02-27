@@ -21,7 +21,7 @@ from expertise_funcs import (
 
 
 """ parameters setting """
-activation_type = "abs"
+# activation_type = "abs"
 activation_type = "product"
 norm_type = "no"
 top_n = 1000
@@ -29,7 +29,7 @@ top_n = 1000
 # norm_type = "sigmoid"
 # L2 = "ja"
 L2_list = ["ja", "nl", "ko", "it"]
-L2_list = ["ja"]
+# L2_list = ["ja"]
 
 # データを格納するリスト
 data = []
@@ -38,20 +38,20 @@ for L2 in L2_list:
     # LLaMA-3 unfreezing
     sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}_revised.pkl"
     llama3_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}_revised.pkl"
-    sorted_neurons_llama3 = unfreeze_pickle(sorted_neurons_path)
+    sorted_neurons_llama3 = unfreeze_pickle(sorted_neurons_path)[:top_n]
     ap_scores_llama3 = unfreeze_pickle(llama3_path)
 
-    # GPT-2 unfreezing
-    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
-    gpt2_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
-    sorted_neurons_gpt2 = unfreeze_pickle(sorted_neurons_path)
-    ap_scores_gpt2 = unfreeze_pickle(gpt2_path)
+    # # GPT-2 unfreezing
+    # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/sorted_neurons_{L2}.pkl"
+    # gpt2_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/gpt2/pickles/AUC/act_{activation_type}/ap_scores/{norm_type}_norm/ap_scores_{L2}.pkl"
+    # sorted_neurons_gpt2 = unfreeze_pickle(sorted_neurons_path)
+    # ap_scores_gpt2 = unfreeze_pickle(gpt2_path)
 
     # makind dataframe for visualization
-    for i in range(len(sorted_neurons_llama3[:top_n])):
+    for i in range(len(sorted_neurons_llama3)):
         data.append({"Model": "LLaMA-3", "Language": L2, "Neuron": i, "AP_Score": ap_scores_llama3[sorted_neurons_llama3[i]]})
-    for i in range(len(sorted_neurons_gpt2[:top_n])):
-        data.append({"Model": "GPT-2", "Language": L2, "Neuron": i, "AP_Score": ap_scores_gpt2[sorted_neurons_gpt2[i]]})
+    # for i in range(len(sorted_neurons_gpt2[:top_n])):
+    #     data.append({"Model": "GPT-2", "Language": L2, "Neuron": i, "AP_Score": ap_scores_gpt2[sorted_neurons_gpt2[i]]})
 
 # convert pandas DataFrame
 df = pd.DataFrame(data)

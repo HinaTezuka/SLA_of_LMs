@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import copy
 import pickle
 from collections import defaultdict
 
@@ -17,6 +18,7 @@ from funcs import (
 )
 
 langs = ['ja', 'nl', 'ko', 'it']
+langs = ['nl', 'it']
 model = 'mistral'
 score_types = ['cos_sim', 'L2_dis']
 
@@ -37,6 +39,10 @@ for L2 in langs:
         # top score neurons
         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+        # l1 = [ 1 for _ in range(1000)]
+        # l2 = [ 0 for _ in range(1000)]
+        # labels_list = l2 + l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l1) # nl, it
+        # labels_list = l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l2) + copy.deepcopy(l2) # ja, ko
 
         top_n = 1000
         corr_ratios = defaultdict(float)
