@@ -81,17 +81,13 @@ for L2 in langs:
             act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, tatoeba_data)
             act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, random_data)
             # plot activation patterns.
-            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "yes")
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, score_type, "yes")
 
             """ deactivate baseline neurons. """
             # get activation list
             act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
             act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
             # plot activation patterns.
-            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "baseline")
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, score_type, "baseline")
 
             print(f"intervention_num: {intervention_num} <- completed.")
-
-    # delete model and some cache
-    del model
-    torch.cuda.empty_cache()

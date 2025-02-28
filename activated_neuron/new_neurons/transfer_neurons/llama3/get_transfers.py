@@ -28,16 +28,17 @@ num_sentences = 1000
 langs = ["ja", "nl", "ko", "it"]
 # langs = ["it", "nl", "ja", "ko"]
 score_types = ["cos_sim", "L2_dis"]
+num_candidate_layers = 32
 
 """ candidate neurons. """
 candidates = {}
-for layer_idx in range(21):
+for layer_idx in range(num_candidate_layers):
     for neuron_idx in range(14336):
         candidates.setdefault(layer_idx, []).append(neuron_idx)
 
 # get centroids.
 num_sentences_for_calc_centroids = 2000
-c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_n{num_sentences_for_calc_centroids}_en.pkl"
+c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_n{num_sentences_for_calc_centroids}.pkl"
 centroids = unfreeze_pickle(c_path)
 
 # calc scores.
@@ -51,8 +52,8 @@ for L2 in langs:
     monolingual_sentences = monolingual_dataset(L2, num_sentences)
     for score_type in score_types:
         # scores: {(layer_idx, neuron_idx): score, ....}
-        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
-        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
+        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
+        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
         # 降順
         # sorted_neurons = [neuron for neuron, score in sorted(scores.items(), key=lambda item: item[1], reverse=True)] # original list
         sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用

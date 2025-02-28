@@ -91,7 +91,3 @@ for L2 in langs:
             activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, "baseline")
 
             print(f"intervention_num: {intervention_num} <- completed.")
-
-    # delete model and some cache
-    del model
-    torch.cuda.empty_cache()
