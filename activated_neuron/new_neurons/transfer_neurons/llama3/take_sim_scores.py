@@ -72,14 +72,14 @@ if __name__ == "__main__":
     n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000] # patterns of intervention_num
     n_list = [100, 1000, 3000, 5000, 8000, 10000]
     score_types = ["cos_sim", "L2_dis"]
-    is_en = True
+    is_en = False
 
     for L2 in langs:
         """ tatoeba translation corpus """
         dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
         # select first 2000 sentences.
         total_sentence_num = 2000 if L2 == "ko" else 5000
-        num_sentences = 2000
+        num_sentences = 20
         dataset = dataset.select(range(total_sentence_num))
         tatoeba_data = []
         for sentence_idx, item in enumerate(dataset):
@@ -101,9 +101,9 @@ if __name__ == "__main__":
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
         for score_type in score_types:
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_en.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_en.pkl"
+            save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_revised.pkl"
             score_dict = unfreeze_pickle(save_path_score_dict)
             
             for n in n_list:

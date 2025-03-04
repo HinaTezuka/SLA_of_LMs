@@ -134,7 +134,8 @@ for score_type in score_types:
       """ intervention with transfer neurons and baseline. """
       # get top AP neurons (layer_idx, neuron_idx)
       pkl_file_path = f"activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_revised.pkl"
-      sorted_neurons_AP = unfreeze_pickle(pkl_file_path)[:top_n]
+      sorted_neurons_AP = unfreeze_pickle(pkl_file_path)
+      sorted_neurons_AP = sorted_neurons_AP[:top_n] + sorted_neurons_AP[:top_n]
       # baseline
     #   sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
     #   sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:top_n]
@@ -145,6 +146,7 @@ for score_type in score_types:
       tokens_dict_high_AP_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_high_AP_intervention, last_token_index, top_k=top_k)
       print("============================================================== high APs ==============================================================\n")
       print_tokens(tokens_dict_high_AP_intervention)
+      sys.exit()
 
     #   all_hidden_states_baseline_intervention = get_hidden_states_with_edit_activation(model, inputs, sorted_neurons_AP_baseline)
     #   tokens_dict_baseline_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_baseline_intervention, last_token_index, top_k=top_k)

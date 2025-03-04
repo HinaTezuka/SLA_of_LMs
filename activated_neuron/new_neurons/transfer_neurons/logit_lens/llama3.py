@@ -43,7 +43,7 @@ for L2 in langs:
         value_predictions = {}
         # for top_n AP neurons
         print(f"================ {L2}/{score_type}. ================")
-        for neuron in sorted_neurons_AP[:top_n]:
+        for neuron in sorted_neurons_AP[-top_n:]:
             layer_idx, neuron_idx = neuron[0], neuron[1]
             value_preds = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
             value_predictions[(layer_idx, neuron_idx)] = value_preds

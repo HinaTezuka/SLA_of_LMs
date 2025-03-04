@@ -128,8 +128,6 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    print(model)
-    sys.exit()
 
     for L2 in langs:
         L1 = "en" # L1 is fixed to english.

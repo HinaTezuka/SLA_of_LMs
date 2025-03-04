@@ -38,7 +38,7 @@ for layer_idx in range(num_candidate_layers):
 
 # get centroids.
 num_sentences_for_calc_centroids = 2000
-c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_n{num_sentences_for_calc_centroids}.pkl"
+c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_n{num_sentences_for_calc_centroids}_en.pkl"
 centroids = unfreeze_pickle(c_path)
 
 # calc scores.
@@ -52,15 +52,15 @@ for L2 in langs:
     monolingual_sentences = monolingual_dataset(L2, num_sentences)
     for score_type in score_types:
         # scores: {(layer_idx, neuron_idx): score, ....}
-        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
-        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
+        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
+        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
         # 降順
         # sorted_neurons = [neuron for neuron, score in sorted(scores.items(), key=lambda item: item[1], reverse=True)] # original list
         sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用
         
         # save as pkl.
-        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_en.pkl"
-        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_en.pkl"
+        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_en_all_layers.pkl"
+        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_en_all_layers.pkl"
         save_as_pickle(sorted_neurons_path, sorted_neurons)
         save_as_pickle(score_dict_path, score_dict)
         print("saved scores for: {L2}.")
