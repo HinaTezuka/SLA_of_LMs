@@ -124,7 +124,7 @@ if __name__ == "__main__":
     """ model configs """
     langs = ["ja", "nl", "ko", "it"]
     # Mistral-7B
-    model_name = "facebook/xglm-2.9B"
+    model_name = "meta-llama/Meta-Llama-3-8B"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
