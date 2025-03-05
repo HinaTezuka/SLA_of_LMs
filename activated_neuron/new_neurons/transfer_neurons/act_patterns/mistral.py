@@ -61,7 +61,7 @@ for L2 in langs:
         if score_type == "cos_sim":
             act_patterns = get_act_patterns(model, tokenizer, device, tatoeba_data)
             act_patterns_baseline = get_act_patterns(model, tokenizer, device, random_data)
-            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, None, model_type, "normal")
+            activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, None, model_type, score_type, "normal")
         for intervention_num in n_list:
             """
             get act_patterns as cos_sim (with high AP neurons intervention).
