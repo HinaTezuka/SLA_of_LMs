@@ -155,6 +155,26 @@ def multilingual_dataset_for_centroid_detection(langs: list, num_sentences=500) 
     
     return dict(tatoeba_data)
 
+def get_norms_of_value_vector(model, tokenizer, device: str, neurons: list, data: list) -> float:
+    result = defaultdict(list)
+    for txt in data:
+        inputs = tokenizer(txt, return_tensors="pt").input_ids.to(device)
+        token_len = len(inputs[0])
+        act_fn_values, up_proj_values = act_llama3(model, inputs)
+        for layer_idx, neuron_idx in neurons:
+            act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
+            up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
+            act_values = calc_element_wise_product(act_fn_value, up_proj_value).detach().cpu().numpy()
+            act_value = act_values[neuron_idx]
+            value_vector = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_idx].detach().cpu().numpy()
+            norm = np.linalg.norm(act_value * value_vector)
+            result[(layer_idx, neuron_idx)].append(norm)
+    # calc means.
+    for layer_idx, neuron_idx in neurons:
+        result[(layer_idx, neuron_idx)] = np.mean(np.array(result[(layer_idx, neuron_idx)]))
+
+    return dict(result)
+
 def get_out_llama3_act_fn(model, prompt, device, index):
     model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
     num_layers = model.config.num_hidden_layers  # nums of layers of the model

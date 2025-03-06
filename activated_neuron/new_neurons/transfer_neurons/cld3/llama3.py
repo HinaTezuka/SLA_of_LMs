@@ -83,20 +83,20 @@ prompts = {
         "혼자 여행하는 사람들에게 적합한 가성비 좋은 여행지 세 곳을 추천해 줄 수 있나요?"
     ]
 }
-prompts = {
-    "en": "What are some popular tourist attractions in New York City? Answer:",
-    "ja": "ニューヨーク市で人気の観光名所はどこですか？ 答え:",
-    "nl": "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord:",
-    "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City? Risposta:",
-    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요? 답변:",
-}
-prompts = {
-    "en": "The capital of Japan is ",
-    "ja": "日本の首都は",
-    "nl": "De hoofdstad van Japan is ",
-    "it": "La capitale del Giappone è ",
-    "ko": "일본의 수도는 ",
-}
+# prompts = {
+#     "en": "What are some popular tourist attractions in New York City? Answer:",
+#     "ja": "ニューヨーク市で人気の観光名所はどこですか？ 答え:",
+#     "nl": "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord:",
+#     "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City? Risposta:",
+#     "ko": "뉴욕에서 인기 있는 관광지는 어디인가요? 답변:",
+# }
+# prompts = {
+#     "en": "The capital of Japan is ",
+#     "ja": "日本の首都は",
+#     "nl": "De hoofdstad van Japan is ",
+#     "it": "La capitale del Giappone è ",
+#     "ko": "일본의 수도는 ",
+# }
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_name = "meta-llama/Meta-Llama-3-8B"
