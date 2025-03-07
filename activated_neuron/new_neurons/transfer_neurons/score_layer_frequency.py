@@ -23,7 +23,7 @@ def plot_layer_frequency(neuron_list):
     plt.yticks(fontsize=25)
 
     plt.savefig(
-        f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_{L2}_n{n}',
+        f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_{L2}_n{n}.',
         bbox_inches='tight',
         )
 
@@ -34,7 +34,7 @@ model = 'mistral'
 langs = ['ja', 'nl', 'ko', 'it']
 # langs = ['ja']
 score_types = ['cos_sim', 'L2_dis']
-score_types = ['cos_sim']
+# score_types = ['cos_sim']
 is_last_token_only = True
 n = 1000
 for L2 in langs:
