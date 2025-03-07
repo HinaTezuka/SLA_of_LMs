@@ -15,6 +15,7 @@ from funcs import (
     monolingual_dataset,
     get_norms_of_value_vector,
     unfreeze_pickle,
+    save_as_pickle,
 )
 
 if __name__ == "__main__":

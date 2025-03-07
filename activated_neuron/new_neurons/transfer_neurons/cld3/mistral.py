@@ -84,6 +84,13 @@ prompts = {
     ]
 }
 prompts = {
+    "en": "What are some popular tourist attractions in New York City?",
+    "ja": "ニューヨーク市で人気の観光名所はどこですか？",
+    "nl": "Wat zijn enkele populaire toeristische attracties in New York City?",
+    "it": "Quali sono alcune delle attrazioni turistiche più famose di New York City?",
+    "ko": "뉴욕에서 인기 있는 관광지는 어디인가요?",
+}
+prompts = {
     "en": "What are some popular tourist attractions in New York City? Answer: ",
     "ja": "ニューヨーク市で人気の観光名所はどこですか？ 答え: ",
     "nl": "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: ",
