@@ -18,6 +18,7 @@ from funcs import (
     # get_centroids_per_L2,
     # get_centroids_of_shared_space,
     save_as_pickle,
+    unfreeze_pickle,
 )
 
 # making multilingual data.
@@ -35,14 +36,15 @@ centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = 32(laye
 
 # hidden_states and get centroids per L2.
 for L2 in langs:
-    sentence_pairs = multilingual_dataset_for_centroid_detection(langs, num_sentences_per_L2)
+    # sentence_pairs = multilingual_dataset_for_centroid_detection(langs, num_sentences_per_L2)
+    sentence_pairs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_train.pkl")
     # text data for L2.
-    data = sentence_pairs[L2]
+    # data = sentence_pairs[L2]
     # get centroids of hidden_states(of en-L2 sentence pairs).
-    c_hidden_states = get_hidden_states(model, tokenizer, device, num_layers, data)
+    c_hidden_states = get_hidden_states(model, tokenizer, device, num_layers, sentence_pairs)
     shared_space_centroids = get_centroid_of_shared_space(c_hidden_states)
     centroids[L2] = shared_space_centroids
 
 # save centroids as pkl.
-save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_n{num_sentences_per_L2}.pkl"
+save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_train.pkl"
 save_as_pickle(save_path, centroids)

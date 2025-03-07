@@ -28,7 +28,7 @@ num_sentences = 1000
 langs = ["ja", "nl", "ko", "it"]
 # langs = ["it", "nl", "ja", "ko"]
 score_types = ["cos_sim", "L2_dis"]
-num_candidate_layers = 32
+num_candidate_layers = 20
 
 """ candidate neurons. """
 candidates = {}
@@ -37,30 +37,33 @@ for layer_idx in range(num_candidate_layers):
         candidates.setdefault(layer_idx, []).append(neuron_idx)
 
 # get centroids.
-num_sentences_for_calc_centroids = 2000
-c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_n{num_sentences_for_calc_centroids}.pkl"
+# num_sentences_for_calc_centroids = 2000
+# original
+# c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_n{num_sentences_for_calc_centroids}.pkl"
+# each L2.
+# c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_train.pkl"
+# en-only
+c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_train_en.pkl"
 centroids = unfreeze_pickle(c_path)
 
 # calc score
 for L2 in langs:
-    # L2-specific neurons
-    # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/sorted_neurons_{L2}.pkl"
-    # save_path_ap_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/ap_lang_specific/ap_scores_{L2}.pkl"
-    # sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-    # ap_scores = unfreeze_pickle(save_path_ap_scores)
 
-    monolingual_sentences = monolingual_dataset(L2, num_sentences)
+    # monolingual_sentences = monolingual_dataset(L2, num_sentences)
+    monolingual_sentences = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl")
     for score_type in score_types:
         # scores: {(layer_idx, neuron_idx): score, ....}
-        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
-        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
+        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
+        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
         # 降順
         # sorted_neurons = [neuron for neuron, score in sorted(scores.items(), key=lambda item: item[1], reverse=True)] # original list
         sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用
         
-        # save as pkl.
-        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_all_layers.pkl"
-        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_all_layers.pkl"
+        # # save as pkl.
+        # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_mono_train.pkl"
+        # score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
+        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/en_only_mono_train.pkl"
+        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/en_only_score_dict_mono_train.pkl"
         save_as_pickle(sorted_neurons_path, sorted_neurons)
         save_as_pickle(score_dict_path, score_dict)
         print("saved scores for: {L2}.")

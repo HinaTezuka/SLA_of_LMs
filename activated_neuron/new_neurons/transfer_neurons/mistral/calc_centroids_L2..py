@@ -16,6 +16,7 @@ from funcs import (
     get_hidden_states_en_only,
     get_centroid_of_shared_space,
     save_as_pickle,
+    unfreeze_pickle,
 )
 
 langs = ["ja", "nl", "it", "ko"]
@@ -31,12 +32,13 @@ for L2 in langs:
     # centroids of english texts.
     centroids = {}
     # hidden_states for english
-    sentence_pairs = monolingual_dataset(L2, num_sentences)
+    # sentence_pairs = monolingual_dataset(L2, num_sentences)
+    sentences = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl")
     
     # get centroids of hidden_states(of en-L2 sentence pairs).
-    c_hidden_states = get_hidden_states_en_only(model, tokenizer, device, num_layers, sentence_pairs)
+    c_hidden_states = get_hidden_states_en_only(model, tokenizer, device, num_layers, sentences)
     shared_space_centroids = get_centroid_of_shared_space(c_hidden_states) # list: [c_layer1, c_layer2, ...]
 
     # save centroids as pkl.
-    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_n{num_sentences}_{L2}.pkl"
+    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_mono_sentences_{L2}.pkl"
     save_as_pickle(save_path, shared_space_centroids)

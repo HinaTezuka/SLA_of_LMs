@@ -76,7 +76,6 @@ def monolingual_dataset(lang: str, num_sentences: int) -> list:
     """
     making tatoeba translation corpus for lang-specific neuron detection.
     """
-
     tatoeba_data = []
     dataset = load_dataset("tatoeba", lang1="en", lang2=lang, split="train")
     dataset = dataset.select(range(2500))
@@ -92,7 +91,6 @@ def monolingual_dataset_en(num_sentences: int) -> list:
     """
     making tatoeba translation corpus for lang-specific neuron detection.
     """
-
     tatoeba_data = []
     dataset = load_dataset("tatoeba", lang1="en", lang2="nl", split="train")
     dataset = dataset.select(range(2500))
@@ -108,7 +106,6 @@ def multilingual_dataset_for_lang_specific_detection(langs: list, num_sentences=
     """
     making tatoeba translation corpus for lang-specific neuron detection.
     """
-
     tatoeba_data = []
     for lang in langs:
         if "en" in langs and lang == "en":
@@ -130,6 +127,24 @@ def multilingual_dataset_for_lang_specific_detection(langs: list, num_sentences=
             tatoeba_data.append(item['translation'][lang])
     
     return tatoeba_data
+
+def sentence_pairs_for_train_test_split(L2: str, num_sentences=2000) -> list:
+    """
+    """
+    tatoeba_data = []
+    dataset = load_dataset("tatoeba", lang1="en", lang2=L2, split="train")
+    dataset = dataset.select(range(2500))
+    random.seed(42)
+    random_indices = random.sample(range(2500), num_sentences)
+    dataset = dataset.select(random_indices)
+    for sentence_idx, item in enumerate(dataset):
+        en_txt = item['translation']['en']
+        l2_txt = item['translation'][L2]
+        if en_txt != '' and l2_txt != '':
+            tatoeba_data.append((en_txt, l2_txt))
+    
+    return tatoeba_data
+
 
 def multilingual_dataset_for_centroid_detection(langs: list, num_sentences=500) -> list:
     """
