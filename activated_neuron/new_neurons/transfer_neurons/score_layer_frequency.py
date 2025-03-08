@@ -30,9 +30,9 @@ def plot_layer_frequency(neuron_list):
 # params
 model = 'llama3' # original llama
 # model = 'llama' # <- llama learned L2.
-# model = 'mistral'
+model = 'mistral'
 langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['ja']
+langs = ['ja', 'nl']
 score_types = ['cos_sim', 'L2_dis']
 # score_types = ['cos_sim']
 is_last_token_only = True
@@ -40,7 +40,7 @@ n = 1000
 for L2 in langs:
     for score_type in score_types:
         # final scores.
-        save_path_sorted_neurons = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/final_scores/{score_type}/{L2}_revised.pkl'
+        save_path_sorted_neurons = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/final_scores/{score_type}/{L2}_mono_train.pkl'
         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)[:n]
 
         plot_layer_frequency(sorted_neurons)

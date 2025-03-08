@@ -26,7 +26,6 @@ model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 1000
 langs = ["ja", "nl", "ko", "it"]
-# langs = ["it", "nl", "ja", "ko"]
 score_types = ["cos_sim", "L2_dis"]
 num_candidate_layers = 20
 

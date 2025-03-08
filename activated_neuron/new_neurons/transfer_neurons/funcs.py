@@ -839,7 +839,7 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
-            output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
+            output[:, :, neuron_idx] *= 1.5  # 指定されたニューロンの活性化値をゼロに設定
 
     return output
 
