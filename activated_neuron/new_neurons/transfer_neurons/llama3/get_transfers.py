@@ -46,7 +46,6 @@ centroids = unfreeze_pickle(c_path)
 
 # calc scores.
 for L2 in langs:
-
     # monolingual_sentences = monolingual_dataset(L2, num_sentences)
     monolingual_sentences = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl")
     for score_type in score_types:

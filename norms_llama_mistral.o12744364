@@ -1,5 +1,6 @@
 pkl_file successfully saved.
 
+norm
  ============================= llama3, nums_of_text: 1000, top_n: 100 ============================= 
 
 ('ja', 'cos_sim'): 0.07049527019262314

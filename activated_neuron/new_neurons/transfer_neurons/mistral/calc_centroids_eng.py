@@ -16,6 +16,7 @@ from funcs import (
     get_hidden_states_en_only,
     get_centroid_of_shared_space,
     save_as_pickle,
+    unfreeze_pickle,
 )
 
 num_sentences = 2000

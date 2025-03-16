@@ -40,7 +40,7 @@ def intersection_ratio(*lists):
     return {
         "Number of common elements": len(intersection),
         "Jaccard index": jaccard_index,
-        "Intersection ratio": intersection_ratio,
+        # "Intersection ratio": intersection_ratio,
         # "Common elements": intersection
     }
 
@@ -48,13 +48,17 @@ top_n = 1000
 for score_type in score_types:
     # top score neurons
     # ja
-    ja_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/ja_revised.pkl"
+    # ja_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/ja_mono_train.pkl"
+    ja_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/ja_sorted_neurons.pkl"
     ja_sorted_neurons = unfreeze_pickle(ja_save_path_sorted_neurons)[:top_n]
-    nl_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/nl_revised.pkl"
+    # nl_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/nl_mono_train.pkl"
+    nl_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/nl_sorted_neurons.pkl"
     nl_sorted_neurons = unfreeze_pickle(nl_save_path_sorted_neurons)[:top_n]
-    ko_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/ko_revised.pkl"
+    # ko_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/ko_mono_train.pkl"
+    ko_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/ko_sorted_neurons.pkl"
     ko_sorted_neurons = unfreeze_pickle(ko_save_path_sorted_neurons)[:top_n]
-    it_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/it_revised.pkl"
+    # it_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/it_mono_train.pkl"
+    it_save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/it_sorted_neurons.pkl"
     it_sorted_neurons = unfreeze_pickle(it_save_path_sorted_neurons)[:top_n]
 
     print(f'{score_type}')

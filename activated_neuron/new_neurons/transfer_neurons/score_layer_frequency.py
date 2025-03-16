@@ -30,9 +30,9 @@ def plot_layer_frequency(neuron_list):
 # params
 model = 'llama3' # original llama
 # model = 'llama' # <- llama learned L2.
-model = 'mistral'
+# model = 'mistral'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['ja', 'nl']
+# langs = ['ja', 'nl']
 score_types = ['cos_sim', 'L2_dis']
 # score_types = ['cos_sim']
 is_last_token_only = True

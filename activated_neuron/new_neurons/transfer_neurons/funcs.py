@@ -412,7 +412,7 @@ def get_hidden_states_en_only(model, tokenizer, device, num_layers, data):
         with torch.no_grad():
             output1 = model(**inputs1, output_hidden_states=True)
 
-        all_hidden_states1 = output1.hidden_states[1:] # remove embedding layer
+        all_hidden_states1 = output1.hidden_states[1:] # exclude embedding layer
         last_token_index1 = inputs1["input_ids"].shape[1] - 1
 
         """  """
@@ -538,6 +538,7 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
                 scores = cosine_similarity(scores, c).reshape(-1)
                 scores = np.where(scores >= layer_score, abs(layer_score - scores), -abs(layer_score - scores))
             # save resulting scores.
+            final_scores_save[layer_idx, :, text_idx] = scores
             final_scores_save[layer_idx, :, text_idx] = scores
 
     # Calculate mean score for each neuron
@@ -839,7 +840,7 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
-            output[:, :, neuron_idx] *= 1.5  # 指定されたニューロンの活性化値をゼロに設定
+            output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
 
     return output
 

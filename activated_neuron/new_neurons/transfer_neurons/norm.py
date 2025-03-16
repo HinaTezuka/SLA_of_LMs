@@ -42,7 +42,10 @@ if __name__ == "__main__":
             data_mono = monolingual_dataset(L2, num_sentences)
             for score_type in score_types:
                 save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_revised.pkl"
-                sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)[:top_n]
+                sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(1)]]
+                sorted_neurons = sorted_neurons[:top_n]
+                # sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)[:top_n]
                 # save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_revised.pkl"
                 # score_dict = unfreeze_pickle(save_path_score_dict)
                 
@@ -51,7 +54,8 @@ if __name__ == "__main__":
 
         # save as pkl.
         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/norms/norms_{top_n}.pkl"
-        save_as_pickle(save_path, results)
+        # save_as_pickle(save_path, results)
+        # results = unfreeze_pickle(save_path)
 
         # print results.
         print(f"\n ============================= {model_type}, nums_of_text: {num_sentences}, top_n: {top_n} ============================= \n")
