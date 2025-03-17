@@ -71,11 +71,8 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000]
     n_list = [100, 1000, 3000, 5000, 8000, 10000]
-    # n_list = [1000]
     score_types = ["cos_sim", "L2_dis"]
-    # score_types = ["cos_sim"]
     is_en = False
 
     for L2 in langs:
@@ -110,19 +107,10 @@ if __name__ == "__main__":
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
         # tatoeba_data = tatoeba_data[:20]
         # random_data = random_data[:20]
-        # print(len(tatoeba_data))
-        # print(len(random_data))
 
         for score_type in score_types:
             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_mono_train.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            save_path_scores = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
-            scores_dict = unfreeze_pickle(save_path_scores)
-            # print(f'================ {L2}_{score_type} ================')
-            # for neuron in sorted_neurons:
-            #     print(f'{scores_dict[neuron]:.10f}')
-            # for ne in sorted_neurons[:100]:
-            #     print(ne)
             
             for n in n_list:
                 """ n: intervention_num """
