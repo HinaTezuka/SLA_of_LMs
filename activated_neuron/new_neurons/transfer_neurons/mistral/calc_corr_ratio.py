@@ -39,7 +39,7 @@ for L2 in langs:
         # top score neurons
         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-        sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(25, 32)]]
+        sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
         # l1 = [ 1 for _ in range(1000)]
         # l2 = [ 0 for _ in range(1000)]
         # labels_list = l2 + l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l1) # nl, it
