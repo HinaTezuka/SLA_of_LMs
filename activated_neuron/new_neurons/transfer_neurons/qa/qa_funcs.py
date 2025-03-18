@@ -121,7 +121,7 @@ def edit_activation_revised(output, layer, layer_idx_and_neuron_idx, last_token_
             if act_mode == 'de':
                 output[:, -1, neuron_idx] *= 0.5
             elif act_mode == 'ac':
-                output[:, -1, neuron_idx] *= 2
+                output[:, -1, neuron_idx] *= 3
 
     return output
 
@@ -142,10 +142,11 @@ def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa
         elif lang_deact == 'ko': prompt= f'{q}? 답변: '
         elif lang_deact == 'it': prompt= f'{q}? Risposta: '
         # prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
-        prompt = f'Wat is de hoofdstad van China? Antwoord: '
+        # prompt = f'Wat is de hoofdstad van China? Antwoord: '
         # prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
+        # prompt = 'Wat is de hoofdstad van Italië? Risposta: '
         # prompt = 'Wat eet een Nederlander graag? Antwoord: '
-        prompt = 'Welke taal spreekt men in België? Antwoord: '
+        # prompt = 'Welke taal spreekt men in België? Antwoord: '
         # prompt = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
         # prompt = 'オランダの首都はどこですか 答え: '
         # prompt = 'こんにちは、今日は'
