@@ -59,12 +59,12 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
-            output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
+            output[:, -1, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
 
     return output
 
 def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
-    trace_layers = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
         return get_act_patterns(model, tokenizer, device, data)
 

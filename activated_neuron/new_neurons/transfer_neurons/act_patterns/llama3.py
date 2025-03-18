@@ -23,7 +23,7 @@ model_name = "meta-llama/Meta-Llama-3-8B"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-n_list = [100, 1000, 3000, 5000, 8000, 10000, 15000, 20000, 30000] # patterns of intervention_num
+n_list = [100, 1000, 3000, 5000, 8000, 10000] # patterns of intervention_num
 score_types = ["cos_sim", "L2_dis"]
 langs = ["ja", "nl", "ko", "it"]
 model_type = "llama3"
@@ -66,7 +66,7 @@ for L2 in langs:
             get act_patterns as cos_sim (with high AP neurons intervention).
             """
             # unfreeze AP_list.
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
 
             """ どのくらい介入するか(intervention_num) """
