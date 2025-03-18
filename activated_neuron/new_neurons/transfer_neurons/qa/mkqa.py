@@ -55,9 +55,9 @@ for model_name in model_names:
 
     # save results as pkl.
     path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs.pkl'
-    save_as_pickle(path_normal)
+    save_as_pickle(path_normal, results)
     path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs_intervention.pkl'
-    save_as_pickle(path_intervention)
+    save_as_pickle(path_intervention, resutls_intervention)
 
     # print results (just in case).
     print(f'normal: {results}')

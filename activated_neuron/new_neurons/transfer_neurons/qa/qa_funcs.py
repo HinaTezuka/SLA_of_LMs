@@ -115,51 +115,42 @@ def remove_intersec(list_a, list_b):
     set_b = set(list_b)  # リストBを集合に変換（検索を高速化）
     return [item for item in list_a if item not in set_b]  # Bにない要素を残す
 
-def edit_activation_revised(output, layer, layer_idx_and_neuron_idx, last_token_idx, device, act_values, is_act=False):
+def edit_activation_revised(output, layer, layer_idx_and_neuron_idx, last_token_idx, device):
     for act_mode, layer_idx, neuron_idx in layer_idx_and_neuron_idx:
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
             if act_mode == 'de':
-                output[:, -1, neuron_idx] *= 0
+                output[:, -1, neuron_idx] *= 0.5
             elif act_mode == 'ac':
-                if not is_act:
-                    # output[:, -1, neuron_idx] += 1
-                    output[:, -1, neuron_idx] *= 2
-                elif is_act:
-                    output[:, -1, neuron_idx] = torch.tensor(float(act_values[(layer_idx, neuron_idx)]), dtype=torch.float).to(device)
+                output[:, -1, neuron_idx] *= 2
 
     return output
 
-
-# def mkqa_with_edit_activation_for_steer_output_lang(model, tokenizer, device, qa, L2, qa_num, neurons_zero, neurons_up):
-#     trace_layers_zero = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in neurons_zero]
-#     trace_layers_up = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in neurons_up]
-#     with TraceDict(model, trace_layers_zero, edit_output=lambda output, layer: edit_activation_zero(output, layer, neurons_zero)) as tr:
-#         with TraceDict(model, trace_layers_up, edit_output=lambda output, layer: edit_activation_up(output, layer, neurons_up)) as tr:
-
-#             return mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2, qa_num)
-
-def mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2: str, qa_num: int, neurons_zero=None, neurons_up=None, act_values:dict=None, is_act:bool=False):
+def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa_num: int, neurons_zero=None, neurons_up=None):
     c = 0 # question counter.
     f1_scores = []
     for i in range(len(qa['queries'])):
         if c == qa_num: break
-        q = qa['queries'][-i][L2] # question
-        a = qa['answers'][-i][L2][0]['text'] # answer
+        q = qa['queries'][i][lang_deact] # question
+        a = qa['answers'][i][lang_deact][0]['text'] # answer
         if q == '' or q == None or  a == '' or a == None:
             continue
 
+        # 対訳文を入れて、発火値を記録しておいて、書き換える？
         # make prompt.
-        if L2 == 'ja': prompt = f'{q} 答え: '
-        elif L2 == 'nl': prompt = f'{q} Antwoord: '
-        elif L2 == 'ko': prompt = f'{q} 답변: '
-        elif L2 == 'it': prompt = f'{q} Risposta: '
-        prompt = f'Wat is de hoofdstad van Japan Antwoord: '
-        # prompt = f'Wat is de hoofdstad van Nederland? Antwoord: '
+        if lang_deact == 'ja': prompt= f'{q}? 答え: '
+        elif lang_deact == 'nl': prompt= f'{q}? Antwoord: '
+        elif lang_deact == 'ko': prompt= f'{q}? 답변: '
+        elif lang_deact == 'it': prompt= f'{q}? Risposta: '
+        # prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
+        prompt = f'Wat is de hoofdstad van China? Antwoord: '
+        # prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
         # prompt = 'Wat eet een Nederlander graag? Antwoord: '
-        # prompt = 'Welke taal spreekt men in België? Antwoord: '
+        prompt = 'Welke taal spreekt men in België? Antwoord: '
         # prompt = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
-        prompt = '日本の首都はどこですか 答え: '
-
+        # prompt = 'オランダの首都はどこですか 答え: '
+        # prompt = 'こんにちは、今日は'
+        # prompt = 'Qual è la capitale del Giappone? Risposta: '
+        # prompt_tran
         # run inference.
         torch.cuda.manual_seed_all(42)
         inputs = tokenizer(prompt, return_tensors='pt').to(device)
@@ -168,24 +159,21 @@ def mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2: str, qa_num: in
         # run inference with steering activations.
         trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
         trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
+        trace_layers = list(set(trace_layers_zero+trace_layers_up))
 
-        with TraceDict(model, trace_layers_zero+trace_layers_up, edit_output=lambda output, layer: edit_activation_revised(output, layer, neurons_zero+neurons_up, last_token_idx, device, act_values, is_act)) as tr:
-            # with TraceDict(model, trace_layers_up, edit_output=lambda output, layer: edit_activation_up(output, layer, neurons_up, last_token_idx)) as tr:
+        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_revised(output, layer, neurons_zero+neurons_up, last_token_idx, device)) as tr:
             with torch.no_grad():
-                output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
+                output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
 
         pre = tokenizer.decode(output[0], skip_special_tokens=True) # model's prediction
-        if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
-        if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
-        if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
-        if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
-        f1 = compute_f1(a, pre)
-        f1_scores.append(f1)
+        if lang_deact == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if lang_deact == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if lang_deact == 'it': pre = pre.split('Risposta: ')[-1].strip()
         c += 1
         print(f'question: {prompt}')
         print(f'model ans: {pre}')
         print(f'gorund truth: {a}')
-        # print(f'f1: {f1}')
         # sys.exit()
     
     return np.mean(np.array(f1_scores))
@@ -269,9 +257,10 @@ def mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2: str, qa_
         elif L2 == 'ko': prompt = f'{q} 답변: '
         elif L2 == 'it': prompt = f'{q} Risposta: '
         # prompt = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
-        prompt = f'Wat is de hoofdstad van Japan\nAntwoord: '
-        prompt = 'Wat is de hoofdstad van Nederland\nAntwoord: '
+        # prompt = f'Wat is de hoofdstad van Japan\nAntwoord: '
+        # prompt = 'Wat is de hoofdstad van Nederland\nAntwoord: '
         # prompt = '日本の首都はどこですか 答え: '
+        # prompt = 'Qual è la capitale del Giappone? Risposta: '
 
         # run inference.
         torch.cuda.manual_seed_all(42) # set seed.
@@ -291,10 +280,10 @@ def mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2: str, qa_
         f1 = compute_f1(a, pre)
         f1_scores.append(f1)
         c += 1
-        print(f'question: {q}')
+        print(f'question: {prompt}')
         print(f'model ans: {pre}')
         print(f'gorund truth: {a}')
-        print(f'f1: {f1}')
+        # print(f'f1: {f1}')
         # sys.exit()
     
     return np.mean(np.array(f1_scores))

@@ -45,7 +45,7 @@ qa = load_dataset('apple/mkqa')['train']
 # qa = load_dataset('atutej/m_lama')
 score_type = 'cos_sim'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['ko']
+langs = ['it']
 intervention_num = 1000
 is_act = False
 
@@ -68,39 +68,30 @@ for L2 in langs:
         # 
         lang_deactivation, lang_activation = pair[0], pair[1]
         print('====================== lang pair ======================')
-        print(f'lang_deactivation: {lang_deactivation}, lang_activation: {lang_activation}\n')
+        print(f'lang_deactivation: {lang_deactivation}, lang_activation: {lang_activation}')
 
         # neurons for deactivation.
         neurons_path_deactivation = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{lang_deactivation}_sorted_neurons.pkl"
         neurons_deactivation = unfreeze_pickle(neurons_path_deactivation)
-        neurons_deactivation = [neuron for neuron in neurons_deactivation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num] # 21-32 layers
+        neurons_deactivation = [neuron for neuron in neurons_deactivation if neuron[0] in [ _ for _ in range(25, 32)]][:intervention_num] # 21-32 layers
         # neurons for forced activation.
         neurons_path_activation = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{lang_activation}_sorted_neurons.pkl"
         neurons_activation = unfreeze_pickle(neurons_path_activation)
-        neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num]
+        neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(25, 32)]][:intervention_num]
 
         # activation value set for forced_activation.
-        act_values = get_mean_act_value(neurons_activation, lang_activation, model_type)
+        # act_values = get_mean_act_value(neurons_activation, lang_activation, model_type)
 
         # remove duplications from neurons_deactivation
         neurons_deactivation_removed = remove_intersec(neurons_deactivation, neurons_activation)
-        neurons_activation_removed = remove_intersec(neurons_activation, neurons_deactivation)
+        # neurons_activation_removed = remove_intersec(neurons_activation, neurons_deactivation)
 
-        neurons_deactivation_removed = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
-        # neurons_activation_removed = [('ac', layer, neuron) for layer, neuron in neurons_activation]
+        neurons_deactivation_removed = [('de', layer, neuron) for layer, neuron in neurons_deactivation_removed]
+        # neurons_activation_removed = [('ac', layer, neuron) for layer, neuron in neurons_activation_removed]
+        # neurons_deactivation = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
-        result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2, qa_num, neurons_deactivation_removed, neurons_activation, act_values, is_act)
-
-# save results as pkl.
-# path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs.pkl'
-# save_as_pickle(path_normal)
-# path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs_intervention.pkl'
-# save_as_pickle(path_intervention)
-
-# print results (just in case).
-print(f'normal: {results}')
-print(f'intervention: {resutls_intervention}')
+        result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deactivation, qa_num, neurons_deactivation_removed, neurons_activation)
 
 del model
 torch.cuda.empty_cache()

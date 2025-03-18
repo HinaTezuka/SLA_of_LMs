@@ -29,12 +29,12 @@ score_types = ["cos_sim"]
 norm_type = "no"
 top_n = 10
 langs = ["ja", "nl", "ko", "it"]
-# langs = ["ja"]
+# langs = ["it"]
 model_type = "llama3"
 
 for L2 in langs:
     for score_type in score_types:
-        pkl_file_path = f"activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_revised.pkl"
+        pkl_file_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
         sorted_neurons_AP = unfreeze_pickle(pkl_file_path)[:top_n]
         # baseline
         # sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[top_n_for_baseline+1:], len(sorted_neurons_AP[top_n_for_baseline+1:]))
@@ -43,7 +43,7 @@ for L2 in langs:
         value_predictions = {}
         # for top_n AP neurons
         print(f"================ {L2}/{score_type}. ================")
-        for neuron in sorted_neurons_AP[-top_n:]:
+        for neuron in sorted_neurons_AP[:top_n]:
             layer_idx, neuron_idx = neuron[0], neuron[1]
             value_preds = project_value_to_vocab(model, tokenizer, layer_idx, neuron_idx, top_k=20, normed=True)
             value_predictions[(layer_idx, neuron_idx)] = value_preds

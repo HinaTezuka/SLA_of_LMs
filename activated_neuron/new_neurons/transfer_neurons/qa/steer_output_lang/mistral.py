@@ -40,18 +40,18 @@ model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # load QA dataset.
-qa_num = 10
+qa_num = 100
 qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['nl']
+langs = ['nl']
 intervention_num = 1000
 
 results = {}
 resutls_intervention = {}
 pair_patterns = {
-    'ja': [('ja', 'nl'), ('ja', 'ko'), ('ja', 'it')],
+    'ja': [('ja', 'ko'), ('ja', 'nl'), ('ja', 'it')],
     'nl': [('nl', 'ja'), ('nl', 'ko'), ('nl', 'it')],
     'ko': [('ko', 'ja'), ('ko', 'nl'), ('ko', 'it')],
     'it': [('it', 'ja'), ('it', 'nl'), ('it', 'ko')],
@@ -78,7 +78,7 @@ for L2 in langs:
         neurons_activation = unfreeze_pickle(neurons_path_activation)
         neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(25, 32)]][:intervention_num]
         # activation value set for forced_activation.
-        act_value = get_mean_act_value(neurons_activation, lang_activation, model_type)
+        # act_value = get_mean_act_value(neurons_activation, lang_activation, model_type)
         # print(act_value)
         # sys.exit()
         # remove duplications from neurons_deactivation
@@ -87,16 +87,6 @@ for L2 in langs:
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
         result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2, qa_num, neurons_deactivation, neurons_activation)
-
-# save results as pkl.
-# path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs.pkl'
-# save_as_pickle(path_normal)
-# path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs_intervention.pkl'
-# save_as_pickle(path_intervention)
-
-# print results (just in case).
-print(f'normal: {results}')
-print(f'intervention: {resutls_intervention}')
 
 del model
 torch.cuda.empty_cache()
