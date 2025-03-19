@@ -106,7 +106,8 @@ def get_mean_act_value(neurons: list, lang: str, model_type: str):
     end_idx = start_indics[lang] + 1000
     for layer_i, neuron_i in neurons:
         # print(len(act_values_arr[layer_i, neuron_i, :1000]))
-        act_values[(layer_i, neuron_i)] = np.mean(act_values_arr[layer_i, neuron_i, start_idx:end_idx])
+        # act_values[(layer_i, neuron_i)] = np.mean(act_values_arr[layer_i, neuron_i, start_idx:end_idx])
+        act_values[(layer_i, neuron_i)] = np.median(act_values_arr[layer_i, neuron_i, start_idx:end_idx])
         # act_values[(layer_i, neuron_i)] = np.max(act_values_arr[layer_i, neuron_i, :1000])
     
     return act_values
@@ -115,27 +116,29 @@ def remove_intersec(list_a, list_b):
     set_b = set(list_b)  # リストBを集合に変換（検索を高速化）
     return [item for item in list_a if item not in set_b]  # Bにない要素を残す
 
-def edit_activation_revised(output, layer, layer_idx_and_neuron_idx, last_token_idx, device):
+def edit_activation_revised(output, layer, layer_idx_and_neuron_idx, last_token_idx, device, act_values):
     for act_mode, layer_idx, neuron_idx in layer_idx_and_neuron_idx:
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
-            if act_mode == 'de':
-                output[:, -1, neuron_idx] *= 0.5
-            elif act_mode == 'ac':
+            if act_mode == 'de' and output.shape[1] == last_token_idx+1:
+            # if act_mode == 'de':
+                output[:, -1, neuron_idx] *= 0
+            elif act_mode == 'ac' and output.shape[1] == last_token_idx+1:
+            # elif act_mode == 'ac':
                 output[:, -1, neuron_idx] *= 3
+                # output[:, -1, neuron_idx] = torch.tensor(float(act_values[(layer_idx, neuron_idx)]), dtype=float)
 
     return output
 
-def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa_num: int, neurons_zero=None, neurons_up=None):
+def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa_num: int, neurons_zero=None, neurons_up=None, act_values=None):
     c = 0 # question counter.
     f1_scores = []
     for i in range(len(qa['queries'])):
         if c == qa_num: break
-        q = qa['queries'][i][lang_deact] # question
-        a = qa['answers'][i][lang_deact][0]['text'] # answer
+        q = qa['queries'][i+100][lang_deact] # question
+        a = qa['answers'][i+100][lang_deact][0]['text'] # answer
         if q == '' or q == None or  a == '' or a == None:
             continue
 
-        # 対訳文を入れて、発火値を記録しておいて、書き換える？
         # make prompt.
         if lang_deact == 'ja': prompt= f'{q}? 答え: '
         elif lang_deact == 'nl': prompt= f'{q}? Antwoord: '
@@ -144,7 +147,7 @@ def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa
         # prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
         # prompt = f'Wat is de hoofdstad van China? Antwoord: '
         # prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
-        # prompt = 'Wat is de hoofdstad van Italië? Risposta: '
+        # prompt = 'Wat is de hoofdstad van Italië? Antwoord: '
         # prompt = 'Wat eet een Nederlander graag? Antwoord: '
         # prompt = 'Welke taal spreekt men in België? Antwoord: '
         # prompt = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
@@ -155,18 +158,20 @@ def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa
         # run inference.
         torch.cuda.manual_seed_all(42)
         inputs = tokenizer(prompt, return_tensors='pt').to(device)
-        last_token_idx = inputs['input_ids'].shape[1] - 1
+        token_len = inputs.input_ids.size(1)
+        last_token_idx = token_len - 1
 
         # run inference with steering activations.
         trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
         trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
         trace_layers = list(set(trace_layers_zero+trace_layers_up))
 
-        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_revised(output, layer, neurons_zero+neurons_up, last_token_idx, device)) as tr:
+        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_revised(output, layer, neurons_zero+neurons_up, last_token_idx, device, act_values)) as tr:
             with torch.no_grad():
                 output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
 
         pre = tokenizer.decode(output[0], skip_special_tokens=True) # model's prediction
+
         if lang_deact == 'ja': pre = pre.split("答え: ")[-1].strip()
         if lang_deact == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
         if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
@@ -330,3 +335,97 @@ def unfreeze_np_arrays(save_path):
     except Exception as e:
         print(f"Failed to load array: {e}")
         return None
+
+
+""" act_values as mlp_activation against translation sentences. """
+
+def get_all_outputs_llama3_mistral(model, prompt, device):
+    num_layers = model.config.num_hidden_layers
+    MLP_act = [f"model.layers.{i}.mlp.act_fn" for i in range(num_layers)]
+    with TraceDict(model, MLP_act) as ret:
+        with torch.no_grad():
+            outputs = model(**prompt, output_hidden_states=True, output_attentions=True)
+    MLP_act_values = [ret[act].output for act in MLP_act]
+    
+    return MLP_act_values
+
+def edit_activation_revised_act_value(output, layer, layer_idx_and_neuron_idx, device, act_values, last_token_idx):
+    for act_mode, layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+            if act_mode == 'de' and output.shape[1] == last_token_idx+1:
+            # if act_mode == 'de':
+                output[:, -1, neuron_idx] *= 0
+                # output[:, -1, neuron_idx] = act_values[layer_idx][:, -1, neuron_idx]
+            elif act_mode == 'de' and output.shape[1] == last_token_idx+1:
+            # elif act_mode == 'ac':
+                output[:, -1, neuron_idx] = act_values[layer_idx][:, -1, neuron_idx]
+
+    return output
+
+def mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_deact: str, lang_act: str, qa_num: int, neurons_zero=None, neurons_up=None):
+    c = 0 # question counter.
+    f1_scores = []
+    ans_patterns = {
+    'ja': '答え: ',
+    'nl': 'Antwoord: ',
+    'ko': '답변: ',
+    'it': 'Risposta: ',
+    }
+    for i in range(len(qa['queries'])):
+        if c == qa_num: break
+        q = qa['queries'][i][lang_deact] # question
+        a = qa['answers'][i][lang_deact][0]['text'] # answer
+        q_tran = qa['queries'][i][lang_act]
+        a_tran = qa['answers'][i][lang_act][0]['text']
+        if q == '' or q == None or  a == '' or a == None or q_tran == '' or q_tran == '' or q_tran == None or a_tran == None:
+            continue
+
+        # make prompt.
+        prompt_lang_deact = f'{q}? {ans_patterns[lang_deact]}'
+        prompt_lang_act = f'{q_tran}? {ans_patterns[lang_act]}'
+        # prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
+        # prompt = f'Wat is de hoofdstad van China? Antwoord: '
+        # prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
+        # prompt_lang_deact = 'Wat is de hoofdstad van Italië? Risposta: '
+        # prompt = 'Wat eet een Nederlander graag? Antwoord: '
+        # prompt_lang_deact = 'Welke taal spreekt men in België? Antwoord: '
+        # prompt_lang_deact = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
+        # prompt_lang_act = 'イタリアの首都はどこですか 答え: '
+        # prompt_lang_act = 'ベルギーでは何の言語が話されていますか? 答え: '
+        # prompt = 'こんにちは、今日は'
+        # prompt = 'Qual è la capitale del Giappone? Risposta: '
+        # prompt_tran
+
+        # run inference.
+        torch.cuda.manual_seed_all(42)
+        # lang_deact.
+        inputs_lang_deact = tokenizer(prompt_lang_deact, return_tensors='pt').to(device)
+        last_token_idx = inputs_lang_deact['input_ids'].shape[1] - 1
+        # lang_act.
+        inputs_lang_act = tokenizer(prompt_lang_act, return_tensors='pt').to(device)
+
+        # run inference with steering activations.
+        trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
+        trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
+        trace_layers = list(set(trace_layers_zero+trace_layers_up))
+
+        # get act_values for lang_act.
+        trace_layers_lang_act = [f'model.layers.{layer}.mlp.act_fn' for layer in range(32)]
+        act_values = get_all_outputs_llama3_mistral(model, inputs_lang_act, device)
+
+        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_revised_act_value(output, layer, neurons_zero+neurons_up, device, act_values, last_token_idx)) as tr:
+            with torch.no_grad():
+                output = model.generate(**inputs_lang_deact, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+
+        pre = tokenizer.decode(output[0], skip_special_tokens=True) # model's prediction
+        if lang_deact == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if lang_deact == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if lang_deact == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        c += 1
+        print(f'question: {prompt_lang_deact}')
+        print(f'model ans: {pre}')
+        print(f'gorund truth: {a}')
+        # sys.exit()
+    
+    return np.mean(np.array(f1_scores))

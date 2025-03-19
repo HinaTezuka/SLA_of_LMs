@@ -18,6 +18,7 @@ from qa_funcs import (
     get_mean_act_value,
     mkqa_for_steer_output_lang,
     mkqa_for_steer_output_lang_normal,
+    mkqa_for_steer_output_lang_act_values,
     # mkqa_with_edit_activation_for_steer_output_lang,
     remove_intersec,
     save_as_pickle,
@@ -44,8 +45,9 @@ qa_num = 10
 qa = load_dataset('apple/mkqa')['train']
 # qa = load_dataset('atutej/m_lama')
 score_type = 'cos_sim'
+# score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['it']
+# langs = ['nl']
 intervention_num = 1000
 is_act = False
 
@@ -73,11 +75,11 @@ for L2 in langs:
         # neurons for deactivation.
         neurons_path_deactivation = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{lang_deactivation}_sorted_neurons.pkl"
         neurons_deactivation = unfreeze_pickle(neurons_path_deactivation)
-        neurons_deactivation = [neuron for neuron in neurons_deactivation if neuron[0] in [ _ for _ in range(25, 32)]][:intervention_num] # 21-32 layers
+        neurons_deactivation = [neuron for neuron in neurons_deactivation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num] # 21-32 layers
         # neurons for forced activation.
         neurons_path_activation = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{lang_activation}_sorted_neurons.pkl"
         neurons_activation = unfreeze_pickle(neurons_path_activation)
-        neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(25, 32)]][:intervention_num]
+        neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num]
 
         # activation value set for forced_activation.
         # act_values = get_mean_act_value(neurons_activation, lang_activation, model_type)
@@ -92,6 +94,8 @@ for L2 in langs:
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
         result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deactivation, qa_num, neurons_deactivation_removed, neurons_activation)
+        """ use act_value for translation Question. """
+        # result_score = mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation)
 
 del model
 torch.cuda.empty_cache()
