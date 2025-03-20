@@ -354,9 +354,9 @@ def edit_activation_revised_act_value(output, layer, layer_idx_and_neuron_idx, d
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
             if act_mode == 'de' and output.shape[1] == last_token_idx+1:
             # if act_mode == 'de':
-                output[:, -1, neuron_idx] *= 0
-                # output[:, -1, neuron_idx] = act_values[layer_idx][:, -1, neuron_idx]
-            elif act_mode == 'de' and output.shape[1] == last_token_idx+1:
+                # output[:, -1, neuron_idx] *= 0
+                output[:, -1, neuron_idx] = act_values[layer_idx][:, -1, neuron_idx]
+            elif act_mode == 'ac' and output.shape[1] == last_token_idx+1:
             # elif act_mode == 'ac':
                 output[:, -1, neuron_idx] = act_values[layer_idx][:, -1, neuron_idx]
 

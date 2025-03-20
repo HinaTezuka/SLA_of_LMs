@@ -90,12 +90,12 @@ for L2 in langs:
 
         neurons_deactivation_removed = [('de', layer, neuron) for layer, neuron in neurons_deactivation_removed]
         # neurons_activation_removed = [('ac', layer, neuron) for layer, neuron in neurons_activation_removed]
-        # neurons_deactivation = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
+        neurons_deactivation = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
-        result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deactivation, qa_num, neurons_deactivation_removed, neurons_activation)
+        # result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deactivation, qa_num, neurons_deactivation_removed, neurons_activation)
         """ use act_value for translation Question. """
-        # result_score = mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation)
+        result_score = mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation)
 
 del model
 torch.cuda.empty_cache()
