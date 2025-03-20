@@ -294,6 +294,17 @@ def mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2: str, qa_
     
     return np.mean(np.array(f1_scores))
 
+def save_np_arrays(save_path, np_array):
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    
+    try:
+        # Save directly to .npz
+        np.savez(save_path, data=np_array)
+        print(f"Array successfully saved to {save_path}")
+    except Exception as e:
+        print(f"Failed to save array: {e}")
+
 def save_as_pickle(file_path: str, target_dict) -> None:
     """
     Save a dictionary as a pickle file with improved safety.

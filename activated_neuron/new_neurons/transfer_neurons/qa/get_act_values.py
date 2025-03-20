@@ -12,7 +12,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from baukit import TraceDict
 
 from qa_funcs import (
-    save_as_pickle,
+    save_np_arrays,
     unfreeze_pickle,
     unfreeze_np_arrays,
 )
@@ -73,11 +73,12 @@ for model_type, model_name in models.items():
             
             c += 1
     
+        activations_list = []
         for layer_idx in range(32):
-            act_values_dict[layer_idx] = np.mean(np.array(act_values_dict[layer_idx]), axis=0)
+            activations_list.append(np.mean(np.array(act_values_dict[layer_idx]), axis=0))
 
         # save as pkl.
-        path_activations = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/act_values_{lang}.pkl'
-        save_as_pickle(path_train, dict(act_values_dict))
+        path_activations = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/act_values_{lang}'
+        save_np_arrays(path_train, np.array(activations_list))
 
         del act_values_dict

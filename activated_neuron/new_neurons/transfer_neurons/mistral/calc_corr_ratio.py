@@ -37,6 +37,7 @@ for L2 in langs:
         activations_arr = unfreeze_np_arrays(save_path_activations)
         labels_list = np.array(unfreeze_pickle(save_path_labels))
         # top score neurons
+        # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_mono_train.pkl"
         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
         sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]

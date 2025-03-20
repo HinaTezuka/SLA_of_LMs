@@ -37,10 +37,16 @@ for L2 in langs:
         save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}_last_token.pkl"
         activations_arr = unfreeze_np_arrays(save_path_activations)
         labels_list = np.array(unfreeze_pickle(save_path_labels))
+
+        """ test for langage families. """
         # l1 = [ 1 for _ in range(1000)]
         # l2 = [ 0 for _ in range(1000)]
-        # labels_list = l2 + l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l1) # nl, it
-        # labels_list = l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l2) + copy.deepcopy(l2) # ja, ko
+        # if L2 in ['nl', 'it']:
+        #     labels_list = l2 + l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l1) # nl, it
+        # elif L2 in ['ja', 'ko']:
+        #     labels_list = l1 + copy.deepcopy(l2) + copy.deepcopy(l1) + copy.deepcopy(l2) + copy.deepcopy(l2) # ja, ko
+
+        """ calc corr_ratio. """
         # top score neurons
         # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_mono_train.pkl"
         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
