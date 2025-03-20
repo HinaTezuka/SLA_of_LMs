@@ -83,25 +83,26 @@ for model_type, model_name in models.items():
     df = pd.DataFrame(distance_data, columns=[f"{l1}-{l2}" for l1, l2 in language_pairs])
 
     """ zscore norm per layer. """
-    # df_zscore = df.apply(zscore, axis=1)  # 各レイヤーごとに正規化
-
-    # # Plot heatmap with Z-score normalization
-    # plt.figure(figsize=(12, 8))
+    # Plot heatmap with Z-score normalization
+    # df_zscore = df.apply(zscore, axis=1)
+    # plt.figure(figsize=(25, 15))
     # sns.heatmap(df_zscore, cmap="coolwarm", annot=True, fmt=".2f", xticklabels=True, yticklabels=[f"{i+1}" for i in range(32)])
-    # plt.xlabel("Language Pair")
-    # plt.ylabel("Layer")
-    # plt.title("Layer-wise Language Pair Distance Heatmap")
+    # plt.xlabel("Language Pair", fontsize=35)
+    # plt.ylabel("Layer", fontsize=35)
+    # plt.xticks(fontsize=25)
+    # plt.yticks(fontsize=15)
+    # plt.title("Layer-wise Language Pair Distance", fontsize=25)
     """ """
 
     """ """
     # Plot heatmap
-    # vmin = np.percentile(df.values, 5)  # 下位5%の値
-    # vmax = np.percentile(df.values, 95)
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(25, 15))
     sns.heatmap(df, cmap="Reds", xticklabels=True, yticklabels=[f"{i+1}" for i in range(32)], annot=True)
-    plt.xlabel("Language Pair")
-    plt.ylabel("Layer")
-    plt.title("Layer-wise Language Pair Distance Heatmap")
+    plt.xlabel("Language Pair", fontsize=35)
+    plt.ylabel("Layer", fontsize=35)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=15)
+    plt.title("Layer-wise Language Pair Distance", fontsize=25)
     save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distance_among_langs/{model_type}_dist.png'
     # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distance_among_langs/{model_type}_dist_normed_per_layer.png'
     plt.savefig(
