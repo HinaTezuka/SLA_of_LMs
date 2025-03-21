@@ -79,6 +79,6 @@ for model_type, model_name in models.items():
 
         # save as pkl.
         path_activations = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/act_values_{lang}'
-        save_np_arrays(path_train, np.array(activations_list))
+        save_np_arrays(path_activations, np.array(activations_list))
 
         del act_values_dict

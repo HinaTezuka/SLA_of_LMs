@@ -1,9 +1,11 @@
 import os
 import re
 import random
+import string
 import sys
 import collections
 import pickle
+from collections import Counter
 
 import torch
 import numpy as np
@@ -12,25 +14,113 @@ from evaluate import load
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from baukit import TraceDict
 
-def compute_f1(a_gold, a_pred):
-    # gold_toks = get_tokens(a_gold)
-    # pred_toks = get_tokens(a_pred)
-    gold_toks = a_gold
-    pred_toks = a_pred
-    common = collections.Counter(gold_toks) & collections.Counter(pred_toks)
-    num_same = sum(common.values())
+
+""" Metrics for generated Answers. """
+
+MIXED_SEGMENTATION_LANGS = ["zh_cn", "zh_hk", "zh_tw", "ja", "th", "km", "ko"]
+ARTICLE_REGEX_BY_LANG = {
+    "en": r"\b(a|an|the)\b",
+    "es": r"\b(un|una|unos|unas|el|la|los|las)\b",
+    "vi": r"\b(của|là|cái|chiếc|những)\b",
+    "de": r"\b(ein|eine|einen|einem|eines|einer|der|die|das|den|dem|des)\b",
+    "ar": "\sال^|ال",
+    "nl": r"\b(de|het|een|des|der|den)\b",
+    "sv": r"\b(en|ett)\b",
+    "da": r"\b(en|et)\b",
+    "no": r"\b(en|et|ei)\b",
+    "fr": r"\b(le|la|l'|les|du|de|d'|des|un|une|des)",
+    "pt": r"\b(o|a|os|as|um|uma|uns|umas)\b",
+    "it": r"\b(il|lo|la|l'|i|gli|le|del|dello|della|dell'|dei|degli|degl'|delle|un'|uno|una|un)",
+    "fi": r"\b(se|yks|yksi)\b",
+    "hu": r"\b(a|az|egy)\b",
+    "ko": r""  # 韓国語は冠詞がないので空にする,
+}
+
+def whitespace_tokenize(text):
+    return text.split()
+
+def mixed_segmentation(text):
+    segs_out = []
+    temp_str = ""
+    for char in text:
+        if temp_str != "":
+            ss = whitespace_tokenize(temp_str)
+            segs_out.extend(ss)
+            temp_str = ""
+        segs_out.append(char)
+
+    if temp_str != "":
+        ss = whitespace_tokenize(temp_str)
+        segs_out.extend(ss)
+
+    return segs_out
+
+def normalize_answer_by_language(s, lang):
+    """Lower text, remove punctuation, articles and extra whitespace.
+    This function is customized by language.
+    """
+
+    def remove_articles(text, lang):
+        article_regex = ARTICLE_REGEX_BY_LANG.get(lang)
+        if article_regex:
+            return re.sub(article_regex, " ", text)
+        else:
+            return text
+
+    def white_space_fix(text, lang):
+
+        if lang in MIXED_SEGMENTATION_LANGS:
+            tokens = mixed_segmentation(text)
+        else:
+            tokens = whitespace_tokenize(text)
+        return " ".join([t for t in tokens if t.strip() != ""])
+
+    def remove_punc(text):
+        exclude = set(string.punctuation)
+        return "".join(ch for ch in text if ch not in exclude)
+
+    def lower(text):
+        return text.lower()
+
+    return white_space_fix(remove_articles(remove_punc(lower(s)), lang), lang)
+
+def calculate_f1(prediction, gold_answer, language):
+    gold_toks = normalize_answer_by_language(gold_answer, language).split() if gold_answer else []
+    pred_toks = normalize_answer_by_language(prediction, language).split() if prediction else []
+    common = Counter(gold_toks) & Counter(pred_toks)
+    num_common = sum(common.values())
+
     if len(gold_toks) == 0 or len(pred_toks) == 0:
-        # If either is no-answer, then F1 is 1 if they agree, 0 otherwise
+        # If the prediction or gold_answer is No Answer, then F1 is 1 if they agree, 0 otherwise
         return int(gold_toks == pred_toks)
-    if num_same == 0:
-        return 0
-    precision = 1.0 * num_same / len(pred_toks)
-    recall = 1.0 * num_same / len(gold_toks)
-    f1 = (2 * precision * recall) / (precision + recall)
-    return f1
+    if num_common == 0:
+        return 0.0
+
+    recall = 1.0 * num_common / len(gold_toks)
+    precision = 1.0 * num_common / len(pred_toks)
+    return (2.0 * precision * recall) / (precision + recall)
+
+# def compute_f1(a_gold, a_pred):
+#     # gold_toks = get_tokens(a_gold)
+#     # pred_toks = get_tokens(a_pred)
+#     gold_toks = a_gold
+#     pred_toks = a_pred
+#     common = collections.Counter(gold_toks) & collections.Counter(pred_toks)
+#     num_same = sum(common.values())
+#     if len(gold_toks) == 0 or len(pred_toks) == 0:
+#         # If either is no-answer, then F1 is 1 if they agree, 0 otherwise
+#         return int(gold_toks == pred_toks)
+#     if num_same == 0:
+#         return 0
+#     precision = 1.0 * num_same / len(pred_toks)
+#     recall = 1.0 * num_same / len(gold_toks)
+#     f1 = (2 * precision * recall) / (precision + recall)
+#     return f1
 
 def compute_exact(a_gold, a_pred):
     return int(normalize_answer(a_gold) == normalize_answer(a_pred))
+
+""" """
 
 """ func for editing activation values """
 def edit_activation(output, layer, layer_idx_and_neuron_idx):
@@ -41,14 +131,13 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
-            # output[:, :, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
+        if str(layer_idx) in layer and output.shape[1] != 1:
             output[:, -1, neuron_idx] *= 0
 
     return output
 
 def mkqa_with_edit_activation(model, tokenizer, device, qa, L2, qa_num, layer_neuron_list):
-    trace_layers = [f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
 
         return mkqa(model, tokenizer, device, qa, L2, qa_num)
@@ -59,34 +148,51 @@ def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int):
     for i in range(len(qa['queries'])):
         if c == qa_num: break
         q = qa['queries'][i][L2] # question
-        a = qa['answers'][i][L2][0]['text'] # answer
-        if q == '' or q == None or  a == '' or a == None:
+        if qa['answers'][i][L2][0]['aliases'] == []:
+            a = [qa['answers'][i][L2][0]['text']] # answer as list.
+        else:
+            a = qa['answers'][i][L2][0]['aliases'] # answer as aliases: see: https://github.com/apple/ml-mkqa/tree/main?tab=readme-ov-file
+
+        def contains_none_or_empty(lst):
+            return any(x is None or x == '' for x in lst)
+        if q == '' or q == None or contains_none_or_empty(a):
             continue
 
         # make prompt.
-        if L2 == 'ja': prompt = f'{q} 答え: '
-        elif L2 == 'nl': prompt = f'{q} Antwoord: '
-        elif L2 == 'ko': prompt = f'{q} 답변: '
-        elif L2 == 'it': prompt = f'{q} Risposta: '
+        if L2 == 'ja': prompt = f'{q}? 答え: '
+        elif L2 == 'nl': prompt = f'{q}? Antwoord: '
+        elif L2 == 'ko': prompt = f'{q}? 답변: '
+        elif L2 == 'it': prompt = f'{q}? Risposta: '
+        elif L2  == 'en': prompt = f'{q}? Answer: '
 
         # run inference.
         torch.cuda.manual_seed_all(42) # set seed.
         inputs = tokenizer(prompt, return_tensors='pt').to(device)
         with torch.no_grad():
-            output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+            output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
         pre = tokenizer.decode(output[0], skip_special_tokens=True)
         # 
         if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
         if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
         if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
         if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
-        f1 = compute_f1(a, pre)
+        if L2 == 'en': pre = pre.split('Answer: ')[-1].strip()
+        
+        if len(a) == 1:
+            f1 = calculate_f1(a[0], pre, L2)
+        else:
+            f1_l = []
+            for ans in a:
+                f1_l.append(calculate_f1(ans, pre, L2))
+            f1 = max(f1_l)
+
         f1_scores.append(f1)
         c += 1
-        # print(f'question: {q}')
+        # print(f'question: {prompt}')
         # print(f'model ans: {pre}')
         # print(f'gorund truth: {a}')
         # print(f'f1: {f1}')
+        # sys.exit()
     
     return np.mean(np.array(f1_scores))
 
@@ -144,16 +250,15 @@ def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa
         elif lang_deact == 'nl': prompt= f'{q}? Antwoord: '
         elif lang_deact == 'ko': prompt= f'{q}? 답변: '
         elif lang_deact == 'it': prompt= f'{q}? Risposta: '
-        # prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
-        # prompt = f'Wat is de hoofdstad van China? Antwoord: '
-        # prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
-        # prompt = 'Wat is de hoofdstad van Italië? Antwoord: '
-        # prompt = 'Wat eet een Nederlander graag? Antwoord: '
-        # prompt = 'Welke taal spreekt men in België? Antwoord: '
-        # prompt = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
-        # prompt = 'オランダの首都はどこですか 答え: '
-        # prompt = 'こんにちは、今日は'
-        # prompt = 'Qual è la capitale del Giappone? Risposta: '
+        prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
+        prompt = f'Wat is de hoofdstad van China? Antwoord: '
+        prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
+        prompt = 'Wat is de hoofdstad van Italië? Antwoord: '
+        prompt = 'Wat eet een Nederlander graag? Antwoord: '
+        prompt = 'Welke taal spreekt men in België? Antwoord: '
+        prompt = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
+        prompt = 'オランダの首都はどこですか 答え: '
+        prompt = 'Qual è la capitale del Giappone? Risposta: '
         # prompt_tran
         # run inference.
         torch.cuda.manual_seed_all(42)
