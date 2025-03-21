@@ -19,7 +19,7 @@ from funcs import (
     unfreeze_pickle,
 )
 
-langs = ["ja", "nl", "ko", "it"]
+langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B
 model_name = "meta-llama/Meta-Llama-3-8B"
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -33,6 +33,7 @@ centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = 32(laye
 for L2 in langs:
     # hidden_states for each L2.
     # mono L2 sentences.
+    if 
     path_mono_train = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl"
     sentences = unfreeze_pickle(path_mono_train)
     # get centroids of hidden_states(of en-L2 sentence pairs).
@@ -40,5 +41,5 @@ for L2 in langs:
     shared_space_centroids = get_centroid_of_shared_space(c_hidden_states) # list: [c_layer1, c_layer2, ...]
 
     # save centroids as pkl.
-    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_{L2}.pkl"
+    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_including_embed_{L2}.pkl"
     save_as_pickle(save_path, shared_space_centroids)
