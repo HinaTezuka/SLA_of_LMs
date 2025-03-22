@@ -5,6 +5,7 @@ import os
 import sys
 import pickle
 import collections
+import random
 
 import numpy as np
 import torch

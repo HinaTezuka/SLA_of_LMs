@@ -14,10 +14,10 @@ from evaluate import load
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from qa_funcs import (
-    compute_f1,
     get_mean_act_value,
     mkqa_for_steer_output_lang,
     mkqa_for_steer_output_lang_normal,
+    mkqa_for_steer_output_lang_add_subducted_vectors,
     # mkqa_with_edit_activation_for_steer_output_lang,
     remove_intersec,
     save_as_pickle,
@@ -32,7 +32,6 @@ MKQA: Multilingual Open Domain Question Answering
 ・https://github.com/apple/ml-mkqa/
 ・https://huggingface.co/datasets/apple/mkqa
 """
-# load models (LLaMA3-8B).
 model_name = 'mistralai/Mistral-7B-v0.3'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model_type = 'mistral'
@@ -45,21 +44,21 @@ qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['nl']
-intervention_num = 3000
+# langs = ['nl']
+intervention_num = 1000
 
-results = {}
-resutls_intervention = {}
+results = {} # normal(without intervention.)
+resutls_intervention = {} # intervened ver.
 pair_patterns = {
     'ja': [('ja', 'ko'), ('ja', 'nl'), ('ja', 'it')],
-    'nl': [('nl', 'ja'), ('nl', 'ko'), ('nl', 'it')],
+    'nl': [('nl', 'ko'), ('nl', 'ja'), ('nl', 'it')],
     'ko': [('ko', 'ja'), ('ko', 'nl'), ('ko', 'it')],
     'it': [('it', 'ja'), ('it', 'nl'), ('it', 'ko')],
 }
 
 for L2 in langs:
     # normal
-    # result_score = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
+    results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
 
     # intervention
     pair_pattern = pair_patterns[L2]
@@ -86,7 +85,25 @@ for L2 in langs:
         neurons_deactivation = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
-        result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2, qa_num, neurons_deactivation, neurons_activation)
+        # result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, L2, qa_num, neurons_deactivation, neurons_activation)
+        """ add (c^l_lang2 - c^l_lang1) to hs of certain layer. """
+        # load c_lang2(lang_deact) and c_lang1(lang_act)
+        c_langs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/centroids/c_train.pkl")
+        c_lang_activation = c_langs[lang_activation]
+        c_lang_deactivation = c_langs[lang_deactivation]
+        # generate outputs.
+        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation)
 
 del model
 torch.cuda.empty_cache()
+
+save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/normal_n{intervention_num}.pkl'
+save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/intervention_n{intervention_num}_30_31_layers.pkl'
+save_as_pickle(save_path_normal, results)
+save_as_pickle(save_path_intervention, resutls_intervention)
+
+""" for output """
+print(f'q_num: {q_num}')
+print('===============================================================================')
+print(f'normal: {results}')
+print(f'intervened_layers: 31, 32')

@@ -14,11 +14,11 @@ from evaluate import load
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from qa_funcs import (
-    compute_f1,
     get_mean_act_value,
     mkqa_for_steer_output_lang,
     mkqa_for_steer_output_lang_normal,
     mkqa_for_steer_output_lang_act_values,
+    mkqa_for_steer_output_lang_add_subducted_vectors,
     # mkqa_with_edit_activation_for_steer_output_lang,
     remove_intersec,
     save_as_pickle,
@@ -41,18 +41,18 @@ model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # load QA dataset.
-qa_num = 10
+qa_num = 100
 qa = load_dataset('apple/mkqa')['train']
 # qa = load_dataset('atutej/m_lama')
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['nl']
+# langs = ['it']
 intervention_num = 1000
 is_act = False
 
-results = {}
-resutls_intervention = {}
+results = {} # normal(without intervention.)
+resutls_intervention = {} # intervened ver.
 pair_patterns = {
     'ja': [('ja', 'nl'), ('ja', 'ko'), ('ja', 'it')],
     'nl': [('nl', 'ja'), ('nl', 'ko'), ('nl', 'it')],
@@ -62,7 +62,7 @@ pair_patterns = {
 
 for L2 in langs:
     # normal
-    # result_score = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
+    results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
 
     # intervention
     pair_pattern = pair_patterns[L2]
@@ -82,7 +82,8 @@ for L2 in langs:
         neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num]
 
         # activation value set for forced_activation.
-        # act_values = get_mean_act_value(neurons_activation, lang_activation, model_type)
+        all_neurons = list(set(neurons_activation+neurons_deactivation))
+        act_values_act = get_mean_act_value(all_neurons, lang_activation, model_type)
 
         # remove duplications from neurons_deactivation
         neurons_deactivation_removed = remove_intersec(neurons_deactivation, neurons_activation)
@@ -93,9 +94,27 @@ for L2 in langs:
         neurons_deactivation = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
-        result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deactivation, qa_num, neurons_deactivation_removed, neurons_activation)
+        # result_score = mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deactivation, qa_num, neurons_deactivation_removed, neurons_activation)
         """ use act_value for translation Question. """
-        result_score = mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation)
+        # result_score = mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation)
+        """ add (c^l_lang2 - c^l_lang1) to hs of certain layer. """
+        # load c_lang2(lang_deact) and c_lang1(lang_act)
+        c_langs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train.pkl")
+        c_lang_activation = c_langs[lang_activation]
+        c_lang_deactivation = c_langs[lang_deactivation]
+        # generate outputs.
+        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
 
 del model
 torch.cuda.empty_cache()
+
+save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n{intervention_num}.pkl'
+save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}_30_31_layers.pkl'
+save_as_pickle(save_path_normal, results)
+save_as_pickle(save_path_intervention, resutls_intervention)
+
+""" for output """
+print(f'q_num: {q_num}')
+print('===============================================================================')
+print(f'normal: {results}')
+print(f'intervened_layers: 31, 32')
