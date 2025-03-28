@@ -107,8 +107,8 @@ if __name__ == "__main__":
                 random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
             elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
-        tatoeba_data = tatoeba_data[:20]
-        random_data = random_data[:20]
+        # tatoeba_data = tatoeba_data[:20]
+        # random_data = random_data[:20]
 
         for score_type in score_types:
             # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/final_scores/{score_type}/{L2}_mono_train.pkl"

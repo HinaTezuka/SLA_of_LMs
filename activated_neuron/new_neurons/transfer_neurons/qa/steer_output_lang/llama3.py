@@ -6,6 +6,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pickle
 import collections
+import random
 
 import numpy as np
 import torch
@@ -25,6 +26,12 @@ from qa_funcs import (
     unfreeze_pickle,
     unfreeze_np_arrays,
 )
+
+# p = 'activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n1000.pkl'
+# p_i = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n1000_30_31_layers.pkl'
+# print(unfreeze_pickle(p))
+# print(unfreeze_pickle(p_i))
+# sys.exit()
 
 """ 
 QA dataset: 
@@ -47,7 +54,7 @@ qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['it']
+# langs = ['nl']
 intervention_num = 1000
 is_act = False
 
@@ -62,7 +69,7 @@ pair_patterns = {
 
 for L2 in langs:
     # normal
-    results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
+    # results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
 
     # intervention
     pair_pattern = pair_patterns[L2]
@@ -109,12 +116,12 @@ del model
 torch.cuda.empty_cache()
 
 save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n{intervention_num}.pkl'
-save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}_30_31_layers.pkl'
+save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}_10_20_25_32_layers.pkl'
 save_as_pickle(save_path_normal, results)
 save_as_pickle(save_path_intervention, resutls_intervention)
 
 """ for output """
-print(f'q_num: {q_num}')
+print(f'q_num: {qa_num}')
 print('===============================================================================')
 print(f'normal: {results}')
 print(f'intervened_layers: 31, 32')

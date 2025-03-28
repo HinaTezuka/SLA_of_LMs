@@ -392,7 +392,7 @@ def mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2: str, qa_
         pred_lang = cld3.get_language(pre)
         if pred_lang.is_reliable:
             total_num += 1
-            if pred_lang == L2:
+            if pred_lang.language == L2:
                 lang_count += 1
     
     return lang_count / total_num
@@ -553,13 +553,13 @@ def edit_activation_times(output, layer, layer_idx_and_neuron_idx, last_token_id
         if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
             if act_mode == 'de' and output.shape[1] == last_token_idx+1:
             # if act_mode == 'de':
-                # output[:, -1, neuron_idx] *= 0
-                output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
+                output[:, -1, neuron_idx] *= 0
+                # output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
                 # output[:, -1, neuron_idx] = act_values_act[layer_idx][:, -1, neuron_idx]
             elif act_mode == 'ac' and output.shape[1] == last_token_idx+1:
             # elif act_mode == 'ac':
-                # output[:, -1, neuron_idx] *= 2
-                output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
+                output[:, -1, neuron_idx] *= 2
+                # output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
                 # output[:, -1, neuron_idx] = act_values_act[layer_idx][:, -1, neuron_idx]
 
     return output
@@ -632,9 +632,10 @@ def mkqa_for_steer_output_lang_add_subducted_vectors(
         torch.cuda.manual_seed_all(42)
         """ get subtracted vectors """
         sub_vectors = {}
-        # target_layers = [ _ for _ in range(3, 15)] # Mistral
-        target_layers = [ _ for _ in range(30, 32)] # LLaMA3でうまくいった
-        # target_layers = [31] # Mistral
+        # target_layers = [ _ for _ in range(29, 32)] # Mistral
+        # target_layers = [ _ for _ in range(30, 32)] # LLaMA3, Mistral
+        # target_layers = [4, 15, 25, 31] # llama
+        target_layers = [9, 19, 24, 31] # 
         for target_layer in target_layers:
             sub_vector = c_lang2[target_layer] - c_lang1[target_layer]
             sub_vectors[target_layer] = sub_vector
@@ -668,13 +669,19 @@ def mkqa_for_steer_output_lang_add_subducted_vectors(
         # print(f'question: {prompt}')
         # print(f'model ans: {pre}')
         # print(f'gorund truth: {a}')
-        # sys.exit()
 
         """ calc ratio of lang_activation in the model's output. """
         pred_lang = cld3.get_language(pre)
         if pred_lang.is_reliable:
             total_num += 1
-            if pred_lang == lang_act:
+            if pred_lang.language == lang_act:
                 lang_count += 1
+        # print('\n', '====================================')
+        # print(f'pred_lang: {pred_lang.language}')
+        # print(f'lang_act: {lang_act}')
+        # print(f'lang_count: {lang_count}')
+        # print(f'total_num: {total_num}')
+        # print(f'lang: {pred_lang}')
+        
     
     return lang_count / total_num 

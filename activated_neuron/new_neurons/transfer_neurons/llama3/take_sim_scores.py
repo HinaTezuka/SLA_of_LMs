@@ -104,8 +104,8 @@ if __name__ == "__main__":
 
         def remove_duplicates(lista, listb):
             return [item for item in lista if item not in set(listb)]
-        tatoeba_data = tatoeba_data[:20]
-        random_data = random_data[:20]
+        # tatoeba_data = tatoeba_data[:20]
+        # random_data = random_data[:20]
         # print(len(tatoeba_data))
         # print(len(random_data))
 

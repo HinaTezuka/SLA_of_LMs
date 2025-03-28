@@ -25,6 +25,12 @@ from qa_funcs import (
     unfreeze_np_arrays,
 )
 
+# p = 'activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/normal_n1000.pkl'
+# p_i = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/intervention_n1000_30_31_layers.pkl'
+# print(unfreeze_pickle(p))
+# print(unfreeze_pickle(p_i))
+# sys.exit()
+
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -58,7 +64,7 @@ pair_patterns = {
 
 for L2 in langs:
     # normal
-    results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
+    # results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
 
     # intervention
     pair_pattern = pair_patterns[L2]
@@ -98,12 +104,12 @@ del model
 torch.cuda.empty_cache()
 
 save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/normal_n{intervention_num}.pkl'
-save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/intervention_n{intervention_num}_30_31_layers.pkl'
+save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/intervention_n{intervention_num}_10_20_25_32_layers.pkl'
 save_as_pickle(save_path_normal, results)
 save_as_pickle(save_path_intervention, resutls_intervention)
 
 """ for output """
-print(f'q_num: {q_num}')
+print(f'q_num: {qa_num}')
 print('===============================================================================')
 print(f'normal: {results}')
 print(f'intervened_layers: 31, 32')
