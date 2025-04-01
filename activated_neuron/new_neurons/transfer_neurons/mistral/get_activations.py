@@ -69,6 +69,7 @@ model_name = "mistralai/Mistral-7B-v0.3"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 is_last_token_onlys = [True, False]
+is_last_token_onlys = [True]
 model_langs = ["ja", "nl", "ko", "it"]
 
 """ get activaitons and save as pkl. """
@@ -93,8 +94,8 @@ for L2 in model_langs:
             save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/{L2}.npz"
             save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/labels/{L2}.pkl"
         if is_last_token_only:
-            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/{L2}_last_token.npz"
-            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/labels/{L2}_last_token.pkl"
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/activations/{L2}_last_token_act_fn_values"
+            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mistral/labels/{L2}_last_token_act_fn_values.pkl"
         save_np_arrays(save_path_activations, activations)
         save_as_pickle(save_path_labels, labels)
         print(f"successfully saved activations and labels of {L2} model as pkl, is_last_token_only:{is_last_token_only}.")

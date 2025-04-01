@@ -36,7 +36,7 @@ qa_num = 1000
 qa = load_dataset('apple/mkqa')['train']
 qa = qa.shuffle(seed=42)
 score_type = 'cos_sim'
-intervention_num = 1000
+intervention_num = 5000
 
 results = {}
 resutls_intervention = {}
@@ -64,11 +64,11 @@ for model_name in model_names:
         resutls_intervention_baseline[L2] = result_score
 
     # save results as pkl.
-    path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs_n{qa_num}.pkl'
+    path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_langs_n{qa_num}.pkl'
     save_as_pickle(path_normal, results)
-    path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs_intervention_n{qa_num}.pkl'
+    path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_langs_intervention_n{qa_num}.pkl'
     save_as_pickle(path_intervention, resutls_intervention)
-    path_intervention_baseline = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_langs_intervention_baseline_n{qa_num}.pkl'
+    path_intervention_baseline = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_langs_intervention_baseline_n{qa_num}.pkl'
     save_as_pickle(path_intervention_baseline, resutls_intervention_baseline)
 
     # print results (just in case).

@@ -269,6 +269,7 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
                     """ Compute element-wise product """
                     act_values = calc_element_wise_product(act_fn_value, up_proj_value)
                     act_values_per_token.append(act_values)
+                    # act_values_per_token.append(act_fn_value)
                 
                 """ Compute mean activation over all tokens """
                 act_values_all_token = np.array(act_values_per_token)
@@ -282,7 +283,12 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
 
             # Store activation values in the numpy array
             for neuron_idx in range(num_neurons):
-                activation_array[layer_idx, neuron_idx, text_idx] = means[neuron_idx]
+                # elem_wise_product
+                # activation_array[layer_idx, neuron_idx, text_idx] = means[neuron_idx]
+                # act_fn_value
+                # activation_array[layer_idx, neuron_idx, text_idx] = act_fn_value[neuron_idx]
+                # up_proj_value
+                activation_array[layer_idx, neuron_idx, text_idx] = up_proj_value[neuron_idx]
 
         # Assign labels
         if not is_bilingual: # monolingual neurons.
@@ -298,75 +304,54 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
 
     return activation_array, labels
 
-# def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False, is_bilingual=False):
-#     # layers_num
-#     num_layers = 32
-#     # nums of total neurons (per a layer)
-#     num_neurons = 14336
-#     # return dict for saving activation values.
-#     # activation_dict = defaultdict(list)
-#     activation_dict = {}
-#     labels = []
-#     """
-#     activation_dict
-#     {
-#     (layer_idx, neuron_idx): [act_value1, act_value2, ...]
-#     }
-#     labels: [1, 1, ..., 0, 0, ...]
-#     """
+def track_neurons_with_text_data_elem_wise(model, device, tokenizer, qa, qa_num, L2):
+    # layers_num
+    num_layers = 32
+    # nums of total neurons (per a layer)
+    num_neurons = 14336
+    # returning np_array.
+    activation_array = np.zeros((num_layers, num_neurons, qa_num))
+    """ """
+    c = 0 # question counter.
+    for i in range(len(qa['queries'])):
+        if c == qa_num: break # 
+        """ make prompt and input_ids. """
+        q = qa['queries'][i][L2] # question
+        a = qa['answers'][i][L2][0]['text'] # answer
+        if q == '' or q == None or  a == '' or a == None:
+            continue
+        ans_patterns = {
+        'ja': '答え: ',
+        'nl': 'Antwoord: ',
+        'ko': '답변: ',
+        'it': 'Risposta: ',
+        }
+        prompt = f'{q}? {ans_patterns[L2]}'
+        # input text
+        inputs = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+        token_len = len(inputs[0])
 
-#     # Track neurons with tatoeba
-#     for text_idx, text in enumerate(data):
-#         """
-#         get activation values
-#         mlp_activation: [torch.Tensor(batch_size, sequence_length, num_neurons) * num_layers]
-#         """
-#         # input text
-#         inputs = tokenizer(text, return_tensors="pt").input_ids.to(device)
-#         token_len = len(inputs[0])
-#         act_fn_values, up_proj_values = act_llama3(model, inputs)
-#         """
-#         neurons(in llama3 MLP): up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
-#         """
-#         for layer_idx in range(num_layers):
-#             # consider means of all token activations.
-#             if not is_last_token_only:
-#                 """ consider average of all tokens """
-#                 act_values_per_token = []
-#                 for token_idx in range(token_len):
-#                     act_fn_value = act_fn_values[layer_idx][:, token_idx, :][0]
-#                     up_proj_value = up_proj_values[layer_idx][:, token_idx, :][0]
+        """ get activations. """
+        act_values = [] # len: layer_num
+        # hook fn
+        def get_elem_wise_product(model, input):
+            act_values.append(input[0][0][-1].detach().cpu().numpy()) # last tokenに対応する活性値のみ取得
+        handles = []
+        for layer in model.model.layers:
+            handle = layer.mlp.down_proj.register_forward_pre_hook(get_elem_wise_product)
+            handles.append(handle)
+        # run inference.
+        with torch.no_grad():
+            output = model(inputs)
+        # remove hook
+        for handle in handles:
+            handle.remove()
 
-#                     """ calc and extract neurons: up_proj(x) * act_fn(x) """
-#                     act_values = calc_element_wise_product(act_fn_value, up_proj_value)
-#                     act_values_per_token.append(act_values)
-#                 """ calc average act_values of all tokens """
-#                 act_values_all_token = np.array(act_values_per_token)
-#                 means = np.mean(act_values_all_token, axis=0).to(torch.float16)
-#             # consider last token activations only.
-#             elif is_last_token_only:
-#                 act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
-#                 up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
-#                 means = calc_element_wise_product(act_fn_value, up_proj_value).to(torch.float16)
-#             # save in activation_dict
-#             for neuron_idx in range(num_neurons):
-#                 mean_act_value = means[neuron_idx]
-#                 # activation_dict[(layer_idx, neuron_idx)].append(mean_act_value)
-#                 activation_dict.setdefault((layer_idx, neuron_idx), []).append(mean_act_value)
+        for layer_idx in range(num_layers):
+            for neuron_idx in range(num_neurons):
+                activation_array[layer_idx, neuron_idx, i] = act_values[layer_idx][neuron_idx] # i: question_idx
 
-#         # labels list
-#         if not is_bilingual:
-#             if text_idx >= start_idx and text_idx < end_idx:
-#                 labels.append(1)
-#             else:
-#                 labels.append(0)
-#         elif is_bilingual:
-#             if (text_idx >= start_idx and text_idx < end_idx) or (text_idx >= 400 and text_idx < 500):
-#                 labels.append(1)
-#             else:
-#                 labels.append(0)            
-
-#     return activation_dict, labels
+    return activation_array
 
 def get_hidden_states(model, tokenizer, device, num_layers, data):
     """

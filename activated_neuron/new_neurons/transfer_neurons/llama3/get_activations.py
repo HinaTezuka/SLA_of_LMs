@@ -42,6 +42,7 @@ model_name = "meta-llama/Meta-Llama-3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 is_last_token_onlys = [True, False]
+is_last_token_onlys = [True]
 model_langs = ["ja", "nl", "ko", "it"]
 
 """ get activaitons and save as npz and pkl. """
@@ -66,8 +67,8 @@ for L2 in model_langs:
             save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}"
             save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}.pkl"
         if is_last_token_only:
-            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}_last_token"
-            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}_last_token.pkl"
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/activations/{L2}_last_token_up_proj"
+            save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}_last_token_up_proj.pkl"
         print("Started Saving....")
         save_np_arrays(save_path_activations, activations)
         save_as_pickle(save_path_labels, labels)

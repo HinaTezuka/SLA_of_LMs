@@ -206,7 +206,7 @@ def get_mean_act_value(neurons: list, lang: str, model_type: str):
         "it": 3000,
         "en": 4000,
     }
-    save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{lang}_last_token.npz"
+    save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{lang}_last_token_act_fn_values.npz"
     act_values_arr = unfreeze_np_arrays(save_path_activations)
     act_values = {}
     start_idx = start_indics[lang]
@@ -283,9 +283,9 @@ def mkqa_for_steer_output_lang(model, tokenizer, device, qa, lang_deact: str, qa
         if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
         if lang_deact == 'it': pre = pre.split('Risposta: ')[-1].strip()
         c += 1
-        print(f'question: {prompt}')
-        print(f'model ans: {pre}')
-        print(f'gorund truth: {a}')
+        # print(f'question: {prompt}')
+        # print(f'model ans: {pre}')
+        # print(f'gorund truth: {a}')
         # sys.exit()
     
     return np.mean(np.array(f1_scores))
@@ -388,6 +388,10 @@ def mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2: str, qa_
         if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
         if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
         c += 1
+        
+        print(f'question: {prompt}')
+        print(f'model ans: {pre}')
+        print(f'gorund truth: {a}')
         """ calc ratio of lang_activation in the model's output. """
         pred_lang = cld3.get_language(pre)
         if pred_lang.is_reliable:
@@ -558,8 +562,8 @@ def edit_activation_times(output, layer, layer_idx_and_neuron_idx, last_token_id
                 # output[:, -1, neuron_idx] = act_values_act[layer_idx][:, -1, neuron_idx]
             elif act_mode == 'ac' and output.shape[1] == last_token_idx+1:
             # elif act_mode == 'ac':
-                output[:, -1, neuron_idx] *= 2
-                # output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
+                # output[:, -1, neuron_idx] *= 2
+                output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
                 # output[:, -1, neuron_idx] = act_values_act[layer_idx][:, -1, neuron_idx]
 
     return output
@@ -605,7 +609,9 @@ def mkqa_for_steer_output_lang_add_subducted_vectors(
         'it': 'Risposta: ',
         }
         prompt = f'{q}? {ans_patterns[lang_deact]}'
+        # prompt = f'Q: {q}?\nA: '
         prompt_lang_act = f'{q_tran}? {ans_patterns[lang_act]}'
+        # prompt_lang_act = f'Q: {q_tran}?\nA: '
         """ """
         # make prompt.
         # if lang_deact == 'ja': prompt= f'{q}? 答え: '
@@ -635,7 +641,10 @@ def mkqa_for_steer_output_lang_add_subducted_vectors(
         # target_layers = [ _ for _ in range(29, 32)] # Mistral
         # target_layers = [ _ for _ in range(30, 32)] # LLaMA3, Mistral
         # target_layers = [4, 15, 25, 31] # llama
-        target_layers = [9, 19, 24, 31] # 
+        # target_layers = [9, 19, 24, 31] # 
+        # target_layers = [4, 14, 24]
+        target_layers = [19]
+        # target_layers = [4, 9, 14, 19]
         for target_layer in target_layers:
             sub_vector = c_lang2[target_layer] - c_lang1[target_layer]
             sub_vectors[target_layer] = sub_vector
@@ -646,18 +655,18 @@ def mkqa_for_steer_output_lang_add_subducted_vectors(
 
         # run inference with steering activations.
         """ activation_values for activation patching. """
-        # trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
-        # trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
-        # trace_layers = list(set(trace_layers_zero+trace_layers_up))
+        trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
+        trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
+        trace_layers = list(set(trace_layers_zero+trace_layers_up))
         """ trace_layers for addition of subtracted_vectors """
         trace_layers_add = [f'model.layers.{layer}' for layer in target_layers]
 
         # with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_times(output, layer, neurons_zero+neurons_up, last_token_idx, device, act_values_act)) as tr:
         """ for tran. """
-        # with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_times(output, layer, neurons_zero+neurons_up, last_token_idx, device, act_values_act)) as tr:
-        with TraceDict(model, trace_layers_add, edit_output=lambda output, layer: edit_activation_sub_vectors(output, layer, last_token_idx, device, sub_vectors)) as tr:
-            with torch.no_grad():
-                output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_times(output, layer, neurons_zero+neurons_up, last_token_idx, device, act_values_act)) as tr:
+            with TraceDict(model, trace_layers_add, edit_output=lambda output, layer: edit_activation_sub_vectors(output, layer, last_token_idx, device, sub_vectors)) as tr:
+                with torch.no_grad():
+                    output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
 
         pre = tokenizer.decode(output[0], skip_special_tokens=True) # model's prediction
 
@@ -665,10 +674,11 @@ def mkqa_for_steer_output_lang_add_subducted_vectors(
         if lang_deact == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
         if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
         if lang_deact == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        # pre = pre.split('A: ')[-1].strip()
         c += 1
-        # print(f'question: {prompt}')
-        # print(f'model ans: {pre}')
-        # print(f'gorund truth: {a}')
+        print(f'question: {prompt}')
+        print(f'model ans: {pre}')
+        print(f'gorund truth: {a}')
 
         """ calc ratio of lang_activation in the model's output. """
         pred_lang = cld3.get_language(pre)

@@ -54,7 +54,7 @@ qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['nl']
+langs = ['nl']
 intervention_num = 1000
 is_act = False
 
@@ -94,10 +94,10 @@ for L2 in langs:
 
         # remove duplications from neurons_deactivation
         neurons_deactivation_removed = remove_intersec(neurons_deactivation, neurons_activation)
-        # neurons_activation_removed = remove_intersec(neurons_activation, neurons_deactivation)
+        neurons_activation_removed = remove_intersec(neurons_activation, neurons_deactivation)
 
         neurons_deactivation_removed = [('de', layer, neuron) for layer, neuron in neurons_deactivation_removed]
-        # neurons_activation_removed = [('ac', layer, neuron) for layer, neuron in neurons_activation_removed]
+        neurons_activation_removed = [('ac', layer, neuron) for layer, neuron in neurons_activation_removed]
         neurons_deactivation = [('de', layer, neuron) for layer, neuron in neurons_deactivation]
         neurons_activation = [('ac', layer, neuron) for layer, neuron in neurons_activation]
         # generate outputs.
@@ -110,7 +110,7 @@ for L2 in langs:
         c_lang_activation = c_langs[lang_activation]
         c_lang_deactivation = c_langs[lang_deactivation]
         # generate outputs.
-        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
+        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
 
 del model
 torch.cuda.empty_cache()
