@@ -61,6 +61,7 @@ is_act = False
 results = {} # normal(without intervention.)
 resutls_intervention = {} # intervened ver.
 pair_patterns = {
+    # 'en': [('en', 'ja'), ('en', 'nl'), ('en', 'ko'), ('en', 'it')]
     'ja': [('ja', 'nl'), ('ja', 'ko'), ('ja', 'it')],
     'nl': [('nl', 'ja'), ('nl', 'ko'), ('nl', 'it')],
     'ko': [('ko', 'ja'), ('ko', 'nl'), ('ko', 'it')],
@@ -110,13 +111,13 @@ for L2 in langs:
         c_lang_activation = c_langs[lang_activation]
         c_lang_deactivation = c_langs[lang_deactivation]
         # generate outputs.
-        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
+        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
 
 del model
 torch.cuda.empty_cache()
 
 save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n{intervention_num}.pkl'
-save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}_10_20_25_32_layers.pkl'
+save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}.pkl'
 save_as_pickle(save_path_normal, results)
 save_as_pickle(save_path_intervention, resutls_intervention)
 

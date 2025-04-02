@@ -1,9 +1,0 @@
-pkl_file successfully saved.
-pkl_file successfully saved.
-
-=================================== RESOURCE INFORMATION ===================================
- Requested Resource:
- mem=64000000kb,walltime=168:00:00,ncpus=16,place=pack 
- Used Resource: 
- mem=1112284kb,walltime=58:15:03,ncpus=16,cpupercent=100,vmem=5331048kb
-============================================================================================

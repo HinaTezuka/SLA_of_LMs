@@ -312,9 +312,8 @@ def track_neurons_with_text_data_elem_wise(model, device, tokenizer, qa, qa_num,
     # returning np_array.
     activation_array = np.zeros((num_layers, num_neurons, qa_num))
     """ """
-    c = 0 # question counter.
     for i in range(len(qa['queries'])):
-        if c == qa_num: break # 
+        if i == qa_num: break # 1000 questions.
         """ make prompt and input_ids. """
         q = qa['queries'][i][L2] # question
         a = qa['answers'][i][L2][0]['text'] # answer
