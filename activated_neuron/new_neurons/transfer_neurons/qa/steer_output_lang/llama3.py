@@ -91,8 +91,8 @@ for L2 in langs:
         neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num]
 
         # activation value set for forced_activation.
-        all_neurons = list(set(neurons_activation+neurons_deactivation))
-        act_values_act = get_mean_act_value(all_neurons, lang_activation, model_type)
+        # all_neurons = list(set(neurons_activation+neurons_deactivation))
+        act_values_act = get_mean_act_value(lang_activation, model_type)
 
         # remove duplications from neurons_deactivation
         neurons_deactivation_removed = remove_intersec(neurons_deactivation, neurons_activation)

@@ -34,30 +34,58 @@ MKQA: Multilingual Open Domain Question Answering
 ・https://huggingface.co/datasets/apple/mkqa
 """
 qa_num = 100
-qa = load_dataset('apple/mkqa')['train']
+qa = load_dataset('atutej/m_lama', 'ja')['test']
+"""
+available langs: 
+['af', 'ar', 'az', 'be', 'bg', 'bn', 'ca', 'ceb', 'cs', 'cy', 'da', 'de', 'el', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'ga', 'gl', 'he', 'hi', 'hr', 'hu', 'hy', 'id', 'it', 'ja', 'ka', 'ko', 'la', 'lt', 'lv', 'ms', 'nl', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sq', 'sr', 'sv', 'ta', 'th', 'tr', 'transliterated-hi', 'uk', 'ur', 'vi', 'zh']
+"""
 # qa = qa.shuffle(seed=42)
+def set_prompt_mlama(template: str, filler: str, XorY: str) -> str:
+    if XorY == 'x':
+        return template.replace('[X]', filler)
+    elif XorY == 'y':
+        return template.replace('[Y]', filler)
+    
 score_type = 'cos_sim'
 intervention_num = 1000
 
+XorY = 'x'
+temps = {
+    'ja': 'は',
+    'ko': '는',
+    'nl': 'is ',
+    'it': 'è ',
+    'en': 'is '
+}
+def mlama(model, tokenizer, device, qa, XorY: str, L2: str):
+    for item in qa:
+        filler = item['sub_label'] if XorY == 'x' else item['obj_label']
+        XorY_reverse = '[Y]' if XorY == 'x' else '[X]'
+        template = set_prompt_mlama(item['template'], filler, XorY)
+        temp_is = temps[L2]
+        # prompt = f'{template}\n{XorY_reverse}{temp_is}'
+        prompt = f'{template}\npredict [Y].\n'
+        # run inference.
+        torch.cuda.manual_seed_all(42) # set seed.
+        inputs = tokenizer(prompt, return_tensors='pt').to(device)
+        with torch.no_grad():
+            output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+        pre = tokenizer.decode(output[0], skip_special_tokens=True)
+        print(pre)
+        ans = item['obj_label']
+        print(f'ans: {ans}')
+        # sys.exit()
 results = {}
 resutls_intervention = {}
 resutls_intervention_baseline = {}
 for model_name in model_names:
-    if 'llama' in model_name: model_type = 'llama3'
-    elif 'mistral' in model_name: model_type = 'mistral'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral'
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    """ get question_indices whose f1_score exceeds THRESHOLD. """
-    THRESHOLD = 0.8
-    qa_dict = get_f1_above_th_questions(model, tokenizer, device, qa, langs, qa_num, THRESHOLD)
-    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}_qa_indices_above_{THRESHOLD}_all_langs.pkl'
-    save_as_pickle(save_path, qa_dict)
-    print(f'successfully saved qa_Dict: qa_num{qa_num}, threshold{THRESHOLD}.')
-
     for L2 in langs:
         # normal
-        result_score = mkqa(model, tokenizer, device, qa, L2, qa_num, qa_dict)
+        result_score = mlama(model, tokenizer, device, qa, XorY, L2)
         results[L2] = result_score
         # intervention
         intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"

@@ -138,17 +138,76 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
     return output
 
-def mkqa_with_edit_activation(model, tokenizer, device, qa, L2, qa_num, layer_neuron_list):
+def get_f1_above_th_questions(model, tokenizer, device, qa, lang_list: list, qa_num: int, THRESHOLD:int=0.8):
+    """
+    dict for saving qa_idx (only questions and answers whose f1score exceeds threshold).
+    dict: {'ja': [q_idx, ...], 'nl': [q_idx, ...], ...}
+    """
+    qa_lists = defaultdict(list) 
+    for L2 in lang_list:
+        for i in range(len(qa['queries'])):
+            if len(qa_lists[L2]) == qa_num: break
+            q = qa['queries'][i][L2] # question
+            if qa['answers'][i][L2][0]['aliases'] == []:
+                a = [qa['answers'][i][L2][0]['text']] # answer as list.
+            else:
+                a = qa['answers'][i][L2][0]['aliases'] # answer as aliases: see: https://github.com/apple/ml-mkqa/tree/main?tab=readme-ov-file
+
+            def contains_none_or_empty(lst):
+                return any(x is None or x == '' for x in lst)
+            if q == '' or q == None or contains_none_or_empty(a):
+                continue
+
+            # make prompt.
+            if L2 == 'ja': prompt = f'{q}? 答え: '
+            elif L2 == 'nl': prompt = f'{q}? Antwoord: '
+            elif L2 == 'ko': prompt = f'{q}? 답변: '
+            elif L2 == 'it': prompt = f'{q}? Risposta: '
+            elif L2  == 'en': prompt = f'{q}? Answer: '
+
+            # run inference.
+            torch.cuda.manual_seed_all(42) # set seed.
+            inputs = tokenizer(prompt, return_tensors='pt').to(device)
+            with torch.no_grad():
+                output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+            pre = tokenizer.decode(output[0], skip_special_tokens=True)
+            # 
+            if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
+            if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+            if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
+            if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
+            if L2 == 'en': pre = pre.split('Answer: ')[-1].strip()
+            
+            if len(a) == 1:
+                f1 = calculate_f1(a[0], pre, L2)
+            else:
+                f1_l = []
+                for ans in a:
+                    f1_l.append(calculate_f1(ans, pre, L2))
+                f1 = max(f1_l)
+            # 
+            if f1 > THRESHOLD:
+                qa_lists[L2].append(i)
+            # print(prompt)
+            # print(pre)
+            # print(f'ans: {a}')
+            # print(f1, qa_lists)
+    
+    return dict(qa_lists)
+
+
+def mkqa_with_edit_activation(model, tokenizer, device, qa, L2, qa_num, layer_neuron_list, qa_dict: dict):
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
 
-        return mkqa(model, tokenizer, device, qa, L2, qa_num)
+        return mkqa(model, tokenizer, device, qa, L2, qa_num, qa_dict)
 
-def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int):
-    c = 0 # question counter.
+def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int, qa_dict: dict):
+    # c = 0 # question counter.
     f1_scores = []
-    for i in range(len(qa['queries'])):
-        if c == qa_num: break
+    # for i in range(len(qa['queries'])):
+    for i in qa_dict[L2]:
+        # if c == qa_num: break
         q = qa['queries'][i][L2] # question
         if qa['answers'][i][L2][0]['aliases'] == []:
             a = [qa['answers'][i][L2][0]['text']] # answer as list.
@@ -189,7 +248,7 @@ def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int):
             f1 = max(f1_l)
 
         f1_scores.append(f1)
-        c += 1
+        # c += 1
         # print(f'question: {prompt}')
         # print(f'model ans: {pre}')
         # print(f'gorund truth: {a}')
@@ -199,7 +258,7 @@ def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int):
     return np.mean(np.array(f1_scores))
 
 """ steer output lang. """
-def get_mean_act_value(neurons: list, lang: str, model_type: str):
+def get_mean_act_value(lang: str, model_type: str):
     save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{lang}_last_token_elem_wise.npz"
     act_values_arr = unfreeze_np_arrays(save_path_activations)
     act_values_arr = np.mean(act_values_arr, axis=2)

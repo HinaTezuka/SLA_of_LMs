@@ -83,10 +83,10 @@ for L2 in langs:
         neurons_path_activation = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{lang_activation}_sorted_neurons.pkl"
         neurons_activation = unfreeze_pickle(neurons_path_activation)
         neurons_activation = [neuron for neuron in neurons_activation if neuron[0] in [ _ for _ in range(20, 32)]][:intervention_num]
+        
         # activation value set for forced_activation.
-        # act_value = get_mean_act_value(neurons_activation, lang_activation, model_type)
-        # print(act_value)
-        # sys.exit()
+        act_values_act = get_mean_act_value(lang_activation, model_type)
+        
         # remove duplications from neurons_deactivation
         neurons_deactivation_removed = remove_intersec(neurons_deactivation, neurons_activation)
         neurons_activation_removed = remove_intersec(neurons_activation, neurons_deactivation)
