@@ -20,6 +20,7 @@ from qa_funcs import (
     mkqa_for_steer_output_lang_normal,
     mkqa_for_steer_output_lang_act_values,
     mkqa_for_steer_output_lang_add_subducted_vectors,
+    mkqa_for_steer_output_lang_patching_with_elem_wise_product,
     # mkqa_with_edit_activation_for_steer_output_lang,
     remove_intersec,
     save_as_pickle,
@@ -54,7 +55,7 @@ qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['nl']
+# langs = ['nl']
 intervention_num = 1000
 is_act = False
 
@@ -111,18 +112,23 @@ for L2 in langs:
         c_lang_activation = c_langs[lang_activation]
         c_lang_deactivation = c_langs[lang_deactivation]
         # generate outputs.
-        resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
+        # resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
+        resutls_intervention[(lang_deactivation, lang_activation)], lang_ratios = mkqa_for_steer_output_lang_patching_with_elem_wise_product(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
 
 del model
 torch.cuda.empty_cache()
 
-save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n{intervention_num}.pkl'
-save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}.pkl'
-save_as_pickle(save_path_normal, results)
-save_as_pickle(save_path_intervention, resutls_intervention)
+# save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n{intervention_num}_19_mean_patching.pkl'
+# save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n{intervention_num}_19_mean_patching.pkl'
+# save_as_pickle(save_path_normal, results)
+# save_as_pickle(save_path_intervention, resutls_intervention)
+# lang_ratios
+save_path_lang_ratios = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/lang_ratios_n{intervention_num}_19_mean_patching.pkl'
+save_as_pickle(save_path_lang_ratios, lang_ratios)
 
 """ for output """
 print(f'q_num: {qa_num}')
 print('===============================================================================')
 print(f'normal: {results}')
-print(f'intervened_layers: 31, 32')
+print(f'intervened_layers: 19')
+print(resutls_intervention)

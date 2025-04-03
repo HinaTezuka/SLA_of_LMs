@@ -25,6 +25,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 langs = ["ja", "nl", "ko", "it"]
+langs = ['en']
 score_types = ["cos_sim", "L2_dis"]
 
 """ candidate neurons. """
