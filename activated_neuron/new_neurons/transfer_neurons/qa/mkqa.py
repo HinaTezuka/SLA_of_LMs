@@ -23,7 +23,7 @@ from qa_funcs import (
 )
 
 # load models (LLaMA3-8B).
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3']
+model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it', 'en']
 """ 
@@ -43,13 +43,12 @@ results = {}
 resutls_intervention = {}
 resutls_intervention_baseline = {}
 for model_name in model_names:
-    if 'llama' in model_name: model_type = 'llama3'
-    elif 'mistral' in model_name: model_type = 'mistral'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     """ get question_indices whose f1_score exceeds THRESHOLD. """
-    THRESHOLD = 0.8
+    THRESHOLD = 0.5
     qa_dict = get_f1_above_th_questions(model, tokenizer, device, qa, langs, qa_num, THRESHOLD)
     save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}_qa_indices_above_{THRESHOLD}_all_langs.pkl'
     save_as_pickle(save_path, qa_dict)

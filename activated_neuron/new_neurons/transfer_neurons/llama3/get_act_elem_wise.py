@@ -25,7 +25,6 @@ qa = qa.shuffle(seed=42)
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3"]
-model_names = ["mistralai/Mistral-7B-v0.3"]
 model_langs = ["ja", "nl", "ko", "it"]
 
 """ get activaitons and save as npz and pkl. """

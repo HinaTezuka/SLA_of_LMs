@@ -64,7 +64,8 @@ def mlama(model, tokenizer, device, qa, XorY: str, L2: str):
         template = set_prompt_mlama(item['template'], filler, XorY)
         temp_is = temps[L2]
         # prompt = f'{template}\n{XorY_reverse}{temp_is}'
-        prompt = f'{template}\npredict [Y].\n'
+        # prompt = f'{template}\npredict [Y].\n'
+        # prompt = '日本の首都は'
         # run inference.
         torch.cuda.manual_seed_all(42) # set seed.
         inputs = tokenizer(prompt, return_tensors='pt').to(device)
@@ -74,7 +75,7 @@ def mlama(model, tokenizer, device, qa, XorY: str, L2: str):
         print(pre)
         ans = item['obj_label']
         print(f'ans: {ans}')
-        # sys.exit()
+        sys.exit()
 results = {}
 resutls_intervention = {}
 resutls_intervention_baseline = {}

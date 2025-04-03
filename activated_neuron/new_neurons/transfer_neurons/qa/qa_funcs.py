@@ -169,7 +169,7 @@ def get_f1_above_th_questions(model, tokenizer, device, qa, lang_list: list, qa_
             torch.cuda.manual_seed_all(42) # set seed.
             inputs = tokenizer(prompt, return_tensors='pt').to(device)
             with torch.no_grad():
-                output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+                output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
             pre = tokenizer.decode(output[0], skip_special_tokens=True)
             # 
             if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
@@ -188,10 +188,10 @@ def get_f1_above_th_questions(model, tokenizer, device, qa, lang_list: list, qa_
             # 
             if f1 > THRESHOLD:
                 qa_lists[L2].append(i)
-            # print(prompt)
-            # print(pre)
-            # print(f'ans: {a}')
-            # print(f1, qa_lists)
+            print(prompt)
+            print(pre)
+            print(f'ans: {a}')
+            print(f1, qa_lists)
     
     return dict(qa_lists)
 
