@@ -33,7 +33,6 @@ centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = 32(laye
 for L2 in langs:
     # hidden_states for each L2.
     # mono L2 sentences.
-    if 
     path_mono_train = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl"
     sentences = unfreeze_pickle(path_mono_train)
     # get centroids of hidden_states(of en-L2 sentence pairs).

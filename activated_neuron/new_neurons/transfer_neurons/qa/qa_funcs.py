@@ -819,11 +819,11 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
     c = 0 # question counter.
     for i in range(len(qa['queries'])):
         if c == qa_num: break
-        q = qa['queries'][i][lang_deact] # question
-        a = qa['answers'][i][lang_deact][0]['text'] # answer
+        q = qa['queries'][i+100][lang_deact] # question
+        a = qa['answers'][i+100][lang_deact][0]['text'] # answer
         """ """
-        q_tran = qa['queries'][i][lang_act]
-        a_tran = qa['answers'][i][lang_act][0]['text']
+        q_tran = qa['queries'][i+100][lang_act]
+        a_tran = qa['answers'][i+100][lang_act][0]['text']
         if q_tran == None or q_tran == '':
             continue
         """ """
@@ -873,11 +873,10 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
         # target_layers = [4, 15, 25, 31] # llama
         # target_layers = [9, 19, 24, 31] # 
         target_layers = [19]
-        # target_layers = [30]
+        # target_layers = [30, 31]
         # target_layers = [4, 9, 14, 19]
         # target_layers = [ _ for _ in range(4, 20)]
 
-        target_layers = []
         for target_layer in target_layers:
             sub_vector = c_lang2[target_layer] - c_lang1[target_layer]
             sub_vectors[target_layer] = sub_vector
@@ -885,20 +884,6 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
         inputs = tokenizer(prompt, return_tensors='pt').to(device)
         token_len = inputs.input_ids.size(1)
         last_token_idx = token_len - 1
-
-        # run inference with steering activations.
-        """ activation_values for activation patching. """
-        # trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
-        # trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
-        # trace_layers = list(set(trace_layers_zero+trace_layers_up))
-        # """ trace_layers for addition of subtracted_vectors """
-        # trace_layers_add = [f'model.layers.{layer}' for layer in target_layers]
-
-        """ for tran. """
-        # with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_times(output, layer, neurons_zero+neurons_up, last_token_idx, device, act_values_act)) as tr:
-        # with TraceDict(model, trace_layers_add, edit_output=lambda output, layer: edit_activation_sub_vectors(output, layer, last_token_idx, device, sub_vectors)) as tr:
-        #     with torch.no_grad():
-        #         output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
 
         neurons = defaultdict(list) # {layer_idx: [neuron_idx, ...]}
         for neuron in neurons_zero+neurons_up:
@@ -928,16 +913,15 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
                         # for tran.
                         # input[0][:, -1, neuron[2]] = torch.tensor(float(act_values_act[neuron[1]][neuron[2]]), dtype=torch.float32, device=device)
 
-        
         # register hook.
         handles = []
         for layer_idx, layer in enumerate(model.model.layers):
             # for patching act_value with translation_version.
-            if layer_idx >= 20 and layer_idx <= 31:
-                handle = layer.mlp.down_proj.register_forward_pre_hook(
-                    lambda model, input, layer_idx=layer_idx: edit_elem_wise_product(model, input, layer_idx)
-                )
-                handles.append(handle)
+            # if layer_idx >= 20 and layer_idx <= 31:
+            #     handle = layer.mlp.down_proj.register_forward_pre_hook(
+            #         lambda model, input, layer_idx=layer_idx: edit_elem_wise_product(model, input, layer_idx)
+            #     )
+            #     handles.append(handle)
             # for adding subtracted vector to the hidden_states.
             if layer_idx in target_layers:
                 handle2 = layer.register_forward_hook(
@@ -953,16 +937,10 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
             handle.remove()
 
         pre = tokenizer.decode(output[0][token_len:], skip_special_tokens=True) # model's prediction
-
-        # if lang_deact == 'ja': pre = pre.split("答え: ")[-1].strip()
-        # if lang_deact == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
-        # if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
-        # if lang_deact == 'it': pre = pre.split('Risposta: ')[-1].strip()
-        # if lang_deact == 'en': pre = pre.split('Answer: ')[-1].strip()
         c += 1
-        # print(f'question: {prompt}')
-        # print(f'model ans: {pre}')
-        # print(f'gorund truth: {a}')
+        print(f'question: {prompt}')
+        print(f'model ans: {pre}')
+        print(f'gorund truth: {a}')
 
         """ calc ratio of lang_activation in the model's output. """
         pred_lang = cld3.get_language(pre)

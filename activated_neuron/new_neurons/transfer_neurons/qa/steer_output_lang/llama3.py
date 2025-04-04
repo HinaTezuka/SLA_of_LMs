@@ -51,18 +51,16 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 # load QA dataset.
 qa_num = 100
 qa = load_dataset('apple/mkqa')['train']
-# qa = load_dataset('atutej/m_lama')
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
 # langs = ['nl']
 intervention_num = 1000
-is_act = False
 
 results = {} # normal(without intervention.)
 resutls_intervention = {} # intervened ver.
 pair_patterns = {
-    # 'en': [('en', 'ja'), ('en', 'nl'), ('en', 'ko'), ('en', 'it')]
+    'en': [('en', 'ja'), ('en', 'nl'), ('en', 'ko'), ('en', 'it')],
     'ja': [('ja', 'nl'), ('ja', 'ko'), ('ja', 'it')],
     'nl': [('nl', 'ja'), ('nl', 'ko'), ('nl', 'it')],
     'ko': [('ko', 'ja'), ('ko', 'nl'), ('ko', 'it')],
@@ -111,9 +109,17 @@ for L2 in langs:
         c_langs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train.pkl")
         c_lang_activation = c_langs[lang_activation]
         c_lang_deactivation = c_langs[lang_deactivation]
+
+        # including en_centroids.
+        # c_lang_activation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_{lang_activation}.pkl")
+        # c_lang_deactivation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_{lang_deactivation}.pkl")
+
+        # c_lang_deactivation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_{lang_deactivation}_qa.pkl")
+        # c_lang_activation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_{lang_activation}_qa.pkl")
+        
         # generate outputs.
         # resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
-        resutls_intervention[(lang_deactivation, lang_activation)], lang_ratios = mkqa_for_steer_output_lang_patching_with_elem_wise_product(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
+        resutls_intervention[(lang_deactivation, lang_activation)], lang_ratios = mkqa_for_steer_output_lang_patching_with_elem_wise_product(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation_removed, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act=act_values_act)
 
 del model
 torch.cuda.empty_cache()
@@ -123,12 +129,12 @@ torch.cuda.empty_cache()
 # save_as_pickle(save_path_normal, results)
 # save_as_pickle(save_path_intervention, resutls_intervention)
 # lang_ratios
-save_path_lang_ratios = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/lang_ratios_n{intervention_num}_19_mean_patching.pkl'
+save_path_lang_ratios = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/lang_ratios_n{intervention_num}_mean_patching_only.pkl'
 save_as_pickle(save_path_lang_ratios, lang_ratios)
 
 """ for output """
 print(f'q_num: {qa_num}')
 print('===============================================================================')
 print(f'normal: {results}')
-print(f'intervened_layers: 19')
+print(f'intervened_layers: None')
 print(resutls_intervention)

@@ -1,0 +1,50 @@
+====================== lang pair ======================
+lang_deactivation: ja, lang_activation: ko
+
+====================== lang pair ======================
+lang_deactivation: ja, lang_activation: nl
+
+====================== lang pair ======================
+lang_deactivation: ja, lang_activation: it
+
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ko
+
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ja
+
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: it
+
+====================== lang pair ======================
+lang_deactivation: ko, lang_activation: ja
+
+====================== lang pair ======================
+lang_deactivation: ko, lang_activation: nl
+
+====================== lang pair ======================
+lang_deactivation: ko, lang_activation: it
+
+====================== lang pair ======================
+lang_deactivation: it, lang_activation: ja
+
+====================== lang pair ======================
+lang_deactivation: it, lang_activation: nl
+
+====================== lang pair ======================
+lang_deactivation: it, lang_activation: ko
+
+pkl_file successfully saved.
+q_num: 100
+===============================================================================
+Mistral.
+normal: {}
+intervened_layers: 19
+{('ja', 'ko'): 0.24242424242424243, ('ja', 'nl'): 0.0, ('ja', 'it'): 0.0, ('nl', 'ko'): 0.14444444444444443, ('nl', 'ja'): 0.03076923076923077, ('nl', 'it'): 0.0, ('ko', 'ja'): 0.1, ('ko', 'nl'): 0.0, ('ko', 'it'): 0.0, ('it', 'ja'): 0.03333333333333333, ('it', 'nl'): 0.0, ('it', 'ko'): 0.7448979591836735}
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=3898800kb,walltime=04:11:31,ncpus=26,cpupercent=137,vmem=48825936kb
+============================================================================================

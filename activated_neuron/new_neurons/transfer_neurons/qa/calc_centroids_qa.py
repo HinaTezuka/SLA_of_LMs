@@ -21,7 +21,7 @@ from funcs import (
 
 langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3"]
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 num_layers = 32
 
@@ -74,3 +74,6 @@ for model_name in model_names:
         # save centroids as pkl.
         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{L2}_qa.pkl"
         save_as_pickle(save_path, shared_space_centroids)
+    
+    del model
+    torch.cuda.empty_cache()

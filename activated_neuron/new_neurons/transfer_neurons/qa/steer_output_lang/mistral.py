@@ -113,12 +113,12 @@ torch.cuda.empty_cache()
 # save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/intervention_n{intervention_num}_19_mean_patching.pkl'
 # save_as_pickle(save_path_normal, results)
 # save_as_pickle(save_path_intervention, resutls_intervention)
-save_path_lang_ratios = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/lang_ratios_n{intervention_num}_19_mean_patching.pkl'
+save_path_lang_ratios = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/mistral/lang_ratio/lang_ratios_n{intervention_num}_mean_patching_only.pkl'
 save_as_pickle(save_path_lang_ratios, lang_ratios)
 
 """ for output """
 print(f'q_num: {qa_num}')
 print('===============================================================================')
 print(f'normal: {results}')
-print(f'intervened_layers: 19')
+print(f'intervened_layers: None')
 print(resutls_intervention)

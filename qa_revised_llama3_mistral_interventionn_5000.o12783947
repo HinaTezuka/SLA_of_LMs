@@ -1,0 +1,19 @@
+pkl_file successfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+normal: {'ja': 0.1596123046051315, 'nl': 0.046515295815295815, 'ko': 0.12620147620225808, 'it': 0.0792357142857143}
+intervention: {'ja': 0.1317043189578669, 'nl': 0.022474025974025973, 'ko': 0.1201991256322914, 'it': 0.031935064935064934}
+intervention baseline: {'ja': 0.15646122921094974, 'nl': 0.0422010101010101, 'ko': 0.12792469246566143, 'it': 0.06397380952380952}
+pkl_file successfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+normal: {'ja': 0.2308386215462782, 'nl': 0.12165119047619047, 'ko': 0.13432729402949992, 'it': 0.10563809523809523}
+intervention: {'ja': 0.2028981363266774, 'nl': 0.09597499999999999, 'ko': 0.12413987785090726, 'it': 0.0824452380952381}
+intervention baseline: {'ja': 0.22422265805537864, 'nl': 0.12301785714285714, 'ko': 0.13400528923690688, 'it': 0.11008809523809523}
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=25243116kb,walltime=120:32:42,ncpus=26,cpupercent=101,vmem=48740812kb
+============================================================================================

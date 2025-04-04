@@ -352,6 +352,28 @@ def track_neurons_with_text_data_elem_wise(model, device, tokenizer, qa, qa_num,
 
     return activation_array
 
+def get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, data):
+    """
+    """
+    # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en).
+    c_hidden_states = defaultdict(list)
+
+    for text1 in data:
+        inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
+
+        # get hidden_states
+        with torch.no_grad():
+            output1 = model(**inputs1, output_hidden_states=True)
+
+        all_hidden_states1 = output1.hidden_states # include embedding layer
+        last_token_index1 = inputs1["input_ids"].shape[1] - 1
+
+        for layer_idx in range(len(all_hidden_states1)):
+            hs1 = all_hidden_states1[layer_idx][:, last_token_index1, :].squeeze().detach().cpu().numpy()
+            c_hidden_states[layer_idx].append(hs1)
+
+    return dict(c_hidden_states)
+
 def get_hidden_states(model, tokenizer, device, num_layers, data):
     """
     """
