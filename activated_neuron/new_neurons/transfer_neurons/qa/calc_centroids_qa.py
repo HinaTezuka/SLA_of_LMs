@@ -56,7 +56,7 @@ def get_sentences_qa(qa, L2: str):
 
 
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     for L2 in langs:

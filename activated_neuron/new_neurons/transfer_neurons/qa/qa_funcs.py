@@ -188,10 +188,10 @@ def get_f1_above_th_questions(model, tokenizer, device, qa, lang_list: list, qa_
             # 
             if f1 > THRESHOLD:
                 qa_lists[L2].append(i)
-            print(prompt)
-            print(pre)
-            print(f'ans: {a}')
-            print(f1, qa_lists)
+            # print(prompt)
+            # print(pre)
+            # print(f'ans: {a}')
+            # print(f1, qa_lists)
     
     return dict(qa_lists)
 
@@ -869,13 +869,12 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
         """ get subtracted vectors """
         sub_vectors = {}
         # target_layers = [ _ for _ in range(29, 32)] # Mistral
-        # target_layers = [ _ for _ in range(30, 32)] # LLaMA3, Mistral
-        # target_layers = [4, 15, 25, 31] # llama
+        target_layers = [ _ for _ in range(30, 32)] # LLaMA3, Mistral
         # target_layers = [9, 19, 24, 31] # 
-        target_layers = [19]
-        # target_layers = [30, 31]
+        # target_layers = [19]
+        # target_layers = [4]
+        target_layers = [31]
         # target_layers = [4, 9, 14, 19]
-        # target_layers = [ _ for _ in range(4, 20)]
 
         for target_layer in target_layers:
             sub_vector = c_lang2[target_layer] - c_lang1[target_layer]
@@ -891,9 +890,9 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
         
         # hook_fn.
         def add_subtracted_vector(model, input, output, layer_idx: int, token_len: int):
-            if layer_idx != 31:
-                if output[0].shape[1] == token_len:
-                    output[0][:, -1, :] += torch.from_numpy(sub_vectors[layer_idx]).to(device)
+            # if layer_idx != 31:
+            if output[0].shape[1] == token_len:
+                output[0][:, -1, :] += torch.from_numpy(sub_vectors[layer_idx]).to(device)
 
         def edit_elem_wise_product(model, input, layer_idx: int):
             if input[0].shape[1] == token_len:
@@ -904,24 +903,26 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
                     # for mean.
                     # input[0][:, -1, neuron_idx] = torch.tensor(float(act_values_act[layer_idx, neuron_idx]), dtype=torch.float32, device=device)
                     """ """
-                    if neuron[0] == 'de':
-                        input[0][:, -1, neuron[2]] *= 0
-                    if neuron[0] == 'ac':
-                        # input[0][:, -1, neuron[2]] *= 5
-                        # for mean.
-                        input[0][:, -1, neuron[2]] = torch.tensor(float(act_values_act[neuron[1], neuron[2]]), dtype=torch.float32, device=device)
-                        # for tran.
-                        # input[0][:, -1, neuron[2]] = torch.tensor(float(act_values_act[neuron[1]][neuron[2]]), dtype=torch.float32, device=device)
+                    if neuron[1] == layer_idx:
+                        if neuron[0] == 'de':
+                            input[0][:, -1, neuron[2]] *= 0
+                            # input[0][:, -1, neuron[2]] = torch.tensor(float(act_values_act[neuron[1], neuron[2]]), dtype=torch.float32, device=device)
+                        # if neuron[0] == 'ac':
+                            # input[0][:, -1, neuron[2]] *= 5
+                            # for mean.
+                            input[0][:, -1, neuron[2]] = torch.tensor(float(act_values_act[neuron[1], neuron[2]]), dtype=torch.float32, device=device)
+                            # for tran.
+                            # input[0][:, -1, neuron[2]] = torch.tensor(float(act_values_act[neuron[1]][neuron[2]]), dtype=torch.float32, device=device)
 
         # register hook.
         handles = []
         for layer_idx, layer in enumerate(model.model.layers):
             # for patching act_value with translation_version.
             # if layer_idx >= 20 and layer_idx <= 31:
-            #     handle = layer.mlp.down_proj.register_forward_pre_hook(
-            #         lambda model, input, layer_idx=layer_idx: edit_elem_wise_product(model, input, layer_idx)
-            #     )
-            #     handles.append(handle)
+            # handle = layer.mlp.down_proj.register_forward_pre_hook(
+            #     lambda model, input, layer_idx=layer_idx: edit_elem_wise_product(model, input, layer_idx)
+            # )
+            # handles.append(handle)
             # for adding subtracted vector to the hidden_states.
             if layer_idx in target_layers:
                 handle2 = layer.register_forward_hook(
@@ -938,13 +939,13 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
 
         pre = tokenizer.decode(output[0][token_len:], skip_special_tokens=True) # model's prediction
         c += 1
-        print(f'question: {prompt}')
-        print(f'model ans: {pre}')
-        print(f'gorund truth: {a}')
+        # print(f'question: {prompt}')
+        # print(f'model ans: {pre}')
+        # print(f'gorund truth: {a}')
 
         """ calc ratio of lang_activation in the model's output. """
         pred_lang = cld3.get_language(pre)
-        if pred_lang.is_reliable:
+        if pred_lang is not None and pred_lang.is_reliable:
             total_num += 1
             if pred_lang.language == lang_act:
                 lang_count += 1

@@ -1,32 +1,3 @@
-"""
-LlamaForCausalLM(
-  (model): LlamaModel(
-    (embed_tokens): Embedding(128256, 4096)
-    (layers): ModuleList(
-      (0-31): 32 x LlamaDecoderLayer(
-        (self_attn): LlamaSdpaAttention(
-          (q_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (k_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (v_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (o_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (rotary_emb): LlamaRotaryEmbedding()
-        )
-        (mlp): LlamaMLP(
-          (gate_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (up_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (down_proj): Linear(in_features=14336, out_features=4096, bias=False)
-          (act_fn): SiLU()
-        )
-        (input_layernorm): LlamaRMSNorm((4096,), eps=1e-05)
-        (post_attention_layernorm): LlamaRMSNorm((4096,), eps=1e-05)
-      )
-    )
-    (norm): LlamaRMSNorm((4096,), eps=1e-05)
-    (rotary_emb): LlamaRotaryEmbedding()
-  )
-  (lm_head): Linear(in_features=4096, out_features=128256, bias=False)
-)
-"""
 import os
 import sys
 import pickle
@@ -39,13 +10,32 @@ import torch
 
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
+from sklearn.metrics.pairwise import cosine_similarity
 
-def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, data):
+def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, data, L2: str, is_sub:bool=False):
     """
     各層について、2000文ペアそれぞれのhidden_statesの類似度の平均を計算
     """
     similarities = defaultdict(list) # {layer_idx: mean_sim_of_each_sentences}
+    """ load centroids. """
+    c_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_en.pkl")
+    c_L2 = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_{L2}.pkl")
+    candidate_layers = [5]
+
+    if is_sub:
+        # hook_fn.
+        def add_subtracted_vector(model, input, output, layer_idx: int):
+            if layer_idx != 31:
+                output[0][:, -1, :] += torch.from_numpy(c_en[layer_idx] - c_L2[layer_idx]).to(device)
+        # register hook.
+        handles = []
+        for layer_idx, layer in enumerate(model.model.layers):
+            # for adding subtracted vector to the hidden_states.
+            if layer_idx in candidate_layers:
+                handle = layer.register_forward_hook(
+                    lambda model, input, output, layer_idx=layer_idx: add_subtracted_vector(model, input, output, layer_idx)
+                )
+                handles.append(handle)
 
     for L1_txt, L2_txt in data:
         hidden_states = defaultdict(torch.Tensor)
@@ -59,18 +49,24 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
 
         all_hidden_states_L1 = output_L1.hidden_states[1:]
         all_hidden_states_L2 = output_L2.hidden_states[1:]
-        # 最後のtokenのhidden_statesのみ取得
+
         last_token_index_L1 = inputs_L1["input_ids"].shape[1] - 1
         last_token_index_L2 = inputs_L2["input_ids"].shape[1] - 1
-        # 各層の最後のトークンの hidden state をリストに格納
+
         last_token_hidden_states_L1 = [
             layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy() for layer_hidden_state in all_hidden_states_L1
         ]
         last_token_hidden_states_L2 = [
             layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy() for layer_hidden_state in all_hidden_states_L2
         ]
+        
         # cos_sim
         similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
+
+    if is_sub:
+        # remove hook
+        for handle in handles:
+            handle.remove()
 
     return similarities
 
@@ -106,8 +102,8 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
     plt.legend()
     plt.grid(True)
     plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}.png",
-        bbox_inches="tight"
+        f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/sub/{L2}.png",
+        bbox_inches="tight",
         )
     plt.close()
 
@@ -161,10 +157,12 @@ if __name__ == "__main__":
                 random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
             elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
+        tatoeba_data = tatoeba_data[:10]
+        random_data = random_data[:10]
 
         """ calc similarities """
-        results_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, tatoeba_data)
-        results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data)
+        results_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, tatoeba_data, L2, is_sub=True)
+        results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data, L2)
         final_results_same_semantics = defaultdict(float)
         final_results_non_same_semantics = defaultdict(float)
         for layer_idx in range(32):

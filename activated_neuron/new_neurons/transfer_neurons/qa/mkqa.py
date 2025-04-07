@@ -58,6 +58,8 @@ for model_name in model_names:
         # normal
         result_score = mkqa(model, tokenizer, device, qa, L2, qa_num, qa_dict)
         results[L2] = result_score
+        if L2 == 'en':
+            continue
         # intervention
         intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
         intervened_neurons = unfreeze_pickle(intervened_neurons_path)
