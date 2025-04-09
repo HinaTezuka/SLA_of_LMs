@@ -51,7 +51,7 @@ qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['en']
+# langs = ['en']
 intervention_num = 1000
 
 results = {} # normal(without intervention.)
@@ -64,13 +64,15 @@ pair_patterns = {
     'it': [('it', 'ja'), ('it', 'nl'), ('it', 'ko')],
 }
 
+lang_ratios_final = {}
+
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     for L2 in langs:
         # normal
-        # results[L2] = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
+        # results[L2], lang_ratios = mkqa_for_steer_output_lang_normal(model, tokenizer, device, qa, L2, qa_num)
 
         # intervention
         pair_pattern = pair_patterns[L2]
@@ -121,14 +123,18 @@ for model_name in model_names:
             # generate outputs.
             # resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
             resutls_intervention[(lang_deactivation, lang_activation)], lang_ratios = mkqa_for_steer_output_lang_patching_with_elem_wise_product(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act=act_values_act)
+            lang_ratios_final[L2] = lang_ratios
 
     # save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/lang_ratio/normal_n{intervention_num}_19_mean_patching.pkl'
-    # save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/lang_ratio/intervention_n{intervention_num}_19_mean_patching.pkl'
+    save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/lang_ratio/intervention_n{intervention_num}_add_subtracted_vectors_to_last_layers_only.pkl'
     # save_as_pickle(save_path_normal, results)
-    # save_as_pickle(save_path_intervention, resutls_intervention)
+    save_as_pickle(save_path_intervention, resutls_intervention)
     # lang_ratios
     save_path_lang_ratios = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/lang_ratio/lang_ratios_add_subtracted_vectors_to_last_layers_only.pkl'
-    save_as_pickle(save_path_lang_ratios, lang_ratios)
+    save_as_pickle(save_path_lang_ratios, lang_ratios_final)
+    
+    # print results.
+    print(f'{model_type}\n{resutls_intervention}')
     
     # release memory.
     del model
@@ -138,6 +144,5 @@ for model_name in model_names:
 """ for output """
 print(f'q_num: {qa_num}')
 print('===============================================================================')
-print(f'normal: {results}')
 print(f'intervened_layers: None')
 print(resutls_intervention)

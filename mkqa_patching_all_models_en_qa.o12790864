@@ -1,0 +1,33 @@
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: ja
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: nl
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: ko
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: it
+pkl_file successfully saved.
+pkl_file successfully saved.
+llama3
+{('en', 'ja'): 0.99, ('en', 'nl'): 0.011111111111111112, ('en', 'ko'): 0.3157894736842105, ('en', 'it'): 0.0}
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: ja
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: nl
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: ko
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: it
+pkl_file successfully saved.
+pkl_file successfully saved.
+mistral
+{('en', 'ja'): 0.0, ('en', 'nl'): 0.0, ('en', 'ko'): 0.0, ('en', 'it'): 0.0}
+====================== lang pair ======================
+lang_deactivation: en, lang_activation: ja
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=32006080kb,walltime=02:42:10,ncpus=26,cpupercent=142,vmem=54140768kb
+============================================================================================
