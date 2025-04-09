@@ -257,6 +257,55 @@ def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int, qa_dict: dict):
     
     return np.mean(np.array(f1_scores))
 
+def mkqa_all(model, tokenizer, device, qa, L2: str, qa_dict: dict):
+    # c = 0 # question counter.
+    f1_scores = []
+    for i in range(len(qa['queries'])):
+        # if c == qa_num: break
+        q = qa['queries'][i][L2] # question
+        if qa['answers'][i][L2][0]['aliases'] == []:
+            a = [qa['answers'][i][L2][0]['text']] # answer as list.
+        else:
+            a = qa['answers'][i][L2][0]['aliases'] # answer as aliases: see: https://github.com/apple/ml-mkqa/tree/main?tab=readme-ov-file
+
+        def contains_none_or_empty(lst: list) -> bool:
+            return any(x is None or x == '' for x in lst)
+
+        if q == '' or q == None or contains_none_or_empty(a):
+            continue
+
+        # make prompt.
+        if L2 == 'ja': prompt = f'{q}? 答え: '
+        elif L2 == 'nl': prompt = f'{q}? Antwoord: '
+        elif L2 == 'ko': prompt = f'{q}? 답변: '
+        elif L2 == 'it': prompt = f'{q}? Risposta: '
+        elif L2  == 'en': prompt = f'{q}? Answer: '
+
+        # run inference.
+        torch.cuda.manual_seed_all(42) # set seed.
+        inputs = tokenizer(prompt, return_tensors='pt').to(device)
+        with torch.no_grad():
+            output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
+        pre = tokenizer.decode(output[0], skip_special_tokens=True)
+        # 
+        if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        if L2 == 'en': pre = pre.split('Answer: ')[-1].strip()
+        
+        if len(a) == 1:
+            f1 = calculate_f1(a[0], pre, L2)
+        else:
+            f1_l = []
+            for ans in a:
+                f1_l.append(calculate_f1(ans, pre, L2))
+            f1 = max(f1_l)
+
+        f1_scores.append((i, f1)) # i: question_idx
+    
+    return f1_scores
+
 """ steer output lang. """
 def get_mean_act_value(lang: str, model_type: str):
     save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{lang}_last_token_elem_wise.npz"

@@ -69,30 +69,31 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         plt.savefig(output_path, bbox_inches="tight")
         plt.close()
 
-for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    for L2 in langs:
-        # hidden_states for each L2.
-        sentences = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl")
-        # get centroids of hidden_states(of en-L2 sentence pairs).
-        hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-        # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+if __name__ == '__main__':
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
+    sentences_all_langs = unfreeze_pickle(path)
+    for model_name in model_names:
+        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        for L2 in langs:
+            sentences = sentences_all_langs[L2]
+            hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+            # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-        # save centroids as pkl.
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
-        save_as_pickle(save_path, hidden_states)
+            # save centroids as pkl.
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
+            save_as_pickle(save_path, hidden_states)
 
-    """ dim_reduction and plot with PCA. """
-    # ["ja", "nl", "ko", "it", "en"]
-    hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
-    hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl.pkl")
-    hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko.pkl")
-    hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
-    hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
-    # 
-    plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
+        """ dim_reduction and plot with PCA. """
+        # ["ja", "nl", "ko", "it", "en"]
+        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
+        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl.pkl")
+        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko.pkl")
+        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
+        hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
+        # 
+        plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
-    del model
-    torch.cuda.empty_cache()
+        del model
+        torch.cuda.empty_cache()
