@@ -28,9 +28,10 @@ from qa_funcs import (
     unfreeze_np_arrays,
 )
 
-# p = 'activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/normal_n1000.pkl'
+# p = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/lang_ratios_add_subtracted_vectors_to_last_layers_only.pkl'
 # p_i = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n1000_30_31_layers.pkl'
-# print(unfreeze_pickle(p))
+# d = unfreeze_pickle(p)
+# print(d)
 # print(unfreeze_pickle(p_i))
 # sys.exit()
 
@@ -50,7 +51,7 @@ qa_num = 100
 qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
-langs = ['ja', 'nl', 'ko', 'it']
+langs = ['ja', 'nl', 'ko', 'it', 'en']
 # langs = ['en']
 intervention_num = 1000
 
@@ -119,11 +120,14 @@ for model_name in model_names:
 
             c_lang_deactivation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{lang_deactivation}_qa.pkl")
             c_lang_activation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{lang_activation}_qa.pkl")
+
+            # meaned subtrancted vector.
+            # c_lang_deactivation = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_qa_{lang_deactivation}_{lang_activation}.pkl")
             
             # generate outputs.
             # resutls_intervention[(lang_deactivation, lang_activation)] = mkqa_for_steer_output_lang_add_subducted_vectors(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act)
             resutls_intervention[(lang_deactivation, lang_activation)], lang_ratios = mkqa_for_steer_output_lang_patching_with_elem_wise_product(model, tokenizer, device, qa, lang_deactivation, lang_activation, qa_num, neurons_deactivation, neurons_activation, c_lang_deactivation, c_lang_activation, act_values_act=act_values_act)
-            lang_ratios_final[L2] = lang_ratios
+            lang_ratios_final[(lang_deactivation, lang_activation)] = lang_ratios
 
     # save_path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/lang_ratio/normal_n{intervention_num}_19_mean_patching.pkl'
     save_path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}/lang_ratio/intervention_n{intervention_num}_add_subtracted_vectors_to_last_layers_only.pkl'

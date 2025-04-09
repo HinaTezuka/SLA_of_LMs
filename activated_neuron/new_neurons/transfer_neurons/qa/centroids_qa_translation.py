@@ -48,9 +48,9 @@ def get_c_tran(model, tokenizer, device, num_layers, data: list) -> list:
     # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en-L2).
     c_hidden_states = defaultdict(list)
 
-    for text1, text2 in data:
-        inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
-        inputs2 = tokenizer(text2, return_tensors="pt").to(device) # L2 text
+    for text1_L1, text2_L2 in data:
+        inputs1 = tokenizer(text1_L1, return_tensors="pt").to(device) # english text
+        inputs2 = tokenizer(text2_L2, return_tensors="pt").to(device) # L2 text
 
         # get hidden_states
         with torch.no_grad():
@@ -67,8 +67,10 @@ def get_c_tran(model, tokenizer, device, num_layers, data: list) -> list:
             hs1 = all_hidden_states1[layer_idx][:, last_token_index1, :].squeeze().detach().cpu().numpy()
             hs2 = all_hidden_states2[layer_idx][:, last_token_index2, :].squeeze().detach().cpu().numpy()
             # save mean of (en_ht, L2_ht). <- estimated shared point in shared semantic space.
-            c = np.stack([hs1, hs2])
-            c = np.mean(c, axis=0)
+            # c = np.stack([hs1, hs2])
+            # c = np.mean(c, axis=0)
+            # subtracted vector.
+            c = hs2 - hs1
             c_hidden_states[layer_idx].append(c)
 
     return get_centroid_of_shared_space(dict(c_hidden_states))
@@ -102,7 +104,6 @@ qa = qa.shuffle(seed=42)
 
 # centroids of english texts.
 centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = 32(layer_num).
-
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'

@@ -958,6 +958,6 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product(
         # print(f'lang: {pred_lang}')
         # print(lang_ratios)
 
-    lang_ratios[total_num] = total_num # save total_reriable_num.    
+    lang_ratios['total_num'] = total_num # save total_reriable_num.    
     
     return lang_count / total_num, dict(lang_ratios)
