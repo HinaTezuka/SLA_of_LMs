@@ -74,8 +74,6 @@ def plot_umap(model_type: str, features_L1: dict, features_L2: dict, features_L3
     languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
     colors = ["red", "blue", "yellow", "orange", "green"]
     
-    num_layers = len(features_L1)  # レイヤー数を自動的に推定
-    
     for layer_idx in range(num_layers):  # Embedding layer + N hidden layers
         f1 = np.array(features_L1[layer_idx])
         f2 = np.array(features_L2[layer_idx])
