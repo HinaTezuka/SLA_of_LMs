@@ -21,6 +21,11 @@ from qa_funcs import (
     save_as_pickle,
     unfreeze_pickle,
 )
+# p = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/aya_qa_indices_above_0.5_all_langs.pkl'
+# d = unfreeze_pickle(p)
+# for k, v in d.items():
+#     print(k, len(v))
+# sys.exit()
 
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']

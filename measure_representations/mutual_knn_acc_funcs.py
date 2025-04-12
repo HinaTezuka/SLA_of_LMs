@@ -12,10 +12,8 @@ def extract_representations(model, tokenizer, texts, layer_idx=-1) -> torch.Tens
     tokens = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
     with torch.no_grad():
         outputs = model(**tokens)
-        hidden_states = outputs.hidden_states  # List of layer-wise hidden states
-        print(hidden_states)
-        representations = hidden_states[layer_idx]  # Extract the chosen layer
-        print(representations)
+        hidden_states = outputs.hidden_states[1:]
+        representations = hidden_states[layer_idx]
     # return representations.mean(dim=1)  # Mean-pooling across tokens
     return F.normalize(representations.mean(dim=1))
 

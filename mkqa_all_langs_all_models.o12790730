@@ -1,0 +1,31 @@
+pkl_file successfully saved.
+successfully saved qa_Dict: qa_num100, threshold0.5.
+pkl_file successfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+normal: {'ja': 0.6965629301525114, 'nl': 0.7135000000000001, 'ko': 0.652675824175824, 'it': 0.7239126984126985, 'en': 0.7317582417582417}
+intervention: {'ja': 0.511772852878116, 'nl': 0.32711904761904764, 'ko': 0.588545621045621, 'it': 0.2070476190476191}
+intervention baseline: {'ja': 0.68308059123539, 'nl': 0.6187857142857142, 'ko': 0.6495329670329668, 'it': 0.6772460317460319}
+pkl_file successfully saved.
+successfully saved qa_Dict: qa_num100, threshold0.5.
+pkl_file successfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+normal: {'ja': 0.722455077086656, 'nl': 0.8538095238095238, 'ko': 0.7247570207570208, 'it': 0.8672857142857143, 'en': 0.8235714285714285}
+intervention: {'ja': 0.6607749794065583, 'nl': 0.7550476190476191, 'ko': 0.6903180708180711, 'it': 0.5728809523809523}
+intervention baseline: {'ja': 0.6898201564517354, 'nl': 0.8538095238095238, 'ko': 0.718090354090354, 'it': 0.8512857142857142}
+pkl_file successfully saved.
+successfully saved qa_Dict: qa_num100, threshold0.5.
+pkl_file successfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+normal: {'ja': 0.7576095858539391, 'nl': 0.8365476190476191, 'ko': 0.7248503718503718, 'it': 0.8541666666666669, 'en': 0.8279761904761904}
+intervention: {'ja': 0.733170748375628, 'nl': 0.6512142857142856, 'ko': 0.5978026973026972, 'it': 0.582}
+intervention baseline: {'ja': 0.7576095858539391, 'nl': 0.8252142857142859, 'ko': 0.724136086136086, 'it': 0.8267380952380954}
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=27702696kb,walltime=87:18:58,ncpus=26,cpupercent=100,vmem=51769112kb
+============================================================================================

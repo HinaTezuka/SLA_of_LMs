@@ -46,7 +46,7 @@ for model_name in model_names:
 
     for L2 in langs:
         # normal
-        result_scores = mkqa_all(model, tokenizer, device, qa, L2, qa_dict)
+        result_scores = mkqa_all(model, tokenizer, device, qa, L2)
         results[L2] = result_scores
 
         """ intervention """

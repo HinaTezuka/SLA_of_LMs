@@ -172,7 +172,7 @@ def get_f1_above_th_questions(model, tokenizer, device, qa, lang_list: list, qa_
                 output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
             pre = tokenizer.decode(output[0], skip_special_tokens=True)
             # 
-            if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
+            if L2 == 'ja': pre = pre.split('答え: ')[-1].strip()
             if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
             if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
             if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
@@ -257,7 +257,7 @@ def mkqa(model, tokenizer, device, qa, L2: str, qa_num: int, qa_dict: dict):
     
     return np.mean(np.array(f1_scores))
 
-def mkqa_all(model, tokenizer, device, qa, L2: str, qa_dict: dict):
+def mkqa_all(model, tokenizer, device, qa, L2: str):
     # c = 0 # question counter.
     f1_scores = []
     for i in range(len(qa['queries'])):
