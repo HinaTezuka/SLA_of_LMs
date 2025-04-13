@@ -137,5 +137,5 @@ if __name__ == '__main__':
         # plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
         plot_umap(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
-        del model
-        torch.cuda.empty_cache()
+        # del model
+        # torch.cuda.empty_cache()
