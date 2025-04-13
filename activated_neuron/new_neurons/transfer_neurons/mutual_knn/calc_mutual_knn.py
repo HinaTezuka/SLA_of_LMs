@@ -10,9 +10,7 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from mknn_funcs import (
-    # extract_representations,
-    # compute_mutual_knn_acc,
-    knn,
+    compute_mutual_knn,
 )
 from funcs import (
     save_as_pickle,
@@ -33,7 +31,7 @@ for model_name in model_names:
     for L2 in langs:
         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_train.pkl'
         sentences = unfreeze_pickle(path)
-        res = knn(model, tokenizer, device, sentences, L1, L2) # res: [knn_score_layer1, knn_score_layer2, ...]
+        res = compute_mutual_knn(model, tokenizer, device, sentences, L1, L2) # res: [knn_score_layer1, knn_score_layer2, ...]
         print(f'=================={model_type}, {L2}==================')
         print(res)
         knn_scores[L2] = res

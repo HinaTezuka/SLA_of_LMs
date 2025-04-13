@@ -10,16 +10,6 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-# Extract features from the models (example for embedding layer or first hidden layer)
-def extract_representations(model, tokenizer, text, layer_idx=-1) -> torch.Tensor: # layer_indexで「どの層」のrepresentationsをとるかを指定
-    inputs = tokenizer(text, return_tensors="pt").to(device)
-    with torch.no_grad():
-        outputs = model(**inputs)
-        hidden_states = outputs.hidden_states[1:]
-        representations = hidden_states[layer_idx]
-    # return representations.mean(dim=1)  # Mean-pooling across tokens
-    return F.normalize(representations.mean(dim=1))
-
 def mutual_knn(feats_A, feats_B, topk=5):
     """
     Computes the mutual KNN accuracy.
@@ -66,22 +56,7 @@ def compute_nearest_neighbors(feats, topk=5):
     )
     return knn
 
-""" """
-# def compute_mutual_knn_acc(
-#     model,
-#     tokenizer,
-#     device,
-#     texts_L1,
-#     texts_L2,
-#     topk
-#     ):
-#     # get representations.
-#     feats_base = extract_representations(model, tokenizer, texts_L1)
-#     feats_L2 = extract_representations(model, tokenizer, texts_L2)
-
-#     return mutual_knn(feats_base, feats_L2, topk)
-
-def knn(model, tokenizer, device, sentences: list, L1: str, L2: str) -> list:
+def compute_mutual_knn(model, tokenizer, device, sentences: list, L1: str, L2: str) -> list:
     # layer_num = model.layer_num
     layer_num = 32
     sentences_num = len(sentences)
