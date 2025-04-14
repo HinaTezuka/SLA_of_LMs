@@ -53,7 +53,7 @@ qa = load_dataset('apple/mkqa')['train']
 score_type = 'cos_sim'
 # score_type = 'L2_dis'
 langs = ['ja', 'nl', 'ko', 'it', 'en']
-langs = ['nl']
+# langs = ['nl']
 intervention_num = 1000
 
 results = {} # normal(without intervention.)

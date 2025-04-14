@@ -1,0 +1,30 @@
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ja
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ko
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: it
+pkl_file successfully saved.
+pkl_file successfully saved.
+llama3
+{('nl', 'ja'): 0.99, ('nl', 'ko'): 0.7684210526315789, ('nl', 'it'): 0.0}
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ja
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ko
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: it
+pkl_file successfully saved.
+pkl_file successfully saved.
+mistral
+{('nl', 'ja'): 1.0, ('nl', 'ko'): 0.9897959183673469, ('nl', 'it'): 0.05263157894736842}
+====================== lang pair ======================
+lang_deactivation: nl, lang_activation: ja
+Failed to load array: [Errno 2] No such file or directory: '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/activations/ja_last_token_elem_wise.npz'
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=10443692kb,walltime=02:04:48,ncpus=26,cpupercent=114,vmem=55161296kb
+============================================================================================

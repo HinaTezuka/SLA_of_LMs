@@ -56,8 +56,7 @@ def compute_nearest_neighbors(feats, topk=5):
     )
     return knn
 
-def compute_mutual_knn(model, tokenizer, device, sentences: list, L1: str, L2: str) -> list:
-    # layer_num = model.layer_num
+def compute_mutual_knn(model, tokenizer, device, sentences: list, L1: str, L2: str, topk:int=5) -> list:
     layer_num = 32
     sentences_num = len(sentences)
     hidden_dim_size = 4096 # dim_size of hidden states.
@@ -83,7 +82,7 @@ def compute_mutual_knn(model, tokenizer, device, sentences: list, L1: str, L2: s
     for layer_idx in range(layer_num):
         feats_L1 = F.normalize(feats_L1, dim=-1) # 原論文はnormalizeしていたので.
         feats_L2 = F.normalize(feats_L2, dim=-1)
-        knn_score = mutual_knn(feats_L1[layer_idx, :, :], feats_L2[layer_idx, :, :])
+        knn_score = mutual_knn(feats_L1[layer_idx, :, :], feats_L2[layer_idx, :, :], topk=topk)
         knn_scores.append(knn_score)
 
     return knn_scores
