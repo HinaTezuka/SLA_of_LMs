@@ -55,7 +55,7 @@ all_data = []
 
 # Load and reshape data for each model
 for model_type in model_types:
-    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k10.pkl'
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs.pkl'
     model_data = unfreeze_pickle(path)
     
     for lang in languages:
@@ -78,7 +78,7 @@ for model_type in model_types:
     sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10')
     model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B'
     plt.title(f'{model_name}', fontsize=30)
-    plt.xlabel('Layer', fontsize=35)
+    plt.xlabel('Layer Index', fontsize=35)
     plt.ylabel('Mutual KNN', fontsize=35)
     plt.ylim(0, 0.6)
     plt.tick_params(axis='both', labelsize=15)
