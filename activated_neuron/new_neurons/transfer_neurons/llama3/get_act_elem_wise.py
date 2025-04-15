@@ -24,7 +24,8 @@ qa = qa.shuffle(seed=42)
 
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3"]
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
+model_names = ['CohereForAI/aya-expanse-8b']
 model_langs = ["ja", "nl", "ko", "it"]
 
 """ get activaitons and save as npz and pkl. """
@@ -42,7 +43,7 @@ for model_name in model_names:
             L2,
             )
         # save activations as npz file.
-        model_type = 'llama3' if 'llama' in model_name else 'mistral'
+        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
         save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token_elem_wise"
         save_np_arrays(save_path_activations, activations)
         print(f'saving completed: {model_type, L2}')

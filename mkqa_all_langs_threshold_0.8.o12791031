@@ -1,0 +1,15 @@
+pkl_file successfully saved.
+successfully saved qa_Dict: qa_num100, threshold0.8.
+pkl_file successfully saved.
+pkl_file successfully saved.
+pkl_file successfully saved.
+normal: {'ja': 0.8704923813225999, 'nl': 0.9761904761904763, 'ko': 0.8643097643097643, 'it': 0.9514472455648926, 'en': 0.9761904761904763}
+intervention: {'ja': 0.5629384534411093, 'nl': 0.2380952380952381, 'ko': 0.6527844262219262, 'it': 0.18207282913165265}
+intervention baseline: {'ja': 0.8584349942652127, 'nl': 0.8095238095238094, 'ko': 0.8368296055796055, 'it': 0.8730158730158729}
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=22920868kb,walltime=168:00:29,ncpus=26,cpupercent=128,vmem=53828036kb
+============================================================================================

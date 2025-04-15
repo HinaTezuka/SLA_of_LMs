@@ -21,6 +21,7 @@ from qa_funcs import (
 
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it', 'en']
 """ 
@@ -66,7 +67,7 @@ for model_name in model_names:
         # resutls_intervention_baseline[L2] = result_score
 
     # save results as pkl.
-    path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_for_histgram.pkl'
+    path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_for_histgram_exclude_0score.pkl'
     save_as_pickle(path_normal, results)
     # path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_langs_intervention_n{qa_num}_above{THRESHOLD}.pkl'
     # save_as_pickle(path_intervention, resutls_intervention)

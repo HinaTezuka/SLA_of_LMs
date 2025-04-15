@@ -302,7 +302,8 @@ def mkqa_all(model, tokenizer, device, qa, L2: str):
                 f1_l.append(calculate_f1(ans, pre, L2))
             f1 = max(f1_l)
 
-        f1_scores.append((i, f1)) # i: question_idx
+        if f1 > 0.0:
+            f1_scores.append((i, f1)) # i: question_idx
     
     return f1_scores
 
