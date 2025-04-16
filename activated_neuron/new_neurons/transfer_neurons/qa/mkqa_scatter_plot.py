@@ -122,10 +122,12 @@ for model_name in model_names:
             max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
             ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='gray', linewidth=1)
 
+            ax.set_title(f'F1 Score: {lang}', fontsize=30)
             if idx == 0:
-                ax.set_title(f'F1 Score: {lang}', fontsize=30)
                 ax.set_xlabel('Normal', fontsize=20)
                 ax.set_ylabel('Intervened', fontsize=20)
+            plt.xlim(0.0, 1.0)
+            plt.ylim(0.0, 1.0)
             plt.tick_params(axis='both', labelsize=15)
             ax.legend()
             ax.grid(True)
