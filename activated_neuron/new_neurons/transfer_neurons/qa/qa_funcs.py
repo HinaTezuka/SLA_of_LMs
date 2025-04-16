@@ -302,10 +302,65 @@ def mkqa_all(model, tokenizer, device, qa, L2: str):
                 f1_l.append(calculate_f1(ans, pre, L2))
             f1 = max(f1_l)
 
-        if f1 > 0.0:
-            f1_scores.append((i, f1)) # i: question_idx
+        f1_scores.append((i, f1)) # i: question_idx
     
     return f1_scores
+
+def mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, layer_neuron_list):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+        return mkqa_all(model, tokenizer, device, qa, L2)
+
+def mkqa_for_scatter_plot_THRESHOLD(model, tokenizer, device, qa, L2: str, qa_dict: dict):
+    f1_scores = []
+    for i in qa_dict[L2]:
+        # if c == qa_num: break
+        q = qa['queries'][i][L2] # question
+        if qa['answers'][i][L2][0]['aliases'] == []:
+            a = [qa['answers'][i][L2][0]['text']] # answer as list.
+        else:
+            a = qa['answers'][i][L2][0]['aliases'] # answer as aliases: see: https://github.com/apple/ml-mkqa/tree/main?tab=readme-ov-file
+
+        # make prompt.
+        if L2 == 'ja': prompt = f'{q}? 答え: '
+        elif L2 == 'nl': prompt = f'{q}? Antwoord: '
+        elif L2 == 'ko': prompt = f'{q}? 답변: '
+        elif L2 == 'it': prompt = f'{q}? Risposta: '
+        elif L2  == 'en': prompt = f'{q}? Answer: '
+
+        # run inference.
+        torch.cuda.manual_seed_all(42) # set seed.
+        inputs = tokenizer(prompt, return_tensors='pt').to(device)
+        with torch.no_grad():
+            output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
+        pre = tokenizer.decode(output[0], skip_special_tokens=True)
+        # 
+        if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        if L2 == 'en': pre = pre.split('Answer: ')[-1].strip()
+        
+        if len(a) == 1:
+            f1 = calculate_f1(a[0], pre, L2)
+        else:
+            f1_l = []
+            for ans in a:
+                f1_l.append(calculate_f1(ans, pre, L2))
+            f1 = max(f1_l)
+
+        f1_scores.append((i, f1)) # i: question_idx
+    
+    return f1_scores
+
+def mkqa_for_scatter_plot_with_edit_activation(model, tokenizer, device, qa, L2, layer_neuron_list, qa_dict: dict):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+        return mkqa_for_scatter_plot_THRESHOLD(model, tokenizer, device, qa, L2, qa_dict)
+
+
 
 """ steer output lang. """
 def get_mean_act_value(lang: str, model_type: str):
