@@ -29,13 +29,6 @@ from qa_funcs import (
     unfreeze_np_arrays,
 )
 
-# p = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/lang_ratios_add_subtracted_vectors_to_last_layers_only.pkl'
-# p_i = '/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/llama3/lang_ratio/intervention_n1000_30_31_layers.pkl'
-# d = unfreeze_pickle(p)
-# print(d)
-# print(unfreeze_pickle(p_i))
-# sys.exit()
-
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -45,6 +38,7 @@ MKQA: Multilingual Open Domain Question Answering
 """
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['CohereForAI/aya-expanse-8b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # load QA dataset.
