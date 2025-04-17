@@ -52,6 +52,7 @@ for model_name in model_names:
         THRESHOLD = 0.5
         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/qa/{model_type}_qa_indices_above_{THRESHOLD}_all_langs.pkl'
         qa_indices_dict = unfreeze_pickle(path)
+
         # normal
         result_scores = mkqa_for_scatter_plot_THRESHOLD(model, tokenizer, device, qa, L2, qa_indices_dict)
         results[L2] = result_scores
@@ -142,7 +143,6 @@ for model_name in model_names:
             path,
             bbox_inches='tight'
         )
-    
     plot_intervention_scatter(results, resutls_intervention, resutls_intervention_baseline)
     print(f'plot suceeded: {model_type}')
 
