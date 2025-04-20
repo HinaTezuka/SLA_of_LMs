@@ -93,7 +93,7 @@ for model_name in model_names:
             # logistic regression model
             r_model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=10000, random_state=42)
             # cross validation
-            cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
+            cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
             """ check if trainings were converged. """
             # fit model with one layer's data to check convergence
             # model.fit(X, y)
@@ -123,3 +123,7 @@ for model_name in model_names:
         print(f"pkl saved.: {L2}")
         unfreeze_pickle(path)
         print(f"successfully unfreezed: {L2}")
+    
+    # cache
+    del model
+    torch.cuda.empty_cache()
