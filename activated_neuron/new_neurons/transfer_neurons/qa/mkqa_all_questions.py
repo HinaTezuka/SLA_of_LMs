@@ -54,27 +54,27 @@ for model_name in model_names:
     path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions.pkl'
     save_as_pickle(path_normal, results)
 
-    # for L2 in langs:
-    #     """ intervention """
-    #     if L2 == 'en':
-    #         continue
-    #     # intervention
-    #     intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-    #     intervened_neurons = unfreeze_pickle(intervened_neurons_path)
-    #     intervened_neurons_main = intervened_neurons[:intervention_num]
-    #     result_score = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_main)
-    #     resutls_intervention[L2] = result_score
-    #     # intervention baseline.
-    #     random.seed(42)
-    #     intervened_neurons_baseline = random.sample(intervened_neurons[intervention_num+1:], len(intervened_neurons[intervention_num+1:]))
-    #     intervened_neurons_baseline = intervened_neurons_baseline[:intervention_num]
-    #     result_score = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_baseline)
-    #     resutls_intervention_baseline[L2] = result_score
+    for L2 in langs:
+        """ intervention """
+        if L2 == 'en':
+            continue
+        # intervention
+        intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+        intervened_neurons = unfreeze_pickle(intervened_neurons_path)
+        intervened_neurons_main = intervened_neurons[:intervention_num]
+        result_score = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_main)
+        resutls_intervention[L2] = result_score
+        # intervention baseline.
+        random.seed(42)
+        intervened_neurons_baseline = random.sample(intervened_neurons[intervention_num+1:], len(intervened_neurons[intervention_num+1:]))
+        intervened_neurons_baseline = intervened_neurons_baseline[:intervention_num]
+        result_score = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_baseline)
+        resutls_intervention_baseline[L2] = result_score
 
-    # path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_intervention.pkl'
-    # save_as_pickle(path_intervention, resutls_intervention)
-    # path_intervention_baseline = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_intervention_baseline.pkl'
-    # save_as_pickle(path_intervention_baseline, resutls_intervention_baseline)
+    path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_intervention.pkl'
+    save_as_pickle(path_intervention, resutls_intervention)
+    path_intervention_baseline = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_intervention_baseline.pkl'
+    save_as_pickle(path_intervention_baseline, resutls_intervention_baseline)
 
     # print results (just in case).
     # print(f'normal: {results}')
