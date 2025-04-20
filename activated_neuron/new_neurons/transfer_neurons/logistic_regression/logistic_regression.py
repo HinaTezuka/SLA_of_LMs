@@ -91,7 +91,7 @@ for model_name in model_names:
             y = np.hstack([labels_label1, labels_label0])  # 対応するラベル（1と0）
 
             # logistic regression model
-            model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=10000, random_state=42)
+            r_model = LogisticRegression(penalty='l2', solver='liblinear', max_iter=10000, random_state=42)
             # cross validation
             cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
             """ check if trainings were converged. """
@@ -101,7 +101,7 @@ for model_name in model_names:
             # sys.exit()
 
             scoring = ['accuracy', 'precision', 'recall', 'f1']
-            scores = cross_validate(model, X, y, cv=cv, scoring=scoring)
+            scores = cross_validate(r_model, X, y, cv=cv, scoring=scoring)
 
             # save scores for each layer
             layer_scores.append({
