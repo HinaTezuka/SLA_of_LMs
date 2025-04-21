@@ -40,7 +40,7 @@ topk = 10 # number of nearest neighbor.
 #         print(res)
 #         knn_scores[L2] = res
     
-#     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k10.pkl'
+#     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}.pkl'
 #     save_as_pickle(path, knn_scores)
 
 #     # clear cache.
@@ -55,7 +55,7 @@ all_data = []
 
 # Load and reshape data for each model
 for model_type in model_types:
-    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs.pkl'
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}.pkl'
     model_data = unfreeze_pickle(path)
     
     for lang in languages:
@@ -85,5 +85,5 @@ for model_type in model_types:
     plt.grid(True)
     plt.tight_layout()
     plt.legend(title='L2', fontsize=15, title_fontsize=15)
-    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}.png'
+    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}.png'
     plt.savefig(save_path, bbox_inches='tight')
