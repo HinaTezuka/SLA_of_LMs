@@ -75,7 +75,7 @@ df = pd.DataFrame(all_data)
 for model_type in model_types:
     plt.figure(figsize=(10, 6))
     subset = df[df['Model'] == model_type]
-    sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10')
+    sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10', linewidth=3)
     model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B'
     plt.title(f'{model_name}', fontsize=30)
     plt.xlabel('Layer Index', fontsize=35)
