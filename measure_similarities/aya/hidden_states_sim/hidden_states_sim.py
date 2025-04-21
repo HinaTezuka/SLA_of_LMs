@@ -132,6 +132,7 @@ def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> 
     plt.title(f'en_{L2}')
     plt.tick_params(axis='x', labelsize=15)
     plt.tick_params(axis='y', labelsize=15)
+    plt.ylim(0, 1)
     plt.legend()
     plt.grid(True)
     plt.savefig(
@@ -174,9 +175,6 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    for name, module in model.named_modules():
-        print(name, module)
-    sys.exit()
     num_layers = 32
     L1 = "en" # L1 is fixed to english.
 
@@ -208,7 +206,7 @@ if __name__ == "__main__":
             elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                 random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
 
-        for measure_type in ["cos_sim", "l2_dist"]:
+        for measure_type in ["cos_sim"]:
             """ calc similarities """
             results_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, tatoeba_data, measure_type)
             results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data, measure_type)
