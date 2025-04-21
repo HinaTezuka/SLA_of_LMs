@@ -19,7 +19,7 @@ for model_type in model_types:
             acc_matrix[i, score['layer']] = np.mean(score['accuracy'])
 
     # plot
-    plt.figure(figsize=(40, 7))
+    plt.figure(figsize=(20, 6))
     ax = sns.heatmap(
         acc_matrix,
         annot=True,
@@ -30,8 +30,7 @@ for model_type in model_types:
         cbar_kws={'label': 'Test Accuracy'},
         linewidths=0.5,
         linecolor='white',
-        annot_kws={"size": 15},
-        square=True,
+        annot_kws={"size": 13},
     )
 
     title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B'
