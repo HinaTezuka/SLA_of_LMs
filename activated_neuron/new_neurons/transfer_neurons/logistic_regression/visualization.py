@@ -19,7 +19,7 @@ for model_type in model_types:
             acc_matrix[i, score['layer']] = np.mean(score['accuracy'])
 
     # plot
-    plt.figure(figsize=(15, 3))
+    plt.figure(figsize=(40, 7))
     ax = sns.heatmap(
         acc_matrix,
         annot=True,
@@ -30,14 +30,15 @@ for model_type in model_types:
         cbar_kws={'label': 'Test Accuracy'},
         linewidths=0.5,
         linecolor='white',
-        annot_kws={"size": 8, "color": "black"},
+        annot_kws={"size": 15},
         square=True,
     )
 
     title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B'
-    ax.set_title(title, fontsize=25)
-    ax.set_xlabel("Layer Index", fontsize=20)
-    ax.set_ylabel("Language Pair", fontsize=20)
+    ax.set_title(title, fontsize=35)
+    if model_type == 'llama3':
+        ax.set_xlabel("Layer Index", fontsize=25)
+        ax.set_ylabel("Language Pair", fontsize=25)
 
     # ラベルを横向きに
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
