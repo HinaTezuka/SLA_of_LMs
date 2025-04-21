@@ -26,7 +26,7 @@ for model_type in model_types:
         fmt=".2f",
         cmap='coolwarm',
         xticklabels=range(1, num_layers + 1),
-        yticklabels=[f"En-{l}" for l in langs],
+        yticklabels=[f"en-{l}" for l in langs],
         cbar_kws={'label': 'Test Accuracy'},
         linewidths=0.5,
         linecolor='white',
