@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 """ n: intervention_num """
                 intervention_num = n
                 sorted_neurons_AP_main = sorted_neurons[:n]
-                # random.seed(42)
+                random.seed(42)
                 sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP_main[intervention_num+1:], len(sorted_neurons_AP_main[intervention_num+1:]))
                 sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 
