@@ -11,7 +11,7 @@ activated_neuron/new_neurons/pickles
 activated_neuron/new_neurons/gpt2/pickles
 
 # tuned weights
-/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/tuned_weights
+activated_neuron/new_neurons/transfer_neurons/tuned_weights
 
 # all pckles and tmps
 echo "*.pkl" >> .gitignore
