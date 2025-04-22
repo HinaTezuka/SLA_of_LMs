@@ -73,8 +73,7 @@ for L2 in langs:
             """ どのくらい介入するか(intervention_num) """
             sorted_neurons_AP = sorted_neurons[:intervention_num]
             # baseline
-            sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
-            sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
+            sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num:], intervention_num)
 
             """ deactivate high AP neurons. """
             # get activation list
