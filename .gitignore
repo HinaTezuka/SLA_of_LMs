@@ -9,9 +9,15 @@ scripts
 # pickles
 activated_neuron/new_neurons/pickles
 activated_neuron/new_neurons/gpt2/pickles
+
 # all pckles and tmps
 echo "*.pkl" >> .gitignore
 echo "*.tmp" >> .gitignore
+
+# pt and npz
+echo "*.pt" >> .gitignore
+echo "*.npz" >> .gitignore
+
 # jsons
 activated_neuron/new_neurons/logit_lens/results
 echo "*.json" >> .gitignore
