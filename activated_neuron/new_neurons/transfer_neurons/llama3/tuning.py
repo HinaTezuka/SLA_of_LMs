@@ -44,7 +44,7 @@ type_2 = unfreeze_pickle(path_type_2)
 type_2 = [neuron for neuron in type_2 if neuron[0] in range(20, 32)][:1000]
 target_indices = type_1 + type_2
 
-# --- proxy vector の準備 ---
+# --- proxy vector ---
 vector_dict = {}
 trainable_params = []
 
@@ -70,7 +70,7 @@ for (layer_idx, _) in set(target_indices):
     handle = model.model.layers[layer_idx].mlp.down_proj.register_forward_hook(make_hook(layer_idx))
     hook_handles.append(handle)
 
-# --- データセット定義 ---
+# --- Define Dataset. ---
 class SentenceDataset(Dataset):
     def __init__(self, sentences, tokenizer, max_length=512):
         self.sentences = sentences
@@ -98,14 +98,20 @@ sentences = unfreeze_pickle(path_mono_train)
 dataset = SentenceDataset(sentences, tokenizer)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
-# --- optimizer と scheduler ---
+# --- optimizer, scheduler ---
 optimizer = optim.AdamW(trainable_params, lr=2e-5)
 num_epochs = 5
 scheduler = get_scheduler("linear", optimizer=optimizer, num_warmup_steps=0, num_training_steps=num_epochs * len(dataloader))
 # scaler = GradScaler()
 
-# --- チューニングループ ---
+# --- tuning loop. ---
 model.train()
+for param in model.parameters():
+    param.requires_grad = False
+
+# proxy vector だけ True に
+for p in vector_dict.values():
+    p.requires_grad = True
 
 for epoch in tqdm(range(num_epochs), desc="Training Epochs"):
     epoch_loss = 0.0

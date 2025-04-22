@@ -54,7 +54,7 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
             # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/{L2}_n{intervention_num}.png"
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/reverse/{L2}_n{intervention_num}.png"
         elif is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/mistral/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}.png"
     plt.savefig(
         path,
         bbox_inches="tight"
@@ -72,7 +72,6 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    n_list = [100, 1000, 3000, 5000, 8000, 10000]
     n_list = [100, 1000, 3000, 5000]
     score_types = ["cos_sim", "L2_dis"]
     is_en = False
@@ -125,23 +124,23 @@ if __name__ == "__main__":
                 sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
 
                 """ deactivate shared_neurons(same semantics expert neurons) """
-                similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
-                similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
-                final_results_same_semantics = defaultdict(float)
-                final_results_non_same_semantics = defaultdict(float)
-                for layer_idx in range(32): # ３２ layers
-                    final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
-                    final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
-
-                """ baseline. """
-                # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-                # similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
+                # similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
                 # final_results_same_semantics = defaultdict(float)
                 # final_results_non_same_semantics = defaultdict(float)
                 # for layer_idx in range(32): # ３２ layers
                 #     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                 #     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
+                # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
+
+                """ baseline. """
+                similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+                similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                final_results_same_semantics = defaultdict(float)
+                final_results_non_same_semantics = defaultdict(float)
+                for layer_idx in range(32): # ３２ layers
+                    final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
+                    final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
+                plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
                 print(f"intervention_num: {n} <- completed.")
