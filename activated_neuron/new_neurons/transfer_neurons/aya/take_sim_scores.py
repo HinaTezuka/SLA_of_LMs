@@ -52,7 +52,8 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
             # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/aya/final/{score_type}/{L2}_n{intervention_num}.png"
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/aya/final/{score_type}/reverse/{L2}_n{intervention_num}.png"
         elif is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/aya/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
+            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/aya/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/aya/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}.png"
     plt.savefig(
         path,
         bbox_inches="tight"
