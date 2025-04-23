@@ -66,6 +66,7 @@ if __name__ == "__main__":
     """ model configs """
     # LLaMA-3
     model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
+    model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
     """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
     # model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
@@ -147,3 +148,6 @@ if __name__ == "__main__":
                     plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
                     print(f"intervention_num: {n} <- completed.")
+        
+        del model
+        torch.cuda.empty_cache()
