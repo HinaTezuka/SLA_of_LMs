@@ -66,7 +66,7 @@ if __name__ == "__main__":
     """ model configs """
     # LLaMA-3
     model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
-    model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
+    model_names = ['meta-llama/Meta-Llama-3-8B']
     """ model and device configs """
     device = "cuda" if torch.cuda.is_available() else "cpu"
     # model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
