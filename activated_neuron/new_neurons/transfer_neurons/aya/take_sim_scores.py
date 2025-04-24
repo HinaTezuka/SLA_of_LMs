@@ -132,8 +132,7 @@ if __name__ == "__main__":
                 intervention_num = n
                 sorted_neurons_AP_main = sorted_neurons[:n]
                 random.seed(42)
-                sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP_main[intervention_num+1:], len(sorted_neurons_AP_main[intervention_num+1:]))
-                sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
+                sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num+1:], intervention_num)
 
                 """ deactivate shared_neurons(same semantics expert neurons) """
                 similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
