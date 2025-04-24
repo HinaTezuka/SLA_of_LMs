@@ -70,7 +70,7 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    n_list = [100, 1000, 3000, 5000, 8000, 10000]
+    n_list = [100, 1000, 3000, 5000]
     score_types = ["cos_sim", "L2_dis"]
     is_en = False
 
@@ -111,11 +111,11 @@ if __name__ == "__main__":
         # print(len(random_data))
 
         for score_type in score_types:
-            # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_mono_train.pkl"
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_mono_train.pkl"
+            # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(0, 20)]]
-            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(0, 20)]]
+            # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
             # print(sorted_neurons)
 
             # sys.exit()
@@ -135,14 +135,14 @@ if __name__ == "__main__":
                 sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num+1:], intervention_num)
 
                 """ deactivate shared_neurons(same semantics expert neurons) """
-                similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
-                similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
-                final_results_same_semantics = defaultdict(float)
-                final_results_non_same_semantics = defaultdict(float)
-                for layer_idx in range(32): # ３２ layers
-                    final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
-                    final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
+                # similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
+                # similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
+                # final_results_same_semantics = defaultdict(float)
+                # final_results_non_same_semantics = defaultdict(float)
+                # for layer_idx in range(32): # ３２ layers
+                #     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
+                #     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
+                # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
 
                 """ baseline """
                 similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
