@@ -165,7 +165,7 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
     plt.legend()
     plt.grid(True)
     if is_reverse:
-        elif intervention == "yes":
+        if intervention == "yes":
             save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/reverse/intervention/{L2}_n{intervention_num}.png"
         elif intervention == "baseline":
             save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/reverse/intervention_baseline/{L2}_n{intervention_num}.png"

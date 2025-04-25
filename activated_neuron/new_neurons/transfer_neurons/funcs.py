@@ -226,7 +226,7 @@ def act_llama3(model, input_ids):
 def calc_element_wise_product(act_fn_value, up_proj_value):
     return act_fn_value * up_proj_value
 
-def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx, is_last_token_only=False, is_bilingual=False):
+def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_idx):
     num_layers = 32
     num_neurons = 14336
     """
@@ -258,49 +258,24 @@ def track_neurons_with_text_data(model, device, tokenizer, data, start_idx, end_
         up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
         """
         for layer_idx in range(num_layers):
-            # Compute activations considering all tokens.
-            if not is_last_token_only:
-                """ Compute the average activation across all tokens """
-                act_values_per_token = []
-                for token_idx in range(token_len):
-                    act_fn_value = act_fn_values[layer_idx][:, token_idx, :][0]
-                    up_proj_value = up_proj_values[layer_idx][:, token_idx, :][0]
-
-                    """ Compute element-wise product """
-                    act_values = calc_element_wise_product(act_fn_value, up_proj_value)
-                    act_values_per_token.append(act_values)
-                    # act_values_per_token.append(act_fn_value)
-                
-                """ Compute mean activation over all tokens """
-                act_values_all_token = np.array(act_values_per_token)
-                means = np.mean(act_values_all_token, axis=0)
-
-            # Compute activations for the last token only
-            else:
-                act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
-                up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
-                means = calc_element_wise_product(act_fn_value, up_proj_value)
+            act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
+            up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
+            activations = calc_element_wise_product(act_fn_value, up_proj_value)
 
             # Store activation values in the numpy array
             for neuron_idx in range(num_neurons):
                 # elem_wise_product
-                # activation_array[layer_idx, neuron_idx, text_idx] = means[neuron_idx]
+                activation_array[layer_idx, neuron_idx, text_idx] = activations[neuron_idx]
                 # act_fn_value
                 # activation_array[layer_idx, neuron_idx, text_idx] = act_fn_value[neuron_idx]
                 # up_proj_value
-                activation_array[layer_idx, neuron_idx, text_idx] = up_proj_value[neuron_idx]
+                # activation_array[layer_idx, neuron_idx, text_idx] = up_proj_value[neuron_idx]
 
         # Assign labels
-        if not is_bilingual: # monolingual neurons.
-            if start_idx <= text_idx < end_idx:
-                labels.append(1)
-            else:
-                labels.append(0)
-        else: # bilingual neurons(neurons activated for both english and L2).
-            if (start_idx <= text_idx < end_idx) or (400 <= text_idx < 500):
-                labels.append(1)
-            else:
-                labels.append(0)
+        if start_idx <= text_idx < end_idx:
+            labels.append(1)
+        else:
+            labels.append(0)
 
     return activation_array, labels
 
