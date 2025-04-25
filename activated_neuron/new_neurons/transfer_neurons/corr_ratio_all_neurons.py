@@ -5,6 +5,7 @@ import pickle
 from collections import defaultdict
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from funcs import (
     save_as_pickle,
@@ -16,6 +17,43 @@ from funcs import (
 langs = ['ja', 'nl', 'ko', 'it']
 model_types = ['llama3', 'mistral', 'aya']
 score_types = ['cos_sim', 'L2_dis']
+
+def plot(matrix, th, model_type, L2):
+    """
+    Plot a bar chart of how many (layer, neuron) positions exceed a threshold for each layer.
+
+    Args:
+        matrix (np.ndarray): 2D array of shape (layer_num, neuron_num), containing values (e.g., activations or scores).
+        th (float): Threshold. Only values > th are counted.
+        model_type (str): Model type name, used in file path.
+        L2 (str): Label or suffix, used in file path.
+        title (str): Title of the bar plot.
+    """
+    # Boolean mask where values exceed the threshold
+    above_th = matrix > th
+
+    # Sum along neurons (axis=1), to get counts per layer
+    layer_counts = np.sum(above_th, axis=1)
+
+    # Plot
+    plt.figure(figsize=(10, 5))
+    plt.bar(np.arange(matrix.shape[0]), layer_counts, color='steelblue')
+    plt.xlabel('Layer Index')
+    plt.ylabel(f'Count of neurons with value > {th}')
+    plt.title(f'{model_type}: {L2}', fontsize=30)
+    plt.xticks(np.arange(matrix.shape[0]))
+    plt.tick_params(axis='x', labelsize=12)
+    plt.tick_params(axis='y', labelsize=12)
+    plt.tight_layout()
+
+    # Create save directory if it doesn't exist
+    save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distribution/{model_type}/lang_specific'
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Save figure
+    save_path = os.path.join(save_dir, f'corr_{L2}_{th}.png')
+    plt.savefig(save_path, bbox_inches='tight')
+    plt.close()
 
 def correlationRatio(categories, values):
     interclass_variation  = sum([
@@ -43,8 +81,14 @@ for score_type in score_types:
                     corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
                     corr_ratios[layer_i, neuron_i] = corr_ratio
             
-            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/cos_sim/{model_type}_{L2}'
+            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}'
             save_np_arrays(path, corr_ratios)
 
             print(f'{L2}, {score_type}, {model_type}, completed.')
-            # print(np.mean(np.array(arr)))
+
+            """ visualization """
+            ths = [0.1, 0.25, 0.5]
+            for th in ths:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}.npz'
+                corr_ratios = unfreeze_np_arrays(path)
+                plot(corr_ratios, th, model_type, L2)
