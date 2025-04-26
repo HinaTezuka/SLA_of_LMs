@@ -49,11 +49,18 @@ for model_name in model_names:
                 ratio_L2 = mean_total_count_en = np.zeros((layer_num, qa_num)) # en-L2 token_numnの割合を保存しておくarray(後で平均を計算する用)
                 ratio_en_baseline = np.zeros((layer_num, qa_num))
                 ratio_L2_baseline = mean_total_count_en = np.zeros((layer_num, qa_num))
-                c = 0 # question counter.
+
                 for i in range(len(qa['queries'])):
-                    if c == qa_num: break
+                    if i == qa_num: break
+
                     """ prepare inputs. """
-                    prompt = qa['queries'][i][L2] # question
+                    q = qa['queries'][i][L2] # question
+                    # make prompt.
+                    if L2 == 'ja': prompt = f'{q}? 答え: '
+                    elif L2 == 'nl': prompt = f'{q}? Antwoord: '
+                    elif L2 == 'ko': prompt = f'{q}? 답변: '
+                    elif L2 == 'it': prompt = f'{q}? Risposta: '
+                    elif L2  == 'en': prompt = f'{q}? Answer: '
                     inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
                     if is_reverse == "normal":
@@ -92,7 +99,6 @@ for model_name in model_names:
                         tokens_dict_intervention = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states, last_token_index, top_k=top_k)
                         tokens_dict_baseline = project_hidden_emb_to_vocab(model, tokenizer, all_hidden_states_baseline, last_token_index, top_k=top_k)
 
-                    """ visualization (normal) """
                     # non-intervention.
                     if score_type == "cos_sim" and is_reverse == "normal":
                         # normal
@@ -117,7 +123,6 @@ for model_name in model_names:
                             ratio_en_baseline[layer_i, i] = lang_distribution_baseline[layer_i]['en']
                             ratio_L2_baseline[layer_i, i] = lang_distribution_baseline[layer_i][L2]
 
-                
                 lang_distribution_normal = defaultdict(defaultdict(float))
                 lang_distribution_intervention = defaultdict(defaultdict(float))
                 lang_distribution_baseline = defaultdict(defaultdict(float))
