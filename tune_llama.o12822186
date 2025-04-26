@@ -1,0 +1,18 @@
+Epoch 1, Loss: 5686.8113
+Saved weights for epoch 1
+Epoch 2, Loss: 5686.8113
+Saved weights for epoch 2
+Epoch 3, Loss: 5686.8113
+Saved weights for epoch 3
+Epoch 4, Loss: 5686.8113
+Saved weights for epoch 4
+Epoch 5, Loss: 5686.8113
+Saved weights for epoch 5
+Training completed and vectors saved.
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=2427028kb,walltime=12:55:30,ncpus=26,cpupercent=99,vmem=50123324kb
+============================================================================================

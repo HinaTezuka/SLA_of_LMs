@@ -16,6 +16,7 @@ from funcs import (
 
 langs = ['ja', 'nl', 'ko', 'it']
 model_types = ['llama3', 'mistral', 'aya']
+model_types = ['aya']
 score_types = ['cos_sim', 'L2_dis']
 
 def plot(matrix, th, model_type, L2):
