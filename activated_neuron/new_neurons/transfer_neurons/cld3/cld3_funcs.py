@@ -13,7 +13,7 @@ from baukit import TraceDict
 def project_hidden_emb_to_vocab(model, tokenizer, hidden_states: torch.Tensor, last_token_index: int, top_k: int) -> dict:
     token_preds_dict = {} # {layer_idx: [token1, token2, ...]}
     for layer_idx in range(32): # <- remove embedding layer(0th layer).
-        hidden_state = hidden_states[layer_idx][0, last_token_index]
+        hidden_state = hidden_states[layer_idx][0, -1]
         # normalization
         normed = model.model.norm(hidden_state)
         # get logits
