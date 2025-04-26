@@ -45,10 +45,10 @@ for model_name in model_names:
     for is_reverse in is_reverses:
         for score_type in score_types:
             for L2 in langs:
-                ratio_en = np.zeros((layer_num, qa_num)) # en-L2 token_numnの割合を保存しておくarray(後で平均を計算する用)
-                ratio_L2 = mean_total_count_en = np.zeros((layer_num, qa_num)) # en-L2 token_numnの割合を保存しておくarray(後で平均を計算する用)
+                ratio_en = np.zeros((layer_num, qa_num)) # en token_numの数を保存しておくarray(後で平均を計算する用)
+                ratio_L2 = np.zeros((layer_num, qa_num)) # L2 token_numの数を保存しておくarray(後で平均を計算する用)
                 ratio_en_baseline = np.zeros((layer_num, qa_num))
-                ratio_L2_baseline = mean_total_count_en = np.zeros((layer_num, qa_num))
+                ratio_L2_baseline = np.zeros((layer_num, qa_num))
 
                 for i in range(len(qa['queries'])):
                     if i == qa_num: break
@@ -103,47 +103,50 @@ for model_name in model_names:
                     if score_type == "cos_sim" and is_reverse == "normal":
                         # normal
                         lang_stats_normal = layerwise_lang_stats(tokens_dict, L2)
-                        lang_distribution_normal = layerwise_lang_distribution(lang_stats_normal, L2)
                         for layer_i in range(layer_num):
-                            ratio_en[layer_i, i] = lang_distribution_normal[layer_i]['en'] # i: question_idx.
-                            ratio_L2[layer_i, i] = lang_distribution_normal[layer_i][L2] 
+                            ratio_en[layer_i, i] = lang_stats_normal[layer_i]['en'] # i: question_idx.
+                            ratio_L2[layer_i, i] = lang_stats_normal[layer_i][L2] 
 
                     if is_reverse != "normal":
                         # high APs intervention
                         lang_stats_intervention = layerwise_lang_stats(tokens_dict_intervention, L2)
-                        lang_distribution_intervention = layerwise_lang_distribution(lang_stats_intervention, L2)
                         for layer_i in range(layer_num):
-                            ratio_en[layer_i, i] = lang_distribution_intervention[layer_i]['en']
-                            ratio_L2[layer_i, i] = lang_distribution_intervention[layer_i][L2]
+                            ratio_en[layer_i, i] = lang_stats_intervention[layer_i]['en']
+                            ratio_L2[layer_i, i] = lang_stats_intervention[layer_i][L2]
 
                         # baseline intervention
                         lang_stats_baseline = layerwise_lang_stats(tokens_dict_baseline, L2)
-                        lang_distribution_baseline = layerwise_lang_distribution(lang_stats_baseline, L2)
                         for layer_i in range(layer_num):
-                            ratio_en_baseline[layer_i, i] = lang_distribution_baseline[layer_i]['en']
-                            ratio_L2_baseline[layer_i, i] = lang_distribution_baseline[layer_i][L2]
+                            ratio_en_baseline[layer_i, i] = lang_stats_baseline[layer_i]['en']
+                            ratio_L2_baseline[layer_i, i] = lang_stats_baseline[layer_i][L2]
 
-                lang_distribution_normal = defaultdict(defaultdict(float))
-                lang_distribution_intervention = defaultdict(defaultdict(float))
-                lang_distribution_baseline = defaultdict(defaultdict(float))
+                lang_stats_normal = defaultdict(lambda: defaultdict(int))
+                lang_stats_intervention = defaultdict(lambda: defaultdict(int))
+                lang_stats_baseline = defaultdict(lambda: defaultdict(int))
                 for layer_i in range(layer_num):
                     if score_type == "cos_sim" and is_reverse == "normal":
-                        lang_distribution_normal[layer_i]['en'] = float(np.mean(ratio_en[layer_i, :]))
-                        lang_distribution_normal[layer_i][L2] = float(np.mean(ratio_en[layer_i, :]))
+                        lang_stats_normal[layer_i]['en'] = int(np.mean(ratio_en[layer_i, :]))
+                        lang_stats_normal[layer_i][L2] = int(np.mean(ratio_en[layer_i, :]))
+                        lang_stats_normal[layer_i]['total_count'] = lang_stats_normal[layer_i]['en'] + lang_stats_normal[layer_i][L2]
                     else: # intervention.
-                        lang_distribution_intervention[layer_i]['en'] = float(np.mean(ratio_en[layer_i, :]))
-                        lang_distribution_intervention[layer_i][L2] = float(np.mean(ratio_en[layer_i, :]))
-                        lang_distribution_baseline[layer_i]['en'] = float(np.mean(ratio_en_baseline[layer_i, :]))
-                        lang_distribution_baseline[layer_i][L2] = float(np.mean(ratio_en_baseline[layer_i, :]))
+                        lang_stats_intervention[layer_i]['en'] = int(np.mean(ratio_en[layer_i, :]))
+                        lang_stats_intervention[layer_i][L2] = int(np.mean(ratio_en[layer_i, :]))
+                        lang_stats_intervention[layer_i]['total_count'] = lang_stats_intervention[layer_i]['en'] + lang_stats_intervention[layer_i][L2]
+                        lang_stats_baseline[layer_i]['en'] = int(np.mean(ratio_en_baseline[layer_i, :]))
+                        lang_stats_baseline[layer_i][L2] = int(np.mean(ratio_en_baseline[layer_i, :]))
+                        lang_stats_baseline[layer_i]['total_count'] = lang_stats_baseline[layer_i]['en'] + lang_stats_baseline[layer_i][L2]
 
 
                 """ visualization (intervention). """
                 if score_type == "cos_sim" and is_reverse == "normal":
+                    lang_distribution_normal = layerwise_lang_distribution(lang_stats_normal, L2)
                     plot_lang_distribution(lang_distribution_normal, "normal", model_type, intervention_num, L2)
                 if is_reverse != "normal":
                     # intervention
+                    lang_distribution_intervention = layerwise_lang_distribution(lang_stats_intervention, L2)
                     plot_lang_distribution(lang_distribution_intervention, score_type, model_type, intervention_num, L2, is_reverse)
                     # intervention baseline
+                    lang_distribution_baseline = layerwise_lang_distribution(lang_stats_baseline, L2)
                     plot_lang_distribution(lang_distribution_baseline, score_type, model_type, intervention_num, L2, is_reverse)
                 
     # delete caches
