@@ -16,10 +16,9 @@ from funcs import (
 
 langs = ['ja', 'nl', 'ko', 'it']
 model_types = ['llama3', 'mistral', 'aya']
-model_types = ['aya']
 score_types = ['cos_sim', 'L2_dis']
 
-def plot(matrix, th, model_type, L2):
+def plot(matrix, th, model_type, L2, score_type):
     """
     Plot a bar chart of how many (layer, neuron) positions exceed a threshold for each layer.
 
@@ -52,7 +51,7 @@ def plot(matrix, th, model_type, L2):
     os.makedirs(save_dir, exist_ok=True)
 
     # Save figure
-    save_path = os.path.join(save_dir, f'corr_{L2}_{th}.png')
+    save_path = os.path.join(save_dir, f'corr_{L2}_{score_type}_{th}.png')
     plt.savefig(save_path, bbox_inches='tight')
     plt.close()
 
@@ -92,4 +91,4 @@ for score_type in score_types:
             for th in ths:
                 path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}.npz'
                 corr_ratios = unfreeze_np_arrays(path)
-                plot(corr_ratios, th, model_type, L2)
+                plot(corr_ratios, th, model_type, L2, score_type)
