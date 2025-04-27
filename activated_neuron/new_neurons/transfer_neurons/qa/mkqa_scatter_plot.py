@@ -95,11 +95,12 @@ for model_name in model_names:
         n_cols = 2
         n_rows = (n_langs + 1) // n_cols
         
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(6 * n_cols, 5 * n_rows), squeeze=False)
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
 
         for idx, lang in enumerate(all_languages):
             row, col = divmod(idx, n_cols)
             ax = axes[row][col]
+            ax.set_facecolor('lightgray') # background color.
 
             base_data = dict_normal.get(lang, [])
             base_f1s = [f1 for _, f1 in base_data]
@@ -121,7 +122,7 @@ for model_name in model_names:
             # Plot y=x line for reference
             min_f1 = min(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
             max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
-            ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='gray', linewidth=1)
+            ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=1)
 
             ax.set_title(f'F1 Score: {lang}', fontsize=30)
             if idx == 0:
