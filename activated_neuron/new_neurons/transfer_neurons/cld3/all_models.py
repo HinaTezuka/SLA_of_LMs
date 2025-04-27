@@ -21,6 +21,12 @@ from cld3_funcs import (
     print_tokens,
     unfreeze_pickle,
 )
+p = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/qa/all_questions.pkl'
+d = unfreeze_pickle(p)
+print(d)
+for k, v in d.items():
+    print(k, len(v))
+sys.exit()
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
