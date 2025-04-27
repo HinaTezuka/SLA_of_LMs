@@ -22,6 +22,7 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+model_names = ['CohereForAI/aya-expanse-8b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 num_layers = 32
 
@@ -42,15 +43,15 @@ def get_sentences_qa(qa, L2: str):
         a = qa['answers'][i][L2][0]['text'] # answer
         if q == '' or q == None or  a == '' or a == None:
             continue
-        ans_patterns = {
-        'ja': '答え: ',
-        'nl': 'Antwoord: ',
-        'ko': '답변: ',
-        'it': 'Risposta: ',
-        'en': 'Answer: ',
-        }
-        prompt = f'{q}? {ans_patterns[L2]}'
-        l.append(prompt)
+        # ans_patterns = {
+        # 'ja': '答え: ',
+        # 'nl': 'Antwoord: ',
+        # 'ko': '답변: ',
+        # 'it': 'Risposta: ',
+        # 'en': 'Answer: ',
+        # }
+        # prompt = f'{q}? {ans_patterns[L2]}'
+        l.append(q)
     
     return l
 
@@ -74,6 +75,7 @@ for model_name in model_names:
         # save centroids as pkl.
         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{L2}_qa.pkl"
         save_as_pickle(save_path, shared_space_centroids)
+        print(f'{L2} completed.')
     
     del model
     torch.cuda.empty_cache()
