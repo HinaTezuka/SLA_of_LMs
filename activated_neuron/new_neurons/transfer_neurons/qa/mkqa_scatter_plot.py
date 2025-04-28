@@ -116,15 +116,15 @@ for model_name in model_names:
                     label=dict_labels[d_idx],
                     marker=markers[d_idx],
                     color=colors[d_idx],
-                    alpha=0.7
+                    alpha=0.8
                 )
 
             # Plot y=x line for reference
             min_f1 = min(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
             max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
-            ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=1)
+            ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=2)
 
-            ax.set_title(f'F1 Score: {lang}', fontsize=30)
+            ax.set_title(f'{lang}', fontsize=30)
             if idx == 0:
                 ax.set_xlabel('Normal', fontsize=20)
                 ax.set_ylabel('Intervened', fontsize=20)
