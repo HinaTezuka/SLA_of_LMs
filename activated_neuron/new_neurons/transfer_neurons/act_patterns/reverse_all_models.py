@@ -20,6 +20,7 @@ L1 = "en"
 """ model configs """
 # LLaMA-3
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 n_list = [100, 1000, 3000, 5000, 8000, 10000] # patterns of intervention_num
 score_types = ["cos_sim", "L2_dis"]
@@ -90,3 +91,6 @@ for model_name in model_names:
                 act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
                 # plot activation patterns.
                 activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, score_type, "baseline", True)
+    
+    del model
+    torch.cuda.empty_cache()

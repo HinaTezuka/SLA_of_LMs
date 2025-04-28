@@ -46,7 +46,7 @@ for model_name in model_names:
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    for L2 in langs:
+    # for L2 in langs:
         # # normal
         # result_scores = mkqa_all(model, tokenizer, device, qa, L2)
         # # save results as pkl.
