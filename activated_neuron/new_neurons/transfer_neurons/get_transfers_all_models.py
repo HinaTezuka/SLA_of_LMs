@@ -75,6 +75,9 @@ def get_sentences_qa(qa, L2: str, qa_num: int):
     
     return l
 
+qa = load_dataset('apple/mkqa')['train']
+qa = qa.shuffle(seed=42)
+
 for is_reverse in is_reverses:
     """ candidate neurons. """
     candidates = {}
