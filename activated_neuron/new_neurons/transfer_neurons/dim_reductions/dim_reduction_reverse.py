@@ -121,9 +121,10 @@ if __name__ == '__main__':
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         for L2 in langs:
             # prepare type-2 Transfer Neurons.
-            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+            save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]][:1000]
+            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+            sorted_neurons = sorted_neurons[:1000]
 
             sentences = sentences_all_langs[L2]
             hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, tokenizer, device, sorted_neurons, num_layers, sentences)

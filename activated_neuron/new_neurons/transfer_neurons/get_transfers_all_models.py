@@ -1,33 +1,3 @@
-"""
-calc scores for each lang-specific neuron.
-
-CohereForCausalLM(
-  (model): CohereModel(
-    (embed_tokens): Embedding(256000, 4096, padding_idx=0)
-    (layers): ModuleList(
-      (0-31): 32 x CohereDecoderLayer(
-        (self_attn): CohereSdpaAttention(
-          (q_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (k_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (v_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (o_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (rotary_emb): CohereRotaryEmbedding()
-        )
-        (mlp): CohereMLP(
-          (gate_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (up_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (down_proj): Linear(in_features=14336, out_features=4096, bias=False)
-          (act_fn): SiLU()
-        )
-        (input_layernorm): CohereLayerNorm()
-      )
-    )
-    (norm): CohereLayerNorm()
-    (rotary_emb): CohereRotaryEmbedding()
-  )
-  (lm_head): Linear(in_features=4096, out_features=256000, bias=False)
-)
-"""
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -47,8 +17,8 @@ from funcs import (
 )
 
 # aya-expanse-8B.
-# model_name = 'CohereForAI/aya-expanse-8b'
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
+model_names = ["mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 langs = ["ja", "nl", "ko", "it", "en"]
 score_types = ["cos_sim", "L2_dis"]
