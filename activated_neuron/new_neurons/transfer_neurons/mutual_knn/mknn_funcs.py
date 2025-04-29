@@ -9,6 +9,7 @@ from datasets import load_dataset
 import numpy as np
 import torch
 import torch.nn.functional as F
+from baukit import TraceDict
 
 def mutual_knn(feats_A, feats_B, topk=5):
     """
@@ -86,3 +87,24 @@ def compute_mutual_knn(model, tokenizer, device, sentences: list, L1: str, L2: s
         knn_scores.append(knn_score)
 
     return knn_scores
+
+
+""" intervention. """
+def edit_activation(output, layer, layer_idx_and_neuron_idx):
+    """
+    edit activation value of neurons(indexed layer_idx and neuron_idx)
+    output: activation values
+    layer: sth like 'model.layers.{layer_idx}.mlp.act_fn'
+    layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
+    """
+    for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+            output[:, -1, neuron_idx] *= 0
+
+    return output
+
+def compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences: list, L1: str, L2: str, topk:int, layer_neuron_list:list):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+        return compute_mutual_knn(model, tokenizer, device, sentences, L1, L2, topk)

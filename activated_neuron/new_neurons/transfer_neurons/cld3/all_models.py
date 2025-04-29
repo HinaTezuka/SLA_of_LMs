@@ -83,7 +83,7 @@ for model_name in model_names:
                                 neurons = unfreeze_pickle(path)
                                 neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20)]]
                             else:
-                                path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+                                path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                                 neurons = unfreeze_pickle(path)
                                 neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
                             # intervention neurons
