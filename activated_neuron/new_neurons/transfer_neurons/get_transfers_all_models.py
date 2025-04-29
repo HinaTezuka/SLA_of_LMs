@@ -59,28 +59,33 @@ for is_reverse in is_reverses:
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
-        for L2 in langs:
-            if not is_reverse:
-                c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/qa/c_qa_tran_en_{L2}.pkl"
-            elif is_reverse:
-                c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{L2}_qa.pkl"
-            centroids = unfreeze_pickle(c_path)
-            monolingual_sentences = get_sentences_qa(qa, L2, 1000)
-            for score_type in score_types:
-                # scores: {(layer_idx, neuron_idx): score, ....}
-                scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for L2 only: reverse transfers.
-                # 降順
-                sorted_neurons, score_dict = sort_neurons_by_score(scores) # np
-                
-                # save as pkl.
-                sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons.pkl"
-                score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_score_dict.pkl"
-                save_as_pickle(sorted_neurons_path, sorted_neurons)
-                save_as_pickle(score_dict_path, score_dict)
-                print(f"saved scores for: {L2}.")
-                
-                del scores, sorted_neurons, score_dict
-                torch.cuda.empty_cache()
+        for is_reverse in is_reverses:
+          for L2 in langs:
+              if not is_reverse:
+                  c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/qa/c_qa_tran_en_{L2}.pkl"
+              elif is_reverse:
+                  c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{L2}_qa.pkl"
+              centroids = unfreeze_pickle(c_path)
+              monolingual_sentences = get_sentences_qa(qa, L2, 1000)
+              for score_type in score_types:
+                  # scores: {(layer_idx, neuron_idx): score, ....}
+                  scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for L2 only: reverse transfers.
+                  # 降順
+                  sorted_neurons, score_dict = sort_neurons_by_score(scores) # np
+                  
+                  # save as pkl.
+                  if not is_reverse:
+                    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons_type1.pkl"
+                    score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_score_dict_type1.pkl"
+                  else:
+                    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons.pkl"
+                    score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_score_dict.pkl"
+                  save_as_pickle(sorted_neurons_path, sorted_neurons)
+                  save_as_pickle(score_dict_path, score_dict)
+                  
+                  del scores, sorted_neurons, score_dict
+                  torch.cuda.empty_cache()
+              print(f"saved scores for: {L2}.")
         
         del model
         torch.cuda.empty_cache()

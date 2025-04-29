@@ -70,46 +70,6 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         plt.savefig(output_path, bbox_inches="tight")
         plt.close()
 
-def plot_umap(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict):
-    languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
-    colors = ["red", "blue", "yellow", "orange", "green"]
-    
-    for layer_idx in range(num_layers):  # Embedding layer + N hidden layers
-        f1 = np.array(features_L1[layer_idx])
-        f2 = np.array(features_L2[layer_idx])
-        f3 = np.array(features_L3[layer_idx])
-        f4 = np.array(features_L4[layer_idx])
-        f5 = np.array(features_L5[layer_idx])
-
-        all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
-
-        reducer = umap.UMAP(n_components=2, random_state=42)
-        all_2d = reducer.fit_transform(all_features)
-
-        lengths = [len(f1), len(f2), len(f3), len(f4), len(f5)]
-        split_points = np.cumsum(lengths)[:-1]
-        f1_2d, f2_2d, f3_2d, f4_2d, f5_2d = np.split(all_2d, split_points)
-
-        plt.figure(figsize=(15, 12))
-        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
-            plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
-
-        plt.xlabel('UMAP Dimension 1', fontsize=20)
-        plt.ylabel('UMAP Dimension 2', fontsize=20)
-
-        title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
-        file_name = 'emb_layer.png' if layer_idx == 0 else f'{layer_idx}.png'
-        plt.title(title, fontsize=25)
-        plt.legend(fontsize=15)
-        plt.grid(True)
-
-        output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/umap'
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, file_name)
-
-        plt.savefig(output_path, bbox_inches="tight")
-        plt.close()
-
 if __name__ == '__main__':
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
     sentences_all_langs = unfreeze_pickle(path)
