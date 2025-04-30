@@ -30,7 +30,7 @@ topk = 10 # number of nearest neighbor.
 # is_reverses = [False, True]
 is_reverses = [False]
 score_type = 'cos_sim'
-intervention_num = 5000
+intervention_num = 10000
 
 for model_name in model_names:
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
