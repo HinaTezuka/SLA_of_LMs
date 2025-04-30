@@ -19,7 +19,7 @@ for model_type in model_types:
             acc_matrix[i, score['layer']] = np.mean(score['accuracy'])
 
     # plot
-    plt.figure(figsize=(15, 4))
+    plt.figure(figsize=(15, 6))
     ax = sns.heatmap(
         acc_matrix,
         annot=True,
