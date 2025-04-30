@@ -49,17 +49,14 @@ for model_type in model_types:
     title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B'
     ax.set_title(title, fontsize=20)
 
+    ax.set_xlabel("Layer Index", fontsize=15)
+    ax.set_ylabel("Language Pair", fontsize=15)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=10)
+    ax.set_yticks(np.arange(len(langs)) + 0.5)
+    ax.set_yticklabels([f"en-{l}" for l in langs], rotation=0, fontsize=10)
     if model_type == 'aya':
-        ax.set_xlabel("Layer Index", fontsize=15)
-        ax.set_ylabel("Language Pair", fontsize=15)
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=10)
-        ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=10)
-        fig.subplots_adjust(top=0.94, bottom=0.13, left=0.08, right=0.98)  # 上下余白を少し狭める
+        fig.subplots_adjust(top=0.94, bottom=0.13, left=0.08, right=0.98)
     else:
-        ax.set_xlabel("")
-        ax.set_ylabel("")
-        ax.set_xticklabels([])
-        ax.set_yticklabels([])
         plt.tight_layout()
 
     save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/logistic_regression/{model_type}.png'
