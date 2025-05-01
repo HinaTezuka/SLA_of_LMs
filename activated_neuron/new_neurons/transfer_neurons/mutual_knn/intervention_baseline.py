@@ -56,7 +56,7 @@ for model_name in model_names:
             neurons_baseline = random.sample(neurons[intervention_num:], intervention_num)
 
             res = compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences, L1, L2, topk, neurons_baseline) # res: [knn_score_layer1, knn_score_layer2, ...]
-            print(f'=================={model_type}, {L2}==================')
+            print(f'================== {model_type}, {L2} ==================')
             # print(res)
             knn_scores[L2] = res
     
