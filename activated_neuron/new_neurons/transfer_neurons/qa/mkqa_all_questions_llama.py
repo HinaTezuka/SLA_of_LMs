@@ -20,12 +20,11 @@ from qa_funcs import (
     unfreeze_pickle,
 )
 
-# load models.
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-model_names = ['mistralai/Mistral-7B-v0.3']
+# load models (LLaMA3-8B).
+model_names = ['meta-llama/Meta-Llama-3-8B']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it', 'en']
-# langs = ['it', 'ko']
+langs = ['it', 'ko', 'en']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -48,12 +47,12 @@ for model_name in model_names:
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     # for L2 in langs:
-        # # normal
-        # result_scores = mkqa_all(model, tokenizer, device, qa, L2)
-        # # save results as pkl.
-        # path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
-        # save_as_pickle(path_normal, result_scores)
-        # print(f'saved: normal: {model_type}, {L2}')
+    #     # normal
+    #     result_scores = mkqa_all(model, tokenizer, device, qa, L2)
+    #     # save results as pkl.
+    #     path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
+    #     save_as_pickle(path_normal, result_scores)
+    #     print(f'saved: normal: {model_type}, {L2}')
 
     for L2 in langs:
         """ intervention """
