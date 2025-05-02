@@ -46,13 +46,13 @@ for model_name in model_names:
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    # for L2 in langs:
-    #     # normal
-    #     result_scores = mkqa_all(model, tokenizer, device, qa, L2)
-    #     # save results as pkl.
-    #     path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
-    #     save_as_pickle(path_normal, result_scores)
-    #     print(f'saved: normal: {model_type}, {L2}')
+    for L2 in langs:
+        # normal
+        result_scores = mkqa_all(model, tokenizer, device, qa, L2)
+        # save results as pkl.
+        path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
+        save_as_pickle(path_normal, result_scores)
+        print(f'saved: normal: {model_type}, {L2}')
 
     for L2 in langs:
         """ intervention """
