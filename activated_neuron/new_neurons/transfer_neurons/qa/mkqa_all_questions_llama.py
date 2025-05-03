@@ -24,7 +24,7 @@ from qa_funcs import (
 model_names = ['meta-llama/Meta-Llama-3-8B']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it', 'en']
-langs = ['it', 'ko', 'en']
+langs = ['it', 'ko']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -59,13 +59,14 @@ for model_name in model_names:
         if L2 == 'en':
             continue
         # intervention
-        intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-        intervened_neurons = unfreeze_pickle(intervened_neurons_path)
-        intervened_neurons_main = intervened_neurons[:intervention_num]
-        result_score_intervention = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_main)
-        path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_intervention_{L2}.pkl'
-        save_as_pickle(path_intervention, result_score_intervention)
-        print(f'saved: intervention: {model_type}, {L2}')
+        if L2 != 'ko':
+            intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+            intervened_neurons = unfreeze_pickle(intervened_neurons_path)
+            intervened_neurons_main = intervened_neurons[:intervention_num]
+            result_score_intervention = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_main)
+            path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_intervention_{L2}.pkl'
+            save_as_pickle(path_intervention, result_score_intervention)
+            print(f'saved: intervention: {model_type}, {L2}')
 
         # intervention baseline.
         random.seed(42)
