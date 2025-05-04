@@ -101,8 +101,6 @@ if __name__ == '__main__':
                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/qa/{L2}_sorted_neurons_type1.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
                 sorted_neurons = sorted_neurons[:1000]
-                print(sorted_neurons[:100])
-                sys.exit()
 
             sentences = sentences_all_langs[L2]
             if L2 == 'en':
