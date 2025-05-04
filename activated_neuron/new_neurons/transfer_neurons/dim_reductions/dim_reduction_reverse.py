@@ -23,6 +23,7 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+# model_names = ["mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 num_layers = 33
 
@@ -84,36 +85,38 @@ if __name__ == '__main__':
     score_type = 'cos_sim'
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
     sentences_all_langs = unfreeze_pickle(path)
-    is_reverse = False
+    is_reverse = True
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        # for L2 in langs:
-        #     # prepare type-2 Transfer Neurons.
-        #     if L2 != "en":
-        #         if is_reverse: # type-2
-        #             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons.pkl"
-        #             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-        #             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-        #         else: # type-1
-        #             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/qa/{L2}_sorted_neurons_type1.pkl"
-        #             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-        #         sorted_neurons = sorted_neurons[:1000]
+        for L2 in langs:
+            # prepare type-2 Transfer Neurons.
+            if L2 != "en":
+                if is_reverse: # type-2
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                else: # type-1
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/qa/{L2}_sorted_neurons_type1.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                sorted_neurons = sorted_neurons[:1000]
+                print(sorted_neurons[:100])
+                sys.exit()
 
-        #     sentences = sentences_all_langs[L2]
-        #     if L2 == 'en':
-        #         hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-        #     else:
-        #         hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, tokenizer, device, sorted_neurons, num_layers, sentences)
-        #     # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+            sentences = sentences_all_langs[L2]
+            if L2 == 'en':
+                hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+            else:
+                hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, tokenizer, device, sorted_neurons, num_layers, sentences)
+            # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-        #     # save centroids as pkl.
-        #     if is_reverse:
-        #         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
-        #     else:
-        #         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1.pkl"
-        #     save_as_pickle(save_path, hidden_states)
+            # save centroids as pkl.
+            if is_reverse:
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
+            else:
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1.pkl"
+            save_as_pickle(save_path, hidden_states)
 
         """ dim_reduction and plot with PCA. """
         # ["ja", "nl", "ko", "it", "en"]

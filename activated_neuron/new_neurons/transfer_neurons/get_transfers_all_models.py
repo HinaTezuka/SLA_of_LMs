@@ -18,11 +18,13 @@ from funcs import (
 
 # aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
-model_names = ["mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
+model_names = ["CohereForAI/aya-expanse-8b", "mistralai/Mistral-7B-v0.3"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
-langs = ["ja", "nl", "ko", "it", "en"]
+# langs = ["ja", "nl", "ko", "it", "en"]
+langs = ["ja", "nl", "ko", "it"]
 score_types = ["cos_sim", "L2_dis"]
 is_reverses = [True, False]
+is_reverses = [True]
 
 def get_sentences_qa(qa, L2: str, qa_num: int):
     l = []
