@@ -1,6 +1,3 @@
-"""
-compare acc of QA for both normal and deactivated model.
-"""
 import os
 import sys
 import pickle
