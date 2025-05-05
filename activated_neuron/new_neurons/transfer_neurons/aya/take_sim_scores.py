@@ -105,10 +105,6 @@ if __name__ == "__main__":
 
         def remove_duplicates(lista, listb):
             return [item for item in lista if item not in set(listb)]
-        # tatoeba_data = tatoeba_data[:20]
-        # random_data = random_data[:20]
-        # print(len(tatoeba_data))
-        # print(len(random_data))
 
         for score_type in score_types:
             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_mono_train.pkl"
