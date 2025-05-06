@@ -47,8 +47,7 @@ def visualize_neurons_with_line_plot(
 
         """ Calculate the standard deviation for shared neurons (used for error bars) """
         shared_counts_std[layer_idx] = np.array(shared_neurons[layer_idx]).std()
-    # print(shared_counts)
-    # sys.exit()
+
     # plot
     plt.figure(figsize=(15, 10))
 
