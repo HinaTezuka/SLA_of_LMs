@@ -77,7 +77,7 @@ for model_name in model_names:
                 sorted_neurons_AP = sorted_neurons[:intervention_num]
                 # baseline
                 random.seed(42)
-                sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num+1:], intervention_num)
+                sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num:], intervention_num)
 
                 """ deactivate high AP neurons. """
                 # get activation list
