@@ -20,9 +20,10 @@ L1 = "en"
 """ model configs """
 # LLaMA-3
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+# model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+# model_names = ['meta-llama/Meta-Llama-3-8B']
 device = "cuda" if torch.cuda.is_available() else "cpu"
-n_list = [100, 1000, 3000, 5000, 8000, 10000] # patterns of intervention_num
+n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
 score_types = ["cos_sim", "L2_dis"]
 langs = ["ja", "nl", "ko", "it"]
 
@@ -75,22 +76,22 @@ for model_name in model_names:
                 """ どのくらい介入するか(intervention_num) """
                 sorted_neurons_AP = sorted_neurons[:intervention_num]
                 # baseline
-                sorted_neurons_AP_baseline = random.sample(sorted_neurons_AP[intervention_num+1:], len(sorted_neurons_AP[intervention_num+1:]))
-                sorted_neurons_AP_baseline = sorted_neurons_AP_baseline[:intervention_num]
+                random.seed(42)
+                sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num+1:], intervention_num)
 
                 """ deactivate high AP neurons. """
                 # get activation list
-                act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, tatoeba_data)
-                act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, random_data)
+                act_patterns_parallel = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, tatoeba_data)
+                act_patterns_random = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP, random_data)
                 # plot activation patterns.
-                activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, score_type, "yes", True)
+                activation_patterns_lineplot(act_patterns_parallel, act_patterns_random, L2, intervention_num, model_type, score_type, "yes", True)
 
                 """ deactivate baseline neurons. """
                 # get activation list
-                act_patterns = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-                act_patterns_baseline = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                act_patterns_parallel = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+                act_patterns_random = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
                 # plot activation patterns.
-                activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, score_type, "baseline", True)
+                activation_patterns_lineplot(act_patterns_parallel, act_patterns_random, L2, intervention_num, model_type, score_type, "baseline", True)
     
     del model
     torch.cuda.empty_cache()
