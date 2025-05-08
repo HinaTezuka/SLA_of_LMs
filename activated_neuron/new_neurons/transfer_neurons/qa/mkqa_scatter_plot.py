@@ -68,7 +68,7 @@ for model_name in model_names:
         resutls_intervention[L2] = result_score
         # intervention baseline.
         random.seed(42)
-        intervened_neurons_baseline = random.sample(intervened_neurons[intervention_num+1:], len(intervened_neurons[intervention_num+1:]))
+        intervened_neurons_baseline = random.sample(intervened_neurons[intervention_num:], intervention_num))
         intervened_neurons_baseline = intervened_neurons_baseline[:intervention_num]
         result_score = mkqa_for_scatter_plot_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_baseline, qa_indices_dict)
         resutls_intervention_baseline[L2] = result_score

@@ -26,7 +26,7 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
-    offset = 0.1 # バーをずらす用
+    offset = 0.1
 
     # plot hist
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
@@ -114,7 +114,6 @@ if __name__ == "__main__":
             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-            # print(sorted_neurons)
 
             # sys.exit()
             # save_path_sorted_neurons_nl = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/nl_mono_train.pkl"
