@@ -1,3 +1,6 @@
+"""
+corr ratio for language-specificity.
+"""
 import os
 import sys
 import copy
