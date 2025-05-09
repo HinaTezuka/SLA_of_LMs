@@ -53,18 +53,27 @@ for model_name in model_names:
         intervention_r = []
         intervention_baseline_r = []
 
-        def get_q_idx_and_f1(score_list, target_idx) -> tuple:
+        def get_q_idx_and_f1(score_list, target_idx):
             for q_idx, f1_score in score_list:
                 if q_idx == target_idx:
-                    return (q_idx, f1_score)
+                    return q_idx, f1_score
         
+        normal_scores = []
+        intervention_scores = []
+        intervention_baseline_scores = []
         for q_idx, f1_score in normal:
             if f1_score >= THRESHOLD:
+                n_score = f1_score
                 normal_r.append((q_idx, f1_score))
-                intervention_r.append(get_q_idx_and_f1(intervention, q_idx))
-                intervention_baseline_r.append(get_q_idx_and_f1(intervention_baseline, q_idx))
+                normal_scores.append(n_score)
+                i_idx, i_score = get_q_idx_and_f1(intervention, q_idx) # i_idx: q_idx(intervention), i_score: f1_score(intervention)
+                intervention_r.append((i_idx, i_score))
+                intervention_scores.append(i_score)
+                b_idx, b_score = get_q_idx_and_f1(intervention_baseline, q_idx) # b_idx: q_idx(intervention_baseline), b_score: f1_score(intervention_baseline)
+                intervention_baseline_r.append((b_idx, b_score))
+                intervention_baseline_scores.append(b_score)
         
-        return normal_r, intervention_r, intervention_baseline_r
+        return normal_r, intervention_r, intervention_baseline_r, np.mean(np.array(normal_scores)), np.mean(np.array(intervention_scores)), np.mean(np.array(intervention_baseline_scores))
 
     normal_dict = {}
     intervention_dict = {}
@@ -86,10 +95,11 @@ for model_name in model_names:
         intervention_baseline = unfreeze_pickle(intervention_baseline_path)
 
         # get q_idx and f1 above THRESHOLD.
-        normal_l, intervention_l, intervention_baseline_l = get_q_above_th(THRESHOLD, normal, intervention, intervention_baseline)
+        normal_l, intervention_l, intervention_baseline_l, normal_mean_score, intervention_mean_score, intervention_baseline_mean_score = get_q_above_th(THRESHOLD, normal, intervention, intervention_baseline)
         normal_dict[L2] = normal_l
         intervention_dict[L2] = intervention_l
-        intervention_baseline_dict[L2] = intervention_baseline_l    
+        intervention_baseline_dict[L2] = intervention_baseline_l
+        print(f'{model_type}, {L2}: normal:{normal_mean_score}, intervention:{intervention_mean_score}, intervention_baseline:{intervention_baseline_mean_score}')
 
     """ visualization. """
     def plot_intervention_scatter(dict_normal, dict_intervene1, dict_intervene2):
@@ -134,7 +144,7 @@ for model_name in model_names:
                     label=dict_labels[d_idx],
                     marker=markers[d_idx],
                     color=colors[d_idx],
-                    alpha=0.8
+                    alpha=0.8,
                 )
 
             # Plot y=x line for reference
