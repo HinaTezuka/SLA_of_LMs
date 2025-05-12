@@ -22,7 +22,7 @@ from qa_funcs import (
 model_names = ['mistralai/Mistral-7B-v0.3']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it', 'en']
-langs = ['ko', 'nl']
+langs = ['ko']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -68,7 +68,6 @@ for model_name in model_names:
         # intervention baseline.
         random.seed(42)
         intervened_neurons_baseline = random.sample(intervened_neurons[intervention_num:], intervention_num)
-        intervened_neurons_baseline = intervened_neurons_baseline[:intervention_num]
         result_score_baseline = mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, intervened_neurons_baseline)
         path_intervention_baseline = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_baseline_{L2}.pkl'
         save_as_pickle(path_intervention_baseline, result_score_baseline)
