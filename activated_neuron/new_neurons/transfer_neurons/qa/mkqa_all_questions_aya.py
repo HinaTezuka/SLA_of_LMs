@@ -24,9 +24,7 @@ from qa_funcs import (
 model_names = ['CohereForAI/aya-expanse-8b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['it', 'ko', 'nl', 'ja']
-langs = ['ko', 'it']
-langs = ['it', 'ko']
+langs = ['it']
 
 """ 
 QA dataset: 

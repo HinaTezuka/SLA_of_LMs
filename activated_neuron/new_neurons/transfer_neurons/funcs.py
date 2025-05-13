@@ -526,7 +526,7 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
                 scores = np.where(scores >= layer_score, abs(layer_score - scores), -abs(layer_score - scores))
             # save resulting scores.
             final_scores_save[layer_idx, :, text_idx] = scores
-            final_scores_save[layer_idx, :, text_idx] = scores
+            # final_scores_save[layer_idx, :, text_idx] = scores
 
     # Calculate mean score for each neuron
     final_scores[:, :] = np.mean(final_scores_save, axis=2)
