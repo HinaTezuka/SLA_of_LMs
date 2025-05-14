@@ -73,7 +73,7 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    langs = ['ko']
+    langs = ['ja', 'nl', 'it']
     n_list = [100, 1000, 3000, 5000]
     score_types = ["cos_sim", "L2_dis"]
     score_types = ['cos_sim']
