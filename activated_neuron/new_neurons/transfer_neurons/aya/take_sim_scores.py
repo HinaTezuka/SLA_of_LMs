@@ -154,4 +154,4 @@ if __name__ == "__main__":
                     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
                 plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
-                print(f"intervention_num: {n} <- completed.")
+                print(f"{L2}, intervention_num: {n} <- completed.")
