@@ -37,6 +37,7 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
 
 if __name__ == '__main__':
     models = ['llama3', 'mistral', 'aya']
+    models = ['mistral']
     langs = ['ja', 'nl', 'ko', 'it']
     score_types = ['cos_sim', 'L2_dis']
     is_last_token_only = True
