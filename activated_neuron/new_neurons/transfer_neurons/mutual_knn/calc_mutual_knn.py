@@ -9,6 +9,7 @@ import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import seaborn as sns
 import pandas as pd
 
@@ -85,5 +86,8 @@ for model_type in model_types:
     plt.grid(True)
     plt.tight_layout()
     plt.legend(title='L2', fontsize=15, title_fontsize=15)
-    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}.png'
-    plt.savefig(save_path, bbox_inches='tight')
+    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}'
+    # plt.savefig(save_path, bbox_inches='tight')
+    with PdfPages(save_path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
