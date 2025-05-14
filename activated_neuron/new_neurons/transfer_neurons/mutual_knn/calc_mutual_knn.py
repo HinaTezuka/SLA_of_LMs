@@ -28,25 +28,25 @@ langs = ['ja', 'nl', 'ko', 'it']
 L1 = 'en'
 topk = 5 # number of nearest neighbor.
 
-# for model_name in model_names:
-#     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-#     tokenizer = AutoTokenizer.from_pretrained(model_name)
-#     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
-#     knn_scores = {}
-#     for L2 in langs:
-#         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_train.pkl'
-#         sentences = unfreeze_pickle(path)
-#         res = compute_mutual_knn(model, tokenizer, device, sentences, L1, L2, topk=topk) # res: [knn_score_layer1, knn_score_layer2, ...]
-#         print(f'=================={model_type}, {L2}==================')
-#         print(res)
-#         knn_scores[L2] = res
+for model_name in model_names:
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+    knn_scores = {}
+    for L2 in langs:
+        path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_train.pkl'
+        sentences = unfreeze_pickle(path)
+        res = compute_mutual_knn(model, tokenizer, device, sentences, L1, L2, topk=topk) # res: [knn_score_layer1, knn_score_layer2, ...]
+        print(f'=================={model_type}, {L2}==================')
+        print(res)
+        knn_scores[L2] = res
     
-#     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}.pkl'
-#     save_as_pickle(path, knn_scores)
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}.pkl'
+    save_as_pickle(path, knn_scores)
 
-#     # clear cache.
-#     del model
-#     torch.cuda.empty_cache()
+    # clear cache.
+    del model
+    torch.cuda.empty_cache()
 
 """ visualization. """
 model_types = ['llama3', 'mistral', 'aya']
