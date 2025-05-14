@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import umap.umap_ as umap
@@ -64,21 +65,24 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         plt.ylabel('PCA Dimension 2', fontsize=20)
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
-        file_name = 'emb_layer.png' if layer_idx == 0 else f'{layer_idx}.png'
+        file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
         plt.title(title, fontsize=25)
         plt.legend(fontsize=15)
         plt.grid(True)
 
         # save as image.
         if is_reverse:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse'
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse/{file_name}'
         else:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/type-1'
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, file_name)
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/type-1/{file_name}'
+        # os.makedirs(output_dir, exist_ok=True)
+        # output_path = os.path.join(output_dir, file_name)
 
-        plt.savefig(output_path, bbox_inches="tight")
-        plt.close()
+        # plt.savefig(output_path, bbox_inches="tight")
+        # plt.close()
+        with PdfPages(output_dir + '.pdf') as pdf:
+            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+            plt.close()
 
 if __name__ == '__main__':
     n_list = [100, 1000, 3000, 5000]

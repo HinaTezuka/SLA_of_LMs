@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 from collections import Counter
 
 from funcs import unfreeze_pickle
@@ -26,10 +27,13 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
         save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_{L2}_n{n}.'
     else:
         save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/reverse/{score_type}_{L2}_n{n}.'        
-    plt.savefig(
-        save_path,
-        bbox_inches='tight',
-        )
+    # plt.savefig(
+    #     save_path,
+    #     bbox_inches='tight',
+    #     )
+    with PdfPages(save_path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
 
 if __name__ == '__main__':
     models = ['llama3', 'mistral', 'aya']
