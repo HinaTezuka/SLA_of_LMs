@@ -24,9 +24,9 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
     plt.yticks(fontsize=25)
 
     if not is_reverse:
-        save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_{L2}_n{n}.'
+        save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_{L2}_n{n}'
     else:
-        save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/reverse/{score_type}_{L2}_n{n}.'        
+        save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/reverse/{score_type}_{L2}_n{n}'        
     # plt.savefig(
     #     save_path,
     #     bbox_inches='tight',
