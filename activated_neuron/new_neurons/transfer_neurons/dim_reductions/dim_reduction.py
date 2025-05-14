@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import umap.umap_ as umap
@@ -57,73 +58,21 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         plt.ylabel('PCA Dimension 2', fontsize=20)
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
-        file_name = 'emb_layer.png' if layer_idx == 0 else f'{layer_idx}.png'
+        file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
         plt.title(title, fontsize=25)
         plt.legend(fontsize=15)
         plt.grid(True)
 
         # save as image.
-        output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}'
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, file_name)
+        output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/{file_name}'
+        # os.makedirs(output_dir, exist_ok=True)
+        # output_path = os.path.join(output_dir, file_name)
 
-        plt.savefig(output_path, bbox_inches="tight")
-        plt.close()
-
-import numpy as np
-import matplotlib.pyplot as plt
-import os
-
-def plot_svd(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict):
-    languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
-    colors = ["red", "blue", "yellow", "orange", "green"]
-
-    for layer_idx in range(num_layers):  # Embedding layer + hidden layers
-        f1 = np.array(features_L1[layer_idx])
-        f2 = np.array(features_L2[layer_idx])
-        f3 = np.array(features_L3[layer_idx])
-        f4 = np.array(features_L4[layer_idx])
-        f5 = np.array(features_L5[layer_idx])
-
-        all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
-
-        # データを中心化（mean subtraction）
-        mean_vec = np.mean(all_features, axis=0)
-        centered = all_features - mean_vec
-
-        # 特異値分解
-        U, S, Vt = np.linalg.svd(centered, full_matrices=False)
-        components = Vt[:2]  # 上位2主成分
-
-        # 各言語の特徴を2次元に射影
-        def project(data):
-            return (data - mean_vec) @ components.T
-
-        f1_2d = project(f1)
-        f2_2d = project(f2)
-        f3_2d = project(f3)
-        f4_2d = project(f4)
-        f5_2d = project(f5)
-
-        plt.figure(figsize=(15, 12))
-        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
-            plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
-
-        plt.xlabel('SVD Dimension 1', fontsize=20)
-        plt.ylabel('SVD Dimension 2', fontsize=20)
-
-        title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
-        file_name = 'emb_layer.png' if layer_idx == 0 else f'{layer_idx}.png'
-        plt.title(title + ' (SVD)', fontsize=25)
-        plt.legend(fontsize=15)
-        plt.grid(True)
-
-        output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/svd'
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, file_name)
-
-        plt.savefig(output_path, bbox_inches="tight")
-        plt.close()
+        # plt.savefig(output_path, bbox_inches="tight")
+        # plt.close()
+        with PdfPages(save_path + '.pdf') as pdf:
+            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+            plt.close()
 
 if __name__ == '__main__':
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
@@ -149,8 +98,8 @@ if __name__ == '__main__':
         hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
         hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
         # 
-        # plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
-        plot_svd(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
+        plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
+        # plot_svd(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
         # del model
         # torch.cuda.empty_cache()

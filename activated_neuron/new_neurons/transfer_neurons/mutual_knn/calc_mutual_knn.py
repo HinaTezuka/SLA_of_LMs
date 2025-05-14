@@ -26,7 +26,7 @@ model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'Coher
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 langs = ['ja', 'nl', 'ko', 'it']
 L1 = 'en'
-topk = 10 # number of nearest neighbor.
+topk = 5 # number of nearest neighbor.
 
 # for model_name in model_names:
 #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
