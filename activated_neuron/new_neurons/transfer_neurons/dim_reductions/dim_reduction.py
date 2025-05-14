@@ -70,7 +70,7 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
         # plt.savefig(output_path, bbox_inches="tight")
         # plt.close()
-        with PdfPages(save_path + '.pdf') as pdf:
+        with PdfPages(output_dir + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
 
@@ -79,16 +79,16 @@ if __name__ == '__main__':
     sentences_all_langs = unfreeze_pickle(path)
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        for L2 in langs:
-            sentences = sentences_all_langs[L2]
-            hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-            # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+        # tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        # for L2 in langs:
+        #     sentences = sentences_all_langs[L2]
+        #     hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+        #     # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-            # save as pkl
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
-            save_as_pickle(save_path, hidden_states)
+        #     # save as pkl
+        #     save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
+        #     save_as_pickle(save_path, hidden_states)
 
         """ dim_reduction and plot with PCA. """
         # ["ja", "nl", "ko", "it", "en"]
@@ -99,7 +99,6 @@ if __name__ == '__main__':
         hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
         # 
         plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
-        # plot_svd(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
         # del model
         # torch.cuda.empty_cache()
