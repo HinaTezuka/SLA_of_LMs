@@ -24,7 +24,7 @@ from qa_funcs import (
 
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-model_names = ['meta-llama/Meta-Llama-3-8B']
+# model_names = ['meta-llama/Meta-Llama-3-8B']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it']
 """ 
@@ -39,7 +39,7 @@ qa = load_dataset('apple/mkqa')['train']
 # qa = qa.shuffle(seed=42)
 score_type = 'cos_sim'
 intervention_num = 1000
-THRESHOLD = 0
+THRESHOLD = 0.8
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'

@@ -21,7 +21,7 @@ langs = ['ja', 'nl', 'ko', 'it']
 # langs = ['nl', 'it']
 # langs = ['ja', 'ko']
 model_types = ['llama3', 'mistral', 'aya']
-score_types = ['cos_sim', 'L2_dis']
+# score_types = ['cos_sim', 'L2_dis']
 score_types = ['cos_sim']
 
 def correlationRatio(categories, values):
@@ -30,6 +30,10 @@ def correlationRatio(categories, values):
     ]) 
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
+
+def calc_ap(categories, vlaues):
+    ap = average_precision_score(y_true=categories, y_score=values)
+    return ap
 
 for model_type in model_types:
     for L2 in langs:
@@ -55,13 +59,16 @@ for model_type in model_types:
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
             # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
 
-            top_n = 10
+            top_n = 1000
             corr_ratios = defaultdict(float)
             arr = []
             for (layer_i, neuron_i) in sorted_neurons[:top_n]:
                 corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
                 corr_ratios[(layer_i, neuron_i)] = corr_ratio
                 arr.append(corr_ratio)
+                # ap_score = calc_ap(labels_list, activations_arr[layer_i, neuron_i, :])
+                # corr_ratios[layer_i, neuron_i] = ap_score
+                # arr.append(ap_score)
 
             print(f'{model_type}, {L2}, {score_type}')
             print(np.mean(np.array(arr)))

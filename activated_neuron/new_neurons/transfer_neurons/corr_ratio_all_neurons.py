@@ -9,6 +9,7 @@ from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import average_precision_score
 
 from funcs import (
     save_as_pickle,
@@ -81,17 +82,18 @@ for score_type in score_types:
             arr = []
             for layer_i in range(layers_num):
                 for neuron_i in range(neurons_num):
-                    corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
-                    corr_ratios[layer_i, neuron_i] = corr_ratio
+                    # corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
+                    # corr_ratios[layer_i, neuron_i] = corr_ratio
+
             
-            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}'
-            save_np_arrays(path, corr_ratios)
+            # path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}'
+            # save_np_arrays(path, corr_ratios)
 
             print(f'{L2}, {score_type}, {model_type}, completed.')
 
-            """ visualization """
-            ths = [0.1, 0.25, 0.5]
-            for th in ths:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}.npz'
-                corr_ratios = unfreeze_np_arrays(path)
-                plot(corr_ratios, th, model_type, L2, score_type)
+            # """ visualization """
+            # ths = [0.1, 0.25, 0.5]
+            # for th in ths:
+            #     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}.npz'
+            #     corr_ratios = unfreeze_np_arrays(path)
+            #     plot(corr_ratios, th, model_type, L2, score_type)

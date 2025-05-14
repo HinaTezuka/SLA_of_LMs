@@ -1,0 +1,7 @@
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=26052012kb,walltime=168:00:39,ncpus=26,cpupercent=101,vmem=45299728kb
+============================================================================================
