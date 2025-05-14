@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import os
 from matplotlib import gridspec
+from matplotlib.backends.backend_pdf import PdfPages
 
 model_types = ['llama3', 'mistral', 'aya']
 langs = ['ja', 'nl', 'ko', 'it']
@@ -59,6 +60,9 @@ for model_type in model_types:
     else:
         plt.tight_layout()
 
-    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/logistic_regression/{model_type}.png'
-    plt.savefig(save_path, bbox_inches='tight')
-    plt.close()
+    save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/logistic_regression/{model_type}'
+    # plt.savefig(save_path, bbox_inches='tight')
+    # plt.close()
+    with PdfPages(save_path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
