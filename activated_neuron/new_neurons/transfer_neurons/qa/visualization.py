@@ -9,6 +9,7 @@ import random
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import seaborn as sns
 import torch
 from datasets import load_dataset
@@ -24,7 +25,6 @@ from qa_funcs import (
 
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-# model_names = ['meta-llama/Meta-Llama-3-8B']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it']
 """ 
@@ -166,12 +166,15 @@ for model_name in model_names:
         for i in range(n_langs, n_rows * n_cols):
             fig.delaxes(axes[i // n_cols][i % n_cols])
         
-        plt.tight_layout()
+        # plt.tight_layout()
         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_above{THRESHOLD}.png' if THRESHOLD != 0 else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_all.png'
-        plt.savefig(
-            path,
-            bbox_inches='tight'
-        )
+        # plt.savefig(
+        #     path,
+        #     bbox_inches='tight'
+        # )
+        pdf = PdfPages(path + '.pdf')
+        pdf.savefig(bbox_inches='tight', pad_inches = 0.01)
+        pdf.close()
     plot_intervention_scatter(normal_dict, intervention_dict, intervention_baseline_dict)
     print(f'plot suceeded: {model_type}')
 
