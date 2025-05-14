@@ -39,7 +39,7 @@ qa = load_dataset('apple/mkqa')['train']
 # qa = qa.shuffle(seed=42)
 score_type = 'cos_sim'
 intervention_num = 1000
-THRESHOLD = 0.8
+THRESHOLD = 0
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
@@ -123,7 +123,8 @@ for model_name in model_names:
         n_cols = 2
         n_rows = (n_langs + 1) // n_cols
         
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
+        # fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(8 * n_cols, 7 * n_rows), squeeze=False)
 
         for idx, lang in enumerate(all_languages):
             row, col = divmod(idx, n_cols)
