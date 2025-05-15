@@ -49,10 +49,11 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/en/baseline/{L2}_n{intervention_num}.png"
     elif not is_en:
         if not is_baseline:
-            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/{L2}_n{intervention_num}.png"
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/{L2}_n{intervention_num}.png"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/{L2}_n{intervention_num}.png"
+            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/{L2}_n{intervention_num}.png"
         elif is_baseline:
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
+            # path =  f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}.png"
     plt.savefig(
         path,
         bbox_inches="tight"
@@ -69,8 +70,9 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
-    n_list = [100, 1000, 3000, 5000, 8000, 10000]
-    score_types = ["cos_sim", "L2_dis"]
+    n_list = [100, 1000, 3000, 5000]
+    # score_types = ["cos_sim", "L2_dis"]
+    score_types = ['cos_sim']
     is_en = False
 
     for L2 in langs:
@@ -104,25 +106,12 @@ if __name__ == "__main__":
 
         def remove_duplicates(lista, listb):
             return [item for item in lista if item not in set(listb)]
-        # tatoeba_data = tatoeba_data[:20]
-        # random_data = random_data[:20]
-        # print(len(tatoeba_data))
-        # print(len(random_data))
 
         for score_type in score_types:
             # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_mono_train.pkl"
             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-
-            # sys.exit()
-            # save_path_sorted_neurons_nl = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/nl_mono_train.pkl"
-            # save_path_sorted_neurons_ja = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/ja_mono_train.pkl"
-            # sorted_neurons_nl = unfreeze_pickle(save_path_sorted_neurons_nl)[:5000]
-            # sorted_neurons_ja = unfreeze_pickle(save_path_sorted_neurons_ja)[:5000]
-            # sorted_neurons = remove_duplicates(sorted_neurons_nl, sorted_neurons_ja)
-            # save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
-            # score_dict = unfreeze_pickle(save_path_score_dict)
             
             for n in n_list:
                 """ n: intervention_num """

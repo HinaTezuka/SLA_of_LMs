@@ -116,15 +116,6 @@ if __name__ == "__main__":
             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
             # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(0, 20)]]
             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-            # print(sorted_neurons)
-
-            # save_path_sorted_neurons_nl = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/nl_mono_train.pkl"
-            # save_path_sorted_neurons_ja = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/ja_mono_train.pkl"
-            # sorted_neurons_nl = unfreeze_pickle(save_path_sorted_neurons_nl)[:5000]
-            # sorted_neurons_ja = unfreeze_pickle(save_path_sorted_neurons_ja)[:5000]
-            # sorted_neurons = remove_duplicates(sorted_neurons_nl, sorted_neurons_ja)
-            # save_path_score_dict = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
-            # score_dict = unfreeze_pickle(save_path_score_dict)
             
             for n in n_list:
                 """ n: intervention_num """
