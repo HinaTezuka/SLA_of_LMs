@@ -6,6 +6,7 @@ import pickle
 from collections import defaultdict
 
 import numpy as np
+from sklearn.metrics import average_precision_score
 
 from funcs import (
     multilingual_dataset_for_lang_specific_detection,
@@ -31,7 +32,7 @@ def correlationRatio(categories, values):
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
 
-def calc_ap(categories, vlaues):
+def calc_ap(categories, values):
     ap = average_precision_score(y_true=categories, y_score=values)
     return ap
 
@@ -63,12 +64,12 @@ for model_type in model_types:
             corr_ratios = defaultdict(float)
             arr = []
             for (layer_i, neuron_i) in sorted_neurons[:top_n]:
-                corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
-                corr_ratios[(layer_i, neuron_i)] = corr_ratio
-                arr.append(corr_ratio)
-                # ap_score = calc_ap(labels_list, activations_arr[layer_i, neuron_i, :])
-                # corr_ratios[layer_i, neuron_i] = ap_score
-                # arr.append(ap_score)
+                # corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
+                # corr_ratios[(layer_i, neuron_i)] = corr_ratio
+                # arr.append(corr_ratio)
+                ap_score = calc_ap(labels_list, activations_arr[layer_i, neuron_i, :])
+                corr_ratios[layer_i, neuron_i] = ap_score
+                arr.append(ap_score)
 
             print(f'{model_type}, {L2}, {score_type}')
             print(np.mean(np.array(arr)))
