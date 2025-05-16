@@ -9,6 +9,7 @@ import numpy as np
 import torch
 import transformers
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 
@@ -44,21 +45,19 @@ def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: s
     plt.grid(True)
     if is_en:
         if not is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/en/{L2}_n{intervention_num}.png"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/en/{L2}_n{intervention_num}"
         elif is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/en/baseline/{L2}_n{intervention_num}.png"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/en/baseline/{L2}_n{intervention_num}"
     elif not is_en:
         if not is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/{L2}_n{intervention_num}.png"
-            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/{L2}_n{intervention_num}.png"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/{L2}_n{intervention_num}"
+            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/{L2}_n{intervention_num}"
         elif is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/baseline/{L2}_n{intervention_num}.png"
-            # path =  f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}.png"
-    plt.savefig(
-        path,
-        bbox_inches="tight"
-    )
-    plt.close()
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/baseline/{L2}_n{intervention_num}"
+            # path =  f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/llama3/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}"
+    with PdfPages(path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
 
 if __name__ == "__main__":
     L1 = "en"
@@ -140,4 +139,4 @@ if __name__ == "__main__":
                     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
                 plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
-                print(f"intervention_num: {n} <- completed.")
+                print(f"{L2}, intervention_num: {n} <- completed.")
