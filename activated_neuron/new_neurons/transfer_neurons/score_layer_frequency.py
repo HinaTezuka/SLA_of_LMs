@@ -16,12 +16,12 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
     plt.figure(figsize=(15, 15))
     plt.bar(display_layers, frequencies, color="blue", alpha=0.7)
 
-    plt.xlabel("Layer Index", fontsize=30)
-    plt.ylabel("Frequency", fontsize=30)
-    plt.title("Neuron Frequency per Layer", fontsize=45)
+    plt.xlabel("Layer Index", fontsize=40)
+    plt.ylabel("Frequency", fontsize=40)
+    plt.title("Neuron Frequency per Layer", fontsize=50)
 
-    plt.xticks(display_layers, fontsize=25)
-    plt.yticks(fontsize=25)
+    plt.xticks(display_layers, fontsize=35)
+    plt.yticks(fontsize=35)
 
     if not is_reverse:
         save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_{L2}_n{n}'
