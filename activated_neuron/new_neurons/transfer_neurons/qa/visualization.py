@@ -174,8 +174,8 @@ for model_name in model_names:
     #     n_cols = 2
     #     n_rows = (n_langs + 1) // n_cols
         
-    #     fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
-    #     # fig, axes = plt.subplots(n_rows, n_cols, figsize=(8 * n_cols, 7 * n_rows), squeeze=False)
+    #     # fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
+    #     fig, axes = plt.subplots(n_rows, n_cols, figsize=(8 * n_cols, 7 * n_rows), squeeze=False)
     #     plt.subplots_adjust(wspace=0.5, hspace=0.5) # adjusting the spaces between each subplot.
 
     #     for idx, lang in enumerate(all_languages):
@@ -205,10 +205,10 @@ for model_name in model_names:
     #         max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
     #         ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=2)
 
-    #         ax.set_title(f'{lang}', fontsize=45)
+    #         ax.set_title(f'{lang}', fontsize=30)
     #         if idx == 0:
-    #             ax.set_xlabel('Normal', fontsize=30)
-    #             ax.set_ylabel('Intervened', fontsize=30)
+    #             ax.set_xlabel('Normal', fontsize=25)
+    #             ax.set_ylabel('Intervened', fontsize=25)
     #         plt.xlim(0.0, 1.0)
     #         plt.ylim(0.0, 1.0)
     #         plt.tick_params(axis='both', labelsize=15)
