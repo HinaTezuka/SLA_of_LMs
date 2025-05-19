@@ -13,14 +13,14 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
     frequencies = [layer_counts[layer] for layer in sorted_layers]
     display_layers = [layer + 1 for layer in sorted_layers]
 
-    plt.figure(figsize=(15, 15))
+    plt.figure(figsize=(13, 13))
     plt.bar(display_layers, frequencies, color="blue", alpha=0.7)
 
-    plt.xlabel("Layer Index", fontsize=40)
-    plt.ylabel("Frequency", fontsize=40)
-    plt.title("Neuron Frequency per Layer", fontsize=50)
+    plt.xlabel("Layer Index", fontsize=45)
+    plt.ylabel("Frequency", fontsize=45)
+    plt.title("Neuron Frequency per Layer", fontsize=55)
 
-    plt.xticks(display_layers, fontsize=30)
+    plt.xticks(display_layers, fontsize=25)
     plt.yticks(fontsize=35)
 
     if not is_reverse:
