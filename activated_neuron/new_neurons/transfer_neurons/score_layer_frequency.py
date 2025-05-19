@@ -20,7 +20,7 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
     plt.ylabel("Frequency", fontsize=40)
     plt.title("Neuron Frequency per Layer", fontsize=50)
 
-    plt.xticks(display_layers, fontsize=35)
+    plt.xticks(display_layers, fontsize=30)
     plt.yticks(fontsize=35)
 
     if not is_reverse:
@@ -37,7 +37,6 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
 
 if __name__ == '__main__':
     models = ['llama3', 'mistral', 'aya']
-    models = ['mistral']
     langs = ['ja', 'nl', 'ko', 'it']
     score_types = ['cos_sim', 'L2_dis']
     is_last_token_only = True
