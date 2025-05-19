@@ -78,11 +78,11 @@ for model_type in model_types:
     subset = df[df['Model'] == model_type]
     sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10', linewidth=3)
     model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B'
-    plt.title(f'{model_name}', fontsize=45)
-    plt.xlabel('Layer Index', fontsize=40)
-    plt.ylabel('Mutual KNN', fontsize=40)
+    plt.title(f'{model_name}', fontsize=50)
+    plt.xlabel('Layer Index', fontsize=45)
+    plt.ylabel('Mutual KNN', fontsize=45)
     plt.ylim(0, 0.6)
-    plt.tick_params(axis='both', labelsize=25)
+    plt.tick_params(axis='both', labelsize=30)
     plt.grid(True)
     plt.tight_layout()
     plt.legend(title='L2', fontsize=15, title_fontsize=15)
