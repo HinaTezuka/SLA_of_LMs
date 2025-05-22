@@ -54,9 +54,9 @@ for model_name in model_names:
         intervention_baseline_r = []
 
         def get_q_idx_and_f1(score_list, target_idx):
-            for q_idx, f1_score in score_list:
-                if q_idx == target_idx:
-                    return q_idx, f1_score
+            for qu_idx, f1_score in score_list:
+                if qu_idx == target_idx:
+                    return qu_idx, f1_score
         
         normal_scores = []
         intervention_scores = []

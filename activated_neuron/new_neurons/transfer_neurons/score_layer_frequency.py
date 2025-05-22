@@ -5,22 +5,25 @@ from collections import Counter
 from funcs import unfreeze_pickle
 
 def plot_layer_frequency(neuron_list: list, is_reverse: bool):
-    # layer_idx の出現回数をカウント
     layer_counts = Counter(layer_idx for layer_idx, _ in neuron_list)
 
-    # データをソート（X軸を昇順に）
     sorted_layers = sorted(layer_counts.keys())
     frequencies = [layer_counts[layer] for layer in sorted_layers]
     display_layers = [layer + 1 for layer in sorted_layers]
 
-    plt.figure(figsize=(13, 13))
+    plt.figure(figsize=(15, 15))
     plt.bar(display_layers, frequencies, color="blue", alpha=0.7)
 
     plt.xlabel("Layer Index", fontsize=45)
     plt.ylabel("Frequency", fontsize=45)
     plt.title("Neuron Frequency per Layer", fontsize=55)
 
-    plt.xticks(display_layers, fontsize=25)
+    xtick_min = min(display_layers)
+    xtick_max = max(display_layers)
+    xtick_step = 5
+    xticks = list(range(xtick_min, xtick_max + 1, xtick_step))
+    plt.xticks(xticks, fontsize=35)
+    plt.xticks(display_layers, fontsize=35)
     plt.yticks(fontsize=35)
 
     if not is_reverse:
