@@ -22,7 +22,7 @@ from funcs import (
 )
 
 # visualization
-def plot_hist_llama3(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, score_type: str, intervention_num: str, is_en=False, is_baseline=False) -> None:
+def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: str, is_en=False, is_baseline=False) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
