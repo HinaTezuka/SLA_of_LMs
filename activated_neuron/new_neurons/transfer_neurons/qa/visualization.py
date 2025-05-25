@@ -102,90 +102,21 @@ for model_name in model_names:
         print(f'{model_type}, {L2}: normal:{normal_mean_score}, intervention:{intervention_mean_score}, intervention_baseline:{intervention_baseline_mean_score}')
 
     """ visualization func. """
-    def plot_intervention_scatter(dict_normal, dict_intervene1, dict_intervene2):
-        dicts = [dict_intervene1, dict_intervene2]
-        dict_labels = ['TransferNeurons', 'Baseline']
-        markers = ['s', '^']
-        colors = ['green', 'red']
-
-        all_languages = sorted(set(dict_normal.keys()) | set(dict_intervene1.keys()) | set(dict_intervene2.keys()))
-
-        for lang in all_languages:
-            fig, ax = plt.subplots(figsize=(6, 6))
-            ax.set_facecolor('lightgray')
-
-            base_data = dict_normal.get(lang, [])
-            base_f1s = [f1 for _, f1 in base_data]
-
-            for d_idx, d in enumerate(dicts):
-                intervened_data = d.get(lang, [])
-                if not intervened_data or not base_data or len(intervened_data) != len(base_data):
-                    continue
-                intervened_f1s = [f1 for _, f1 in intervened_data]
-                ax.scatter(
-                    base_f1s,
-                    intervened_f1s,
-                    label=dict_labels[d_idx],
-                    marker=markers[d_idx],
-                    color=colors[d_idx],
-                    alpha=0.8,
-                )
-
-            min_f1 = min(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
-            max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
-            ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=2)
-
-            ax.set_title(f'{lang}', fontsize=35)
-            if lang == 'it':
-                ax.set_xlabel('Normal', fontsize=30)
-                ax.set_ylabel('Intervened', fontsize=30)
-
-            ax.set_xlim(0.0, 1.0)
-            ax.set_ylim(0.0, 1.0)
-            ax.tick_params(axis='both', labelsize=20)
-            ax.legend()
-            ax.grid(True)
-
-            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_above{THRESHOLD}/{lang}.pdf' if THRESHOLD != 0 else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_all/{lang}.pdf'
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            pdf = PdfPages(path)
-            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-            pdf.close()
-            plt.close(fig)
-
     # def plot_intervention_scatter(dict_normal, dict_intervene1, dict_intervene2):
-    #     """
-    #     For each language, plots a scatter plot:
-    #     X-axis: f1_score from dict_normal(no intervention).
-    #     Y-axis: f1_score from dict_intervene1(top1000 intervention) and dict_intervene2(intervention_baseline).
-        
-    #     Each language gets its own subplot.
-    #     Interventions are shown with different colors and markers.
-    #     """
     #     dicts = [dict_intervene1, dict_intervene2]
     #     dict_labels = ['TransferNeurons', 'Baseline']
     #     markers = ['s', '^']
     #     colors = ['green', 'red']
 
-    #     # Union of all languages
     #     all_languages = sorted(set(dict_normal.keys()) | set(dict_intervene1.keys()) | set(dict_intervene2.keys()))
-        
-    #     n_langs = len(all_languages)
-    #     n_cols = 2
-    #     n_rows = (n_langs + 1) // n_cols
-        
-    #     # fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
-    #     fig, axes = plt.subplots(n_rows, n_cols, figsize=(8 * n_cols, 7 * n_rows), squeeze=False)
-    #     plt.subplots_adjust(wspace=0.5, hspace=0.5) # adjusting the spaces between each subplot.
 
-    #     for idx, lang in enumerate(all_languages):
-    #         row, col = divmod(idx, n_cols)
-    #         ax = axes[row][col]
-    #         ax.set_facecolor('lightgray') # background color.
+    #     for lang in all_languages:
+    #         fig, ax = plt.subplots(figsize=(6, 6))
+    #         ax.set_facecolor('lightgray')
 
     #         base_data = dict_normal.get(lang, [])
     #         base_f1s = [f1 for _, f1 in base_data]
-            
+
     #         for d_idx, d in enumerate(dicts):
     #             intervened_data = d.get(lang, [])
     #             if not intervened_data or not base_data or len(intervened_data) != len(base_data):
@@ -200,30 +131,99 @@ for model_name in model_names:
     #                 alpha=0.8,
     #             )
 
-    #         # Plot y=x line for reference
     #         min_f1 = min(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
     #         max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
     #         ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=2)
 
-    #         ax.set_title(f'{lang}', fontsize=30)
-    #         if idx == 0:
-    #             ax.set_xlabel('Normal', fontsize=25)
-    #             ax.set_ylabel('Intervened', fontsize=25)
-    #         plt.xlim(0.0, 1.0)
-    #         plt.ylim(0.0, 1.0)
-    #         plt.tick_params(axis='both', labelsize=15)
+    #         ax.set_title(f'{lang}', fontsize=35)
+    #         if lang == 'it':
+    #             ax.set_xlabel('Normal', fontsize=30)
+    #             ax.set_ylabel('Intervened', fontsize=30)
+
+    #         ax.set_xlim(0.0, 1.0)
+    #         ax.set_ylim(0.0, 1.0)
+    #         ax.tick_params(axis='both', labelsize=20)
     #         ax.legend()
     #         ax.grid(True)
 
-    #     # Remove any unused subplots
-    #     for i in range(n_langs, n_rows * n_cols):
-    #         fig.delaxes(axes[i // n_cols][i % n_cols])
+    #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_above{THRESHOLD}/{lang}.pdf' if THRESHOLD != 0 else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_all/{lang}.pdf'
+    #         os.makedirs(os.path.dirname(path), exist_ok=True)
+    #         pdf = PdfPages(path)
+    #         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+    #         pdf.close()
+    #         plt.close(fig)
+
+    def plot_intervention_scatter(dict_normal, dict_intervene1, dict_intervene2):
+        """
+        For each language, plots a scatter plot:
+        X-axis: f1_score from dict_normal(no intervention).
+        Y-axis: f1_score from dict_intervene1(top1000 intervention) and dict_intervene2(intervention_baseline).
         
-    #     # plt.tight_layout()
-    #     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_above{THRESHOLD}' if THRESHOLD != 0 else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_all'
-    #     pdf = PdfPages(path + '.pdf')
-    #     pdf.savefig(bbox_inches='tight', pad_inches = 0.01)
-    #     pdf.close()
+        Each language gets its own subplot.
+        Interventions are shown with different colors and markers.
+        """
+        dicts = [dict_intervene1, dict_intervene2]
+        dict_labels = ['TransferNeurons', 'Baseline']
+        markers = ['s', '^']
+        colors = ['green', 'red']
+
+        # Union of all languages
+        all_languages = sorted(set(dict_normal.keys()) | set(dict_intervene1.keys()) | set(dict_intervene2.keys()))
+        
+        n_langs = len(all_languages)
+        n_cols = 2
+        n_rows = (n_langs + 1) // n_cols
+        
+        # fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), squeeze=False)
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(8 * n_cols, 7 * n_rows), squeeze=False)
+        plt.subplots_adjust(wspace=0.5, hspace=0.5) # adjusting the spaces between each subplot.
+
+        for idx, lang in enumerate(all_languages):
+            row, col = divmod(idx, n_cols)
+            ax = axes[row][col]
+            ax.set_facecolor('lightgray') # background color.
+
+            base_data = dict_normal.get(lang, [])
+            base_f1s = [f1 for _, f1 in base_data]
+            
+            for d_idx, d in enumerate(dicts):
+                intervened_data = d.get(lang, [])
+                if not intervened_data or not base_data or len(intervened_data) != len(base_data):
+                    continue
+                intervened_f1s = [f1 for _, f1 in intervened_data]
+                ax.scatter(
+                    base_f1s,
+                    intervened_f1s,
+                    label=dict_labels[d_idx],
+                    marker=markers[d_idx],
+                    color=colors[d_idx],
+                    alpha=0.8,
+                )
+
+            # Plot y=x line for reference
+            min_f1 = min(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
+            max_f1 = max(base_f1s + [f for d in dicts for (_, f) in d.get(lang, [])])
+            ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=2)
+
+            ax.set_title(f'{lang}', fontsize=30)
+            if idx == 0:
+                ax.set_xlabel('Normal', fontsize=25)
+                ax.set_ylabel('Intervened', fontsize=25)
+            plt.xlim(0.0, 1.0)
+            plt.ylim(0.0, 1.0)
+            plt.tick_params(axis='both', labelsize=15)
+            ax.legend()
+            ax.grid(True)
+
+        # Remove any unused subplots
+        for i in range(n_langs, n_rows * n_cols):
+            fig.delaxes(axes[i // n_cols][i % n_cols])
+        
+        # plt.tight_layout()
+        path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_above{THRESHOLD}' if THRESHOLD != 0 else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/qa/{model_type}_all'
+        pdf = PdfPages(path + '.pdf')
+        pdf.savefig(bbox_inches='tight', pad_inches = 0.01)
+        pdf.close()
 
     """ visualization """
     plot_intervention_scatter(normal_dict, intervention_dict, intervention_baseline_dict)
