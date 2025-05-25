@@ -1,3 +1,32 @@
+"""
+LlamaForCausalLM(
+  (model): LlamaModel(
+    (embed_tokens): Embedding(128256, 4096)
+    (layers): ModuleList(
+      (0-31): 32 x LlamaDecoderLayer(
+        (self_attn): LlamaSdpaAttention(
+          (q_proj): Linear(in_features=4096, out_features=4096, bias=False)
+          (k_proj): Linear(in_features=4096, out_features=1024, bias=False)
+          (v_proj): Linear(in_features=4096, out_features=1024, bias=False)
+          (o_proj): Linear(in_features=4096, out_features=4096, bias=False)
+          (rotary_emb): LlamaRotaryEmbedding()
+        )
+        (mlp): LlamaMLP(
+          (gate_proj): Linear(in_features=4096, out_features=14336, bias=False)
+          (up_proj): Linear(in_features=4096, out_features=14336, bias=False)
+          (down_proj): Linear(in_features=14336, out_features=4096, bias=False)
+          (act_fn): SiLU()
+        )
+        (input_layernorm): LlamaRMSNorm((4096,), eps=1e-05)
+        (post_attention_layernorm): LlamaRMSNorm((4096,), eps=1e-05)
+      )
+    )
+    (norm): LlamaRMSNorm((4096,), eps=1e-05)
+    (rotary_emb): LlamaRotaryEmbedding()
+  )
+  (lm_head): Linear(in_features=4096, out_features=128256, bias=False)
+)
+"""
 import os
 import sys
 from typing import Callable, Optional, Tuple
@@ -175,6 +204,8 @@ class CustomLlamaAttention(LlamaAttention):
         self.last_head_outputs = attn_output.detach()
 
         attn_output = attn_output.reshape(*input_shape, -1).contiguous()
+        print(attn_output.shape)
+        sys.exit() 
         attn_output = self.o_proj(attn_output)
         return attn_output, attn_weights, past_key_value # original: return attn_output, attn_weights
 
@@ -183,10 +214,11 @@ for i, layer in enumerate(model.model.layers):
     original_attn = layer.self_attn
     new_attn = CustomLlamaAttention(layer.self_attn.config, i).to(device)
 
+    # copy original weights to new one.
     new_attn.load_state_dict(original_attn.state_dict())
     layer.self_attn = new_attn
 
-""" run inference. """
+""" run inference with CultomAttention. """
 inputs = tokenizer("こんにちは、元気ですか？", return_tensors="pt").to(device)
 with torch.no_grad():
     output = model(**inputs)
