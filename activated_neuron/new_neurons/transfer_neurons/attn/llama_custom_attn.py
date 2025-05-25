@@ -29,7 +29,7 @@ LlamaForCausalLM(
 """
 import os
 import sys
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, TypedDict
 from venv import logger
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pickle
@@ -44,14 +44,42 @@ from transformers.models.llama.modeling_llama import (
     apply_rotary_pos_emb,
 )
 from transformers.cache_utils import Cache
+# from transformers.modeling_flash_attention_utils import FlashAttentionKwargs
 # from transformers.integrations import sdpa_attention
 # from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
+
+from funcs import (
+    save_as_pickle,
+    unfreeze_pickle,
+    save_np_arrays,
+    unfreeze_np_arrays,
+)
 
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
 llama_name = 'meta-llama/Meta-Llama-3-8B'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = AutoModelForCausalLM.from_pretrained(llama_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(llama_name)
+
+class FlashAttentionKwargs(TypedDict, total=False):
+    """
+    Keyword arguments for Flash Attention with Compile.
+
+    Attributes:
+        cumulative_seqlens_q (`torch.LongTensor`, *optional*)
+            Gets cumulative sequence length for query state.
+        cumulative_seqlens_k (`torch.LongTensor`, *optional*)
+            Gets cumulative sequence length for key state.
+        max_length_q (`int`, *optional*):
+            Maximum sequence length for query state.
+        max_length_k (`int`, *optional*):
+            Maximum sequence length for key state.
+    """
+
+    cumulative_seqlens_q: Optional[torch.LongTensor]
+    cumulative_seqlens_k: Optional[torch.LongTensor]
+    max_length_q: Optional[int]
+    max_length_k: Optional[int]
 
 def sdpa_attention_forward(
     module: torch.nn.Module,
@@ -168,7 +196,7 @@ class CustomLlamaAttention(LlamaAttention):
         attention_mask: Optional[torch.Tensor],
         past_key_value: Optional[Cache] = None,
         cache_position: Optional[torch.LongTensor] = None,
-        **kwargs, # original: **kwargs: Unpack[FlashAttentionKwargs],
+        **kwargs # original: **kwargs: Unpack[FlashAttentionKwargs], <- Unpackがpython3.11以降じゃないとサポートされてないため.
     ) -> Tuple[torch.Tensor, Optional[torch.Tensor], Optional[Tuple[torch.Tensor]]]:
         input_shape = hidden_states.shape[:-1]
         hidden_shape = (*input_shape, -1, self.head_dim)
