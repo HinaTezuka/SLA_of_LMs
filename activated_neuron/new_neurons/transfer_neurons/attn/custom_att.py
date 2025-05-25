@@ -92,7 +92,7 @@ class CustomLlamaAttention(LlamaAttention):
             key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
 
         attention_interface: Callable = eager_attention_forward
-        # if self.config._attn_implementation != "eager":
+        # if self.config._attn_implementation != "eager": # sdpa
         #     attention_interface = ALL_ATTENTION_FUNCTIONS[self.config._attn_implementation]
 
         attn_output, attn_weights = attention_interface(
