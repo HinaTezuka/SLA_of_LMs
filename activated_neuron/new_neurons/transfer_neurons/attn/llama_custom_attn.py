@@ -204,8 +204,6 @@ class CustomLlamaAttention(LlamaAttention):
         self.last_head_outputs = attn_output.detach()
 
         attn_output = attn_output.reshape(*input_shape, -1).contiguous()
-        print(attn_output.shape)
-        sys.exit() 
         attn_output = self.o_proj(attn_output)
         return attn_output, attn_weights, past_key_value # original: return attn_output, attn_weights
 
