@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import Callable, Optional, Tuple
+from venv import logger
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pickle
 
@@ -9,13 +10,12 @@ from torch import nn
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers.models.llama.modeling_llama import (
+    LlamaSdpaAttention,
     LlamaAttention,
     apply_rotary_pos_emb,
-    # eager_attention_forward,
 )
 from transformers.cache_utils import Cache
-from transformers.processing_utils import Unpack
-# from transformers.modeling_flash_attention_utils import FlashAttentionKwargs
+# from transformers.integrations import sdpa_attention
 # from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
 
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
@@ -23,6 +23,71 @@ llama_name = 'meta-llama/Meta-Llama-3-8B'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = AutoModelForCausalLM.from_pretrained(llama_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(llama_name)
+
+def sdpa_attention_forward(
+    module: torch.nn.Module,
+    query: torch.Tensor,
+    key: torch.Tensor,
+    value: torch.Tensor,
+    attention_mask: Optional[torch.Tensor],
+    dropout: float = 0.0,
+    scaling: Optional[float] = None,
+    is_causal: Optional[bool] = None,
+    **kwargs,
+) -> Tuple[torch.Tensor, None]:
+    if kwargs.get("output_attentions", False) or kwargs.get("head_mask", None) is not None:
+        logger.warning_once(
+            "`sdpa` attention does not support `output_attentions=True` or `head_mask`."
+            " Please set your attention to `eager` if you want any of these features."
+        )
+
+    if hasattr(module, "num_key_value_groups"):
+        key = repeat_kv(key, module.num_key_value_groups)
+        value = repeat_kv(value, module.num_key_value_groups)
+
+    if attention_mask is not None and attention_mask.ndim == 4:
+        attention_mask = attention_mask[:, :, :, : key.shape[-2]]
+
+    # SDPA with memory-efficient backend is bugged with non-contiguous inputs and custom attn_mask for some torch versions
+    # Reference: https://github.com/pytorch/pytorch/issues/112577.
+    query = query.contiguous()
+    key = key.contiguous()
+    value = value.contiguous()
+
+    # We dispatch to SDPA's Flash Attention or Efficient kernels via this `is_causal` if statement instead of an inline conditional assignment
+    # in SDPA to support both torch.compile's dynamic shapes and full graph options. An inline conditional prevents dynamic shapes from compiling.
+    # Note that it is important to check first for the shape, otherwise compile will fail with `argument 'is_causal' must be bool, not SymBool`
+    if is_causal is None:
+        # The last condition is for encoder (decoder) models which specify this by passing their own `is_causal` flag
+        # This is mainly due to those models having mixed implementations for encoder, decoder, and encoder-decoder attns
+        is_causal = query.shape[2] > 1 and attention_mask is None and getattr(module, "is_causal", True)
+
+    # Shapes (e.g. query.shape[2]) are tensors during jit tracing, resulting in `is_causal` being a tensor.
+    # We convert it to a bool for the SDPA kernel that only accepts bools.
+    if torch.jit.is_tracing() and isinstance(is_causal, torch.Tensor):
+        is_causal = is_causal.item()
+
+    attn_output = torch.nn.functional.scaled_dot_product_attention(
+        query,
+        key,
+        value,
+        attn_mask=attention_mask,
+        dropout_p=dropout,
+        scale=scaling,
+        is_causal=is_causal,
+    )
+    attn_output = attn_output.transpose(1, 2).contiguous()
+
+    return attn_output, None
+
+ALL_ATTENTION_FUNCTIONS = {
+        # "flash_attention_2": flash_attention_forward,
+        # "flex_attention": flex_attention_forward,
+        # "paged_attention": paged_attention_forward,
+        "sdpa": sdpa_attention_forward,
+        # "sdpa_paged": sdpa_attention_paged_forward,
+        # "eager_paged": eager_paged_attention_forward,
+    }
 
 def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
     """
@@ -92,8 +157,8 @@ class CustomLlamaAttention(LlamaAttention):
             key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
 
         attention_interface: Callable = eager_attention_forward
-        # if self.config._attn_implementation != "eager": # sdpa
-        #     attention_interface = ALL_ATTENTION_FUNCTIONS[self.config._attn_implementation]
+        if self.config._attn_implementation != "eager": # sdpa
+            attention_interface = ALL_ATTENTION_FUNCTIONS[self.config._attn_implementation]
 
         attn_output, attn_weights = attention_interface(
             self,
@@ -106,7 +171,7 @@ class CustomLlamaAttention(LlamaAttention):
             **kwargs,
         )
         
-        #
+        # get output of each attention head.
         self.last_head_outputs = attn_output.detach()
 
         attn_output = attn_output.reshape(*input_shape, -1).contiguous()
@@ -126,7 +191,7 @@ inputs = tokenizer("こんにちは、元気ですか？", return_tensors="pt").
 with torch.no_grad():
     output = model(**inputs)
 
-# 任意のレイヤーの各ヘッド出力（ex: 0-th layer）
-layer0_heads = model.model.layers[0].self_attn.last_head_outputs  # shape: (bsz, num_heads, seq_len, head_dim)
+# test: print output of each head in the last layer.
+layer0_heads = model.model.layers[31].self_attn.last_head_outputs  # shape: (bsz, num_heads, seq_len, head_dim)
 print(layer0_heads)
 print(layer0_heads.shape)
