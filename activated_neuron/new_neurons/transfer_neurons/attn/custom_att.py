@@ -129,3 +129,4 @@ with torch.no_grad():
 # 任意のレイヤーの各ヘッド出力（ex: 0-th layer）
 layer0_heads = model.model.layers[0].self_attn.last_head_outputs  # shape: (bsz, num_heads, seq_len, head_dim)
 print(layer0_heads)
+print(layer0_heads.shape)
