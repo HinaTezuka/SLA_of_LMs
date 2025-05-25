@@ -84,7 +84,7 @@ def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_
 
     return similarities
 
-def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str) -> None:
+def plot_hist(dict1, dict2, L2: str) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     # keys = list(dict1.keys())
