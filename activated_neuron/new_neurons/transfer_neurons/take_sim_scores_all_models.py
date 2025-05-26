@@ -30,17 +30,17 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
     offset = 0.1 # バーをずらす用
 
     # plot hist
+    plt.rcParams["font.family"] = "DejaVu Serif"
+    plt.figure(figsize=(7, 6))
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
     plt.bar(keys+offset, values2, alpha=1, label='different semantics')
-    # plt.bar(keys, values1, alpha=1, label='same semantics')
-    # plt.bar(keys, values2, alpha=1, label='different semantics')
 
     plt.xlabel('Layer index', fontsize=30)
     plt.ylabel('Cosine Sim', fontsize=30)
     plt.ylim(0, 1)
-    plt.title(f'en_{L2}')
-    plt.tick_params(axis='x', labelsize=15)
-    plt.tick_params(axis='y', labelsize=15)
+    plt.title(f'en-{L2}', fontsize=30)
+    plt.tick_params(axis='x', labelsize=20)
+    plt.tick_params(axis='y', labelsize=20)
     plt.legend()
     plt.grid(True)
     if is_en:
@@ -58,11 +58,12 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
     with PdfPages(path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
         plt.close()
-
+        
 if __name__ == "__main__":
     L1 = "en"
     """ model configs """
     model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+    model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
@@ -81,13 +82,6 @@ if __name__ == "__main__":
             total_sentence_num = 2000 if L2 == "ko" else 5000
             num_sentences = 1000
             dataset = dataset.select(range(total_sentence_num))
-            # tatoeba_data = []
-            # for sentence_idx, item in enumerate(dataset):
-            #     if sentence_idx == num_sentences: break
-            #     # check if there are empty sentences.
-            #     if item['translation'][L1] != '' and item['translation'][L2] != '':
-            #         tatoeba_data.append((item['translation'][L1], item['translation'][L2]))
-            # tatoeba_data_len = len(tatoeba_data)
 
             # same semantics sentence pairs: test split.
             tatoeba_data = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_test.pkl")
@@ -119,7 +113,6 @@ if __name__ == "__main__":
                     sorted_neurons_AP_main = sorted_neurons[:n]
                     random.seed(42)
                     sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num:], intervention_num)
-
                     """ deactivate shared_neurons(same semantics expert neurons) """
                     similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
                     similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
@@ -141,3 +134,6 @@ if __name__ == "__main__":
                     plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
                     print(f"{L2}, intervention_num: {n} <- completed.")
+    
+    del model
+    torch.cuda.empty_cache()
