@@ -235,7 +235,7 @@ class CustomLlamaAttention(LlamaAttention):
         attn_output = self.o_proj(attn_output)
         return attn_output, attn_weights, past_key_value # original: return attn_output, attn_weights
 
-""" set the CustomAttention Calss to the model. """
+""" set the CustomAttention Class to the model. """
 for i, layer in enumerate(model.model.layers):
     original_attn = layer.self_attn
     new_attn = CustomLlamaAttention(layer.self_attn.config, i).to(device)
