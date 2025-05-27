@@ -1,31 +1,54 @@
 """
-LlamaForCausalLM(
-  (model): LlamaModel(
-    (embed_tokens): Embedding(128256, 4096)
+Phi3ForCausalLM(
+  (model): Phi3Model(
+    (embed_tokens): Embedding(100352, 5120, padding_idx=100349)
+    (embed_dropout): Dropout(p=0.0, inplace=False)
     (layers): ModuleList(
-      (0-31): 32 x LlamaDecoderLayer(
-        (self_attn): LlamaSdpaAttention(
-          (q_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (k_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (v_proj): Linear(in_features=4096, out_features=1024, bias=False)
-          (o_proj): Linear(in_features=4096, out_features=4096, bias=False)
-          (rotary_emb): LlamaRotaryEmbedding()
+      (0-39): 40 x Phi3DecoderLayer(
+        (self_attn): Phi3SdpaAttention(
+          (o_proj): Linear4bit(in_features=5120, out_features=5120, bias=False)
+          (qkv_proj): Linear4bit(in_features=5120, out_features=7680, bias=False)
+          (rotary_emb): Phi3RotaryEmbedding()
         )
-        (mlp): LlamaMLP(
-          (gate_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (up_proj): Linear(in_features=4096, out_features=14336, bias=False)
-          (down_proj): Linear(in_features=14336, out_features=4096, bias=False)
-          (act_fn): SiLU()
+        (mlp): Phi3MLP(
+          (gate_up_proj): Linear4bit(in_features=5120, out_features=35840, bias=False)
+          (down_proj): Linear4bit(in_features=17920, out_features=5120, bias=False)
+          (activation_fn): SiLU()
         )
-        (input_layernorm): LlamaRMSNorm((4096,), eps=1e-05)
-        (post_attention_layernorm): LlamaRMSNorm((4096,), eps=1e-05)
+        (input_layernorm): Phi3RMSNorm((5120,), eps=1e-05)
+        (resid_attn_dropout): Dropout(p=0.0, inplace=False)
+        (resid_mlp_dropout): Dropout(p=0.0, inplace=False)
+        (post_attention_layernorm): Phi3RMSNorm((5120,), eps=1e-05)
       )
     )
-    (norm): LlamaRMSNorm((4096,), eps=1e-05)
-    (rotary_emb): LlamaRotaryEmbedding()
+    (norm): Phi3RMSNorm((5120,), eps=1e-05)
   )
-  (lm_head): Linear(in_features=4096, out_features=128256, bias=False)
+  (lm_head): Linear(in_features=5120, out_features=100352, bias=False)
 )
+
+MLP:
+class Phi3MLP(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.config = config
+        self.gate_up_proj = nn.Linear(config.hidden_size, 2 * config.intermediate_size, bias=False)
+        self.down_proj = nn.Linear(config.intermediate_size, config.hidden_size, bias=False)
+        self.activation_fn = ACT2FN[config.hidden_act]
+
+    def forward(self, hidden_states: torch.FloatTensor) -> torch.FloatTensor:
+        up_states = self.gate_up_proj(hidden_states)
+
+        gate, up_states = up_states.chunk(2, dim=-1)
+        up_states = up_states * self.activation_fn(gate)
+
+        return self.down_proj(up_states)
+
+languages used for pre-training: https://arxiv.org/pdf/2412.08905
+Multilingual Data: We incorporated multilingual datasets to ensure that our model could handle a wide range of languages, including German, Spanish, French, Portuguese, Italian, Hindi
+and Japanese. This involved sourcing and processing high-quality multilingual documents from CommonCrawl and Wikipedia. Our multilingual processing pipeline consists of a language identification model, based on fastText used to categorize documents into 176 languages, then uses the
+same classifiers for filtering web dumps to filter for quality. Note that the classifiers were trained
+on multilingual LLM-generated annotations. (citation from: p7)
 """
 import os
 import sys
@@ -35,10 +58,11 @@ from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import torch
 
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 
 def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, data):
@@ -57,6 +81,9 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
             output_L1 = model(**inputs_L1, output_hidden_states=True)
             output_L2 = model(**inputs_L2, output_hidden_states=True)
 
+        print(output_L1.hidden_states)
+        print(len(output_L1.hidden_states))
+        sys.exit()
         all_hidden_states_L1 = output_L1.hidden_states[1:]
         all_hidden_states_L2 = output_L2.hidden_states[1:]
         # 最後のtokenのhidden_statesのみ取得
@@ -105,11 +132,10 @@ def plot_hist(dict1, dict2, L2: str) -> None:
     plt.ylim(0, 1)
     plt.legend()
     plt.grid(True)
-    plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}.png",
-        bbox_inches="tight"
-        )
-    plt.close()
+    output_dir = f"/home/s2410121/proj_LA/measure_similarities/phi4/images/hs_sim/{L2}.png"
+    with PdfPages(output_dir + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
 
 def unfreeze_pickle(file_path: str):
     """
@@ -127,11 +153,16 @@ def unfreeze_pickle(file_path: str):
 if __name__ == "__main__":
     """ model configs """
     langs = ["ja", "nl", "ko", "it"]
-    # original llama
-    model_name = "meta-llama/Meta-Llama-3-8B"
+    # original phi-4.
+    # quantization_config = BitsAndBytesConfig(
+    #     load_in_16bit=True,
+    #     llm_int8_threshold=6.0,
+    #     llm_int8_has_fp16_weight=True,
+    # )
+    model_name = "microsoft/phi-4"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
 
     for L2 in langs:
         L1 = "en" # L1 is fixed to english.
