@@ -16,7 +16,7 @@ from funcs import (
 
 num_sentences = 2000
 split_num = 1000
-langs = ["ja", "nl", "ko", "it"]
+langs = ["ja", "nl", "ko", "it", "fr", "ru", "vi"]
 
 for L2 in langs:
     # monolingual data.
@@ -40,11 +40,11 @@ for L2 in langs:
     save_as_pickle(path_multi_test, multi_test)
 
 """ data for en-only """
-# en
-en_sentences = monolingual_dataset_en(num_sentences)
-en_train = en_sentences[:split_num]
-en_test = en_sentences[split_num:]
-path_en_train = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/en_mono_train.pkl"
-path_en_test = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/en_mono_test.pkl"
-save_as_pickle(path_en_train, en_train)
-save_as_pickle(path_en_test, en_test)
+# # en
+# en_sentences = monolingual_dataset_en(num_sentences)
+# en_train = en_sentences[:split_num]
+# en_test = en_sentences[split_num:]
+# path_en_train = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/en_mono_train.pkl"
+# path_en_test = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/en_mono_test.pkl"
+# save_as_pickle(path_en_train, en_train)
+# save_as_pickle(path_en_test, en_test)

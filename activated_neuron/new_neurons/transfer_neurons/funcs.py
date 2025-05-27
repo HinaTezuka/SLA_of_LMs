@@ -884,7 +884,7 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
 
     return similarities
 
-def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_L2: list, similarities: defaultdict(float)) -> defaultdict(float):
+def calc_cosine_sim(last_token_hidden_states_L1: list, last_token_hidden_states_L2: list, similarities):
     """
     calc similarity per layer.
     """

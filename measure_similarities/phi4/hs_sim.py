@@ -26,7 +26,7 @@ Phi3ForCausalLM(
   (lm_head): Linear(in_features=5120, out_features=100352, bias=False)
 )
 
-MLP:
+MLP Computation of Phi:
 class Phi3MLP(nn.Module):
     def __init__(self, config):
         super().__init__()
@@ -81,9 +81,6 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
             output_L1 = model(**inputs_L1, output_hidden_states=True)
             output_L2 = model(**inputs_L2, output_hidden_states=True)
 
-        print(output_L1.hidden_states)
-        print(len(output_L1.hidden_states))
-        sys.exit()
         all_hidden_states_L1 = output_L1.hidden_states[1:]
         all_hidden_states_L2 = output_L2.hidden_states[1:]
         # 最後のtokenのhidden_statesのみ取得
@@ -118,21 +115,23 @@ def plot_hist(dict1, dict2, L2: str) -> None:
     values1 = list(dict1.values())
     values2 = list(dict2.values())
 
-    offset = 0.1
+    offset = 0.1 # バーをずらす用
 
     # plot hist
+    plt.rcParams["font.family"] = "DejaVu Serif"
+    plt.figure(figsize=(7, 6))
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
     plt.bar(keys+offset, values2, alpha=1, label='different semantics')
 
-    plt.xlabel('Layer index', fontsize=35)
-    plt.ylabel('Cosine Sim', fontsize=35)
-    plt.title(f'en_{L2}')
-    plt.tick_params(axis='x', labelsize=15)  # x軸の目盛りフォントサイズ
-    plt.tick_params(axis='y', labelsize=15)
+    plt.xlabel('Layer index', fontsize=30)
+    plt.ylabel('Cosine Sim', fontsize=30)
     plt.ylim(0, 1)
+    plt.title(f'en-{L2}', fontsize=30)
+    plt.tick_params(axis='x', labelsize=20)
+    plt.tick_params(axis='y', labelsize=20)
     plt.legend()
     plt.grid(True)
-    output_dir = f"/home/s2410121/proj_LA/measure_similarities/phi4/images/hs_sim/{L2}.png"
+    output_dir = f"/home/s2410121/proj_LA/measure_similarities/phi4/images/hs_sim/{L2}"
     with PdfPages(output_dir + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
         plt.close()
@@ -152,13 +151,13 @@ def unfreeze_pickle(file_path: str):
 
 if __name__ == "__main__":
     """ model configs """
-    langs = ["ja", "nl", "ko", "it"]
-    # original phi-4.
+    langs = ["ja", "fr", "it", "vi"] # phi-4のPretraining datasetに入っていて、かつMKQAにも入っている言語.
     # quantization_config = BitsAndBytesConfig(
     #     load_in_16bit=True,
     #     llm_int8_threshold=6.0,
     #     llm_int8_has_fp16_weight=True,
     # )
+    # phi4-
     model_name = "microsoft/phi-4"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -198,7 +197,7 @@ if __name__ == "__main__":
         results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data)
         final_results_same_semantics = defaultdict(float)
         final_results_non_same_semantics = defaultdict(float)
-        for layer_idx in range(32):
+        for layer_idx in range(40):
             final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
 
