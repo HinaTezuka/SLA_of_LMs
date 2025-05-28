@@ -36,50 +36,52 @@ for model_name in model_names:
             # print(np.allclose(u @ np.diag(s) @ vh, hs_layer, atol=1e-6)) # True.
 
             """ compute 累積寄与率（cumulative explained variance ratio) and plot. """
-            # # Compute explained variance ratio
-            # explained_variance_ratio = (s ** 2) / np.sum(s ** 2)
+            # Compute explained variance ratio
+            explained_variance_ratio = (s ** 2) / np.sum(s ** 2)
 
-            # # Compute cumulative explained variance
-            # cumulative_explained_variance = np.cumsum(explained_variance_ratio)
+            # Compute cumulative explained variance
+            cumulative_explained_variance = np.cumsum(explained_variance_ratio)
 
-            # # Set thresholds for saturation levels
-            # thresholds = [0.9, 0.95, 0.99]
+            # Set thresholds for saturation levels
+            thresholds = [0.9, 0.95, 0.99]
 
-            # # Find the number of components needed to reach each threshold
-            # threshold_points = {}
-            # for t in thresholds:
-            #     k = np.searchsorted(cumulative_explained_variance, t) + 1  # +1 for human-readable index
-            #     threshold_points[t] = k
-            #     print(f"{L2} - Layer {layer_i}: {int(t*100)}% variance explained by top {k} components")
+            # Find the number of components needed to reach each threshold
+            threshold_points = {}
+            for t in thresholds:
+                k = np.searchsorted(cumulative_explained_variance, t) + 1  # +1 for human-readable index
+                threshold_points[t] = k
+                print(f"{L2} - Layer {layer_i}: {int(t*100)}% variance explained by top {k} components")
+                # save.
+                threshold_log[model_type][t][L2].append(k)
 
-            # # Plot
-            # plt.rcParams["font.family"] = "DejaVu Serif"
-            # plt.figure(figsize=(7, 6))
-            # plt.plot(cumulative_explained_variance, color="blue", linewidth=3)
+            # Plot
+            plt.rcParams["font.family"] = "DejaVu Serif"
+            plt.figure(figsize=(7, 6))
+            plt.plot(cumulative_explained_variance, color="blue", linewidth=3)
 
-            # colors = {
-            #     0.9: "#08c93b",   # light blue
-            #     0.95: "#54AFE4",  # medium blue
-            #     0.99: "#24158A",  # darker blue
-            # }
-            # for t, k in threshold_points.items():
-            #     plt.axhline(y=t, color=colors[t], linestyle="--", linewidth=2)
-            #     plt.axvline(x=k, color=colors[t], linestyle="--", linewidth=2)
-            #     plt.text(k + 5, t - 0.05, f"{int(t*100)}% : {k} components", fontsize=18, fontweight="bold", color=colors[t])
+            colors = {
+                0.9: "#08c93b",   # light blue
+                0.95: "#54AFE4",  # medium blue
+                0.99: "#24158A",  # darker blue
+            }
+            for t, k in threshold_points.items():
+                plt.axhline(y=t, color=colors[t], linestyle="--", linewidth=2)
+                plt.axvline(x=k, color=colors[t], linestyle="--", linewidth=2)
+                plt.text(k + 5, t - 0.05, f"{int(t*100)}% : {k} components", fontsize=18, fontweight="bold", color=colors[t])
 
-            # plt.xlabel("# Components", fontsize=30)
-            # plt.ylabel("Explained Variance", fontsize=30)
-            # plt.title(f"{L2}, Layer {layer_i}", fontsize=30)
-            # plt.tick_params(axis='both', which='major', labelsize=20)
-            # plt.grid(True, linestyle=":", alpha=0.6)
+            plt.xlabel("# Components", fontsize=30)
+            plt.ylabel("Explained Variance", fontsize=30)
+            plt.title(f"{L2}, Layer {layer_i}", fontsize=30)
+            plt.tick_params(axis='both', which='major', labelsize=20)
+            plt.grid(True, linestyle=":", alpha=0.6)
 
-            # if layer_i == 0:
-            #     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
-            # else:
-            #     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
-            # with PdfPages(path + '.pdf') as pdf:
-            #     pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-            #     plt.close()
+            if layer_i == 0:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
+            else:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
+            with PdfPages(path + '.pdf') as pdf:
+                pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+                plt.close()
 
             """  """
             output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
