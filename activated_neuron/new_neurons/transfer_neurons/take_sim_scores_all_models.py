@@ -50,11 +50,11 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/en/baseline/{L2}_n{intervention_num}"
     elif not is_en:
         if not is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/{L2}_n{intervention_num}"
-            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/reverse/{L2}_n{intervention_num}"
+            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/{L2}_n{intervention_num}"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/reverse/{L2}_n{intervention_num}"
         elif is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/baseline/{L2}_n{intervention_num}"
-            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}"
+            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/baseline/{L2}_n{intervention_num}"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}"
     with PdfPages(path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
         plt.close()
@@ -97,8 +97,8 @@ if __name__ == "__main__":
                     random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
             
             for score_type in score_types:
-                save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-                # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+                # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+                save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                 sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
                 # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(0, 20)]]
                 sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
