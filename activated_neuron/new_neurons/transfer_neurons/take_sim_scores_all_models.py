@@ -31,17 +31,17 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
 
     # plot hist
     plt.rcParams["font.family"] = "DejaVu Serif"
-    plt.figure(figsize=(7, 6))
+    plt.figure(figsize=(8, 7))
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
     plt.bar(keys+offset, values2, alpha=1, label='different semantics')
 
-    plt.xlabel('Layer index', fontsize=30)
-    plt.ylabel('Cosine Sim', fontsize=30)
-    plt.ylim(0, 1)
-    plt.title(f'en-{L2}', fontsize=30)
+    plt.xlabel('Layer index', fontsize=35)
+    plt.ylabel('Cosine Sim', fontsize=35)
+    plt.ylim(-0.5, 1)
+    plt.title(f'en-{L2}', fontsize=35)
     plt.tick_params(axis='x', labelsize=20)
     plt.tick_params(axis='y', labelsize=20)
-    plt.legend()
+    plt.legend(fontsize=20)
     plt.grid(True)
     if is_en:
         if not is_baseline:
@@ -95,16 +95,13 @@ if __name__ == "__main__":
                     random_data.append((dataset2["translation"][num_sentences+sentence_idx][L1], item["translation"][L2])) 
                 elif L2 != "ko" and dataset['translation'][num_sentences+sentence_idx][L1] != '' and item['translation'][L2] != '':
                     random_data.append((dataset["translation"][num_sentences+sentence_idx][L1], item["translation"][L2]))
-
-            def remove_duplicates(lista, listb):
-                return [item for item in lista if item not in set(listb)]
-
+            
             for score_type in score_types:
                 save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
                 # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                 sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
                 # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(0, 20)]]
-                # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
                 
                 for n in n_list:
                     """ n: intervention_num """

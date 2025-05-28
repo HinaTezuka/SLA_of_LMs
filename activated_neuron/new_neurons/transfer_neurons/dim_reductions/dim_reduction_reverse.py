@@ -85,11 +85,11 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
             plt.close()
 
 if __name__ == '__main__':
-    n_list = [100, 1000, 3000, 5000]
+    # n_list = [100, 1000, 3000, 5000]
     score_type = 'cos_sim'
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
     sentences_all_langs = unfreeze_pickle(path)
-    is_reverse = True
+    is_reverse = False
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
                     sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
                 else: # type-1
-                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/qa/{L2}_sorted_neurons_type1.pkl"
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
                 sorted_neurons = sorted_neurons[:1000]
 
@@ -111,9 +111,9 @@ if __name__ == '__main__':
                 hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
             else:
                 hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, tokenizer, device, sorted_neurons, num_layers, sentences)
-            # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+            # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-            # save centroids as pkl.
+            # save hs as pkl.
             if is_reverse:
                 save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
             else:

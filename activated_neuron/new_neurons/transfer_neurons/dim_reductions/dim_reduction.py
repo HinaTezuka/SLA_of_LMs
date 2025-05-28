@@ -84,7 +84,7 @@ if __name__ == '__main__':
         # for L2 in langs:
         #     sentences = sentences_all_langs[L2]
         #     hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-        #     # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+        #     # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
         #     # save as pkl
         #     save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"

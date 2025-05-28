@@ -6,6 +6,7 @@ from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import torch
 import transformers
 from baukit import TraceDict
@@ -63,17 +64,17 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
     return output
 
-def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
+def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron_list, data, model_type):
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
-        return get_act_patterns(model, tokenizer, device, data)
+        return get_act_patterns(model, model_type,tokenizer, device, data)
 
-def get_act_patterns(model, tokenizer, device, data):
+def get_act_patterns(model, model_type, tokenizer, device, data):
 
     # layers_num
-    num_layers = 32
+    num_layers = 40 if model_type == 'phi4' else 32
     # nums of total neurons (per a layer)
-    num_neurons = 14336
+    num_neurons = 17920 if model_type == 'phi4' else 14336
 
     """
     activation valuesを保存する dict (shared neuronsが対象)
@@ -119,6 +120,150 @@ def get_act_patterns(model, tokenizer, device, data):
 
     return act_patterns_dict
 
+def get_act_patterns_inputs_to_down_proj(model, model_type, tokenizer, device, data):
+
+    # layers_num
+    num_layers = 40 if model_type == 'phi4' else 32
+    # nums of total neurons (per a layer)
+    num_neurons = 17920 if model_type == 'phi4' else 14336
+
+    """
+    activation valuesを保存する dict (shared neuronsが対象)
+    {
+        layer_idx: [cos_sim1, cos_sim2, ....] <- act_pattern(cos_sim of act_values): list
+    }
+    """
+    act_patterns_dict = defaultdict(list)
+
+    # Track neurons with tatoeba
+    for L1_text, L2_text in data:
+        # L1 text
+        input_ids_L1 = tokenizer(L1_text, return_tensors="pt").input_ids.to(device)
+        token_len_L1 = len(input_ids_L1[0])
+
+        # L2 text
+        input_ids_L2 = tokenizer(L2_text, return_tensors="pt").input_ids.to(device)
+        token_len_L2 = len(input_ids_L2[0])
+
+        """ get activation values: L1 """
+        act_values_L1 = [] # len: layer_num
+        # hook fn
+        def get_inputs_to_down_proj_L1(model, input):
+            act_values_L1.append(input[0][0][-1].detach().cpu().numpy())
+        handles = []
+        for layer_idx, layer in enumerate(model.model.layers):
+            handle = layer.mlp.down_proj.register_forward_pre_hook(get_inputs_to_down_proj_L1)
+            handles.append(handle)
+        # run inference.
+        with torch.no_grad():
+            L1_output = model(input_ids_L1)
+        # remove hook.
+        for handle in handles:
+            handle.remove()
+        """ get activation values: L2 """
+        act_values_L2 = [] # len: layer_num
+        # hook fn
+        def get_inputs_to_down_proj_L2(model, input):
+            act_values_L2.append(input[0][0][-1].detach().cpu().numpy())
+        handles = []
+        for layer_idx, layer in enumerate(model.model.layers):
+            handle = layer.mlp.down_proj.register_forward_pre_hook(get_inputs_to_down_proj_L2)
+            handles.append(handle)
+        # run inference.
+        with torch.no_grad():
+            L2_output = model(input_ids_L2)
+        # remove hook.
+        for handle in handles:
+            handle.remove()
+
+        """ calc cos_sim """
+        for layer_idx in range(num_layers):
+            """ consider last token only """
+            # L1
+            neurons_L1_values = act_values_L1[layer_idx]
+            print(act_values_L1[layer_idx])
+            sys.exit()
+            # L2
+            neurons_L2_values = act_values_L2[layer_idx]
+            """ calc act_patterns (cos_sim). """ 
+            act_patterns = cosine_similarity(neurons_L1_values, neurons_L2_values)[0, 0]
+            act_patterns_dict[layer_idx].append(act_patterns)
+
+    return act_patterns_dict
+
+# def get_act_patterns_inputs_to_down_proj_with_edit_activations(model, model_type, tokenizer, device, data):
+
+#     # layers_num
+#     num_layers = 40 if model_type == 'phi4' else 32
+#     # nums of total neurons (per a layer)
+#     num_neurons = 17920 if model_type == 'phi4' else 14336
+
+#     """
+#     activation valuesを保存する dict (shared neuronsが対象)
+#     {
+#         layer_idx: [cos_sim1, cos_sim2, ....] <- act_pattern(cos_sim of act_values): list
+#     }
+#     """
+#     act_patterns_dict = defaultdict(list)
+
+#     # Track neurons with tatoeba
+#     for L1_text, L2_text in data:
+#         # L1 text
+#         input_ids_L1 = tokenizer(L1_text, return_tensors="pt").input_ids.to(device)
+#         token_len_L1 = len(input_ids_L1[0])
+
+#         # L2 text
+#         input_ids_L2 = tokenizer(L2_text, return_tensors="pt").input_ids.to(device)
+#         token_len_L2 = len(input_ids_L2[0])
+
+#         """ get activation values: L1 """
+#         act_values_L1 = [] # len: layer_num
+#         # hook fn
+#         def get_inputs_to_down_proj_L1(model, input, layer_idx: int):
+#             if input[0].shape[1] == token_len_L1:
+#                 for neuron_idx in neurons[layer_idx]:
+#             act_values_L1.append(input[0][0][-1].detach().cpu().numpy())
+#         handles = []
+#         for layer_idx, layer in enumerate(model.model.layers):
+#             handle = layer.mlp.down_proj.register_forward_pre_hook(get_inputs_to_down_proj_L1)
+#             handles.append(handle)
+#         # run inference.
+#         with torch.no_grad():
+#             L1_output = model(input_ids_L1)
+#         # remove hook.
+#         for handle in handles:
+#             handle.remove()
+#         """ get activation values: L2 """
+#         act_values_L2 = [] # len: layer_num
+#         # hook fn
+#         def get_inputs_to_down_proj_L2(model, input):
+#             act_values_L2.append(input[0][0][-1].detach().cpu().numpy())
+#         handles = []
+#         for layer_idx, layer in enumerate(model.model.layers):
+#             handle = layer.mlp.down_proj.register_forward_pre_hook(get_inputs_to_down_proj_L2)
+#             handles.append(handle)
+#         # run inference.
+#         with torch.no_grad():
+#             L2_output = model(input_ids_L2)
+#         # remove hook.
+#         for handle in handles:
+#             handle.remove()
+
+#         """ calc cos_sim """
+#         for layer_idx in range(num_layers):
+#             """ consider last token only """
+#             # L1
+#             neurons_L1_values = act_values_L1[layer_idx].unsqueeze()
+#             print(act_values_L1[layer_idx])
+#             sys.exit()
+#             # L2
+#             neurons_L2_values = act_values_L2[layer_idx]
+#             """ calc act_patterns (cos_sim). """ 
+#             act_patterns = cosine_similarity(neurons_L1_values, neurons_L2_values)[0, 0]
+#             act_patterns_dict[layer_idx].append(act_patterns)
+
+#     return act_patterns_dict
+
 
 def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, intervention_num, model_type, score_type, intervention, is_reverse=False):
     """
@@ -146,7 +291,8 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
     means2, std_devs2 = compute_stats(act_patterns_baseline, all_layer_idxs) # baseline
 
     # Plot
-    plt.figure(figsize=(12, 6))
+    plt.rcParams["font.family"] = "DejaVu Serif"
+    plt.figure(figsize=(8, 7))
     
     # Plot act_patterns
     plt.plot(all_layer_idxs, means1, marker='o', linestyle='-', color='blue', label="Same Semantics")
@@ -159,30 +305,28 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
     # Labels and title
     plt.xlabel("Layer Index", fontsize=35)
     plt.ylabel("Cosine Sim", fontsize=35)
-    plt.tick_params(axis='x', labelsize=15)
-    plt.tick_params(axis='y', labelsize=15)
-    plt.title(f"en_{L2}")
-    plt.legend()
+    plt.tick_params(axis='x', labelsize=20)
+    plt.tick_params(axis='y', labelsize=20)
+    plt.title(f"en_{L2}", fontsize=35)
+    plt.legend(fontsize=20)
     plt.grid(True)
     if is_reverse:
         if intervention == "yes":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/reverse/intervention/{L2}_n{intervention_num}.png"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/reverse/intervention/{L2}_n{intervention_num}"
         elif intervention == "baseline":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/reverse/intervention_baseline/{L2}_n{intervention_num}.png"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/reverse/intervention_baseline/{L2}_n{intervention_num}"
     else:
         # save_path
         if intervention == "normal":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/normal/{L2}.png"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/normal/{L2}"
         elif intervention == "yes":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention/{L2}_n{intervention_num}.png"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention/{L2}_n{intervention_num}"
         elif intervention == "baseline":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention_baseline/{L2}_n{intervention_num}.png"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention_baseline/{L2}_n{intervention_num}"
     
-    plt.savefig(
-        save_path,
-        bbox_inches="tight",
-        )
-    plt.close()
+    with PdfPages(save_path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
 
 def get_activation_value(activations, neuron_idx):
     """

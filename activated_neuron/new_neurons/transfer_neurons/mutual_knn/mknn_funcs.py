@@ -103,8 +103,54 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
     return output
 
+# def compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences: list, L1: str, L2: str, topk:int, layer_neuron_list:list):
+#     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+#     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+#         return compute_mutual_knn(model, tokenizer, device, sentences, L1, L2, topk)
+
+def compute_mutual_knn_L2(model, tokenizer, device, sentences: list, L1: str, L2: str, topk:int=5) -> list:
+    layer_num = 32
+    sentences_num = len(sentences)
+    hidden_dim_size = 4096 # dim_size of hidden states.
+    feats_L2 = torch.zeros((layer_num, sentences_num, hidden_dim_size), device=device)
+    for txt_idx, (L1_txt, L2_txt) in enumerate(sentences):
+        inputs_L2 = tokenizer(L2_txt, return_tensors='pt').to(device)
+        # run inference.
+        with torch.no_grad():
+            output_L2 = model(**inputs_L2, output_hidden_states=True)
+        hs_L2_all_layers = output_L2.hidden_states[1:]
+        for layer_idx in range(layer_num):
+            hs_L2 = hs_L2_all_layers[layer_idx][:, -1, :].squeeze()
+            feats_L2[layer_idx, txt_idx, :] = hs_L2
+
+    return feats_L2
+
 def compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences: list, L1: str, L2: str, topk:int, layer_neuron_list:list):
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    # L2 hs.
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
-
-        return compute_mutual_knn(model, tokenizer, device, sentences, L1, L2, topk)
+        feats_L2 = compute_mutual_knn_L2(model, tokenizer, device, sentences, L1, L2, topk)
+    # L1 hs.
+    layer_num = 32
+    sentences_num = len(sentences)
+    hidden_dim_size = 4096 # dim_size of hidden states.
+    feats_L1 = torch.zeros((layer_num, sentences_num, hidden_dim_size), device=device)
+    for txt_idx, (L1_txt, L2_txt) in enumerate(sentences):
+        inputs_L1 = tokenizer(L1_txt, return_tensors='pt').to(device)
+        # run inference.
+        with torch.no_grad():
+            output_L1 = model(**inputs_L1, output_hidden_states=True)
+        hs_L1_all_layers = output_L1.hidden_states[1:]
+        for layer_idx in range(layer_num):
+            hs_L1 = hs_L1_all_layers[layer_idx][:, -1, :].squeeze()
+            feats_L1[layer_idx, txt_idx, :] = hs_L1
+    # calc Mutual KNN.
+    knn_scores = [] # [knn_score_layer1, knn_score_layer2, ...]
+    for layer_idx in range(layer_num):
+        feats_L1 = F.normalize(feats_L1, dim=-1) # 原論文はnormalizeしていたので.
+        feats_L2 = F.normalize(feats_L2, dim=-1)
+        knn_score = mutual_knn(feats_L1[layer_idx, :, :], feats_L2[layer_idx, :, :], topk=topk)
+        knn_scores.append(knn_score)
+    
+    return knn_scores

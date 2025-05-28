@@ -790,7 +790,7 @@ def compute_ap_and_sort_np(activations_array: np.array, labels: list):
     return sorted_neurons, final_scores
 
 # visualization
-def plot_hist(dict1: defaultdict(float), dict2: defaultdict(float), L2: str, AUC_or_AUC_baseline:str, intervention_num: str) -> None:
+def plot_hist(dict1, dict2, L2: str, AUC_or_AUC_baseline:str, intervention_num: str) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
@@ -833,9 +833,41 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
 def take_similarities_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
-    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+    similarities = defaultdict(list)
 
-        return calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, device, data)
+    for L1_txt, L2_txt in data:
+        # get L2 hs (with intervention).
+        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)):
+            inputs_L2 = tokenizer(L2_txt, return_tensors="pt").to(device)
+            with torch.no_grad():
+                output_L2 = model(**inputs_L2, output_hidden_states=True)
+            last_token_index_L2 = inputs_L2["input_ids"].shape[1] - 1
+            last_token_hidden_states_L2 = [
+                layer_hidden_state[:, last_token_index_L2, :].detach().cpu().numpy()
+                for layer_hidden_state in output_L2.hidden_states
+            ]
+
+        # get L1 hs (without intervention).
+        inputs_L1 = tokenizer(L1_txt, return_tensors="pt").to(device)
+        with torch.no_grad():
+            output_L1 = model(**inputs_L1, output_hidden_states=True)
+        last_token_index_L1 = inputs_L1["input_ids"].shape[1] - 1
+        last_token_hidden_states_L1 = [
+            layer_hidden_state[:, last_token_index_L1, :].detach().cpu().numpy()
+            for layer_hidden_state in output_L1.hidden_states
+        ]
+
+        # cos_sim for this sentence pair
+        similarities = calc_cosine_sim(last_token_hidden_states_L1, last_token_hidden_states_L2, similarities)
+
+    return similarities
+
+
+# def take_similarities_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
+#     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+#     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+#         return calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, device, data)
 
 def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, device, data):
     """

@@ -33,43 +33,43 @@ is_reverses = [False]
 score_type = 'cos_sim'
 intervention_num = 1000
 
-# for model_name in model_names:
-#     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-#     tokenizer = AutoTokenizer.from_pretrained(model_name)
-#     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
-#     knn_scores = {}
-#     for is_reverse in is_reverses:
-#         for L2 in langs:
-#             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_train.pkl'
-#             sentences = unfreeze_pickle(path)
+for model_name in model_names:
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+    knn_scores = {}
+    for is_reverse in is_reverses:
+        for L2 in langs:
+            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_train.pkl'
+            sentences = unfreeze_pickle(path)
 
-#             if not is_reverse:
-#                 path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-#                 neurons = unfreeze_pickle(path)
-#                 neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20)]]
-#             elif is_reverse:
-#                 path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
-#                 neurons = unfreeze_pickle(path)
-#                 neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-#             neurons_main = neurons[:intervention_num]
-#             # baseline
-#             random.seed(42)
-#             neurons_baseline = random.sample(neurons[intervention_num:], intervention_num)
+            if not is_reverse:
+                path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+                neurons = unfreeze_pickle(path)
+                neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20)]]
+            elif is_reverse:
+                path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+                neurons = unfreeze_pickle(path)
+                neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+            neurons_main = neurons[:intervention_num]
+            # baseline
+            random.seed(42)
+            neurons_baseline = random.sample(neurons[intervention_num:], intervention_num)
 
-#             res = compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences, L1, L2, topk, neurons_baseline) # res: [knn_score_layer1, knn_score_layer2, ...]
-#             print(f'================== {model_type}, {L2} ==================')
-#             # print(res)
-#             knn_scores[L2] = res
+            res = compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences, L1, L2, topk, neurons_baseline) # res: [knn_score_layer1, knn_score_layer2, ...]
+            print(f'================== {model_type}, {L2} ==================')
+            # print(res)
+            knn_scores[L2] = res
     
-#         if not is_reverse:
-#             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}_type1_n{intervention_num}_baseline.pkl'
-#         elif is_reverse:
-#             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}_type2_n{intervention_num}_baseline.pkl'
-#         save_as_pickle(path, knn_scores)
+        if not is_reverse:
+            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}_type1_n{intervention_num}_baseline.pkl'
+        elif is_reverse:
+            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/knn/res_all_langs_k{topk}_type2_n{intervention_num}_baseline.pkl'
+        save_as_pickle(path, knn_scores)
 
-#     # clear cache.
-#     del model
-#     torch.cuda.empty_cache()
+    # clear cache.
+    del model
+    torch.cuda.empty_cache()
 
 """ visualization. """
 model_types = ['llama3', 'mistral', 'aya']
@@ -101,6 +101,7 @@ for is_reverse in is_reverses:
 
     # Generate a separate plot for each model
     for model_type in model_types:
+        plt.rcParams["font.family"] = "DejaVu Serif"
         plt.figure(figsize=(10, 6))
         subset = df[df['Model'] == model_type]
         sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10', linewidth=3)
@@ -115,9 +116,9 @@ for is_reverse in is_reverses:
         plt.legend(title='L2', fontsize=15, title_fontsize=15)
         
         if not is_reverse:
-            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}_type1_n{intervention_num}_baseline'
+            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/test/{model_type}_top{topk}_type1_n{intervention_num}_baseline'
         elif is_reverse:
-            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}_type2_n{intervention_num}_baseline'
+            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/test/{model_type}_top{topk}_type2_n{intervention_num}_baseline'
         # plt.savefig(save_path, bbox_inches='tight')
         with PdfPages(save_path + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
