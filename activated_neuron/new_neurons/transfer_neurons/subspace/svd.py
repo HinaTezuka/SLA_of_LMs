@@ -34,8 +34,8 @@ for model_name in model_names:
             hs_layer = np.array(hs[layer_i]) # shape: (sample_num, hs_dim)
             u, s, vh = svd(hs_layer, full_matrices=False)
 
-            explained_variance_ratio = (s ** 2) / np.sum(s ** 2)
-            cumulative_explained_variance = np.cumsum(explained_variance_ratio)
+            explained_variance_ratio = (s ** 2) / np.sum(s ** 2) # 寄与率.
+            cumulative_explained_variance = np.cumsum(explained_variance_ratio) # 累積寄与率.
             thresholds = [0.9, 0.95, 0.99]
 
             threshold_points = {}
