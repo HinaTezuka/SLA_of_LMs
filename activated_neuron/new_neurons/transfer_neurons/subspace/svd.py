@@ -11,6 +11,7 @@ from numpy.linalg import svd, matrix_rank
 from matplotlib.backends.backend_pdf import PdfPages
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from sklearn.preprocessing import StandardScaler
 
 from funcs import (
     unfreeze_pickle,
@@ -20,6 +21,7 @@ langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))  # ← これを追加
+is_scaled = True
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
@@ -32,6 +34,9 @@ for model_name in model_names:
         for L2 in langs:
             hs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl")
             hs_layer = np.array(hs[layer_i]) # shape: (sample_num, hs_dim)
+            if is_scaled:
+                scaler = StandardScaler()
+                hs_layer = scaler.fit_transform(hs_layer)
             u, s, vh = svd(hs_layer, full_matrices=False)
 
             explained_variance_ratio = (s ** 2) / np.sum(s ** 2) # 寄与率.
@@ -83,15 +88,24 @@ for model_name in model_names:
         plt.legend(fontsize=14)
 
         if layer_i == 0:
-            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
+            if is_scaled:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/emb_layer'
+            else:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
         else:
-            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
+            if is_scaled:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/{layer_i}'
+            else:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
         with PdfPages(path + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
 
     # Summary plot
-    output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
+    if is_scaled:
+        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/scale"
+    else:
+        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
     os.makedirs(output_dir, exist_ok=True)
 
     colors_by_lang = {
