@@ -22,6 +22,7 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+is_using_centroids = False
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
