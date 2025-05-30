@@ -53,7 +53,6 @@ for model_name in model_names:
             all_lang_cumexp[L2] = cumulative_explained_variance
             all_lang_thresh[L2] = threshold_points
 
-        # ✅ 一度だけ全言語プロット
         plt.rcParams["font.family"] = "DejaVu Serif"
         plt.figure(figsize=(7, 6))
 
