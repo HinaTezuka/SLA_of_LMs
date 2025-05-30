@@ -28,9 +28,9 @@ for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
     layer_num = 41 if model_type == 'phi4' else 33 # emb_layer included.
     # load hidden states.
-    hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
+    # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
     hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl.pkl")
-    hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko.pkl")
+    # hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko.pkl")
     hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
     hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
 
@@ -38,12 +38,13 @@ for model_name in model_names:
         all_lang_cumexp = {}
         all_lang_thresh = {}
 
-        hs_ja_layer = np.array(hs_ja[layer_i]) # shape: (n * d) n: sample_num, d: dimention of hs.
+        # hs_ja_layer = np.array(hs_ja[layer_i]) # shape: (n * d) n: sample_num, d: dimention of hs.
         hs_nl_layer = np.array(hs_nl[layer_i])
-        hs_ko_layer = np.array(hs_ko[layer_i])
+        # hs_ko_layer = np.array(hs_ko[layer_i])
         hs_it_layer = np.array(hs_it[layer_i])
         hs_en_layer = np.array(hs_en[layer_i])
-        hs_layer = np.concatenate([hs_ja_layer, hs_nl_layer, hs_ko_layer, hs_it_layer, hs_en_layer], axis=0)
+        # hs_layer = np.concatenate([hs_ja_layer, hs_nl_layer, hs_ko_layer, hs_it_layer, hs_en_layer], axis=0)
+        hs_layer = np.concatenate([hs_nl_layer, hs_it_layer, hs_en_layer], axis=0)
 
         if is_scaled:
             scaler = StandardScaler()
@@ -63,39 +64,39 @@ for model_name in model_names:
             threshold_log[model_type][t]["all"].append(k)  # 言語ではなく "all" とするのが自然
 
         plt.rcParams["font.family"] = "DejaVu Serif"
-        plt.figure(figsize=(7, 6))
+        # plt.figure(figsize=(7, 6))
 
-        # 累積寄与率のプロット（全言語統合の1本のみ）
-        plt.plot(cumulative_explained_variance, color="#1f77b4", linewidth=3, label="All languages")
+        # # 累積寄与率のプロット（全言語統合の1本のみ）
+        # plt.plot(cumulative_explained_variance, color="#1f77b4", linewidth=3, label="All languages")
 
-        # 95%しきい値の線と注釈
-        k95 = threshold_points[0.95]
-        plt.axvline(x=k95, color="#1f77b4", linestyle="--", linewidth=1.5, alpha=0.7)
-        plt.text(k95 + 5, 0.87, f"95% : {k95} components",
-                fontsize=18, fontweight="bold", color="#1f77b4")
+        # # 95%しきい値の線と注釈
+        # k95 = threshold_points[0.95]
+        # plt.axvline(x=k95, color="#1f77b4", linestyle="--", linewidth=1.5, alpha=0.7)
+        # plt.text(k95 + 5, 0.87, f"95% : {k95} components",
+        #         fontsize=18, fontweight="bold", color="#1f77b4")
 
-        plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
+        # plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
 
-        plt.xlabel("# Components", fontsize=30)
-        plt.ylabel("Explained Variance", fontsize=30)
-        plt.title(f"Layer {layer_i}", fontsize=30)
-        plt.tick_params(axis='both', which='major', labelsize=20)
-        plt.grid(True, linestyle=":", alpha=0.6)
-        plt.legend(fontsize=20)
+        # plt.xlabel("# Components", fontsize=30)
+        # plt.ylabel("Explained Variance", fontsize=30)
+        # plt.title(f"Layer {layer_i}", fontsize=30)
+        # plt.tick_params(axis='both', which='major', labelsize=20)
+        # plt.grid(True, linestyle=":", alpha=0.6)
+        # plt.legend(fontsize=20)
 
-        if layer_i == 0:
-            if is_scaled:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/emb_layer'
-            else:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/emb_layer'
-        else:
-            if is_scaled:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/{layer_i}'
-            else:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/{layer_i}'
-        with PdfPages(path + '.pdf') as pdf:
-            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-            plt.close()
+        # if layer_i == 0:
+        #     if is_scaled:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/emb_layer'
+        #     else:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/emb_layer'
+        # else:
+        #     if is_scaled:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/{layer_i}'
+        #     else:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/{layer_i}'
+        # with PdfPages(path + '.pdf') as pdf:
+        #     pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        #     plt.close()
         
     # Summary plot
     if is_scaled:
@@ -129,7 +130,7 @@ for model_name in model_names:
                 label=f"{int(threshold * 100)}%"
             )
 
-        plt.title(f"{model_name_map[model_type]} - Variance", fontsize=30)
+        plt.title(f"{model_name_map[model_type]}_Europe", fontsize=30)
         plt.xlabel("Layers", fontsize=30)
         plt.ylabel("# Principal Components", fontsize=30)
         plt.grid(True, linestyle=":", alpha=0.5)
@@ -144,5 +145,8 @@ for model_name in model_names:
             plt.close()
 
 # save threshold log as pkl.
-path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca.pkl'
+if is_scaled:
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca_scaled.pkl'
+else:
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca_europe.pkl'
 save_as_pickle(path, dict(threshold_log))

@@ -137,7 +137,7 @@ for model_name in model_names:
         plt.legend(fontsize=22, title="Threshold", title_fontsize=20)
         plt.tight_layout()
 
-        save_path = os.path.join(output_dir, f"{model_type}_all_thresholds")
+        save_path = os.path.join(output_dir, f"{model_type}")
         with PdfPages(save_path + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
