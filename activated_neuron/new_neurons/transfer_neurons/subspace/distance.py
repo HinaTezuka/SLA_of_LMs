@@ -97,7 +97,7 @@ for model_name in model_names:
 
         # Plot heatmap
         plt.rcParams["font.family"] = "DejaVu Serif"
-        plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(8.5, 8))
         ax = sns.heatmap(
             lang_sim_matrix,
             xticklabels=langs,
@@ -107,16 +107,22 @@ for model_name in model_names:
             fmt=".2f",
             vmin=0,
             vmax=0.5,
-            square=True
+            square=True,
+            annot_kws={"size": 20}
         )
+        cbar = ax.collections[0].colorbar
+        cbar.ax.tick_params(labelsize=20)
         title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B' if model_type == 'aya' else 'Phi4-14B'
         plt.title(f"{title} - Layer {layer_i}", fontsize=30)
-        plt.tick_params(labelsize=25)
+        plt.tick_params(labelsize=30)
 
         save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance"
         os.makedirs(save_dir, exist_ok=True)
-        save_path = f"{save_dir}/layer_{layer_i}.pdf"
+        if layer_i == 0:
+            save_path = f'{save_dir}/emb_layer'
+        else:
+            save_path = f"{save_dir}/layer_{layer_i}"
 
-        with PdfPages(save_path) as pdf:
+        with PdfPages(save_path + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
