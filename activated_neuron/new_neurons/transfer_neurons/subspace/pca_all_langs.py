@@ -11,11 +11,12 @@ from matplotlib.backends.backend_pdf import PdfPages
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, normalize
 
 from funcs import (
     unfreeze_pickle,
     save_as_pickle,
+    defaultdict_to_dict,
 )
 
 langs = ["ja", "nl", "ko", "it", "en"]
@@ -23,7 +24,7 @@ langs = ["ja", "nl", "ko", "it", "en"]
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 is_scaled = False
-lang_family = 'europe'
+lang_family = 'all'
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
@@ -72,10 +73,8 @@ for model_name in model_names:
         if lang_family == 'all':
             plt.figure(figsize=(7, 6))
 
-            # 累積寄与率のプロット（全言語統合の1本のみ）
             plt.plot(cumulative_explained_variance, color="#1f77b4", linewidth=3, label="All languages")
 
-            # 95%しきい値の線と注釈
             k95 = threshold_points[0.95]
             plt.axvline(x=k95, color="#1f77b4", linestyle="--", linewidth=1.5, alpha=0.7)
             plt.text(k95 + 5, 0.87, f"95% : {k95} components",
@@ -149,14 +148,14 @@ for model_name in model_names:
     plt.legend(fontsize=22, title="Threshold", title_fontsize=25)
     plt.tight_layout()
 
-    save_path = os.path.join(output_dir, f"{model_type}")
+    save_path = os.path.join(output_dir, f"{model_type}_{lang_family}")
     with PdfPages(save_path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
         plt.close()
 
-# save threshold log as pkl.
-if is_scaled:
-    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca_scaled_{lang_family}.pkl'
-else:
-    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca_{lang_family}.pkl'
-save_as_pickle(path, dict(threshold_log))
+# # save threshold log as pkl.
+# if is_scaled:
+#     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca_scaled_{lang_family}.pkl'
+# else:
+#     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca_{lang_family}.pkl'
+# save_as_pickle(path, defaultdict_to_dict(threshold_log))
