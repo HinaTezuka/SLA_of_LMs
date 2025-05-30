@@ -115,32 +115,31 @@ for model_name in model_names:
         "aya": "Aya-8B"
     }
 
-    for model_type in threshold_log:
-        plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 6))
 
-        for threshold in [0.9, 0.95, 0.99]:
-            y = threshold_log[model_type][threshold]["all"]
-            plt.plot(
-                range(len(y)),
-                y,
-                color=threshold_colors[threshold],
-                linewidth=3,
-                label=f"{int(threshold * 100)}%"
-            )
+    for threshold in [0.9, 0.95, 0.99]:
+        y = threshold_log[model_type][threshold]["all"]
+        plt.plot(
+            range(len(y)),
+            y,
+            color=threshold_colors[threshold],
+            linewidth=3,
+            label=f"{int(threshold * 100)}%"
+        )
 
-        plt.title(f"{model_name_map[model_type]} - Variance Thresholds", fontsize=30)
-        plt.xlabel("Layers", fontsize=30)
-        plt.ylabel("# Components", fontsize=30)
-        plt.grid(True, linestyle=":", alpha=0.5)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        plt.legend(fontsize=22, title="Threshold", title_fontsize=20)
-        plt.tight_layout()
+    plt.title(f"{model_name_map[model_type]} - Variance Thresholds", fontsize=30)
+    plt.xlabel("Layers", fontsize=30)
+    plt.ylabel("# Components", fontsize=30)
+    plt.grid(True, linestyle=":", alpha=0.5)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.legend(fontsize=22, title="Threshold", title_fontsize=20)
+    plt.tight_layout()
 
-        save_path = os.path.join(output_dir, f"{model_type}")
-        with PdfPages(save_path + '.pdf') as pdf:
-            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-            plt.close()
+    save_path = os.path.join(output_dir, f"{model_type}")
+    with PdfPages(save_path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
 
 # save threshold log as pkl.
 path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/subspace/dist_between_subspaces/threshold_log_pca.pkl'
