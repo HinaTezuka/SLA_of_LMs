@@ -21,7 +21,7 @@ langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))  # ← これを追加
-is_scaled = True
+is_scaled = False
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
