@@ -41,7 +41,7 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
     plt.title(f'en-{L2}', fontsize=35)
     plt.tick_params(axis='x', labelsize=20)
     plt.tick_params(axis='y', labelsize=20)
-    plt.legend(fontsize=20)
+    plt.legend(fontsize=25)
     plt.grid(True)
     if is_en:
         if not is_baseline:

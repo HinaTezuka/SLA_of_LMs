@@ -40,6 +40,7 @@ import torch
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
+from matplotlib.backends.backend_pdf import PdfPages
 
 def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, data):
     """
@@ -94,22 +95,23 @@ def plot_hist(dict1, dict2, L2: str) -> None:
     offset = 0.1
 
     # plot hist
+    plt.rcParams["font.family"] = "DejaVu Serif"
+    plt.figure(figsize=(8, 7))
     plt.bar(keys-offset, values1, alpha=1, label='same semantics')
     plt.bar(keys+offset, values2, alpha=1, label='different semantics')
 
     plt.xlabel('Layer index', fontsize=35)
     plt.ylabel('Cosine Sim', fontsize=35)
-    plt.title(f'en_{L2}')
-    plt.tick_params(axis='x', labelsize=15)  # x軸の目盛りフォントサイズ
-    plt.tick_params(axis='y', labelsize=15)
     plt.ylim(0, 1)
-    plt.legend()
+    plt.title(f'en-{L2}', fontsize=35)
+    plt.tick_params(axis='x', labelsize=20)
+    plt.tick_params(axis='y', labelsize=20)
+    plt.legend(fontsize=25)
     plt.grid(True)
-    plt.savefig(
-        f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}.png",
-        bbox_inches="tight"
-        )
-    plt.close()
+    save_path = f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}",
+    with PdfPages(save_path + '.pdf') as pdf:
+        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        plt.close()
 
 def unfreeze_pickle(file_path: str):
     """
