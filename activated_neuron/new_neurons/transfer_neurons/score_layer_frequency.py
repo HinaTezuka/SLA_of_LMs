@@ -57,13 +57,13 @@ def plot_layer_distribution_all_langs(all_neurons_by_lang: dict, is_reverse: boo
                 color=color,
             )
 
-    plt.xlabel("Layer Index", fontsize=35)
-    plt.ylabel("Density", fontsize=35)
+    plt.xlabel("Layer Index", fontsize=45)
+    plt.ylabel("Density", fontsize=45)
     title = 'Type-1 Neurons' if not is_reverse else 'Type-2 Neurons'
-    plt.title(f"{title} (n={n})", fontsize=40)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.legend(title="Language", fontsize=30, title_fontsize=30)
+    plt.title(f"{title} (n={n})", fontsize=50)
+    plt.xticks(fontsize=40)
+    plt.yticks(fontsize=40)
+    plt.legend(title="Language", fontsize=50, title_fontsize=45)
 
     if not is_reverse:
         save_path = f'activated_neuron/new_neurons/images/transfers/distribution/{model}/layer_freq/{score_type}_allLangs_n{n}'
