@@ -22,6 +22,7 @@ langs = ["ja", "nl", "ko", "it", "en"]
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 is_scaled = False
+intervention_type = 'type-2' # normal, type-1(top-1k), type-2(top-1k). 
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
@@ -32,7 +33,12 @@ for model_name in model_names:
         all_lang_thresh = {}
 
         for L2 in langs:
-            hs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl")
+            if intervention_type == 'normal':
+                hs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl")
+            elif intervention_type == 'type-1':
+                hs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1.pkl")
+            elif intervention_type == 'type-2':
+                hs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl")
             hs_layer = np.array(hs[layer_i]) # shape: (sample_num, hs_dim)
             if is_scaled:
                 scaler = StandardScaler()
@@ -54,51 +60,51 @@ for model_name in model_names:
             all_lang_thresh[L2] = threshold_points
 
         plt.rcParams["font.family"] = "DejaVu Serif"
-        plt.figure(figsize=(7, 6))
+        # plt.figure(figsize=(7, 6))
 
-        colors_by_lang = {
-            "en": "#1f77b4",
-            "ja": "#ff7f0e",
-            "ko": "#2ca02c",
-            "it": "#d62728",
-            "nl": "#9467bd"
-        }
+        # colors_by_lang = {
+        #     "en": "#1f77b4",
+        #     "ja": "#ff7f0e",
+        #     "ko": "#2ca02c",
+        #     "it": "#d62728",
+        #     "nl": "#9467bd"
+        # }
 
-        y_offset_base = 0.9
-        y_step = 0.05  # Vertical spacing between text annotations
+        # y_offset_base = 0.9
+        # y_step = 0.05  # Vertical spacing between text annotations
 
-        for i, lang in enumerate(langs):
-            plt.plot(all_lang_cumexp[lang], color=colors_by_lang[lang], linewidth=3, label=lang)
+        # for i, lang in enumerate(langs):
+        #     plt.plot(all_lang_cumexp[lang], color=colors_by_lang[lang], linewidth=3, label=lang)
 
-            # Only annotate 95% threshold
-            k95 = all_lang_thresh[lang][0.95]
-            y_offset = y_offset_base - i * y_step  # Decrease y per language
-            plt.axvline(x=k95, color=colors_by_lang[lang], linestyle="--", linewidth=1.5, alpha=0.7)
-            plt.text(k95 + 5, y_offset, f"{lang} - 95% : {k95} components",
-                    fontsize=18, fontweight="bold", color=colors_by_lang[lang])
+        #     # Only annotate 95% threshold
+        #     k95 = all_lang_thresh[lang][0.95]
+        #     y_offset = y_offset_base - i * y_step  # Decrease y per language
+        #     plt.axvline(x=k95, color=colors_by_lang[lang], linestyle="--", linewidth=1.5, alpha=0.7)
+        #     plt.text(k95 + 5, y_offset, f"{lang} - 95% : {k95} components",
+        #             fontsize=18, fontweight="bold", color=colors_by_lang[lang])
 
-        plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
+        # plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
 
-        plt.xlabel("# Components", fontsize=30)
-        plt.ylabel("Explained Variance", fontsize=30)
-        plt.title(f"Layer {layer_i}", fontsize=30)
-        plt.tick_params(axis='both', which='major', labelsize=20)
-        plt.grid(True, linestyle=":", alpha=0.6)
-        plt.legend(fontsize=14)
+        # plt.xlabel("# Components", fontsize=30)
+        # plt.ylabel("Explained Variance", fontsize=30)
+        # plt.title(f"Layer {layer_i}", fontsize=30)
+        # plt.tick_params(axis='both', which='major', labelsize=20)
+        # plt.grid(True, linestyle=":", alpha=0.6)
+        # plt.legend(fontsize=14)
 
-        if layer_i == 0:
-            if is_scaled:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/emb_layer'
-            else:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
-        else:
-            if is_scaled:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/{layer_i}'
-            else:
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
-        with PdfPages(path + '.pdf') as pdf:
-            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-            plt.close()
+        # if layer_i == 0:
+        #     if is_scaled:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/emb_layer'
+        #     else:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
+        # else:
+        #     if is_scaled:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/{layer_i}'
+        #     else:
+        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
+        # with PdfPages(path + '.pdf') as pdf:
+        #     pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        #     plt.close()
 
     # Summary plot
     if is_scaled:
@@ -144,7 +150,12 @@ for model_name in model_names:
             plt.legend(title="Language", fontsize=25, title_fontsize=25)
             plt.tight_layout()
 
-            save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}")
+            if intervention_type == 'normal':
+                save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}")
+            elif intervention_type == 'type-1':
+                save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}_type1")
+            elif intervention_type == 'type-2':
+                save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}_type2")
             with PdfPages(save_path + '.pdf') as pdf:
                 pdf.savefig(bbox_inches='tight', pad_inches=0.01)
                 plt.close()
