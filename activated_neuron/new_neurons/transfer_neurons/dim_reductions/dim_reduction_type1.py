@@ -61,13 +61,13 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
             plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
 
-        plt.xlabel('PCA Dimension 1', fontsize=20)
-        plt.ylabel('PCA Dimension 2', fontsize=20)
+        plt.xlabel('PCA Dimension 1', fontsize=35)
+        plt.ylabel('PCA Dimension 2', fontsize=35)
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
         file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
-        plt.title(title, fontsize=25)
-        plt.legend(fontsize=15)
+        plt.title(title, fontsize=30)
+        plt.legend(fontsize=25)
         plt.grid(True)
 
         # save as image.
@@ -75,11 +75,7 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
             output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse/{file_name}'
         else:
             output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/type-1/{file_name}'
-        # os.makedirs(output_dir, exist_ok=True)
-        # output_path = os.path.join(output_dir, file_name)
 
-        # plt.savefig(output_path, bbox_inches="tight")
-        # plt.close()
         with PdfPages(output_dir + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
@@ -89,7 +85,7 @@ if __name__ == '__main__':
     score_type = 'cos_sim'
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
     sentences_all_langs = unfreeze_pickle(path)
-    is_reverse = True
+    is_reverse = False
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -104,6 +100,7 @@ if __name__ == '__main__':
                 else: # type-1
                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    orted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20)]]
                 sorted_neurons = sorted_neurons[:1000]
 
             sentences = sentences_all_langs[L2]
@@ -134,9 +131,9 @@ if __name__ == '__main__':
             hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1.pkl")
             hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1.pkl")
             hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
-        # 
+        
+        # apply PCA and plot.
         plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, is_reverse)
-        # plot_umap(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
         del model
         torch.cuda.empty_cache()
