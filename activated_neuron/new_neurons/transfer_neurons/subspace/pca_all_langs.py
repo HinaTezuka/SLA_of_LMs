@@ -23,7 +23,7 @@ langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
-is_scaled = False
+is_scaled = True
 lang_family = 'all'
 
 for model_name in model_names:
@@ -70,38 +70,38 @@ for model_name in model_names:
             threshold_log[model_type][t]["all"].append(k)  # 言語ではなく "all" とするのが自然
 
         plt.rcParams["font.family"] = "DejaVu Serif"
-        if lang_family == 'all':
-            plt.figure(figsize=(7, 6))
+        # if lang_family == 'all':
+        #     plt.figure(figsize=(7, 6))
 
-            plt.plot(cumulative_explained_variance, color="#1f77b4", linewidth=3, label="All languages")
+        #     plt.plot(cumulative_explained_variance, color="#1f77b4", linewidth=3, label="All languages")
 
-            k95 = threshold_points[0.95]
-            plt.axvline(x=k95, color="#1f77b4", linestyle="--", linewidth=1.5, alpha=0.7)
-            plt.text(k95 + 5, 0.87, f"95% : {k95} components",
-                    fontsize=18, fontweight="bold", color="#1f77b4")
+        #     k95 = threshold_points[0.95]
+        #     plt.axvline(x=k95, color="#1f77b4", linestyle="--", linewidth=1.5, alpha=0.7)
+        #     plt.text(k95 + 5, 0.87, f"95% : {k95} components",
+        #             fontsize=18, fontweight="bold", color="#1f77b4")
 
-            plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
+        #     plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
 
-            plt.xlabel("# Components", fontsize=30)
-            plt.ylabel("Explained Variance", fontsize=30)
-            plt.title(f"Layer {layer_i}", fontsize=30)
-            plt.tick_params(axis='both', which='major', labelsize=20)
-            plt.grid(True, linestyle=":", alpha=0.6)
-            plt.legend(fontsize=20)
+        #     plt.xlabel("# Components", fontsize=30)
+        #     plt.ylabel("Explained Variance", fontsize=30)
+        #     plt.title(f"Layer {layer_i}", fontsize=30)
+        #     plt.tick_params(axis='both', which='major', labelsize=20)
+        #     plt.grid(True, linestyle=":", alpha=0.6)
+        #     plt.legend(fontsize=20)
 
-            if layer_i == 0:
-                if is_scaled:
-                    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/emb_layer'
-                else:
-                    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/emb_layer'
-            else:
-                if is_scaled:
-                    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/{layer_i}'
-                else:
-                    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/{layer_i}'
-            with PdfPages(path + '.pdf') as pdf:
-                pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-                plt.close()
+        #     if layer_i == 0:
+        #         if is_scaled:
+        #             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/emb_layer'
+        #         else:
+        #             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/emb_layer'
+        #     else:
+        #         if is_scaled:
+        #             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/scale/pca/{layer_i}'
+        #         else:
+        #             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/all/pca/{layer_i}'
+        #     with PdfPages(path + '.pdf') as pdf:
+        #         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        #         plt.close()
         
     # Summary plot
     if is_scaled:
