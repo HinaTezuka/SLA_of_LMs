@@ -108,7 +108,7 @@ def plot_hist(dict1, dict2, L2: str) -> None:
     plt.tick_params(axis='y', labelsize=20)
     plt.legend(fontsize=25)
     plt.grid(True)
-    save_path = f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}",
+    save_path = f"/home/s2410121/proj_LA/measure_similarities/original_llama3/images/ht_sim/{L2}"
     with PdfPages(save_path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
         plt.close()
