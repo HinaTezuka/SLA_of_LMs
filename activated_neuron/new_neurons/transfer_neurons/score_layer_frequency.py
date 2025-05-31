@@ -42,7 +42,7 @@ def plot_layer_frequency(neuron_list: list, is_reverse: bool):
 
 def plot_layer_distribution_all_langs(all_neurons_by_lang: dict, is_reverse: bool, model: str, score_type: str, L2s: list, n: int):
     plt.rcParams["font.family"] = "DejaVu Serif"
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(12, 12))
     palette = sns.color_palette('Set2', len(all_neurons_by_lang))
     for (lang, neuron_list), color in zip(all_neurons_by_lang.items(), palette):
         layer_indices = [layer for layer, _ in neuron_list]
@@ -59,7 +59,8 @@ def plot_layer_distribution_all_langs(all_neurons_by_lang: dict, is_reverse: boo
 
     plt.xlabel("Layer Index", fontsize=35)
     plt.ylabel("Density", fontsize=35)
-    plt.title(f"Neuron Distribution per Language (n={n})", fontsize=40)
+    title = 'Type-1 Neurons' if not is_reverse else 'Type-2 Neurons'
+    plt.title(f"{title} (n={n})", fontsize=40)
     plt.xticks(fontsize=30)
     plt.yticks(fontsize=30)
     plt.legend(title="Language", fontsize=30, title_fontsize=30)
