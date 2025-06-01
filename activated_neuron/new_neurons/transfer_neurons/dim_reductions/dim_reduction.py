@@ -50,26 +50,22 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f5_2d = pca.transform(f5)
 
         # plot.
-        plt.figure(figsize=(15, 12))
+        plt.rcParams["font.family"] = "DejaVu Serif"
+        plt.figure(figsize=(12, 12))
         for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
             plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
 
-        plt.xlabel('PCA Dimension 1', fontsize=20)
-        plt.ylabel('PCA Dimension 2', fontsize=20)
+        plt.xlabel('Principal Component 1', fontsize=40)
+        plt.ylabel('Principal Component 2', fontsize=40)
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
         file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
-        plt.title(title, fontsize=25)
-        plt.legend(fontsize=15)
+        plt.title(title, fontsize=40)
+        plt.legend(fontsize=35)
         plt.grid(True)
 
         # save as image.
         output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/{file_name}'
-        # os.makedirs(output_dir, exist_ok=True)
-        # output_path = os.path.join(output_dir, file_name)
-
-        # plt.savefig(output_path, bbox_inches="tight")
-        # plt.close()
         with PdfPages(output_dir + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
