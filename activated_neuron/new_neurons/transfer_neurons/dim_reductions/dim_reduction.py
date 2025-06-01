@@ -60,7 +60,7 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
         file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
-        plt.title(title, fontsize=40)
+        plt.title(title, fontsize=50)
         plt.legend(fontsize=35)
         plt.grid(True)
 
