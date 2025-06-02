@@ -57,10 +57,10 @@ for L2 in langs:
         sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用
         
         # save as pkl.
-        # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_mono_train.pkl"
-        # score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
-        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/en_only_mono_train_{L2}.pkl"
-        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/en_only_score_dict_mono_train{L2}.pkl"
+        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_mono_train.pkl"
+        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
+        # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/en_only_mono_train_{L2}.pkl"
+        # score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/{score_type}/en_only_score_dict_mono_train{L2}.pkl"
         save_as_pickle(sorted_neurons_path, sorted_neurons)
         save_as_pickle(score_dict_path, score_dict)
         print(f"saved scores for: {L2}.")
