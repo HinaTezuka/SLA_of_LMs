@@ -129,6 +129,7 @@ def unfreeze_pickle(file_path: str):
 if __name__ == "__main__":
     """ model configs """
     langs = ["ja", "nl", "ko", "it"]
+    langs = ['vi', 'ru', 'fr']
     # original llama
     model_name = "meta-llama/Meta-Llama-3-8B"
     device = "cuda" if torch.cuda.is_available() else "cpu"

@@ -174,6 +174,7 @@ if __name__ == "__main__":
     # aya
     model_name = "CohereForAI/aya-expanse-8b"
     L2_patterns = ["ja", "nl", "ko", "it"]
+    L2_patterns = ['vi', 'ru', 'fr']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)

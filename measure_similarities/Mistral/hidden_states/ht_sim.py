@@ -128,6 +128,7 @@ def unfreeze_pickle(file_path: str):
 if __name__ == "__main__":
     """ model configs """
     langs = ["ja", "nl", "ko", "it"]
+    langs = ['vi', 'ru', 'fr']
     # Mistral-7B
     model_name = "mistralai/Mistral-7B-v0.3"
     device = "cuda" if torch.cuda.is_available() else "cpu"
