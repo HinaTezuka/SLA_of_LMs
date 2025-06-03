@@ -339,10 +339,10 @@ def get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, 
     # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en).
     c_hidden_states = defaultdict(list)
 
+    torch.manual_seed(42)
     for text1 in data:
         inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
 
-        # get hidden_states
         with torch.no_grad():
             output1 = model(**inputs1, output_hidden_states=True)
 
@@ -361,6 +361,7 @@ def get_hidden_states(model, tokenizer, device, num_layers, data):
     # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en-L2).
     c_hidden_states = defaultdict(list)
 
+    torch.manual_seed(42)
     for text1, text2 in data:
         inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
         inputs2 = tokenizer(text2, return_tensors="pt").to(device) # L2 text
@@ -392,6 +393,7 @@ def get_hidden_states_en_only(model, tokenizer, device, num_layers, data):
     # { layer_idx: [c_1, c_2, ...]} c_1: (last token)centroid of text1 (en).
     c_hidden_states = defaultdict(list)
 
+    torch.manual_seed(42)
     for text1 in data:
         inputs1 = tokenizer(text1, return_tensors="pt").to(device) # english text
 
@@ -445,6 +447,7 @@ def get_all_outputs_llama3_mistral(model, prompt, device):
     ATT_act = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]
     # ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]
 
+    torch.manual_seed(42)
     with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:
         with torch.no_grad():
             outputs = model(prompt, output_hidden_states=True, output_attentions=True)
@@ -463,6 +466,7 @@ def get_all_outputs_llama3_mistral(model, prompt, device):
     ATT_act = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]
     # ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]
 
+    torch.manual_seed(42)
     with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:
         with torch.no_grad():
             outputs = model(prompt, output_hidden_states=True, output_attentions=True)
@@ -618,6 +622,7 @@ def get_out_llama3_post_attention_layernorm(model, prompt, device, index):
     num_layers = model.config.num_hidden_layers  # nums of layers of the model
     ATT_act = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
+    torch.manual_seed(42)
     with torch.no_grad():
         # trace MLP layers using TraceDict
         with TraceDict(model, ATT_act) as ret:
@@ -639,6 +644,7 @@ def compute_scores(model, tokenizer, device, data, candidate_neurons, centroids,
     num_layers = model.config.num_hidden_layers
     final_scores = {} # { (l, i): [score1, score2, ...] }
 
+    torch.manual_seed(42)
     for text in data:
         inputs_for_ht = tokenizer(text, return_tensors="pt").to(device)
         inputs_for_att = inputs_for_ht.input_ids
@@ -835,6 +841,7 @@ def take_similarities_with_edit_activation(model, tokenizer, device, layer_neuro
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     similarities = defaultdict(list)
 
+    torch.manual_seed(42)
     for L1_txt, L2_txt in data:
         # get L2 hs (with intervention).
         with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)):
@@ -875,6 +882,7 @@ def calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, d
     """
     similarities = defaultdict(list) # {layer_idx: mean_sim_of_each_sentences}
 
+    torch.manual_seed(42)
     for L1_txt, L2_txt in data:
         hidden_states = defaultdict(torch.Tensor)
         inputs_L1 = tokenizer(L1_txt, return_tensors="pt").to(device)

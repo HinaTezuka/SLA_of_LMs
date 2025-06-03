@@ -11,7 +11,7 @@ from funcs import (
     unfreeze_pickle,
 )
 
-langs = ["ja", "nl", "ko", "it", "en"]
+langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # load QA dataset.
 qa_num = 1000
 qa = load_dataset('apple/mkqa')['train']
@@ -26,8 +26,11 @@ for i in range(len(qa['queries'])):
     txt_ko = qa['queries'][i]['ko']
     txt_it = qa['queries'][i]['it']
     txt_en = qa['queries'][i]['en']
+    txt_vi = qa['queries'][i]['vi']
+    txt_ru = qa['queries'][i]['ru']
+    txt_fr = qa['queries'][i]['fr']
 
-    if any(not txt for txt in [txt_ja, txt_nl, txt_ko, txt_it, txt_en]):
+    if any(not txt for txt in [txt_ja, txt_nl, txt_ko, txt_it, txt_en, txt_vi, txt_ru, txt_fr]):
         continue
     
     sentences['ja'].append(txt_ja)
@@ -35,8 +38,11 @@ for i in range(len(qa['queries'])):
     sentences['ko'].append(txt_ko)
     sentences['it'].append(txt_it)
     sentences['en'].append(txt_en)
+    sentences['vi'].append(txt_vi)
+    sentences['ru'].append(txt_ru)
+    sentences['fr'].append(txt_fr)
     
     c += 1
 
-path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
+path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en_vi_ru_fr.pkl'
 save_as_pickle(path, dict(sentences))

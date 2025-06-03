@@ -26,6 +26,7 @@ model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 1000
 langs = ["ja", "nl", "ko", "it"]
+langs = ['vi', 'ru', 'fr']
 score_types = ["cos_sim", "L2_dis"]
 num_candidate_layers = 20
 
@@ -39,8 +40,9 @@ for layer_idx in range(num_candidate_layers):
 num_sentences_for_calc_centroids = 2000
 # each L2.
 # c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/centroids/c_train.pkl"
+c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/centroids/c_train_vi_ru_fr.pkl"
 # en-only
-c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/centroids/c_train_en.pkl"
+# c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/centroids/c_train_en.pkl"
 centroids = unfreeze_pickle(c_path)
 
 # calc scores.
@@ -50,16 +52,16 @@ for L2 in langs:
 
     for score_type in score_types:
         # scores: {(layer_idx, neuron_idx): score, ....}
-        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
-        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
+        scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
+        # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
         # 降順
         sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用
         
         # save as pkl.
-        # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_mono_train.pkl"
-        # score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
-        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/en_only_mono_train_{L2}.pkl"
-        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/en_only_score_dict_mono_train{L2}.pkl"
+        sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_mono_train.pkl"
+        score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
+        # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/en_only_mono_train_{L2}.pkl"
+        # score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/aya/final_scores/{score_type}/en_only_score_dict_mono_train{L2}.pkl"
         save_as_pickle(sorted_neurons_path, sorted_neurons)
         save_as_pickle(score_dict_path, score_dict)
         print(f"saved scores for: {L2}.")
