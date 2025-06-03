@@ -45,8 +45,9 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f8 = np.array(features_L8[layer_idx])
 
         all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
-        scaler = StandardScaler()
-        all_features = scaler.fit_transform(all_features)
+        if model_type == 'phi4':
+            scaler = StandardScaler()
+            all_features = scaler.fit_transform(all_features)
         pca = PCA(n_components=2, random_state=42)
         pca.fit(all_features)
 
