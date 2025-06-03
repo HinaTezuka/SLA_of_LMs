@@ -27,12 +27,12 @@ langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
 model_names = ["microsoft/phi-4"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
-num_layers = 33
 
 def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict):
     languages = ["Japanese", "Dutch", "Korean", "Italian", "English", "Vietnamese", "Russian", "French"]
     colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
     
+    num_layers = 33 if model_type != 'phi4' else 41
     for layer_idx in range(num_layers):  # Embedding layer + 32 hidden layers
 
         f1 = np.array(features_L1[layer_idx])
