@@ -22,7 +22,7 @@ from funcs import (
 )
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
+# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 num_layers = 33
@@ -91,7 +91,10 @@ if __name__ == '__main__':
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        if model_type == 'phi4':
+            model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+        else:
+            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         for L2 in langs:
             sentences = sentences_all_langs[L2]
             hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
