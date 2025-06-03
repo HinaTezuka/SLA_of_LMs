@@ -182,7 +182,7 @@ def eager_attention_forward(
 
     return attn_output, attn_weights
 
-class CustomLlamaAttention(LlamaAttention): # <- 継承元をLlamaSdpaAttentionにしても動くけど、LlamaSdpaAttentionがどこにあるか不明.
+class CustomLlamaAttention(LlamaAttention): # <- 継承元をLlamaSdpaAttentionにしても動くけど、githubみたら, modeling_llama.pyからLlamaSdpaAttentionが消えていた。以前のブランチ等を見る限り、LlamaAttentionに統合されたっぽい.
     def __init__(self, config, layer_idx):
         super().__init__(config, layer_idx)
         # 
@@ -214,7 +214,7 @@ class CustomLlamaAttention(LlamaAttention): # <- 継承元をLlamaSdpaAttention�
             key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
 
         attention_interface: Callable = eager_attention_forward
-        if self.config._attn_implementation != "eager": # sdpa
+        if self.config._attn_implementation != "eager": # default: sdpa
             attention_interface = ALL_ATTENTION_FUNCTIONS[self.config._attn_implementation]
 
         attn_output, attn_weights = attention_interface(
