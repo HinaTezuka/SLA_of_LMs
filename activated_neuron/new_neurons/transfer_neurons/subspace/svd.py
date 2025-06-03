@@ -17,15 +17,15 @@ from funcs import (
     unfreeze_pickle,
 )
 
-langs = ["ja", "nl", "ko", "it", "en"]
+langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 is_scaled = False
-intervention_type = 'type-2' # normal, type-1(top-1k), type-2(top-1k). 
+intervention_type = 'normal' # normal, type-1(top-1k), type-2(top-1k). 
 
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
     layer_num = 41 if model_type == 'phi4' else 33 # emb_layer included.
 
     for layer_i in range(layer_num):
@@ -40,7 +40,7 @@ for model_name in model_names:
             elif intervention_type == 'type-2':
                 hs = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl")
             hs_layer = np.array(hs[layer_i]) # shape: (sample_num, hs_dim)
-            if is_scaled:
+            if is_scaled or model_type == 'phi4':
                 scaler = StandardScaler()
                 hs_layer = scaler.fit_transform(hs_layer)
             u, s, vh = svd(hs_layer, full_matrices=False)
@@ -110,7 +110,7 @@ for model_name in model_names:
     if is_scaled:
         output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/scale"
     else:
-        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
+        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/all_langs"
     os.makedirs(output_dir, exist_ok=True)
 
     colors_by_lang = {
@@ -118,7 +118,10 @@ for model_name in model_names:
         "ja": "#ff7f0e",
         "ko": "#2ca02c",
         "it": "#d62728",
-        "nl": "#9467bd"
+        "nl": "#9467bd",
+        "vi": "#8c564b",
+        "ru": "#e377c2",
+        "fr": "#7f7f7f",
     }
 
     threshold_colors = {
@@ -130,7 +133,8 @@ for model_name in model_names:
     model_name_map = {
         "llama3": "LLaMA3-8B",
         "mistral": "Mistral-7B",
-        "aya": "Aya-8B"
+        "aya": "Aya expanse-8B",
+        "phi4": "Phi4-14B",
     }
 
     for model_type in threshold_log:

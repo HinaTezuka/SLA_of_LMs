@@ -12,6 +12,7 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import umap.umap_ as umap
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 from funcs import (
     monolingual_dataset_en,
@@ -24,6 +25,7 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
+model_names = ["microsoft/phi-4"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 num_layers = 33
 
@@ -43,6 +45,8 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f8 = np.array(features_L8[layer_idx])
 
         all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
+        scaler = StandardScaler()
+        all_features = scaler.fit_transform(all_features)
         pca = PCA(n_components=2, random_state=42)
         pca.fit(all_features)
 
@@ -90,19 +94,19 @@ if __name__ == '__main__':
 
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        if model_type == 'phi4':
-            model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-        else:
-            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        for L2 in langs:
-            sentences = sentences_all_langs[L2]
-            hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-            # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+        # tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # if model_type == 'phi4':
+        #     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+        # else:
+        #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        # for L2 in langs:
+        #     sentences = sentences_all_langs[L2]
+        #     hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+        #     # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-            # save as pkl
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
-            save_as_pickle(save_path, hidden_states)
+        #     # save as pkl
+        #     save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
+        #     save_as_pickle(save_path, hidden_states)
 
         """ dim_reduction and plot with PCA. """
         # ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
@@ -117,5 +121,5 @@ if __name__ == '__main__':
         # 
         plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, hs_vi, hs_ru, hs_fr)
 
-        del model
+        # del model
         torch.cuda.empty_cache()
