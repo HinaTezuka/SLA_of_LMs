@@ -20,6 +20,7 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
+model_names = ["microsoft/phi-4"]
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 is_scaled = False
 intervention_type = 'normal' # normal, type-1(top-1k), type-2(top-1k). 
@@ -43,6 +44,8 @@ for model_name in model_names:
             if is_scaled or model_type == 'phi4':
                 scaler = StandardScaler()
                 hs_layer = scaler.fit_transform(hs_layer)
+                if model_type == 'phi4':
+                    hs_layer = hs_layer.astype(np.float32)
             u, s, vh = svd(hs_layer, full_matrices=False)
 
             explained_variance_ratio = (s ** 2) / np.sum(s ** 2) # 寄与率.
