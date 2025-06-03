@@ -182,7 +182,7 @@ def eager_attention_forward(
 
     return attn_output, attn_weights
 
-class CustomLlamaAttention(LlamaAttention):
+class CustomLlamaAttention(LlamaAttention): # <- 継承元をLlamaSdpaAttentionにしても動くけど、LlamaSdpaAttentionがどこにあるか不明.
     def __init__(self, config, layer_idx):
         super().__init__(config, layer_idx)
         # 
