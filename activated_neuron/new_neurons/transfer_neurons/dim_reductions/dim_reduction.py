@@ -35,14 +35,24 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
     num_layers = 33 if model_type != 'phi4' else 41
     for layer_idx in range(num_layers):  # Embedding layer + 32 hidden layers
 
-        f1 = np.array(features_L1[layer_idx])
-        f2 = np.array(features_L2[layer_idx])
-        f3 = np.array(features_L3[layer_idx])
-        f4 = np.array(features_L4[layer_idx])
-        f5 = np.array(features_L5[layer_idx])
-        f6 = np.array(features_L6[layer_idx])
-        f7 = np.array(features_L7[layer_idx])
-        f8 = np.array(features_L8[layer_idx])
+        if model_type == 'phi4':
+            f1 = np.array(features_L1[layer_idx], dtype=np.float64)
+            f2 = np.array(features_L2[layer_idx], dtype=np.float64)
+            f3 = np.array(features_L3[layer_idx], dtype=np.float64)
+            f4 = np.array(features_L4[layer_idx], dtype=np.float64)
+            f5 = np.array(features_L5[layer_idx], dtype=np.float64)
+            f6 = np.array(features_L6[layer_idx], dtype=np.float64)
+            f7 = np.array(features_L7[layer_idx], dtype=np.float64)
+            f8 = np.array(features_L8[layer_idx], dtype=np.float64)
+        else:
+            f1 = np.array(features_L1[layer_idx])
+            f2 = np.array(features_L2[layer_idx])
+            f3 = np.array(features_L3[layer_idx])
+            f4 = np.array(features_L4[layer_idx])
+            f5 = np.array(features_L5[layer_idx])
+            f6 = np.array(features_L6[layer_idx])
+            f7 = np.array(features_L7[layer_idx])
+            f8 = np.array(features_L8[layer_idx])
 
         all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
         scaler = StandardScaler()
