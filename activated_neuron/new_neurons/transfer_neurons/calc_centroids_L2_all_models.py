@@ -20,19 +20,19 @@ from funcs import (
 )
 
 # langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4']
+model_names = ['microsoft/phi-4']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    if model_name == 'phi4':
-        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-        langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
-    else:
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        langs = ['vi', 'ru', 'fr']
+    # if model_name == 'phi4':
+    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+    langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
+    # else:
+    #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    #     langs = ['vi', 'ru', 'fr']
     num_layers = 32 if model_name != 'phi4' else 40
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     # centroids of english texts.
     centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = layer_num.
