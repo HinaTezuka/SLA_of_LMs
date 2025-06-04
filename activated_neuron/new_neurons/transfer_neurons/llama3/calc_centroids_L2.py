@@ -41,5 +41,5 @@ for L2 in langs:
     shared_space_centroids = get_centroid_of_shared_space(c_hidden_states) # list: [c_layer1, c_layer2, ...]
 
     # save centroids as pkl.
-    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_including_embed_{L2}.pkl"
+    save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/centroids/c_train_{L2}.pkl"
     save_as_pickle(save_path, shared_space_centroids)
