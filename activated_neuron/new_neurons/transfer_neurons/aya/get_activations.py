@@ -18,6 +18,7 @@ from funcs import (
 
 # making multilingual data.
 langs = ["ja", "nl", "ko", "it", "en"]
+langs = ['vi', 'ru', 'fr']
 num_sentences = 1000
 start_indics = {
     "ja": 0,
@@ -25,6 +26,9 @@ start_indics = {
     "ko": 2000,
     "it": 3000,
     "en": 4000,
+    "vi": 5000,
+    "ru": 6000,
+    "fr": 7000,
 }
 multilingual_sentences = multilingual_dataset_for_lang_specific_detection(langs, num_sentences)
 print(f"len_multilingual_sentences: {len(multilingual_sentences)}")

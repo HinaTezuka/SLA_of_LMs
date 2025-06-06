@@ -55,10 +55,7 @@ def plot(matrix, th, model_type, L2, score_type):
     save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distribution/{model_type}/lang_specific/corr_{L2}_{score_type}_{th}'
     # os.makedirs(save_dir, exist_ok=True)
 
-    # # Save figure
-    # save_path = os.path.join(save_dir, f'corr_{L2}_{score_type}_{th}.png')
-    # plt.savefig(save_path, bbox_inches='tight')
-    # plt.close()
+    # Save figure
     with PdfPages(save_dir + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
         plt.close()

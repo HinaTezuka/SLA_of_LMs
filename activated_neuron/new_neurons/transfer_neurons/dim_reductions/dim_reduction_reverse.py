@@ -89,20 +89,15 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
         # save as image.
         if is_reverse:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse/{file_name}'
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/reverse/{file_name}'
         else:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/type-1/{file_name}'
-        # os.makedirs(output_dir, exist_ok=True)
-        # output_path = os.path.join(output_dir, file_name)
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/type-1/{file_name}'
 
-        # plt.savefig(output_path, bbox_inches="tight")
-        # plt.close()
         with PdfPages(output_dir + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
 
 if __name__ == '__main__':
-    # n_list = [100, 1000, 3000, 5000]
     score_type = 'cos_sim'
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en_vi_ru_fr.pkl'
     sentences_all_langs = unfreeze_pickle(path)
