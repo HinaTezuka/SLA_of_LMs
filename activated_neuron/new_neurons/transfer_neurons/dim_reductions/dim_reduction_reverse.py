@@ -6,11 +6,13 @@ import pickle
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from matplotlib.backends.backend_pdf import PdfPages
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import umap.umap_ as umap
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 from funcs import (
     monolingual_dataset_en,
@@ -21,16 +23,16 @@ from funcs import (
     unfreeze_pickle,
 )
 
-langs = ["ja", "nl", "ko", "it", "en"]
+langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 # model_names = ["mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 num_layers = 33
 
-def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, is_reverse: bool):
-    languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
-    colors = ["red", "blue", "yellow", "orange", "green"]
+def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict, is_reverse: bool):
+    languages = ["Japanese", "Dutch", "Korean", "Italian", "English", "Vietnamese", "Russian", "French"]
+    colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
 
     if is_reverse:
         start, end = 20+1, 32+1
@@ -44,8 +46,14 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3 = np.array(features_L3[layer_idx])
         f4 = np.array(features_L4[layer_idx])
         f5 = np.array(features_L5[layer_idx])
+        f6 = np.array(features_L6[layer_idx])
+        f7 = np.array(features_L7[layer_idx])
+        f8 = np.array(features_L8[layer_idx])
 
-        all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
+        all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
+        if model_type == 'phi4':
+            scaler = StandardScaler()
+            all_features = scaler.fit_transform(all_features)
         pca = PCA(n_components=2, random_state=42)
         pca.fit(all_features)
 
@@ -55,19 +63,28 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3_2d = pca.transform(f3)
         f4_2d = pca.transform(f4)
         f5_2d = pca.transform(f5)
+        f6_2d = pca.transform(f6)
+        f7_2d = pca.transform(f7)
+        f8_2d = pca.transform(f8)
 
         # plot.
-        plt.figure(figsize=(15, 12))
-        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
+        plt.rcParams["font.family"] = "DejaVu Serif"
+        plt.figure(figsize=(12, 12))
+        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
             plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
+        legend_handles = [
+            Line2D([0], [0], marker='o', color='w', label=lang,
+                markerfacecolor=col, markersize=30, alpha=0.7)
+            for lang, col in zip(languages, colors)
+        ]
 
-        plt.xlabel('PCA Dimension 1', fontsize=20)
-        plt.ylabel('PCA Dimension 2', fontsize=20)
+        plt.xlabel('Principal Component 1', fontsize=40)
+        plt.ylabel('Principal Component 2', fontsize=40)
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
         file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
-        plt.title(title, fontsize=25)
-        plt.legend(fontsize=15)
+        plt.title(title, fontsize=50)
+        plt.legend(handles=legend_handles, fontsize=35)
         plt.grid(True)
 
         # save as image.
@@ -87,9 +104,9 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 if __name__ == '__main__':
     # n_list = [100, 1000, 3000, 5000]
     score_type = 'cos_sim'
-    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en.pkl'
+    path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en_vi_ru_fr.pkl'
     sentences_all_langs = unfreeze_pickle(path)
-    is_reverse = True
+    is_reverse = True # fix.
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -128,6 +145,9 @@ if __name__ == '__main__':
             hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko.pkl")
             hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/it.pkl")
             hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en.pkl")
+            hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/vi.pkl")
+            hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ru.pkl")
+            hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/fr.pkl")
         else:
             hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1.pkl")
             hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1.pkl")
@@ -135,7 +155,7 @@ if __name__ == '__main__':
             hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1.pkl")
             hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
         # 
-        plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, is_reverse)
+        plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, hs_vi, hs_ru, hs_fr, is_reverse)
         # plot_umap(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
         del model

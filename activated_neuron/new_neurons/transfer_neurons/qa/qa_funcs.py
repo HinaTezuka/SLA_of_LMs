@@ -119,8 +119,8 @@ def calculate_f1(prediction, gold_answer, language):
 #     f1 = (2 * precision * recall) / (precision + recall)
 #     return f1
 
-def compute_exact(a_gold, a_pred):
-    return int(normalize_answer(a_gold) == normalize_answer(a_pred))
+# def compute_exact(a_gold, a_pred):
+#     return int(normalize_answer(a_gold) == normalize_answer(a_pred))
 
 """ """
 
@@ -279,7 +279,10 @@ def mkqa_all(model, tokenizer, device, qa, L2: str):
         elif L2 == 'nl': prompt = f'{q}? Antwoord: '
         elif L2 == 'ko': prompt = f'{q}? 답변: '
         elif L2 == 'it': prompt = f'{q}? Risposta: '
-        elif L2  == 'en': prompt = f'{q}? Answer: '
+        elif L2 == 'en': prompt = f'{q}? Answer: '
+        elif L2 == 'vi': prompt = f'{q}? Trả lời: '
+        elif L2 == 'ru': prompt = f'{q}? Ответ: '
+        elif L2 == 'fr': prompt = f'{q}? Réponse: '
 
         # run inference.
         torch.cuda.manual_seed_all(42) # set seed.
@@ -293,6 +296,9 @@ def mkqa_all(model, tokenizer, device, qa, L2: str):
         if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
         if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
         if L2 == 'en': pre = pre.split('Answer: ')[-1].strip()
+        if L2 == 'vi': pre = pre.split('Trả lời: ')[-1].strip()
+        if L2 == 'ru': pre = pre.split('Ответ: ')[-1].strip()
+        if L2 == 'fr': pre = pre.split('Réponse: ')[-1].strip()
         
         if len(a) == 1:
             f1 = calculate_f1(a[0], pre, L2)
