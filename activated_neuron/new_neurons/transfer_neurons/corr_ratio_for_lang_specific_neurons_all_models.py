@@ -65,6 +65,7 @@ def correlationRatio(categories, values):
 langs = ['ja', 'nl', 'ko', 'it']
 langs = ['vi', 'ru', 'fr']
 model_types = ['llama3', 'mistral', 'aya', 'phi4']
+model_types = ['phi4']
 score_types = ['cos_sim', 'L2_dis']
 
 l1 = [ 1 for _ in range(1000)]
