@@ -63,6 +63,7 @@ if __name__ == "__main__":
     L1 = "en"
     """ model configs """
     model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+    model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
