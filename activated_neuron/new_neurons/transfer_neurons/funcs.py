@@ -240,8 +240,7 @@ def track_neurons_with_text_data(model, model_type, device, tokenizer, data, sta
 
     # Track neurons with tatoeba
     for text_idx, text in enumerate(data):
-        # Input text
-        inputs = tokenizer(text, return_tensors="pt").input_ids.to(device)
+        inputs = tokenizer(text, return_tensors='pt').input_ids.to(device)
         token_len = len(inputs[0])
 
         # set hooks.
