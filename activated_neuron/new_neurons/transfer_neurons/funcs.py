@@ -400,7 +400,7 @@ def get_hidden_states_en_only(model, tokenizer, device, num_layers, data):
     return dict(c_hidden_states)
 
 def get_centroid_of_shared_space(hidden_states: dict):
-    centroids = [] # [c1, c2, ] len = layer_num(32layers: 0-31)
+    centroids = [] # [c1, c2, ] len = layer_num
     for layer_idx, c in hidden_states.items():
         final_c = np.mean(c, axis=0) # calc mean of c(shared point per text) of all text.
         centroids.append(final_c)
@@ -519,6 +519,88 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
             # save resulting scores.
             final_scores_save[layer_idx, :, text_idx] = scores
             # final_scores_save[layer_idx, :, text_idx] = scores
+
+    # Calculate mean score for each neuron
+    final_scores[:, :] = np.mean(final_scores_save, axis=2)
+
+    return final_scores
+
+def get_attn_output_hook_for_transfer(model, input, output, layer_idx: int, output_array: np.array):
+    attn_output = output[0][-1, :].detach().cpu().numpy()
+    output_array[layer_idx, :] = attn_output
+def get_activations_hook_for_transfer(model, input, layer_idx: int, activation_array: np.array):
+    activation_values = input[0][0, -1, :].detach().cpu().numpy()
+    activation_array[layer_idx, :] = activation_values
+
+def compute_scores_optimized_phi4(model, tokenizer, device, data, candidate_neurons, centroids, score_type):
+    """
+    Optimized function to compute scores using batched inference.
+    """
+    num_layers = model.config.num_hidden_layers
+    num_candidate_layers = len(candidate_neurons.keys())
+    num_neurons = 17920
+    final_scores_save = np.zeros((num_candidate_layers, num_neurons, len(data))) # final_scoreを計算する前の保存用
+    final_scores = np.zeros((num_candidate_layers, num_neurons))
+    num_dim_hs = 5120
+
+    for text_idx, text in enumerate(data):
+        # Tokenize all input data at once
+        inputs = tokenizer(text, return_tensors="pt").to(device)
+        # Extract hidden states (ht), attention layer outputs, and MLP activations
+        token_len = inputs.input_ids.size(1)
+        last_token_idx = token_len - 1
+
+        # Score calculation based on type (L2 distance or cosine similarity)
+        attn_output_array = np.zeros((num_candidate_layers, num_dim_hs))
+        mlp_output_array = np.zeros((num_candidate_layers, num_neurons))
+        handles = []
+        for layer_idx, layer in enumerate(model.model.layers):
+            handle_attn = layer.self_attn.o_proj.register_forward_hook(
+                lambda model, input, output, layer_idx=layer_idx, output_array=attn_output_array: get_attn_output_hook_for_transfer(model, input, output, layer_idx, output_array)
+            )
+            handles.append(handle_attn)
+            handle_mlp = layer.mlp.down_proj.register_forward_pre_hook(
+                lambda model, input, layer_idx=layer_idx, output_array=mlp_output_array: get_activations_hook_for_transfer(model, input, layer_idx, output_array)
+            )
+            handles.append(handle_mlp)
+        
+        # run inference.
+        with torch.no_grad():
+            output = model(**inputs, output_hidden_states=True)
+        
+        # remove handles.
+        for handle in handles:
+            handle.remove()
+
+        ht_all_layer = output.hidden_states # len==41(0-40), including 0th layer(embedding layer). <- emb(0th) layer is needed to calc score of 1th layer.
+        for layer_idx, neurons in candidate_neurons.items():
+            c = centroids[layer_idx].reshape(1, -1) # centroid of the layer.
+            # i-1th layer hidden_state.
+            ht_pre = ht_all_layer[layer_idx][:, last_token_idx, :].squeeze().detach().cpu().numpy()
+            # i-th layer attention output.
+            atts = attn_output_array[layer_idx, :]
+            # i-th layer activation values (act_fn(x) * up_proj(x))
+            acts = mlp_output_array[layer_idx, :]
+            
+            # layer_score.
+            layer_score = (ht_pre + atts).reshape(1, -1) # H^l-1 * Att^l
+            if score_type == "L2_dis":
+                layer_score = euclidean_distances(layer_score, c)[0, 0]
+            elif score_type == "cos_sim":
+                layer_score = cosine_similarity(layer_score, c)[0, 0]
+
+            neuron_indices = np.array(candidate_neurons[layer_idx])
+            value_vectors = model.model.layers[layer_idx].mlp.down_proj.weight.T.data[neuron_indices].detach().cpu().numpy()
+            scores = (ht_pre + atts + (acts.reshape(-1, 1) * value_vectors))
+            if score_type == "L2_dis":
+                scores = euclidean_distances(scores, c).reshape(-1)
+                scores = np.where(scores <= layer_score, abs(layer_score - scores), -abs(layer_score - scores))
+            elif score_type == "cos_sim":
+                scores = cosine_similarity(scores, c).reshape(-1)
+                scores = np.where(scores >= layer_score, abs(layer_score - scores), -abs(layer_score - scores))
+
+            # save resulting scores.
+            final_scores_save[layer_idx, :, text_idx] = scores
 
     # Calculate mean score for each neuron
     final_scores[:, :] = np.mean(final_scores_save, axis=2)
