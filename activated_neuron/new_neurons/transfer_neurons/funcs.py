@@ -287,7 +287,7 @@ def track_neurons_with_text_data(model, model_type, device, tokenizer, data, sta
             with torch.no_grad():
                 output = model(inputs)
 
-            # remove handle.
+            # remove handles.
             for handle in handles:
                 handle.remove()
 
