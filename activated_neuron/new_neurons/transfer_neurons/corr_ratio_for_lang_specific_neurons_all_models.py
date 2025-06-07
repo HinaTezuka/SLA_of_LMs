@@ -64,7 +64,7 @@ def correlationRatio(categories, values):
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
 
-langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'it']
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'it', 'fr']
 model_types = ['llama3', 'mistral', 'aya', 'phi4']
 # model_types = ['phi4']
 score_types = ['cos_sim', 'L2_dis']
