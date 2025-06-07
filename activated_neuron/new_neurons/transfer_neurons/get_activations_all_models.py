@@ -34,15 +34,20 @@ print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model_names = ["mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
-# model_langs = ["ja", "nl", "ko", "it"]
-model_langs = ['vi', 'ru', 'fr']
+# model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4']
+model_names = ['microsoft/phi-4']
+model_langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 
 """ get activaitons and save as npz and pkl. """
 for model_name in model_names:
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
+    if model_type != 'phi4':
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+
     for L2 in model_langs:
         # start and end indices.
         start_idx = start_indics[L2]
@@ -50,6 +55,7 @@ for model_name in model_names:
         # get activations and corresponding labels.
         activations, labels = track_neurons_with_text_data(
             model, 
+            model_type,
             device, 
             tokenizer, 
             multilingual_sentences, 
