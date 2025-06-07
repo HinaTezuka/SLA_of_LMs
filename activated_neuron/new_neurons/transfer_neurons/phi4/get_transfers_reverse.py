@@ -11,8 +11,6 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from funcs import (
-    monolingual_dataset,
-    compute_scores,
     compute_scores_optimized_phi4,
     sort_neurons_by_score,
     save_as_pickle,

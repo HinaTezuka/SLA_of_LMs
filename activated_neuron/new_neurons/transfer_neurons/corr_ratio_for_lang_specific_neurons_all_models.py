@@ -19,10 +19,6 @@ from funcs import (
     unfreeze_np_arrays,
 )
 
-langs = ['ja', 'nl', 'ko', 'it']
-model_types = ['llama3', 'mistral', 'aya']
-score_types = ['cos_sim', 'L2_dis']
-
 def plot(matrix, th, model_type, L2, score_type):
     """
     Plot a bar chart of how many (layer, neuron) positions exceed a threshold for each layer.
@@ -53,7 +49,6 @@ def plot(matrix, th, model_type, L2, score_type):
 
     # Create save directory if it doesn't exist
     save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/distribution/{model_type}/lang_specific/corr_{L2}_{score_type}_{th}'
-    # os.makedirs(save_dir, exist_ok=True)
 
     # Save figure
     with PdfPages(save_dir + '.pdf') as pdf:
@@ -67,28 +62,48 @@ def correlationRatio(categories, values):
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
 
-layers_num = 32
-neurons_num = 14336
+langs = ['ja', 'nl', 'ko', 'it']
+langs = ['vi', 'ru', 'fr']
+model_types = ['llama3', 'mistral', 'aya', 'phi4']
+score_types = ['cos_sim', 'L2_dis']
+
+l1 = [ 1 for _ in range(1000)]
+l2 = [ 0 for _ in range(1000)]
+
+labels_dict = {
+    'ja': l1 + l2 + l2 + l2 + l2 + l2 + l2 + l2,
+    'nl': l2 + l1 + l2 + l2 + l2 + l2 + l2 + l2,
+    'ko': l2 + l2 + l1 + l2 + l2 + l2 + l2 + l2,
+    'it': l2 + l2 + l2 + l1 + l2 + l2 + l2 + l2,
+    'en': l2 + l2 + l2 + l2 + l1 + l2 + l2 + l2,
+    'vi': l2 + l2 + l2 + l2 + l2 + l1 + l2 + l2,
+    'ru': l2 + l2 + l2 + l2 + l2 + l2 + l1 + l2,
+    'fr': l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1,
+}
 
 for score_type in score_types:
     for model_type in model_types:
+        layers_num = 32 if model_type != 'phi4' else 40
+        neurons_num = 14336 if model_type != 'phi4' else 17920
+        if model_type == 'phi4': langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
         for L2 in langs:
-            # # activations
-            # save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token.npz"
+            # activations
+            save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token.npz"
             # save_path_labels = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/labels/{L2}_last_token.pkl"
-            # activations_arr = unfreeze_np_arrays(save_path_activations)
+            activations_arr = unfreeze_np_arrays(save_path_activations)
             # labels_list = np.array(unfreeze_pickle(save_path_labels))
+            labels_list = np.array(labels_dict[L2])
 
-            # corr_ratios = np.zeros((layers_num, neurons_num))
+            corr_ratios = np.zeros((layers_num, neurons_num))
             arr = []
-            # for layer_i in range(layers_num):
-            #     for neuron_i in range(neurons_num):
-                    # corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
-                    # corr_ratios[layer_i, neuron_i] = corr_ratio
+            for layer_i in range(layers_num):
+                for neuron_i in range(neurons_num):
+                    corr_ratio = correlationRatio(labels_list, activations_arr[layer_i, neuron_i, :])
+                    corr_ratios[layer_i, neuron_i] = corr_ratio
 
             
-            # path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}'
-            # save_np_arrays(path, corr_ratios)
+            path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/{score_type}/{model_type}_{L2}'
+            save_np_arrays(path, corr_ratios)
 
             print(f'{L2}, {score_type}, {model_type}, completed.')
 
