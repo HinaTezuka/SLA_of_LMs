@@ -34,7 +34,7 @@ print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+model_names = ["mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 # model_langs = ["ja", "nl", "ko", "it"]
 model_langs = ['vi', 'ru', 'fr']
 
@@ -59,6 +59,7 @@ for model_name in model_names:
         # saving as pkl file.
         save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token"
         save_np_arrays(save_path_activations, activations)
-
-        # clean cache.
-        torch.cuda.empty_cache()
+    
+    # clean cache.
+    del model
+    torch.cuda.empty_cache()
