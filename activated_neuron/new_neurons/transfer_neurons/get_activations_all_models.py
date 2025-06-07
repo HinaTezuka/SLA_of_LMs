@@ -34,9 +34,8 @@ print(f"len_multilingual_sentences: {len(multilingual_sentences)}")
 
 # model and tokenizer.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4']
-# model_names = ['microsoft/phi-4']
-model_langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
+model_names = ["mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4']
+model_langs = ['vi', 'ru', 'fr']
 
 """ get activaitons and save as npz and pkl. """
 for model_name in model_names:
@@ -47,6 +46,7 @@ for model_name in model_names:
     else:
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+        model_langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 
     for L2 in model_langs:
         # start and end indices.
