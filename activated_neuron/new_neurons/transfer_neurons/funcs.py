@@ -226,70 +226,39 @@ def act_llama3(model, input_ids):
 def calc_element_wise_product(act_fn_value, up_proj_value):
     return act_fn_value * up_proj_value
 
-def get_activations_hook_phi4(model, input, layer_idx: int, text_idx, activation_array: np.array):
+def get_activations_hook(model, input, layer_idx: int, text_idx, activation_array: np.array):
     activation_values = input[0][0, -1, :].detach().cpu().numpy()
     activation_array[layer_idx, :, text_idx] = activation_values
 
 def track_neurons_with_text_data(model, model_type, device, tokenizer, data, start_idx, end_idx):
     num_layers = 32 if model_type != 'phi4' else 40
     num_neurons = 14336 if model_type != 'phi4' else 17920
-    """
-    a numpy array for saving activation values (layer_idx * neuron_idx * text_idx):
-    can access activation_list of each neuron by activation_array[layer_idx, neuron_idx].
-    """
-    activation_array = np.zeros((num_layers, num_neurons, len(data)), dtype=np.float16)
-    labels = []
 
-    """
-    activation_array shape: (num_layers, num_neurons, len(data))
-    Each value represents the activation of a neuron for a given text sample.
-    labels: [1, 1, ..., 0, 0, ...]
-    """
+    # a numpy array for saving activation values (layer_idx * neuron_idx * text_idx):
+    activation_array = np.zeros((num_layers, num_neurons, len(data)), dtype=np.float16)
+    labels = [] # labels: [1, 1, ..., 0, 0, ...] <- 1 for the texts of target language, 0 for others.
 
     # Track neurons with tatoeba
     for text_idx, text in enumerate(data):
-        """
-        Get activation values
-        mlp_activation: [torch.Tensor(batch_size, sequence_length, num_neurons) * num_layers]
-        """
         # Input text
         inputs = tokenizer(text, return_tensors="pt").input_ids.to(device)
         token_len = len(inputs[0])
-        
-        if model_type != 'phi4':
-            act_fn_values, up_proj_values = act_llama3(model, inputs)
-            """
-            Neurons in LLama3 MLP:
-            up_proj(x) * act_fn(gate_proj(x)) <- input of down_proj()
-            """
-            for layer_idx in range(num_layers):
-                act_fn_value = act_fn_values[layer_idx][:, token_len-1, :][0]
-                up_proj_value = up_proj_values[layer_idx][:, token_len-1, :][0]
-                activations = calc_element_wise_product(act_fn_value, up_proj_value)
 
-                # Store activation values in the numpy array
-                for neuron_idx in range(num_neurons):
-                    # elem_wise_product
-                    activation_array[layer_idx, neuron_idx, text_idx] = activations[neuron_idx]
-                    # act_fn_value
-                    # activation_array[layer_idx, neuron_idx, text_idx] = act_fn_value[neuron_idx]
-                    # up_proj_value
-                    # activation_array[layer_idx, neuron_idx, text_idx] = up_proj_value[neuron_idx]
-        else:
-            # set hooks.
-            handles = []
-            for layer_idx, layer in enumerate(model.model.layers):
-                handle = layer.mlp.down_proj.register_forward_pre_hook(
-                    lambda model, input, layer_idx=layer_idx, text_idx=text_idx, activation_array=activation_array: get_activations_hook_phi4(model, input, layer_idx, text_idx, activation_array)
-                )
-                handles.append(handle)
-            # run inference.
-            with torch.no_grad():
-                output = model(inputs)
+        # set hooks.
+        handles = []
+        for layer_idx, layer in enumerate(model.model.layers):
+            handle = layer.mlp.down_proj.register_forward_pre_hook(
+                lambda model, input, layer_idx=layer_idx, text_idx=text_idx, activation_array=activation_array: get_activations_hook(model, input, layer_idx, text_idx, activation_array)
+            )
+            handles.append(handle)
 
-            # remove handles.
-            for handle in handles:
-                handle.remove()
+        # run inference.
+        with torch.no_grad():
+            output = model(inputs)
+
+        # remove handles.
+        for handle in handles:
+            handle.remove()
 
         # Assign labels
         if start_idx <= text_idx < end_idx:
