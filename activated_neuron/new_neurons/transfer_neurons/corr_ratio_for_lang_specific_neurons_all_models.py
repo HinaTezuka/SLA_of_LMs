@@ -38,11 +38,12 @@ def plot(matrix, th, model_type, L2, score_type):
 
     # Plot
     plt.rcParams["font.family"] = "DejaVu Serif"
-    plt.figure(figsize=(8, 7))
+    plt.figure(figsize=(8, 8))
     plt.bar(np.arange(matrix.shape[0]), layer_counts, color='steelblue')
-    plt.xlabel('Layer Index', fontsize=45)
-    plt.ylabel(f'# neurons with value > {th}', fontsize=45)
-    plt.title(f'{model_type}: {L2}', fontsize=40)
+    plt.xlabel('Layers', fontsize=45)
+    plt.ylabel(f'# Neurons', fontsize=45)
+    model_title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B' if model_type == 'aya' else 'Phi4-14B'
+    plt.title(f'{model_title}: {L2} ( > {th})', fontsize=40)
     # plt.xticks(np.arange(matrix.shape[0]))
     plt.tick_params(axis='x', labelsize=25)
     plt.tick_params(axis='y', labelsize=25)
@@ -63,8 +64,7 @@ def correlationRatio(categories, values):
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
 
-langs = ['ja', 'nl', 'ko', 'it']
-langs = ['vi', 'ru', 'fr']
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'it']
 model_types = ['llama3', 'mistral', 'aya', 'phi4']
 # model_types = ['phi4']
 score_types = ['cos_sim', 'L2_dis']
