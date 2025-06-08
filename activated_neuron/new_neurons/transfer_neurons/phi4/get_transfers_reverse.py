@@ -38,7 +38,6 @@ for L2 in langs:
     # get centroids for each L2.
     c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/phi4/centroids/c_train_{L2}.pkl"
     centroids = unfreeze_pickle(c_path)
-    # monolingual_sentences = monolingual_dataset(L2, num_sentences)
     monolingual_sentences = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl")
     for score_type in score_types:
         # scores: {(layer_idx, neuron_idx): score, ....}

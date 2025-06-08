@@ -31,7 +31,7 @@ for model_name in model_names:
     # else:
     #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     #     langs = ['vi', 'ru', 'fr']
-    num_layers = 32 if model_name != 'phi4' else 40
+    num_layers = 32 if model_type != 'phi4' else 40
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     # centroids of english texts.
