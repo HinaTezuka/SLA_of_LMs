@@ -54,7 +54,7 @@ for model_name in model_names:
 
     # save centroids as pkl.
     # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_train_vi_ru_fr.pkl"
-    # for phi4 only.
+    # for phi4 and qwen3 only.
     save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_train_all_langs_en_L2.pkl"
     save_as_pickle(save_path, centroids)
 
