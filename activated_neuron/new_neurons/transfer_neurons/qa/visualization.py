@@ -26,7 +26,7 @@ from qa_funcs import (
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-langs = ['ja', 'nl', 'ko', 'it']
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -84,7 +84,7 @@ for model_name in model_names:
         normal_llama = unfreeze_pickle(normal_dict_path)
         
     for L2 in langs:
-        if model_type == 'llama3':
+        if model_type == 'llama3' and L2 in ['ja', 'nl', 'ko', 'it']:
             normal = normal_llama[L2]
         else:
             normal_list_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'

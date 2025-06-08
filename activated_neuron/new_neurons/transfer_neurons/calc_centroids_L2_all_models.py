@@ -21,17 +21,18 @@ from funcs import (
 
 # langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
 model_names = ['microsoft/phi-4']
+model_names =  ['Qwen/Qwen3-8B']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
     # if model_name == 'phi4':
-    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
     # else:
     #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     #     langs = ['vi', 'ru', 'fr']
-    num_layers = 32 if model_type != 'phi4' else 40
+    num_layers = 32 if model_type in ['llama3', 'mistral', 'aya'] else 40 if model_type == 'phi4' else 36 # qwen: 36 layers.
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     # centroids of english texts.
