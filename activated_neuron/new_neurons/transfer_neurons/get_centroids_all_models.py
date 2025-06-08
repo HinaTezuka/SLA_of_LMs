@@ -22,25 +22,23 @@ from funcs import (
 )
 
 # making multilingual data.
-# langs = ["ja", "nl", "ko", "it"]
-langs = ['vi', 'ru', 'fr']
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 num_sentences_per_L2 = 2000
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4']
-model_names = ['microsoft/phi-4']
+# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
+model_names = ['Qwen/Qwen3-8B']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # hidden_states and get centroids per L2.
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
-    num_layers = 32 if model_type != 'phi4' else 40
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
+    num_layers = 32 if model_type in ['llama3', 'mistral', 'aya'] else 40 if model_type == 'phi4' else 36
     if model_type != 'phi4':
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     else:
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-        langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 
     # centroids of L2s
     centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = layer_num.
