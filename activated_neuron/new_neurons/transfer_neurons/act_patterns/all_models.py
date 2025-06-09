@@ -20,7 +20,7 @@ from funcs import (
 L1 = "en" # fix L1 to English.
 """ model configs """
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
 score_types = ['cos_sim', 'L2_dis']
 langs = ['ja', 'nl', 'ko', 'it', 'fr', 'ru', 'vi']
@@ -43,7 +43,7 @@ for model_name in model_names:
         dataset = dataset.select(range(total_sentence_num))
 
         # same semantics sentence pairs: test split.
-        tatoeba_data = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_test.pkl")
+        tatoeba_data = unfreeze_pickle(f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_multi_test.pkl')
 
         """ non-translation pair for baseline. """
         random_data = []
