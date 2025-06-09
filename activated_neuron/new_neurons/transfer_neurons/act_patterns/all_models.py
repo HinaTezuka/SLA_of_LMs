@@ -22,8 +22,8 @@ L1 = "en" # fix L1 to English.
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
-score_types = ["cos_sim", "L2_dis"]
-langs = ["ja", "nl", "ko", "it", "fr", "ru", "vi"]
+score_types = ['cos_sim', 'L2_dis']
+langs = ['ja', 'nl', 'ko', 'it', 'fr', 'ru', 'vi']
 is_reverses = [False, True]
 
 for model_name in model_names:
