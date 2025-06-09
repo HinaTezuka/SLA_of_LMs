@@ -400,6 +400,7 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
     # Labels and title
     plt.xlabel("Layer Index", fontsize=35)
     plt.ylabel("Cosine Sim", fontsize=35)
+    plt.ylim(-0.1, 1)
     plt.tick_params(axis='x', labelsize=20)
     plt.tick_params(axis='y', labelsize=20)
     plt.title(f"en_{L2}", fontsize=35)
