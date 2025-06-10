@@ -16,10 +16,10 @@ from funcs import (
     unfreeze_np_arrays,
 )
 
-langs = ['ja', 'nl', 'ko', 'it']
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 model_type = 'llama3'
-model_type = 'mistral'
-model_type = 'aya'
+# model_type = 'mistral'
+# model_type = 'aya'
 score_types = ['cos_sim', 'L2_dis']
 score_types = ['cos_sim']
 

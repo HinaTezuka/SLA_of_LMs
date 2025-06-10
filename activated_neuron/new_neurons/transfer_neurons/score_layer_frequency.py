@@ -76,7 +76,7 @@ def plot_layer_distribution_all_langs(all_neurons_by_lang: dict, is_reverse: boo
 
 if __name__ == '__main__':
     models = ['llama3', 'mistral', 'aya']
-    langs = ['ja', 'nl', 'ko', 'it']
+    langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
     score_types = ['cos_sim', 'L2_dis']
     nums = [100, 1000, 3000, 5000, 10000]
     is_reverses = [True, False]
