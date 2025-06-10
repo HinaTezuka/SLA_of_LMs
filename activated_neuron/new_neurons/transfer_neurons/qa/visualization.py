@@ -39,7 +39,7 @@ qa = load_dataset('apple/mkqa')['train']
 # qa = qa.shuffle(seed=42)
 score_type = 'cos_sim'
 intervention_num = 1000
-THRESHOLD = 0.5
+THRESHOLD = 0.8
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'

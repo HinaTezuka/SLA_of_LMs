@@ -18,12 +18,10 @@ from qa_funcs import (
 )
 
 # load models.
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-# model_names = ['mistralai/Mistral-7B-v0.3']
+model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # langs = ['ja', 'nl', 'ko', 'it', 'en']
 langs = ['vi', 'ru', 'fr']
-langs = ['fr']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
