@@ -19,6 +19,7 @@ def get_out_llama3_act_fn(model, prompt, device, index):
     num_layers = model.config.num_hidden_layers  # nums of layers of the model
     MLP_act = [f"model.layers.{i}.mlp.act_fn" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
+    torch.manual_seed(42)
     with torch.no_grad():
         # trace MLP layers using TraceDict
         with TraceDict(model, MLP_act) as ret:
@@ -31,6 +32,7 @@ def get_out_llama3_up_proj(model, prompt, device, index):
     num_layers = model.config.num_hidden_layers  # nums of layers of the model
     MLP_act = [f"model.layers.{i}.mlp.up_proj" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
 
+    torch.manual_seed(42)
     with torch.no_grad():
         # trace MLP layers using TraceDict
         with TraceDict(model, MLP_act) as ret:
@@ -249,6 +251,8 @@ def get_act_patterns_inputs_to_down_proj(model, model_type, tokenizer, device, d
         for layer_idx, layer in enumerate(model.model.layers):
             handle = layer.mlp.down_proj.register_forward_pre_hook(get_inputs_to_down_proj_L1)
             handles.append(handle)
+
+        torch.manual_seed(42)
         # run inference.
         with torch.no_grad():
             L1_output = model(input_ids_L1)
