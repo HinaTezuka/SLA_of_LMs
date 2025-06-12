@@ -17,7 +17,7 @@ from funcs import (
     unfreeze_pickle,
 )
 
-# Phi4-14B.
+# Qwen3-8B.
 model_name = "Qwen/Qwen3-8B"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
