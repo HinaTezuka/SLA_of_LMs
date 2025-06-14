@@ -23,9 +23,9 @@ from funcs import (
 )
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
+# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
-model_names = ["microsoft/phi-4"]
+model_names = ['Qwen/Qwen3-8B']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict):
@@ -94,20 +94,22 @@ if __name__ == '__main__':
     sentences_all_langs2 = unfreeze_pickle(path)
 
     for model_name in model_names:
-        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
-        # tokenizer = AutoTokenizer.from_pretrained(model_name)
-        # if model_type == 'phi4':
-        #     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-        # else:
-        #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        # for L2 in langs:
-        #     sentences = sentences_all_langs[L2]
-        #     hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-        #     # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        if model_type == 'phi4':
+            model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+        else:
+            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        num_layers = model.config.num_hidden_layers
 
-        #     # save as pkl
-        #     save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
-        #     save_as_pickle(save_path, hidden_states)
+        for L2 in langs:
+            sentences = sentences_all_langs[L2]
+            hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+            # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+
+            # save as pkl
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}.pkl"
+            save_as_pickle(save_path, hidden_states)
 
         """ dim_reduction and plot with PCA. """
         # ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]

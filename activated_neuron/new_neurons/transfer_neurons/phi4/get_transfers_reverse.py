@@ -24,6 +24,7 @@ model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 1000
 langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
+langs = ['ru', 'fr']
 score_types = ["cos_sim", "L2_dis"]
 num_candidate_layers = 40
 
