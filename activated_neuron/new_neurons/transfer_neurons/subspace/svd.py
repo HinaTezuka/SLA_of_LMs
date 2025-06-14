@@ -18,16 +18,17 @@ from funcs import (
 )
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
-model_names = ["microsoft/phi-4"]
+langs = ["ja", "nl", "ko", "it", "en"]
+# models
+model_names = ["microsoft/phi-4", "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
+model_names = ['Qwen/Qwen3-8B', 'microsoft/phi-4']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 is_scaled = False
 intervention_type = 'normal' # normal, type-1(top-1k), type-2(top-1k). 
 
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
-    layer_num = 41 if model_type == 'phi4' else 33 # emb_layer included.
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
+    layer_num = 41 if model_type == 'phi4' else 33 if model_type in ['llama3', 'mistral', 'aya'] else 37 # emb_layer included.
 
     for layer_i in range(layer_num):
         all_lang_cumexp = {}
@@ -63,57 +64,58 @@ for model_name in model_names:
             all_lang_thresh[L2] = threshold_points
 
         plt.rcParams["font.family"] = "DejaVu Serif"
-        # plt.figure(figsize=(7, 6))
+        plt.figure(figsize=(7, 6))
 
-        # colors_by_lang = {
-        #     "en": "#1f77b4",
-        #     "ja": "#ff7f0e",
-        #     "ko": "#2ca02c",
-        #     "it": "#d62728",
-        #     "nl": "#9467bd"
-        # }
+        colors_by_lang = {
+            "en": "#1f77b4",
+            "ja": "#ff7f0e",
+            "ko": "#2ca02c",
+            "it": "#d62728",
+            "nl": "#9467bd"
+        }
 
-        # y_offset_base = 0.9
-        # y_step = 0.05  # Vertical spacing between text annotations
+        y_offset_base = 0.9
+        y_step = 0.05  # Vertical spacing between text annotations
 
-        # for i, lang in enumerate(langs):
-        #     plt.plot(all_lang_cumexp[lang], color=colors_by_lang[lang], linewidth=3, label=lang)
+        for i, lang in enumerate(langs):
+            plt.plot(all_lang_cumexp[lang], color=colors_by_lang[lang], linewidth=3, label=lang)
 
-        #     # Only annotate 95% threshold
-        #     k95 = all_lang_thresh[lang][0.95]
-        #     y_offset = y_offset_base - i * y_step  # Decrease y per language
-        #     plt.axvline(x=k95, color=colors_by_lang[lang], linestyle="--", linewidth=1.5, alpha=0.7)
-        #     plt.text(k95 + 5, y_offset, f"{lang} - 95% : {k95} components",
-        #             fontsize=18, fontweight="bold", color=colors_by_lang[lang])
+            # Only annotate 95% threshold
+            k95 = all_lang_thresh[lang][0.95]
+            y_offset = y_offset_base - i * y_step  # Decrease y per language
+            plt.axvline(x=k95, color=colors_by_lang[lang], linestyle="--", linewidth=1.5, alpha=0.7)
+            plt.text(k95 + 5, y_offset, f"{lang} - 95% : {k95} components",
+                    fontsize=18, fontweight="bold", color=colors_by_lang[lang])
 
-        # plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
+        plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
 
-        # plt.xlabel("# Components", fontsize=30)
-        # plt.ylabel("Explained Variance", fontsize=30)
-        # plt.title(f"Layer {layer_i}", fontsize=30)
-        # plt.tick_params(axis='both', which='major', labelsize=20)
-        # plt.grid(True, linestyle=":", alpha=0.6)
-        # plt.legend(fontsize=14)
+        plt.xlabel("# Components", fontsize=30)
+        plt.ylabel("Explained Variance", fontsize=30)
+        plt.title(f"Layer {layer_i}", fontsize=30)
+        plt.tick_params(axis='both', which='major', labelsize=20)
+        plt.grid(True, linestyle=":", alpha=0.6)
+        plt.legend(fontsize=14)
 
-        # if layer_i == 0:
-        #     if is_scaled:
-        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/emb_layer'
-        #     else:
-        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
-        # else:
-        #     if is_scaled:
-        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/{layer_i}'
-        #     else:
-        #         path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
-        # with PdfPages(path + '.pdf') as pdf:
-        #     pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-        #     plt.close()
+        if layer_i == 0:
+            if is_scaled:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/emb_layer'
+            else:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/emb_layer'
+        else:
+            if is_scaled:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/scale/{layer_i}'
+            else:
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/layer_wise/{layer_i}'
+        with PdfPages(path + '.pdf') as pdf:
+            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+            plt.close()
 
     # Summary plot
     if is_scaled:
         output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/scale"
     else:
-        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/all_langs"
+        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
+        # output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/all_langs"
     os.makedirs(output_dir, exist_ok=True)
 
     colors_by_lang = {
@@ -138,6 +140,7 @@ for model_name in model_names:
         "mistral": "Mistral-7B",
         "aya": "Aya expanse-8B",
         "phi4": "Phi4-14B",
+        'qwen': "Qwen3-8B",
     }
 
     for model_type in threshold_log:

@@ -24,8 +24,7 @@ from funcs import (
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4"]
-model_names = ["microsoft/phi-4"]
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4", "Qwen/Qwen3-8B"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict):

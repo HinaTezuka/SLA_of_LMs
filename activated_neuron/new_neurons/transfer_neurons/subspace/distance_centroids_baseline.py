@@ -21,15 +21,15 @@ from funcs import (
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 langs = ["ja", "nl", "ko", "it", "en"]
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
-model_names = ["microsoft/phi-4", "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3"]
+# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
+model_names = ["microsoft/phi-4", "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'Qwen/Qwen3-8B']
+model_names = ['Qwen/Qwen3-8B']
 is_using_centroids = False
 intervention_type = 'type-1'
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
     layer_num = 41 if model_type == 'phi4' else 33 # emb_layer included.
 
     if intervention_type == 'normal':
