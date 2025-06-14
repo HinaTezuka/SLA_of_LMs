@@ -62,20 +62,25 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
 if __name__ == "__main__":
     L1 = "en"
     """ model configs """
-    model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-    model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+    model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
+    model_names = ['Qwen/Qwen3-8B', 'microsoft/phi-4']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     """ parameters """
     langs = ["ja", "nl", "it", "ko"]
     langs = ["vi", "ru", "fr"]
+    langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
+    langs = ['it', 'fr', 'vi', 'ja']
     n_list = [100, 1000, 3000, 5000]
     score_types = ["cos_sim", "L2_dis"]
     is_en = False
 
     for model_name in model_names:
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if  'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
+        if model_type == 'phi4':
+            model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+        else:
+            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
         for L2 in langs:
             """ tatoeba translation corpus """
             dataset = load_dataset("tatoeba", lang1=L1, lang2=L2, split="train")
@@ -112,21 +117,21 @@ if __name__ == "__main__":
                     random.seed(42)
                     sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num:], intervention_num)
                     """ deactivate shared_neurons(same semantics expert neurons) """
-                    similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
-                    similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_main, random_data)
+                    similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
+                    similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_main, random_data)
                     final_results_same_semantics = defaultdict(float)
                     final_results_non_same_semantics = defaultdict(float)
-                    for layer_idx in range(32): # ３２ layers
+                    for layer_idx in range(model.config.num_hidden_layers): # ３２ layers
                         final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                         final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
                     plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
 
                     """ baseline """
-                    similarities_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-                    similarities_non_same_semantics = take_similarities_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                    similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+                    similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, random_data)
                     final_results_same_semantics = defaultdict(float)
                     final_results_non_same_semantics = defaultdict(float)
-                    for layer_idx in range(32):
+                    for layer_idx in range(model.config.num_hidden_layers):
                         final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                         final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
                     plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)

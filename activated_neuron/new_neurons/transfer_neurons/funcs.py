@@ -967,8 +967,11 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
     return output
 
-def take_similarities_with_edit_activation(model, tokenizer, device, layer_neuron_list, data):
-    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+def take_similarities_with_edit_activation(model, model_type, tokenizer, device, layer_neuron_list, data):
+    if model_type in ['llama3', 'mistral', 'aya', 'qwen']:
+        trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    elif model_type in ['phi4']:
+        trace_layers = list(set([f'model.layers.{layer}.mlp.activation_fn' for layer, _ in layer_neuron_list]))
     similarities = defaultdict(list)
 
     torch.manual_seed(42)
