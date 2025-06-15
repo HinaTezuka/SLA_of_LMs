@@ -173,7 +173,7 @@ if __name__ == "__main__":
         results_non_same_semantics = calc_similarities_of_hidden_state_per_each_sentence_pair(model, tokenizer, random_data)
         final_results_same_semantics = defaultdict(float)
         final_results_non_same_semantics = defaultdict(float)
-        for layer_idx in range(40):
+        for layer_idx in range(34):
             final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
 
