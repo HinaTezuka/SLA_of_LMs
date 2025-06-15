@@ -34,7 +34,12 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
     colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
 
     if is_reverse:
-        start, end = 20+1, 32+1 if model_type in ['llama3', 'mistral', 'aya'] else 20+1, 40+1 if model_type == 'phi4' else 20+1, 36+1
+        if model_type in ['llama3', 'mistral', 'aya']:
+            start, end = 21, 33
+        elif model_type == 'phi4':
+            start, end = 21, 41
+        else:
+            start, end = 21, 37
     else:
         start, end = 0, 20+1
     
@@ -45,12 +50,12 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3 = np.array(features_L3[layer_idx])
         f4 = np.array(features_L4[layer_idx])
         f5 = np.array(features_L5[layer_idx])
-        f6 = np.array(features_L6[layer_idx])
-        f7 = np.array(features_L7[layer_idx])
-        f8 = np.array(features_L8[layer_idx])
+        # f6 = np.array(features_L6[layer_idx])
+        # f7 = np.array(features_L7[layer_idx])
+        # f8 = np.array(features_L8[layer_idx])
 
-        # all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
-        all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
+        all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
+        # all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
         if model_type == 'phi4':
             scaler = StandardScaler()
             all_features = scaler.fit_transform(all_features)
@@ -63,15 +68,15 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3_2d = pca.transform(f3)
         f4_2d = pca.transform(f4)
         f5_2d = pca.transform(f5)
-        f6_2d = pca.transform(f6)
-        f7_2d = pca.transform(f7)
-        f8_2d = pca.transform(f8)
+        # f6_2d = pca.transform(f6)
+        # f7_2d = pca.transform(f7)
+        # f8_2d = pca.transform(f8)
 
         # plot.
         plt.rcParams["font.family"] = "DejaVu Serif"
         plt.figure(figsize=(12, 12))
-        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
-        # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
+        # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
+        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
             plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
         legend_handles = [
             Line2D([0], [0], marker='o', color='w', label=lang,
@@ -90,9 +95,11 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
         # save as image.
         if is_reverse:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/reverse/{file_name}'
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse/{file_name}'
+            # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/reverse/{file_name}'
         else:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/type-1/{file_name}'
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/type-1/{file_name}'
+            # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/type-1/{file_name}'
 
         with PdfPages(output_dir + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
@@ -167,8 +174,8 @@ if __name__ == '__main__':
             hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1.pkl")
             hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
         # 
-        # plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, hs_vi, hs_ru, hs_fr, is_reverse)
+        plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, hs_vi, hs_ru, hs_fr, is_reverse)
         # plot_umap(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
-        del model
-        torch.cuda.empty_cache()
+        # del model
+        # torch.cuda.empty_cache()
