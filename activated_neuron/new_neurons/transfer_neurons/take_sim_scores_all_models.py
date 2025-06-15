@@ -70,7 +70,7 @@ if __name__ == "__main__":
     langs = ["vi", "ru", "fr"]
     langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
     langs = ['it', 'fr', 'vi', 'ja']
-    langs = ['ja', 'nl']
+    langs = ['nl', 'ja']
     n_list = [100, 1000, 3000, 5000]
     score_types = ["cos_sim", "L2_dis"]
     is_en = False

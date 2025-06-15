@@ -75,7 +75,8 @@ def plot_layer_distribution_all_langs(all_neurons_by_lang: dict, is_reverse: boo
         plt.close()
 
 if __name__ == '__main__':
-    models = ['llama3', 'mistral', 'aya']
+    models = ['llama3', 'mistral', 'aya', 'phi4', 'qwen']
+    models = ['phi4']
     langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
     score_types = ['cos_sim', 'L2_dis']
     nums = [100, 1000, 3000, 5000, 10000]
@@ -90,7 +91,12 @@ if __name__ == '__main__':
                         if is_reverse:
                             path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl'
                             sorted_neurons = unfreeze_pickle(path)
-                            sorted_neurons = [neuron for neuron in sorted_neurons if 20 <= neuron[0] < 32]
+                            if model in ['llama3', 'mistral', 'aya']:
+                                sorted_neurons = [neuron for neuron in sorted_neurons if 20 <= neuron[0] < 32]
+                            elif model in ['qwen']:
+                                sorted_neurons = [neuron for neuron in sorted_neurons if 20 <= neuron[0] < 36]
+                            elif model in ['phi4']:
+                                sorted_neurons = [neuron for neuron in sorted_neurons if 20 <= neuron[0] < 40]
                         else:
                             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model}/final_scores/{score_type}/{L2}_mono_train.pkl"
                             sorted_neurons = unfreeze_pickle(path)
