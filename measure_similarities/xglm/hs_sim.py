@@ -1,28 +1,5 @@
 """
-BloomForCausalLM(
-  (transformer): BloomModel(
-    (word_embeddings): Embedding(250880, 2560)
-    (word_embeddings_layernorm): LayerNorm((2560,), eps=1e-05, elementwise_affine=True)
-    (h): ModuleList(
-      (0-29): 30 x BloomBlock(
-        (input_layernorm): LayerNorm((2560,), eps=1e-05, elementwise_affine=True)
-        (self_attention): BloomAttention(
-          (query_key_value): Linear(in_features=2560, out_features=7680, bias=True)
-          (dense): Linear(in_features=2560, out_features=2560, bias=True)
-          (attention_dropout): Dropout(p=0.0, inplace=False)
-        )
-        (post_attention_layernorm): LayerNorm((2560,), eps=1e-05, elementwise_affine=True)
-        (mlp): BloomMLP(
-          (dense_h_to_4h): Linear(in_features=2560, out_features=10240, bias=True)
-          (gelu_impl): BloomGelu()
-          (dense_4h_to_h): Linear(in_features=10240, out_features=2560, bias=True)
-        )
-      )
-    )
-    (ln_f): LayerNorm((2560,), eps=1e-05, elementwise_affine=True)
-  )
-  (lm_head): Linear(in_features=2560, out_features=250880, bias=False)
-)
+
 """
 import os
 import sys
@@ -34,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import torch
+import transformers
 
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
