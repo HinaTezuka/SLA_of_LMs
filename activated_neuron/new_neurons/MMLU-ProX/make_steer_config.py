@@ -45,6 +45,7 @@ if __name__ == "__main__":
     torch.save(config, args.output)
     print(f'Saved steer_config to: {args.output}')
 
+    """ test """
     # config = torch.load("/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/steer_config.pt")
 
     # for hookpoint, data in config.items():
