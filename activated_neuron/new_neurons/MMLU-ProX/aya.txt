@@ -20,3 +20,46 @@
 |------------|------:|--------------|------|-----------|---|-----:|---|-----:|
 |mmlu_prox_ja|      0|custom-extract|      |exact_match|↑  |0.2648|±  | 0.004|
 
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr       |      0|custom-extract|      |exact_match|↑  |0.3207|±  |0.0042|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.5300|±  |0.0187|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.3105|±  |0.0165|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.2279|±  |0.0125|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.3000|±  |0.0227|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.4336|±  |0.0171|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.2869|±  |0.0145|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.3115|±  |0.0177|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.3150|±  |0.0238|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1877|±  |0.0126|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.3501|±  |0.0130|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.3323|±  |0.0155|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.2786|±  |0.0201|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.2594|±  |0.0122|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.4398|±  |0.0176|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr|      0|custom-extract|      |exact_match|↑  |0.3207|±  |0.0042|
+
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko       |      0|custom-extract|      |exact_match|↑  |0.2702|±  |0.0041|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.3543|±  |0.0179|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2864|±  |0.0161|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.2191|±  |0.0123|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.3098|±  |0.0229|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.3412|±  |0.0163|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.2487|±  |0.0139|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.2183|±  |0.0158|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.2415|±  |0.0220|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1700|±  |0.0121|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.3183|±  |0.0127|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.2727|±  |0.0147|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.1864|±  |0.0174|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.2186|±  |0.0115|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.4123|±  |0.0174|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko|      0|custom-extract|      |exact_match|↑  |0.2702|±  |0.0041|
