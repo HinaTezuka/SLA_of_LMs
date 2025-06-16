@@ -37,7 +37,7 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         if model_type in ['llama3', 'mistral', 'aya']:
             start, end = 21, 33
         elif model_type == 'phi4':
-            start, end = 21, 41
+            start, end = 31, 41
         else:
             start, end = 21, 37
     else:
@@ -106,7 +106,8 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
             plt.close()
 
 if __name__ == '__main__':
-    score_type = 'cos_sim'
+    # score_type = 'cos_sim'
+    score_type = 'L2_dis'
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en_vi_ru_fr.pkl'
     sentences_all_langs = unfreeze_pickle(path)
     is_reverse = True # fix.
@@ -119,7 +120,7 @@ if __name__ == '__main__':
             model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 41 if model_type == 'phi4' else 37
         num_intervention = 1000 if model_type in ['llama3', 'mistral', 'aya', 'qwen'] else 1500
-        # num_intervention = 5000
+        num_intervention = 5000
         for L2 in langs:
             # prepare type-2 Transfer Neurons.
             if L2 != "en":
@@ -142,8 +143,8 @@ if __name__ == '__main__':
 
             # save hs as pkl.
             if is_reverse:
-                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
-                # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}_{num_intervention}.pkl"
+                # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}_{num_intervention}.pkl"
             else:
                 save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1.pkl"
             save_as_pickle(save_path, hidden_states)

@@ -80,7 +80,7 @@ if __name__ == '__main__':
     langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
     score_types = ['cos_sim', 'L2_dis']
     nums = [100, 1000, 3000, 5000, 10000]
-    is_reverses = [True, False]
+    is_reverses = [False, True]
 
     for model in models:
         for is_reverse in is_reverses:

@@ -25,7 +25,7 @@ langs = ["ja", "nl", "ko", "it", "en"]
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
 model_names = ['microsoft/phi-4']
 is_using_centroids = False
-intervention_type = 'type-1'
+intervention_type = 'type-2'
 # intervention_type = 'normal'
 
 """ compute distance between language subspaces. """
