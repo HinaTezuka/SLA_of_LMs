@@ -12,7 +12,7 @@ from funcs import (
 def make_steer_config(neuron_list, hidden_size, action="multiply", clamp_value=0.0):
     config = {}
     for layer, neuron in neuron_list:
-        hook_name = f"model.layers.{layer}.mlp.act_fn"
+        hook_name = f"layers.{layer}.mlp.act_fn"
         steering_vector = torch.ones(1, hidden_size)
         steering_vector[0, neuron] = 0.0
         config[hook_name] = {
