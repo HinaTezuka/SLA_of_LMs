@@ -95,6 +95,7 @@ if __name__ == "__main__":
             )
 
             output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}.pt'
+            # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/test.pt'
             torch.save(config, output_path)
             print(f'Saved steer_config to: {output_path}')
     
