@@ -20,15 +20,14 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 langs = ["ja", "nl", "ko", "it", "en"]
 # models
-model_names = ["microsoft/phi-4", "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
-model_names = ['Qwen/Qwen3-8B', 'microsoft/phi-4']
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
 threshold_log = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 is_scaled = False
 intervention_type = 'normal' # normal, type-1(top-1k), type-2(top-1k). 
 
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
-    layer_num = 41 if model_type == 'phi4' else 33 if model_type in ['llama3', 'mistral', 'aya'] else 37 # emb_layer included.
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
+    layer_num = 33 if model_type in ['llama3', 'mistral', 'aya'] else 31 # emb_layer included.
 
     for layer_i in range(layer_num):
         all_lang_cumexp = {}
@@ -71,7 +70,10 @@ for model_name in model_names:
             "ja": "#ff7f0e",
             "ko": "#2ca02c",
             "it": "#d62728",
-            "nl": "#9467bd"
+            "nl": "#9467bd",
+            "vi": "#8c564b",
+            "ru": "#e377c2",
+            "fr": "#7f7f7f",
         }
 
         y_offset_base = 0.9
@@ -84,8 +86,8 @@ for model_name in model_names:
             k95 = all_lang_thresh[lang][0.95]
             y_offset = y_offset_base - i * y_step  # Decrease y per language
             plt.axvline(x=k95, color=colors_by_lang[lang], linestyle="--", linewidth=1.5, alpha=0.7)
-            plt.text(k95 + 5, y_offset, f"{lang} - 95% : {k95} components",
-                    fontsize=18, fontweight="bold", color=colors_by_lang[lang])
+            # plt.text(k95 + 5, y_offset, f"{lang} - 95% : {k95} components",
+            #         fontsize=18, fontweight="bold", color=colors_by_lang[lang])
 
         plt.axhline(y=0.95, color="#54AFE4", linestyle="--", linewidth=2)
 
@@ -94,7 +96,7 @@ for model_name in model_names:
         plt.title(f"Layer {layer_i}", fontsize=30)
         plt.tick_params(axis='both', which='major', labelsize=20)
         plt.grid(True, linestyle=":", alpha=0.6)
-        plt.legend(fontsize=14)
+        plt.legend(fontsize=30)
 
         if layer_i == 0:
             if is_scaled:
@@ -110,62 +112,61 @@ for model_name in model_names:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
 
-    # Summary plot
-    if is_scaled:
-        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/scale"
-    else:
-        output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
-        # output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/all_langs"
-    os.makedirs(output_dir, exist_ok=True)
+    # # Summary plot
+    # if is_scaled:
+    #     output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/scale"
+    # else:
+    #     output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary"
+    #     # output_dir = "/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/summary/all_langs"
+    # os.makedirs(output_dir, exist_ok=True)
 
-    colors_by_lang = {
-        "en": "#1f77b4",
-        "ja": "#ff7f0e",
-        "ko": "#2ca02c",
-        "it": "#d62728",
-        "nl": "#9467bd",
-        "vi": "#8c564b",
-        "ru": "#e377c2",
-        "fr": "#7f7f7f",
-    }
+    # colors_by_lang = {
+    #     "en": "#1f77b4",
+    #     "ja": "#ff7f0e",
+    #     "ko": "#2ca02c",
+    #     "it": "#d62728",
+    #     "nl": "#9467bd",
+    #     "vi": "#8c564b",
+    #     "ru": "#e377c2",
+    #     "fr": "#7f7f7f",
+    # }
 
-    threshold_colors = {
-        0.9: "#08c93b",
-        0.95: "#54AFE4",
-        0.99: "#24158A",
-    }
+    # threshold_colors = {
+    #     0.9: "#08c93b",
+    #     0.95: "#54AFE4",
+    #     0.99: "#24158A",
+    # }
 
-    model_name_map = {
-        "llama3": "LLaMA3-8B",
-        "mistral": "Mistral-7B",
-        "aya": "Aya expanse-8B",
-        "phi4": "Phi4-14B",
-        'qwen': "Qwen3-8B",
-    }
+    # model_name_map = {
+    #     "llama3": "LLaMA3-8B",
+    #     "mistral": "Mistral-7B",
+    #     "aya": "Aya expanse-8B",
+    #     "bloom": "BLOOM-3B",
+    # }
 
-    for model_type in threshold_log:
-        for threshold in [0.9, 0.95, 0.99]:
-            plt.figure(figsize=(10, 6))
+    # for model_type in threshold_log:
+    #     for threshold in [0.9, 0.95, 0.99]:
+    #         plt.figure(figsize=(10, 6))
 
-            for lang in langs:
-                y = threshold_log[model_type][threshold][lang]
-                plt.plot(range(len(y)), y, label=lang, color=colors_by_lang[lang], linewidth=2)
+    #         for lang in langs:
+    #             y = threshold_log[model_type][threshold][lang]
+    #             plt.plot(range(len(y)), y, label=lang, color=colors_by_lang[lang], linewidth=2)
 
-            plt.title(f"{model_name_map[model_type]} - {int(threshold * 100)}% Variance", fontsize=30)
-            plt.xlabel("Layers", fontsize=30)
-            plt.ylabel("# Components", fontsize=30)
-            plt.grid(True, linestyle=":", alpha=0.5)
-            plt.xticks(fontsize=20)
-            plt.yticks(fontsize=20)
-            plt.legend(title="Language", fontsize=25, title_fontsize=25)
-            plt.tight_layout()
+    #         plt.title(f"{model_name_map[model_type]} - {int(threshold * 100)}% Variance", fontsize=30)
+    #         plt.xlabel("Layers", fontsize=30)
+    #         plt.ylabel("# Components", fontsize=30)
+    #         plt.grid(True, linestyle=":", alpha=0.5)
+    #         plt.xticks(fontsize=20)
+    #         plt.yticks(fontsize=20)
+    #         plt.legend(title="Language", fontsize=25, title_fontsize=25)
+    #         plt.tight_layout()
 
-            if intervention_type == 'normal':
-                save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}")
-            elif intervention_type == 'type-1':
-                save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}_type1")
-            elif intervention_type == 'type-2':
-                save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}_type2")
-            with PdfPages(save_path + '.pdf') as pdf:
-                pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-                plt.close()
+    #         if intervention_type == 'normal':
+    #             save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}")
+    #         elif intervention_type == 'type-1':
+    #             save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}_type1")
+    #         elif intervention_type == 'type-2':
+    #             save_path = os.path.join(output_dir, f"{model_type}_{int(threshold * 100)}_type2")
+    #         with PdfPages(save_path + '.pdf') as pdf:
+    #             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+    #             plt.close()
