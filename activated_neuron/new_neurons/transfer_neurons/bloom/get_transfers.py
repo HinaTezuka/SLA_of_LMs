@@ -21,7 +21,7 @@ from funcs import (
 
 # BLOOM-3B.
 model_name = 'bigscience/bloom-3b'
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 # for name, module in model.named_modules():

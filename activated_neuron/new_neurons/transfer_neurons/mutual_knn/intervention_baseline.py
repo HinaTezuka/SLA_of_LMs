@@ -23,7 +23,8 @@ from funcs import (
     unfreeze_np_arrays,
 )
 
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
+model_names = ['bigscience/bloom-3b']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 langs = ['ja', 'nl', 'ko', 'it']
 L1 = 'en'
@@ -36,7 +37,7 @@ intervention_num = 1000
 for model_name in model_names:
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
     knn_scores = {}
     for is_reverse in is_reverses:
         for L2 in langs:
@@ -50,13 +51,14 @@ for model_name in model_names:
             elif is_reverse:
                 path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                 neurons = unfreeze_pickle(path)
-                neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                # neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 30)]]
             neurons_main = neurons[:intervention_num]
             # baseline
             random.seed(42)
             neurons_baseline = random.sample(neurons[intervention_num:], intervention_num)
 
-            res = compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences, L1, L2, topk, neurons_baseline) # res: [knn_score_layer1, knn_score_layer2, ...]
+            res = compute_mutual_knn_with_edit_activation(model, model_type, tokenizer, device, sentences, L1, L2, topk, neurons_baseline) # res: [knn_score_layer1, knn_score_layer2, ...]
             print(f'================== {model_type}, {L2} ==================')
             # print(res)
             knn_scores[L2] = res
@@ -72,7 +74,7 @@ for model_name in model_names:
     torch.cuda.empty_cache()
 
 """ visualization. """
-model_types = ['llama3', 'mistral', 'aya']
+model_types = ['llama3', 'mistral', 'aya', 'bloom']
 languages = ['ja', 'nl', 'ko', 'it']
 # Prepare a list to collect all rows for the DataFrame
 all_data = []
@@ -116,9 +118,9 @@ for is_reverse in is_reverses:
         plt.legend(title='L2', fontsize=15, title_fontsize=15)
         
         if not is_reverse:
-            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/test/{model_type}_top{topk}_type1_n{intervention_num}_baseline'
+            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}_type1_n{intervention_num}_baseline'
         elif is_reverse:
-            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/test/{model_type}_top{topk}_type2_n{intervention_num}_baseline'
+            save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}_type2_n{intervention_num}_baseline'
         # plt.savefig(save_path, bbox_inches='tight')
         with PdfPages(save_path + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)

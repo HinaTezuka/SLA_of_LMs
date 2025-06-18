@@ -20,7 +20,7 @@ from funcs import (
 # BLOOM-3B.
 model_name = 'bigscience/bloom-3b'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
+model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 num_sentences = 1000
 langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
