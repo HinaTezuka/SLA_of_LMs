@@ -27,7 +27,7 @@ model_names = ['bigscience/bloom-3b']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 langs = ['ja', 'nl', 'ko', 'it']
 L1 = 'en'
-topk = 10 # number of nearest neighbor.
+topk = 5 # number of nearest neighbor.
 
 for model_name in model_names:
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
@@ -51,6 +51,7 @@ for model_name in model_names:
 
 """ visualization. """
 model_types = ['llama3', 'mistral', 'aya', 'bloom']
+model_types = ['bloom']
 languages = ['ja', 'nl', 'ko', 'it']
 # Prepare a list to collect all rows for the DataFrame
 all_data = []
@@ -78,7 +79,7 @@ for model_type in model_types:
     plt.figure(figsize=(10, 6))
     subset = df[df['Model'] == model_type]
     sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10', linewidth=3)
-    model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B'
+    model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B' if model_type == 'aya' else 'BLOOM-3B'
     plt.title(f'{model_name}', fontsize=50)
     plt.xlabel('Layer Index', fontsize=45)
     plt.ylabel('Mutual KNN', fontsize=45)
