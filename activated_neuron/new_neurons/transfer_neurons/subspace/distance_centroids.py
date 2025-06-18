@@ -20,18 +20,18 @@ from funcs import (
 )
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
-langs = ["ja", "nl", "ko", "it", "en"]
+# langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
-model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
-model_names = ['microsoft/phi-4']
+model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
+model_names = ['bigscience/bloom-3b']
 is_using_centroids = False
-intervention_type = 'type-2'
-# intervention_type = 'normal'
+# intervention_type = 'type-2'
+intervention_type = 'normal'
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
-    layer_num = 41 if model_type == 'phi4' else 33 if model_type in ['llama3', 'mistral', 'aya'] else 37 # emb_layer included.
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
+    layer_num = 41 if model_type == 'phi4' else 33 if model_type in ['llama3', 'mistral', 'aya'] else 31 # emb_layer included.
 
     if intervention_type == 'normal':
         hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
@@ -91,9 +91,9 @@ for model_name in model_names:
         hs_ko_layer = np.array(hs_ko[layer_i])
         hs_it_layer = np.array(hs_it[layer_i])
         hs_en_layer = np.array(hs_en[layer_i])
-        # hs_vi_layer = np.array(hs_vi[layer_i])
-        # hs_ru_layer = np.array(hs_ru[layer_i])
-        # hs_fr_layer = np.array(hs_fr[layer_i])
+        hs_vi_layer = np.array(hs_vi[layer_i])
+        hs_ru_layer = np.array(hs_ru[layer_i])
+        hs_fr_layer = np.array(hs_fr[layer_i])
     
         # compute cosine_sim beween vectors in each subspace.
         lang2hs_layer = {
@@ -102,9 +102,9 @@ for model_name in model_names:
             "ko": hs_ko_layer,
             "it": hs_it_layer,
             "en": hs_en_layer,
-            # "vi": hs_vi_layer,
-            # "ru": hs_ru_layer,
-            # "fr": hs_fr_layer,
+            "vi": hs_vi_layer,
+            "ru": hs_ru_layer,
+            "fr": hs_fr_layer,
         }
 
         for lang1, lang2 in permutations(langs, 2):
@@ -152,7 +152,7 @@ for model_name in model_names:
         )
         cbar = ax.collections[0].colorbar
         cbar.ax.tick_params(labelsize=20)
-        title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B' if model_type == 'aya' else 'Phi4-14B' if 'phi' in model_name else 'Qwen3-8B'
+        title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B' if model_type == 'aya' else 'BLOOM-3B'
         plt.title(f"{title} - Layer {layer_i}", fontsize=30)
         plt.tick_params(labelsize=30)
         if intervention_type == 'type-1':
@@ -170,7 +170,7 @@ for model_name in model_names:
 
         if intervention_type == 'normal':
             save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/all"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/all"
         elif intervention_type == 'type-1':
             save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
