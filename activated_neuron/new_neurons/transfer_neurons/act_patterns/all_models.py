@@ -19,7 +19,7 @@ from funcs import (
 
 L1 = "en" # fix L1 to English.
 """ model configs """
-model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'microsoft/phi-4', 'Qwen/Qwen3-8B']
+model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
 score_types = ['cos_sim', 'L2_dis']
@@ -27,11 +27,8 @@ langs = ['ja', 'nl', 'ko', 'it', 'fr', 'ru', 'vi']
 is_reverses = [False, True]
 
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4'
-    if model_type == 'phi4':
-        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-    else:
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     """ parallel data """
     for L2 in langs:

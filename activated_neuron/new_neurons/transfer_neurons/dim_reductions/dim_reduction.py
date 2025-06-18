@@ -23,7 +23,7 @@ from funcs import (
 )
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
+# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
 model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
