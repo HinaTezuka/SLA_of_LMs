@@ -32,7 +32,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # hidden_states and get centroids per L2.
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
-    num_layers = 32 if model_type in ['llama3', 'mistral', 'aya'] else 31
+    num_layers = 32 if model_type in ['llama3', 'mistral', 'aya'] else 30 # 30: BOOM-3B.
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
