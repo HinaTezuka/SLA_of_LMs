@@ -26,10 +26,10 @@ def make_steer_config(neuron_list, hidden_size, action="multiply", clamp_value=0
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--pickle", type=str, required=True,
-                        help="Path to pickle file containing [(layer, neuron), ...]")
-    parser.add_argument("--hidden_size", type=int, default=14336,
-                        help="MLP hidden size (default: 14336 for LLaMA-3-8B)")
-    parser.add_argument("--output", type=str, default="steer_config.pt",
+                        help="Path to pickle file containing [(layer_idx, neuron_idx), ...]")
+    parser.add_argument("--activation_size", type=int, required=True, default=14336,
+                        help="MLP activation vector size (default: 14336 for LLaMA-3-8B)")
+    parser.add_argument("--output", type=str, required=True, default="steer_config.pt",
                         help="Output .pt filename (default: steer_config.pt)")
     parser.add_argument("--clamp_value", type=float, default=0.0,
                         help="Value to clamp neurons to (default: 0.0)")
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     neuron_list = unfreeze_pickle(args.pickle)[:1000]
     config = make_steer_config(
         neuron_list,
-        hidden_size=args.hidden_size,
+        hidden_size=args.activation_size,
         clamp_value=args.clamp_value
     )
 
