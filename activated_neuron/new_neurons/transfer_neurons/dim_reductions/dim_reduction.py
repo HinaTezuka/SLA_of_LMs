@@ -24,18 +24,18 @@ from funcs import (
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', "microsoft/phi-4", "Qwen/Qwen3-8B"]
-model_names = ["Tower-Babel/Babel-9B"]
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
+model_names = ["bigscience/bloom-3b"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict):
-    languages = ["Japanese", "Dutch", "Korean", "Italian", "English", "Vietnamese", "Russian", "French"]
-    colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
-    # languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
-    # colors = ["red", "blue", "yellow", "orange", "green"]
+def plot_pca(model_type: str, num_layers: int, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict):
+    # languages = ["Japanese", "Dutch", "Korean", "Italian", "English", "Vietnamese", "Russian", "French"]
+    # colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
+    languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
+    colors = ["red", "blue", "yellow", "orange", "green"]
     
-    num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 41 if model_type == 'phi4' else 37 if model_type in ['qwen'] else 35
-    for layer_idx in range(num_layers):  # Embedding layer + 32 hidden layers
+    num_layers = num_layers + 1 # include emb layer.
+    for layer_idx in range(num_layers):
 
         f1 = np.array(features_L1[layer_idx])
         f2 = np.array(features_L2[layer_idx])
@@ -46,11 +46,11 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f7 = np.array(features_L7[layer_idx])
         f8 = np.array(features_L8[layer_idx])
 
-        # all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
-        all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
-        if model_type in ['phi4', 'qwen']:
-            scaler = StandardScaler()
-            all_features = scaler.fit_transform(all_features)
+        all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
+        # all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
+        # if model_type in ['bloom']:
+        #     scaler = StandardScaler()
+        #     all_features = scaler.fit_transform(all_features)
         pca = PCA(n_components=2, random_state=42)
         pca.fit(all_features)
 
@@ -60,15 +60,15 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3_2d = pca.transform(f3)
         f4_2d = pca.transform(f4)
         f5_2d = pca.transform(f5)
-        f6_2d = pca.transform(f6)
-        f7_2d = pca.transform(f7)
-        f8_2d = pca.transform(f8)
+        # f6_2d = pca.transform(f6)
+        # f7_2d = pca.transform(f7)
+        # f8_2d = pca.transform(f8)
 
         # plot.
         plt.rcParams["font.family"] = "DejaVu Serif"
         plt.figure(figsize=(12, 12))
-        # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
-        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
+        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
+        # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
             plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
         legend_handles = [
             Line2D([0], [0], marker='o', color='w', label=lang,
@@ -86,8 +86,8 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         plt.grid(True)
 
         # save as image.
-        # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/{file_name}'
-        output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/{file_name}'
+        output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/{file_name}'
+        # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/{file_name}'
         with PdfPages(output_dir + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
@@ -99,13 +99,10 @@ if __name__ == '__main__':
     sentences_all_langs2 = unfreeze_pickle(path)
 
     for model_name in model_names:
-        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen' if 'qwen' in model_name else 'babel'
+        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
         # tokenizer = AutoTokenizer.from_pretrained(model_name)
-        # if model_type == 'phi4':
-        #     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-        # else:
-        #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        # num_layers = model.config.num_hidden_layers
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        num_layers = model.config.num_hidden_layers
 
         # for L2 in langs:
         #     sentences = sentences_all_langs[L2]
@@ -127,7 +124,7 @@ if __name__ == '__main__':
         hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru.pkl")
         hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr.pkl")
         # 
-        plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, hs_vi, hs_ru, hs_fr)
+        plot_pca(model_type, num_layers, hs_ja, hs_nl, hs_ko, hs_it, hs_en, hs_vi, hs_ru, hs_fr)
 
         # del model
         torch.cuda.empty_cache()
