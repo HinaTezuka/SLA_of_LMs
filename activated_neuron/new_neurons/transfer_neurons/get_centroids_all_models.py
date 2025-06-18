@@ -25,9 +25,9 @@ from funcs import (
 langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 num_sentences_per_L2 = 2000
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
+model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
 model_names = ['bigscience/bloom-3b']
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # hidden_states and get centroids per L2.
 for model_name in model_names:
@@ -36,7 +36,7 @@ for model_name in model_names:
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
-    # centroids of L2s
+    # centroids of L2
     centroids = {} # { L2: [shared_centroids(en-L2)_1, ...} <- len(values) = layer_num.
     for L2 in langs:
         # sentence_pairs = multilingual_dataset_for_centroid_detection(langs, num_sentences_per_L2)
