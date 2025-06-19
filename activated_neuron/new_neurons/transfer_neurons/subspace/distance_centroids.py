@@ -31,7 +31,7 @@ intervention_type = 'type-1'
 """ compute distance between language subspaces. """
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
-    layer_num = 41 if model_type == 'phi4' else 33 if model_type in ['llama3', 'mistral', 'aya'] else 31 # emb_layer included.
+    layer_num = 33 if model_type in ['llama3', 'mistral', 'aya'] else 31 # emb_layer included.
 
     if intervention_type == 'normal':
         hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
