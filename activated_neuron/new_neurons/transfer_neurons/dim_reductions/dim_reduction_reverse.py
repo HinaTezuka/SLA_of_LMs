@@ -105,8 +105,8 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
             plt.close()
 
 if __name__ == '__main__':
-    # score_type = 'cos_sim'
-    score_type = 'L2_dis'
+    score_type = 'cos_sim'
+    # score_type = 'L2_dis'
     path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/mkqa_q_sentence_data_ja_nl_ko_it_en_vi_ru_fr.pkl'
     sentences_all_langs = unfreeze_pickle(path)
     is_reverse = True # fix.

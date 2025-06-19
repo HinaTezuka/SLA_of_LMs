@@ -19,14 +19,14 @@ from funcs import (
     save_as_pickle,
 )
 
-langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
-# langs = ["ja", "nl", "ko", "it", "en"]
-# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B / Qwen3-8B.
+# langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
+langs = ["ja", "nl", "ko", "it", "en"]
+# LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
 model_names = ['bigscience/bloom-3b']
 is_using_centroids = False
-# intervention_type = 'type-2'
-intervention_type = 'normal'
+intervention_type = 'type-1'
+# intervention_type = 'normal'
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
@@ -91,9 +91,9 @@ for model_name in model_names:
         hs_ko_layer = np.array(hs_ko[layer_i])
         hs_it_layer = np.array(hs_it[layer_i])
         hs_en_layer = np.array(hs_en[layer_i])
-        hs_vi_layer = np.array(hs_vi[layer_i])
-        hs_ru_layer = np.array(hs_ru[layer_i])
-        hs_fr_layer = np.array(hs_fr[layer_i])
+        # hs_vi_layer = np.array(hs_vi[layer_i])
+        # hs_ru_layer = np.array(hs_ru[layer_i])
+        # hs_fr_layer = np.array(hs_fr[layer_i])
     
         # compute cosine_sim beween vectors in each subspace.
         lang2hs_layer = {
@@ -102,9 +102,9 @@ for model_name in model_names:
             "ko": hs_ko_layer,
             "it": hs_it_layer,
             "en": hs_en_layer,
-            "vi": hs_vi_layer,
-            "ru": hs_ru_layer,
-            "fr": hs_fr_layer,
+            # "vi": hs_vi_layer,
+            # "ru": hs_ru_layer,
+            # "fr": hs_fr_layer,
         }
 
         for lang1, lang2 in permutations(langs, 2):

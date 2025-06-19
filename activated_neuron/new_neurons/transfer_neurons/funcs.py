@@ -323,8 +323,8 @@ def track_neurons_with_text_data_elem_wise(model, device, tokenizer, qa, qa_num,
     return activation_array
 
 def get_hidden_states_including_emb_layer_with_edit_activation(model, model_type, tokenizer, device, layer_neuron_list, num_layers, data):
-    if model_type == 'phi4':
-        trace_layers = list(set([f'model.layers.{layer}.mlp.activation_fn' for layer, _ in layer_neuron_list]))
+    if model_type == 'bloom':
+        trace_layers = list(set([f'transformer.h.{layer}.mlp.gelu_impl' for layer, _ in layer_neuron_list]))
     else:
         trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
