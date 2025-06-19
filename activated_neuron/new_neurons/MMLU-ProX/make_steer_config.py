@@ -2,6 +2,7 @@ import sys
 sys.path.append('/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons')
 import pickle
 import argparse
+import random
 
 import torch
 
@@ -85,16 +86,25 @@ if __name__ == "__main__":
         for L2 in langs:
             # get type-1 neurons.
             type1_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-            type1_neurons = unfreeze_pickle(type1_path)[:intervention_num]
+            type1_neurons = unfreeze_pickle(type1_path)
+
+            # type-1 neurons.
+            type1_neurons_main = type1_neurons[:intervention_num]
+
+            # baseline.
+            random.seed(42)
+            type1_neurons_baseline = random.sample(type1_neurons[intervention_num:], intervention_num)
 
             config = make_steer_config(
-                type1_neurons,
+                # type1_neurons_main, # type-1
+                type1_neurons_baseline, # baseline
                 hidden_size=neuron_num,
                 action=action_type,
                 clamp_value=0.0
             )
 
-            output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}.pt'
+            # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}.pt'
+            output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}_baseline.pt'
             # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/test.pt'
             torch.save(config, output_path)
             print(f'Saved steer_config to: {output_path}')
