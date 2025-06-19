@@ -25,7 +25,7 @@ from funcs import (
 
 langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict, is_reverse: bool):
@@ -111,15 +111,11 @@ if __name__ == '__main__':
     sentences_all_langs = unfreeze_pickle(path)
     is_reverse = True # fix.
     for model_name in model_names:
-        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'phi4' if 'phi' in model_name else 'qwen'
+        model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        if model_type == 'phi4':
-            model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16).to(device)
-        else:
-            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 41 if model_type == 'phi4' else 37
-        num_intervention = 1000 if model_type in ['llama3', 'mistral', 'aya', 'qwen'] else 1500
-        num_intervention = 5000
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 31 # emb layer included.
+        num_intervention = 1000
         for L2 in langs:
             # prepare type-2 Transfer Neurons.
             if L2 != "en":
@@ -127,7 +123,7 @@ if __name__ == '__main__':
                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
                     # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-                    sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 40)]]
+                    sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 30)]]
                 else: # type-1
                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
