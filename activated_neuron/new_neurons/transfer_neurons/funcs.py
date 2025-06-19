@@ -231,8 +231,8 @@ def get_activations_hook(model, input, layer_idx: int, text_idx, activation_arra
     activation_array[layer_idx, :, text_idx] = activation_values
 
 def track_neurons_with_text_data(model, model_type, device, tokenizer, data, start_idx, end_idx):
-    num_layers = 32 if model_type != 'phi4' else 40
-    num_neurons = 14336 if model_type != 'phi4' else 17920
+    num_layers = 32 if model_type != 'bloom' else 30
+    num_neurons = 14336 if model_type != 'bloom' else 10240
 
     # a numpy array for saving activation values (layer_idx * neuron_idx * text_idx):
     activation_array = np.zeros((num_layers, num_neurons, len(data)), dtype=np.float16)
@@ -245,11 +245,18 @@ def track_neurons_with_text_data(model, model_type, device, tokenizer, data, sta
 
         # set hooks.
         handles = []
-        for layer_idx, layer in enumerate(model.model.layers):
-            handle = layer.mlp.down_proj.register_forward_pre_hook(
-                lambda model, input, layer_idx=layer_idx, text_idx=text_idx, activation_array=activation_array: get_activations_hook(model, input, layer_idx, text_idx, activation_array)
-            )
-            handles.append(handle)
+        if model_type in ['llama3', 'mistral', 'aya']:
+            for layer_idx, layer in enumerate(model.model.layers):
+                handle = layer.mlp.down_proj.register_forward_pre_hook(
+                    lambda model, input, layer_idx=layer_idx, text_idx=text_idx, activation_array=activation_array: get_activations_hook(model, input, layer_idx, text_idx, activation_array)
+                )
+                handles.append(handle)
+        elif model_type in ['bloom']:
+            for layer_idx, layer in enumerate(model.transformer.h):
+                handle = layer.mlp.dense_4h_to_h.register_forward_pre_hook(
+                    lambda model, input, layer_idx=layer_idx, text_idx=text_idx, activation_array=activation_array: get_activations_hook(model, input, layer_idx, text_idx, activation_array)
+                )
+                handles.append(handle)
 
         # run inference.
         with torch.no_grad():
