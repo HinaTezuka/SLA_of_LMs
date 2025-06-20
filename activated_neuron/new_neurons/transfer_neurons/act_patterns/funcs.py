@@ -68,11 +68,108 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
 def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron_list, data, model_type):
     # layers_num
-    num_layers = 40 if model_type == 'phi4' else 32
+    num_layers = 30 if model_type == 'bloom' else 32
     # nums of total neurons (per a layer)
-    num_neurons = 17920 if model_type == 'phi4' else 14336
+    num_neurons = 10240 if model_type == 'bloom' else 14336
     act_patterns_dict = defaultdict(list)
-    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list])) if model_type in ['llama3', 'mistral', 'aya'] else list(set([f'transformer.h.{layer}.mlp.gelu_impl' for layer, _ in layer_neuron_list]))
+    # Track neurons with tatoeba
+    for L1_text, L2_text in data:
+        """
+        get activation values
+        mlp_activation_L1/L2: [torch.Tensor(batch_size, sequence_length, num_neurons) * num_layers]
+        """
+        if model_type in ['llama3', 'mistral', 'aya']:
+            # L1 text
+            input_ids_L1 = tokenizer(L1_text, return_tensors="pt").input_ids.to(device)
+            token_len_L1 = len(input_ids_L1[0])
+            act_fn_value_L1, up_proj_value_L1 = act_llama3(model, input_ids_L1)
+        elif model_type in ['bloom']:
+            # L1 text
+            input_ids_L1 = tokenizer(L1_text, return_tensors="pt").input_ids.to(device)
+            token_len_L1 = len(input_ids_L1[0])
+            act_fn_value_L1 = act_bloom(model, input_ids_L1)
+
+        # L2 text
+        input_ids_L2 = tokenizer(L2_text, return_tensors="pt").input_ids.to(device)
+        token_len_L2 = len(input_ids_L2[0])
+
+        if model_type in ['llama3', 'mistral', 'aya']:
+            with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+                act_fn_value_L2, up_proj_value_L2 = act_llama3(model, input_ids_L2)
+            """
+            neurons(in llama3 MLP): act_fn(gate_proj(x)) * up_proj(x) <- input to down_proj()
+            L1/L2 shared neurons
+            """
+            for layer_idx in range(len(act_fn_value_L1)):
+                """ consider last token only """
+                # L1
+                act_fn_value_L1[layer_idx] = act_fn_value_L1[layer_idx][:, token_len_L1 - 1, :]
+                up_proj_value_L1[layer_idx] = up_proj_value_L1[layer_idx][:, token_len_L1 - 1, :]
+                # L2
+                act_fn_value_L2[layer_idx] = act_fn_value_L2[layer_idx][:, token_len_L2 - 1, :]
+                up_proj_value_L2[layer_idx] = up_proj_value_L2[layer_idx][:, token_len_L2 - 1, :]
+                """ get neuron activation values: act_fn(gate_proj(x)) * up_proj(x) """
+                neurons_L1_values = calc_element_wise_product(act_fn_value_L1[layer_idx], up_proj_value_L1[layer_idx]) # torch.Tensor
+                neurons_L2_values = calc_element_wise_product(act_fn_value_L2[layer_idx], up_proj_value_L2[layer_idx])
+                """ calc act_patterns (cos_sim). """ 
+                act_patterns = cosine_similarity(neurons_L1_values, neurons_L2_values)[0, 0]
+                act_patterns_dict[layer_idx].append(act_patterns)
+        elif model_type in ['bloom']:
+            with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+                act_fn_value_L2 = act_bloom(model, input_ids_L2)
+            """
+            neurons(in llama3 MLP): act_fn(gate_proj(x)) * up_proj(x) <- input to down_proj()
+            L1/L2 shared neurons
+            """
+            for layer_idx in range(len(act_fn_value_L1)):
+                """ consider last token only """
+                # L1
+                act_fn_value_L1[layer_idx] = act_fn_value_L1[layer_idx][:, token_len_L1 - 1, :]
+                # L2
+                act_fn_value_L2[layer_idx] = act_fn_value_L2[layer_idx][:, token_len_L2 - 1, :]
+                neurons_L1_values = act_fn_value_L1[layer_idx]
+                neurons_L2_values = act_fn_value_L2[layer_idx]
+                """ calc act_patterns (cos_sim). """ 
+                act_patterns = cosine_similarity(neurons_L1_values, neurons_L2_values)[0, 0]
+                act_patterns_dict[layer_idx].append(act_patterns)
+
+    return act_patterns_dict
+
+def get_out_bloom_act_fn(model, prompt, device, index):
+    model.eval() # swith the model to evaluation mode (deactivate dropout, batch normalization)
+    num_layers = model.config.num_hidden_layers  # nums of layers of the model
+    MLP_act = [f"transformer.h.{i}.mlp.gelu_impl" for i in range(num_layers)]  # generate path to MLP layer(of LLaMA-3)
+
+    torch.manual_seed(42)
+    with torch.no_grad():
+        # trace MLP layers using TraceDict
+        with TraceDict(model, MLP_act) as ret:
+            output = model(prompt, output_hidden_states=True, output_attentions=True)  # モデルを実行
+        MLP_act_value = [ret[act_value].output for act_value in MLP_act]  # 各MLP層の出力を取得
+        return MLP_act_value
+
+def act_bloom(model, input_ids):
+    act_fn_values = get_out_bloom_act_fn(model, input_ids, model.device, -1)  # LlamaのMLP活性化を取得
+    act_fn_values = [act.to("cpu") for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
+
+    return act_fn_values
+
+def get_act_patterns_bloom(model, model_type, tokenizer, device, data):
+
+    # layers_num
+    num_layers = 30
+    # nums of total neurons (per a layer)
+    num_neurons = 10240
+
+    """
+    activation valuesを保存する dict (shared neuronsが対象)
+    {
+        layer_idx: [cos_sim1, cos_sim2, ....] <- act_pattern(cos_sim of act_values): list
+    }
+    """
+    act_patterns_dict = defaultdict(list)
+
     # Track neurons with tatoeba
     for L1_text, L2_text in data:
         """
@@ -82,13 +179,12 @@ def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron
         # L1 text
         input_ids_L1 = tokenizer(L1_text, return_tensors="pt").input_ids.to(device)
         token_len_L1 = len(input_ids_L1[0])
-        act_fn_value_L1, up_proj_value_L1 = act_llama3(model, input_ids_L1)
+        act_fn_value_L1 = act_bloom(model, input_ids_L1)
 
         # L2 text
         input_ids_L2 = tokenizer(L2_text, return_tensors="pt").input_ids.to(device)
         token_len_L2 = len(input_ids_L2[0])
-        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
-            act_fn_value_L2, up_proj_value_L2 = act_llama3(model, input_ids_L2)
+        act_fn_value_L2 = act_bloom(model, input_ids_L2)
         """
         neurons(in llama3 MLP): act_fn(gate_proj(x)) * up_proj(x) <- input to down_proj()
         L1/L2 shared neurons
@@ -97,13 +193,10 @@ def get_act_patterns_with_edit_activation(model, tokenizer, device, layer_neuron
             """ consider last token only """
             # L1
             act_fn_value_L1[layer_idx] = act_fn_value_L1[layer_idx][:, token_len_L1 - 1, :]
-            up_proj_value_L1[layer_idx] = up_proj_value_L1[layer_idx][:, token_len_L1 - 1, :]
             # L2
             act_fn_value_L2[layer_idx] = act_fn_value_L2[layer_idx][:, token_len_L2 - 1, :]
-            up_proj_value_L2[layer_idx] = up_proj_value_L2[layer_idx][:, token_len_L2 - 1, :]
-            """ get neuron activation values: act_fn(gate_proj(x)) * up_proj(x) """
-            neurons_L1_values = calc_element_wise_product(act_fn_value_L1[layer_idx], up_proj_value_L1[layer_idx]) # torch.Tensor
-            neurons_L2_values = calc_element_wise_product(act_fn_value_L2[layer_idx], up_proj_value_L2[layer_idx])
+            neurons_L1_values = act_fn_value_L1[layer_idx] # torch.Tensor
+            neurons_L2_values = act_fn_value_L2[layer_idx]
             """ calc act_patterns (cos_sim). """ 
             act_patterns = cosine_similarity(neurons_L1_values, neurons_L2_values)[0, 0]
             act_patterns_dict[layer_idx].append(act_patterns)
@@ -374,7 +467,10 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
     - act_patterns_baseline: Dictionary in the format {layer_idx: [cos_sim1, cos_sim2, ...]}
     """
     # Get all unique layer indices
-    all_layer_idxs = [i for i in range(32)]
+    if model_type in ['llama3', 'mistral', 'aya']:
+        all_layer_idxs = [i for i in range(32)]
+    elif model_type in ['bloom']:
+        all_layer_idxs = [i for i in range(30)]
 
     def compute_stats(data_dict, layers):
         """ Compute mean and standard deviation for each layer index. """

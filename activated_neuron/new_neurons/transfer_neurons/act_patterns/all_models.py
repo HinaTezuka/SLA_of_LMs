@@ -10,6 +10,7 @@ from datasets import load_dataset
 
 from funcs import (
     get_act_patterns,
+    get_act_patterns_bloom,
     get_act_patterns_inputs_to_down_proj,
     get_act_patterns_with_edit_activation,
     activation_patterns_lineplot,
@@ -20,6 +21,7 @@ from funcs import (
 L1 = "en" # fix L1 to English.
 """ model configs """
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
+model_names = ['bigscience/bloom-3b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
 score_types = ['cos_sim', 'L2_dis']
@@ -56,8 +58,12 @@ for model_name in model_names:
         for is_reverse in is_reverses:
             for score_type in score_types:
                 if score_type == "cos_sim":
-                    act_patterns = get_act_patterns(model, model_type, tokenizer, device, tatoeba_data)
-                    act_patterns_baseline = get_act_patterns(model, model_type, tokenizer, device, random_data)
+                    if model_type in ['llama3', 'mistral', 'aya']:
+                        act_patterns = get_act_patterns(model, model_type, tokenizer, device, tatoeba_data)
+                        act_patterns_baseline = get_act_patterns(model, model_type, tokenizer, device, random_data)
+                    elif model_type in ['bloom']:
+                        act_patterns = get_act_patterns_bloom(model, model_type, tokenizer, device, tatoeba_data)
+                        act_patterns_baseline = get_act_patterns_bloom(model, model_type, tokenizer, device, random_data)
                     activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, None, model_type, score_type, "normal")
                 for intervention_num in n_list:
                     """
@@ -67,14 +73,16 @@ for model_name in model_names:
                         # prepare type-2 Transfer Neurons.
                         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-                        if model_type == 'phi4':
-                            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(30, 40)]]
+                        if model_type == 'bloom':
+                            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 30)]]
                         else:
                             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
                     else:
                         # type-1 neurons.
                         save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
                         sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                        if model_type in ['bloom']:
+                            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20)]]
 
                     """ どのくらい介入するか(intervention_num) """
                     sorted_neurons_AP = sorted_neurons[:intervention_num]
