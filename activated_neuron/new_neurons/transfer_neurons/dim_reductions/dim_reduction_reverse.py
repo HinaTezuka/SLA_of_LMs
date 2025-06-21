@@ -30,10 +30,10 @@ model_names = ['bigscience/bloom-3b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict, is_reverse: bool):
-    languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
-    colors = ["red", "blue", "yellow", "orange", "green"]
-    # languages = ["Japanese", "Dutch", "Korean", "Italian", "English", "Vietnamese", "Russian", "French"]
-    # colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
+    # languages = ["Japanese", "Dutch", "Korean", "Italian", "English"]
+    # colors = ["red", "blue", "yellow", "orange", "green"]
+    languages = ["Japanese", "Dutch", "Korean", "Italian", "English", "Vietnamese", "Russian", "French"]
+    colors = ["red", "blue", "yellow", "orange", "green", "purple", "cyan", "brown"]
 
     if is_reverse:
         if model_type in ['llama3', 'mistral', 'aya']:
@@ -52,12 +52,12 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3 = np.array(features_L3[layer_idx])
         f4 = np.array(features_L4[layer_idx])
         f5 = np.array(features_L5[layer_idx])
-        # f6 = np.array(features_L6[layer_idx])
-        # f7 = np.array(features_L7[layer_idx])
-        # f8 = np.array(features_L8[layer_idx])
+        f6 = np.array(features_L6[layer_idx])
+        f7 = np.array(features_L7[layer_idx])
+        f8 = np.array(features_L8[layer_idx])
 
-        all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
-        # all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
+        # all_features = np.concatenate([f1, f2, f3, f4, f5], axis=0)
+        all_features = np.concatenate([f1, f2, f3, f4, f5, f6, f7, f8], axis=0)
         if model_type == 'phi4':
             scaler = StandardScaler()
             all_features = scaler.fit_transform(all_features)
@@ -70,15 +70,15 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
         f3_2d = pca.transform(f3)
         f4_2d = pca.transform(f4)
         f5_2d = pca.transform(f5)
-        # f6_2d = pca.transform(f6)
-        # f7_2d = pca.transform(f7)
-        # f8_2d = pca.transform(f8)
+        f6_2d = pca.transform(f6)
+        f7_2d = pca.transform(f7)
+        f8_2d = pca.transform(f8)
 
         # plot.
         plt.rcParams["font.family"] = "DejaVu Serif"
         plt.figure(figsize=(12, 12))
-        # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
-        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
+        for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):
+        # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
             plt.scatter(feats[:, 0], feats[:, 1], color=color, label=label, alpha=0.7)
         legend_handles = [
             Line2D([0], [0], marker='o', color='w', label=lang,
@@ -97,8 +97,8 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
         # save as image.
         if is_reverse:
-            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse/{file_name}'
-            # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/reverse/{file_name}'
+            # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/reverse/{file_name}'
+            output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/reverse/{file_name}'
         else:
             output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/type-1/{file_name}'
             # output_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/dim_reduction/{model_type}/all/type-1/{file_name}'
@@ -150,14 +150,14 @@ if __name__ == '__main__':
         """ dim_reduction and plot with PCA. """
         # ["ja", "nl", "ko", "it", "en"]
         if is_reverse:
-            hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja_baseline.pkl")
-            hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl_baseline.pkl")
-            hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko_baseline.pkl")
-            hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/it_baseline.pkl")
-            hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en_baseline.pkl")
-            hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/vi_baseline.pkl")
-            hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ru_baseline.pkl")
-            hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/fr_baseline.pkl")
+            hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja.pkl")
+            hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl.pkl")
+            hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko.pkl")
+            hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/it.pkl")
+            hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en.pkl")
+            hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/vi.pkl")
+            hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ru.pkl")
+            hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/fr.pkl")
             # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja_{num_intervention}.pkl")
             # hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl_{num_intervention}.pkl")
             # hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko_{num_intervention}.pkl")

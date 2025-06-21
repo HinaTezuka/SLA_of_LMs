@@ -25,8 +25,8 @@ langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
 model_names = ['bigscience/bloom-3b']
 is_using_centroids = False
-# intervention_type = 'type-1'
-intervention_type = 'normal'
+intervention_type = 'type-2'
+# intervention_type = 'normal'
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
@@ -176,8 +176,8 @@ for model_name in model_names:
             save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/qa"
         if intervention_type == 'type-2':
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
+            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all/n5000"
         os.makedirs(save_dir, exist_ok=True)
         if layer_i == 0:
