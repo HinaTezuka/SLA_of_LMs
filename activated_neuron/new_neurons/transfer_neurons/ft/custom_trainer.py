@@ -3703,6 +3703,7 @@ class Trainer:
 
         return ctx_manager
     
+    """ most part of this method was copied from: https://github.com/chenyuxin1999/Abstract_Thought/blob/main/train.py """
     def mask_gradients(self, model, activate_neuron):
         """
         Selectively zero out gradients based on activate_neuron index mask.
