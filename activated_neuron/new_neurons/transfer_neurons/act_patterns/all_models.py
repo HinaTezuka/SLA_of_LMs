@@ -26,9 +26,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
 score_types = ['cos_sim', 'L2_dis']
 langs = ['ja', 'nl', 'ko', 'it', 'fr', 'ru', 'vi']
-langs = ['fr', 'ru', 'vi']
 is_reverses = [False, True]
-is_reverses = [True]
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'

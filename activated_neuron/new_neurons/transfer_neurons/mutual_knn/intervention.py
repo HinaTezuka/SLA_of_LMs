@@ -26,9 +26,11 @@ from funcs import (
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
 model_names = ['bigscience/bloom-3b']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-langs = ['ja', 'nl', 'ko', 'it']
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
+# langs = ['ja', 'nl', 'ko', 'it']
+# langs = ['vi', 'ru', 'fr']
 L1 = 'en'
-topk = 5 # number of nearest neighbor.
+topk = 10 # number of nearest neighbors.
 # is_reverses = [False, True]
 is_reverses = [False]
 score_type = 'cos_sim'
@@ -51,11 +53,13 @@ for model_name in model_names:
             elif is_reverse:
                 path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                 neurons = unfreeze_pickle(path)
-                # neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-                neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 30)]]
+                if model_type in ['llama3', 'mistral', 'aya']:
+                    neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                elif model_type in ['bloom']:
+                    neurons = [neuron for neuron in neurons if neuron[0] in [ _ for _ in range(20, 30)]]
             neurons = neurons[:intervention_num]
 
-            res = compute_mutual_knn_with_edit_activation(model, tokenizer, device, sentences, L1, L2, topk, neurons) # res: [knn_score_layer1, knn_score_layer2, ...]
+            res = compute_mutual_knn_with_edit_activation(model, model_type, tokenizer, device, sentences, L1, L2, topk, neurons) # res: [knn_score_layer1, knn_score_layer2, ...]
             print(f'=================={model_type}, {L2}==================')
             # print(res)
             knn_scores[L2] = res
@@ -104,7 +108,7 @@ for is_reverse in is_reverses:
         plt.figure(figsize=(10, 6))
         subset = df[df['Model'] == model_type]
         sns.lineplot(data=subset, x='Layer', y='Mutual KNN', hue='L2', palette='tab10', linewidth=3)
-        model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B'
+        model_name = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya-expanse-8B' if model_type == 'aya' else 'BLOOM-3B'
         plt.title(f'{model_name}', fontsize=30)
         plt.xlabel('Layer Index', fontsize=35)
         plt.ylabel('Mutual KNN', fontsize=35)

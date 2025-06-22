@@ -127,14 +127,14 @@ def compute_mutual_knn_L2(model, model_type, tokenizer, device, sentences: list,
     return feats_L2
 
 def compute_mutual_knn_with_edit_activation(model, model_type, tokenizer, device, sentences: list, L1: str, L2: str, topk:int, layer_neuron_list:list):
-    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list])) if model_type in ['llama3', 'mistral', 'aya'] else list(set([f'transformer.h.{layer}.mlp.gelu_impl' for layer, _ in layer_neuron_list]))
     # L2 hs.
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
         feats_L2 = compute_mutual_knn_L2(model, model_type, tokenizer, device, sentences, L1, L2, topk)
     # L1 hs.
-    layer_num = 32
+    layer_num = 32 if model_type in ['llama3', 'mistral', 'aya'] else 30
     sentences_num = len(sentences)
-    hidden_dim_size = 4096 # dim_size of hidden states.
+    hidden_dim_size = 4096 if model_type in ['llama3', 'mistral', 'aya'] else 2560 # dim_size of hidden states.
     feats_L1 = torch.zeros((layer_num, sentences_num, hidden_dim_size), device=device)
     for txt_idx, (L1_txt, L2_txt) in enumerate(sentences):
         inputs_L1 = tokenizer(L1_txt, return_tensors='pt').to(device)
