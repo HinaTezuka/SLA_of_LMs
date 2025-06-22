@@ -3746,10 +3746,12 @@ class Trainer:
                 if proj_key in name and "bias" not in name:
                     tune_idx = activate_neuron[neuron_key].get(layer, set())
                     index_dim = 1 if proj_key == "down_proj" or proj_key == "attn.o_proj" else 0
-                    mask = torch.ones(param.size(index_dim), dtype=torch.bool, device=param.device)
+                    mask = torch.ones(param.size(index_dim), dtype=torch.bool, device=param.device) # parametersの指定軸サイズだけTrueで埋めた, 1Dのbool tensor.
                     indices = [i // div_factor for i in tune_idx]
-                    mask[indices] = False
+                    mask[indices] = False # 更新したい neurons のidxだけFalseに.
 
+                    # Trueの行 -> 勾配を0にする（更新を禁止）, Falseの行 -> 勾配を残す（更新許可).
+                    # torch(numpy)の bool indexing を使用(Trueの部分だけ操作).
                     if index_dim == 0:
                         param.grad[mask, :] = 0
                     else:
