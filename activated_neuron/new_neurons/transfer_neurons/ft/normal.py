@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 
 import numpy as np
 import torch
+import transformers
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
