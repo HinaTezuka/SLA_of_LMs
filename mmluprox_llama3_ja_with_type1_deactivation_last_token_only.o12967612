@@ -1,0 +1,32 @@
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 2
+steered (pretrained=meta-llama/Meta-Llama-3-8B,steer_path=/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/llama3/cos_sim/ja.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ja       |      0|custom-extract|      |exact_match|↑  |0.1885|±  |0.0036|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.2106|±  |0.0152|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2155|±  |0.0146|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.1316|±  |0.0101|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.2415|±  |0.0212|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.3009|±  |0.0158|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.1249|±  |0.0106|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.1863|±  |0.0149|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.1864|±  |0.0200|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1272|±  |0.0108|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.1702|±  |0.0102|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.2089|±  |0.0134|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.2365|±  |0.0190|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.1124|±  |0.0088|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.3308|±  |0.0167|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ja|      0|custom-extract|      |exact_match|↑  |0.1885|±  |0.0036|
+
+
+=================================== RESOURCE INFORMATION ===================================
+ Requested Resource:
+ mem=256000000kb,walltime=168:00:00,ncpus=26,place=pack 
+ Used Resource: 
+ mem=2180644kb,walltime=82:51:40,ncpus=26,cpupercent=101,vmem=56465428kb
+============================================================================================
