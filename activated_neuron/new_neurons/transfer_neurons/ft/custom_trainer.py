@@ -3752,7 +3752,7 @@ class Trainer:
                     mask[indices] = False # 更新したい neurons のidxだけFalseに.
 
                     # Trueの行 -> 勾配を0にする（更新を禁止）, Falseの行 -> 勾配を残す（更新許可).
-                    # torch(numpy)の bool indexing を使用(Trueの部分だけ操作).
+                    # torch(numpy)の bool indexing を使用(Trueの部分だけ勾配を0に).
                     if index_dim == 0:
                         param.grad[mask, :] = 0
                     else:
