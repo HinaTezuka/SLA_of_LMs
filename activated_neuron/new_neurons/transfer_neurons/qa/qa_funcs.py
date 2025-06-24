@@ -312,8 +312,8 @@ def mkqa_all(model, tokenizer, device, qa, L2: str):
     
     return f1_scores
 
-def mkqa_all_with_edit_activation(model, tokenizer, device, qa, L2, layer_neuron_list):
-    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+def mkqa_all_with_edit_activation(model, model_type, tokenizer, device, qa, L2, layer_neuron_list):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list])) if model_type in ['llama3', 'mistral', 'aya'] else list(set([f'transformer.h.{layer}.mlp.gelu_impl' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
 
         return mkqa_all(model, tokenizer, device, qa, L2)

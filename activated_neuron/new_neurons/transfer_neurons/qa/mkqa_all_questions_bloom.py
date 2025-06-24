@@ -20,12 +20,10 @@ from qa_funcs import (
     unfreeze_pickle,
 )
 
-# load models (LLaMA3-8B).
-model_names = ['CohereForAI/aya-expanse-8b']
+# load models (BLOOM-3B).
+model_names = ['bigscience/bloom-3b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-# langs = ['ja', 'nl', 'ko', 'it', 'vi']
-langs = ['ru', 'fr']
-
+langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -43,23 +41,22 @@ results = {}
 resutls_intervention = {}
 resutls_intervention_baseline = {}
 for model_name in model_names:
-    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
+    model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    # for L2 in langs:
-    #     # normal
-    #     result_scores = mkqa_all(model, tokenizer, device, qa, L2)
-    #     # save results as pkl.
-    #     path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
-    #     save_as_pickle(path_normal, result_scores)
-    #     print(f'saved: normal: {model_type}, {L2}')
+    for L2 in langs:
+        # normal
+        result_scores = mkqa_all(model, tokenizer, device, qa, L2)
+        # save results as pkl.
+        path_normal = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
+        save_as_pickle(path_normal, result_scores)
+        print(f'saved: normal: {model_type}, {L2}')
 
     for L2 in langs:
         """ intervention """
         if L2 == 'en':
             continue
-
         # intervention
         intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
         intervened_neurons = unfreeze_pickle(intervened_neurons_path)
@@ -72,6 +69,7 @@ for model_name in model_names:
         # intervention baseline.
         random.seed(42)
         intervened_neurons_baseline = random.sample(intervened_neurons[intervention_num:], intervention_num)
+        intervened_neurons_baseline = intervened_neurons_baseline[:intervention_num]
         result_score_baseline = mkqa_all_with_edit_activation(model, model_type, tokenizer, device, qa, L2, intervened_neurons_baseline)
         path_intervention_baseline = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n{intervention_num}/all_questions_baseline_{L2}.pkl'
         save_as_pickle(path_intervention_baseline, result_score_baseline)

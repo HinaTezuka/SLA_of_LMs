@@ -3720,12 +3720,13 @@ class Trainer:
         kv_factor = real_model.config.num_attention_heads / real_model.config.num_key_value_heads
 
         proj_map = {
-            "attn.q_proj": ("attn_q", 1),
-            "attn.k_proj": ("attn_k", kv_factor),
-            "attn.v_proj": ("attn_v", kv_factor),
-            "attn.o_proj": ("attn_o", 1),
-            "up_proj":     ("fwd_up", 1),
-            "down_proj":   ("fwd_down", 1)
+            # "attn.q_proj": ("attn_q", 1),
+            # "attn.k_proj": ("attn_k", kv_factor),
+            # "attn.v_proj": ("attn_v", kv_factor),
+            # "attn.o_proj": ("attn_o", 1),
+            """ MLP Module. """
+            "up_proj":     ("fwd_up", 1), # key
+            "down_proj":   ("fwd_down", 1), # value
         }
 
         for name, param in model.named_parameters():
