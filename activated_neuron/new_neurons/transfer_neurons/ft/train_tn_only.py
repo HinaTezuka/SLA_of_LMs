@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -22,8 +23,9 @@ from funcs import (
 
 if __name__ == '__main__':
     # login wandb and huggingface hub.
-    wandb.login(key='f047e5ac80e14ebcadcb601940884e9ce4a8dde3')
-    login(token='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') # hf
+    load_dotenv() # load .env
+    wandb.login(key=os.environ["WANDB_API_KEY"]) # wandb
+    login(token=os.environ['HF_TOKEN_proj_LA']) # hf
 
     parser = ArgumentParser()
     parser.add_argument('--model_name', type=str, help='model path on huggingface hub.', required=True)
@@ -38,20 +40,21 @@ if __name__ == '__main__':
     score_type = args.score_type # 
     top_n = args.top_n # top-n neurons
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    bnb_config = BitsAndBytesConfig(
-        load_in_8bit=True,    # 8bit 量子化
-        llm_int8_skip_modules=["lm_head"],  # lm_head は量子化しない
-        # llm_int8_threshold=6.0,
-        # llm_int8_has_fp16_weight=True
-    )
-    if model_type in ['llama3', 'mistral', 'aya']:
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            quantization_config=bnb_config
-        )
-    elif model_type in ['bloom']:
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    # bnb_config = BitsAndBytesConfig(
+    #     load_in_8bit=True,    # 8bit 量子化
+    #     llm_int8_skip_modules=["lm_head"],  # lm_head は量子化しない
+    #     # llm_int8_threshold=6.0,
+    #     # llm_int8_has_fp16_weight=True
+    # )
+    # if model_type in ['llama3', 'mistral', 'aya']:
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         model_name,
+    #         device_map="auto",
+    #         quantization_config=bnb_config
+    #     )
+    # elif model_type in ['bloom']:
+    #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     # add pad_token # llamaなどは'[PAD]' tokenをもっていないため.
     if tokenizer.pad_token is None:
@@ -99,7 +102,13 @@ if __name__ == '__main__':
     tn = tn_type1 + tn_type2
 
     # get tn in required format.
-    tn = build_activate_neuron(tn, module_name='mlp_down') # module_name: the parameters we want to update.
+    if model_type in ['llama3', 'mistral', 'aya']:
+        tn = build_activate_neuron(tn, module_name='mlp_down') # module_name: the parameters we want to update.
+    elif model_type in ['bloom']:
+        tn = build_activate_neuron(tn, module_name='dense_4h_to_h')
+    # path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/ft/tn_pt/{score_type}/{L2}.pt'
+    # torch.save(tn, path)
+    # sys.exit()
 
     """ implement training. """
     training_args = transformers.TrainingArguments(

@@ -3717,7 +3717,7 @@ class Trainer:
             return
 
         real_model = model.module if hasattr(model, "module") else model
-        kv_factor = real_model.config.num_attention_heads / real_model.config.num_key_value_heads
+        # kv_factor = real_model.config.num_attention_heads / real_model.config.num_key_value_heads # attentionは使わないので一旦消す.
 
         proj_map = {
             """ self-Att. """
@@ -3728,6 +3728,7 @@ class Trainer:
             """ MLP. """
             # "up_proj":     ("mlp_up", 1), # key
             "down_proj":   ("mlp_down", 1), # value
+            "dense_4h_to_h": ("mlp_down, 1") # value(bloom)
         }
 
         for name, param in model.named_parameters():
@@ -3739,7 +3740,7 @@ class Trainer:
                 continue
 
             # match = re.search(r"layers\.(\d+)\.", name)
-            match = re.search(r"layers\.(\d+)\.mlp\.down_proj", name) # mlp.down_proj以外は即座に更新対象外.
+            match = re.search(r"layers\.(\d+)\.mlp\.down_proj", name) or re.search(r"h\.(\d+)\.mlp\.dense_4h_to_h", name) # mlp.down_proj以外は即座に更新対象外.
             if not match:
                 param.grad.zero_()
                 continue
@@ -3750,7 +3751,7 @@ class Trainer:
             for proj_key, (neuron_key, div_factor) in proj_map.items():
                 if proj_key in name and "bias" not in name:
                     tune_idx = activate_neuron[neuron_key].get(layer, set())
-                    index_dim = 1 if proj_key == "down_proj" or proj_key == "attn.o_proj" else 0
+                    index_dim = 1 if proj_key == "down_proj" or proj_key == "attn.o_proj" or proj_key=="dense_4h_to_h" else 0
                     mask = torch.ones(param.size(index_dim), dtype=torch.bool, device=param.device) # parametersの指定軸サイズだけTrueで埋めた, 1Dのbool tensor.
                     indices = [i // div_factor for i in tune_idx]
                     mask[indices] = False # 更新したい neurons のidxだけFalseに.
