@@ -3728,7 +3728,7 @@ class Trainer:
             """ MLP. """
             # "up_proj":     ("mlp_up", 1), # key
             "down_proj":   ("mlp_down", 1), # value
-            "dense_4h_to_h": ("mlp_down, 1") # value(bloom)
+            "dense_4h_to_h": ("mlp_down", 1) # value(bloom)
         }
 
         for name, param in model.named_parameters():

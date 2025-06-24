@@ -54,7 +54,7 @@ if __name__ == '__main__':
     #     )
     # elif model_type in ['bloom']:
     #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     # add pad_token # llamaなどは'[PAD]' tokenをもっていないため.
     if tokenizer.pad_token is None:
@@ -105,7 +105,8 @@ if __name__ == '__main__':
     if model_type in ['llama3', 'mistral', 'aya']:
         tn = build_activate_neuron(tn, module_name='mlp_down') # module_name: the parameters we want to update.
     elif model_type in ['bloom']:
-        tn = build_activate_neuron(tn, module_name='dense_4h_to_h')
+        # tn = build_activate_neuron(tn, module_name='dense_4h_to_h')
+        tn = build_activate_neuron(tn, module_name='mlp_down')
     # path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/ft/tn_pt/{score_type}/{L2}.pt'
     # torch.save(tn, path)
     # sys.exit()
@@ -162,7 +163,6 @@ if __name__ == '__main__':
 
     # begin training.
     trainer.train()
-
 
     # after training, push model to hub:
     trainer.model.push_to_hub(repo_name, tokenizer=tokenizer)
