@@ -40,20 +40,6 @@ if __name__ == '__main__':
     score_type = args.score_type # 
     top_n = args.top_n # top-n neurons
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    # bnb_config = BitsAndBytesConfig(
-    #     load_in_8bit=True,    # 8bit 量子化
-    #     llm_int8_skip_modules=["lm_head"],  # lm_head は量子化しない
-    #     # llm_int8_threshold=6.0,
-    #     # llm_int8_has_fp16_weight=True
-    # )
-    # if model_type in ['llama3', 'mistral', 'aya']:
-    #     model = AutoModelForCausalLM.from_pretrained(
-    #         model_name,
-    #         device_map="auto",
-    #         quantization_config=bnb_config
-    #     )
-    # elif model_type in ['bloom']:
-    #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     # add pad_token # llamaなどは'[PAD]' tokenをもっていないため.
