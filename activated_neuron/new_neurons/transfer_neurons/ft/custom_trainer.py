@@ -3703,7 +3703,7 @@ class Trainer:
 
         return ctx_manager
     
-    """ most part of this method was copied from: https://github.com/chenyuxin1999/Abstract_Thought/blob/main/train.py """
+    """ this method is based on the one from: https://github.com/chenyuxin1999/Abstract_Thought/blob/main/train.py """
     def mask_gradients(self, model, activate_neuron):
         """
         Selectively zero out gradients based on activate_neuron index mask.
@@ -3720,13 +3720,14 @@ class Trainer:
         kv_factor = real_model.config.num_attention_heads / real_model.config.num_key_value_heads
 
         proj_map = {
+            """ self-Att. """
             # "attn.q_proj": ("attn_q", 1),
             # "attn.k_proj": ("attn_k", kv_factor),
             # "attn.v_proj": ("attn_v", kv_factor),
             # "attn.o_proj": ("attn_o", 1),
-            """ MLP Module. """
-            "up_proj":     ("fwd_up", 1), # key
-            "down_proj":   ("fwd_down", 1), # value
+            """ MLP. """
+            # "up_proj":     ("mlp_up", 1), # key
+            "down_proj":   ("mlp_down", 1), # value
         }
 
         for name, param in model.named_parameters():
@@ -3737,11 +3738,13 @@ class Trainer:
                 param.grad.zero_()
                 continue
 
-            match = re.search(r"layers\.(\d+)\.", name)
+            # match = re.search(r"layers\.(\d+)\.", name)
+            match = re.search(r"layers\.(\d+)\.mlp\.down_proj", name) # mlp.down_proj以外は即座に更新対象外.
             if not match:
                 param.grad.zero_()
                 continue
             
+            """ mlp.down_projの中で、Transfer Neuronsにに対応するValue vectorのみを更新対象に."""
             matched = False
             layer = match.group(1)
             for proj_key, (neuron_key, div_factor) in proj_map.items():
@@ -5170,7 +5173,8 @@ class Trainer:
             args.update(accelerator_config)
         # tp is initialized at Accelerator init phase so
         # args should be prepared here
-        if self.args.tp_size > 1:
+        # if self.args.tp_size > 1:
+        if getattr(self.args, "tp_size", 1) > 1:
             self.is_tp_enabled = True
             if version.parse(accelerate_version) > version.parse("1.3.0"):
                 args["torch_tp_plugin"] = TorchTensorParallelPlugin(tp_size=self.args.tp_size)

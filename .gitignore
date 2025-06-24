@@ -15,6 +15,9 @@ activated_neuron/new_neurons/MMLU-ProX/steer_configs
 # MMLU-ProX results:
 activated_neuron/new_neurons/MMLU-ProX/meta-llama/Meta-Llama-3-8B_ja_to_check_log.jsonl
 
+# wandb
+wandb
+
 # pickles
 activated_neuron/new_neurons/pickles
 activated_neuron/new_neurons/gpt2/pickles
