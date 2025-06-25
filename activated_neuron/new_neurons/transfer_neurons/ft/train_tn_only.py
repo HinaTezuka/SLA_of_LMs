@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import random
 from argparse import ArgumentParser
 
 import numpy as np
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--model_name', type=str, help='model path on huggingface hub.', required=True)
     parser.add_argument('--lang', type=str, help='the L2 language you want to use as a dataset (L1=en, fixed).', required=True)
-    parser.add_argument('--is_baseline', type=bool, help='whether the neurons you want to fine-tune is Transfer Neurons or baseline ones.', required=True)
+    parser.add_argument('--is_baseline', type=bool, default=False, help='whether the neurons you want to fine-tune is Transfer Neurons or baseline ones.', required=True)
     parser.add_argument('--score_type', type=str, default='cos_sim', help='the type of distance fn used for identifying Transfer Neurons.')
     parser.add_argument('--top_n', type=int, default=1000, help='the number of neurons used for updating gradients per each type of Transfer Neurons.')
 
@@ -82,11 +83,19 @@ if __name__ == '__main__':
     # type-1 neurons.
     tn_type1 = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl")
     tn_type1 = [neuron for neuron in tn_type1 if neuron[0] in [ _ for _ in range(20)]]
-    tn_type1 = tn_type1[:top_n]
+    if not is_baseline:
+        tn_type1 = tn_type1[:top_n]
+    elif is_baseline:
+        random.seed(42)
+        tn_type1 = random.sample(tn_type1[top_n:], top_n)
     # type-2 neurons.
     tn_type2 = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl")
     tn_type2 = [neuron for neuron in tn_type2 if neuron[0] in [ _ for _ in range(20, 32)]] if model_type in ['llama3', 'mistral', 'aya'] else [neuron for neuron in tn_type2 if neuron[0] in [ _ for _ in range(20, 30)]]
-    tn_type2 = tn_type2[:top_n]
+    if not is_baseline:
+        tn_type2 = tn_type2[:top_n]
+    elif is_baseline:
+        tn_type2 = random.sample(tn_type2[top_n:], top_n)
+
     # type1/2 neurons.
     tn = tn_type1 + tn_type2
 
@@ -102,7 +111,7 @@ if __name__ == '__main__':
 
     """ implement training. """
     training_args = transformers.TrainingArguments(
-        run_name=f'FT-TN-{L2}-{model_type}-{top_n}',
+        run_name=f'FT-TN-{L2}-{model_type}-{top_n}' if not is_baseline else f'FT-TN-{L2}-{model_type}-{top_n}-baseline',
         per_device_train_batch_size=1,  # 4だと out of memory error.
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=4,  # gradientを何ステップ貯めてからパラメータを更新するか.
@@ -126,10 +135,10 @@ if __name__ == '__main__':
         logging_nan_inf_filter=True,
         logging_first_step=True,
     )
-    # set tn for training.
+    # set TN for training.
     training_args.activate_neuron = tn
 
-    repo_name = f'HinataTezuka/FT-TN-{L2}-{model_type}-{top_n}' # path for huggingface repo.
+    repo_name = f'HinataTezuka/FT-TN-{L2}-{model_type}-{top_n}' if not is_baseline else f'HinataTezuka/FT-TN-{L2}-{model_type}-{top_n}-baseline' # path for huggingface repo.
 
     # for pushing the trained model to hugginface hub after every epoch.
     auto_push_cb = AutoPushCallback(

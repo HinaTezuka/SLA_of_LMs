@@ -63,14 +63,22 @@ for model_name in model_names:
         hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ru.pkl")
         hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/fr.pkl")
     elif intervention_type == 'ft':
-        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ja.pkl")
-        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/nl.pkl")
-        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ko.pkl")
-        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/it.pkl")
-        hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/en.pkl")
-        hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/vi.pkl")
-        hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ru.pkl")
-        hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/fr.pkl")
+        # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ja.pkl")
+        # hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/nl.pkl")
+        # hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ko.pkl")
+        # hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/it.pkl")
+        # hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/en.pkl")
+        # hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/vi.pkl")
+        # hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ru.pkl")
+        # hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/fr.pkl")
+        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ja_baseline.pkl")
+        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/nl_baseline.pkl")
+        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ko_baseline.pkl")
+        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/it_baseline.pkl")
+        hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/en_baseline.pkl")
+        hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/vi_baseline.pkl")
+        hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/ru_baseline.pkl")
+        hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ft/fr_baseline.pkl")
 
     sim_dict = sim_dict = defaultdict(lambda: defaultdict(lambda: np.float64(0)))
 
@@ -172,7 +180,8 @@ for model_name in model_names:
             save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all/n5000"
         elif intervention_type == 'ft':
-            save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids'
+            # save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids'
+            save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids/baseline'
         os.makedirs(save_dir, exist_ok=True)
         if layer_i == 0:
             save_path = f'{save_dir}/emb_layer'
