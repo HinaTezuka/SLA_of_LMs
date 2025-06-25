@@ -104,7 +104,7 @@ if __name__ == '__main__':
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=4,  # gradientを何ステップ貯めてからパラメータを更新するか.
         warmup_ratio=0.03,
-        num_train_epochs=1,
+        num_train_epochs=5,
         learning_rate=5e-5, # この値がよく使われる?
         bf16=True, # for saving memory.
         gradient_checkpointing=True,
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     # set tn for training.
     training_args.activate_neuron = tn
 
-    repo_name = f'HinataTezuka/FT-TN-{L2}-{model_type}-{top_n}' # huggingface repo.
+    repo_name = f'HinataTezuka/FT-TN-{L2}-{model_type}-{top_n}' # path for huggingface repo.
 
     # for pushing the trained model to hugginface hub after every epoch.
     auto_push_cb = AutoPushCallback(
@@ -136,7 +136,6 @@ if __name__ == '__main__':
 
     # use CustomTrainer to train.
     trainer = Trainer(
-        # deepspeed=deepspeed,
         model=model,
         train_dataset=tokenized_dataset_train,
         eval_dataset=tokenized_dataset_test,
