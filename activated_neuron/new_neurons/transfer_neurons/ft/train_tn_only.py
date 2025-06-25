@@ -41,6 +41,7 @@ if __name__ == '__main__':
     top_n = args.top_n # top-n neurons
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(device)
+    model.lm_head = model.lm_head.to(torch.float32) # lm_headだけ元の精度に戻す（loss計算安定化のため）.
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     # add pad_token # llamaなどは'[PAD]' tokenをもっていないため.
     if tokenizer.pad_token is None:
@@ -104,8 +105,8 @@ if __name__ == '__main__':
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=4,  # gradientを何ステップ貯めてからパラメータを更新するか.
         warmup_ratio=0.03,
-        num_train_epochs=5,
-        learning_rate=5e-5, # この値がよく使われる?
+        num_train_epochs=10,
+        learning_rate=5e-5, # この値がよく使われるっぽい(学習率はちゃんと決めるべき？).
         bf16=True, # for saving memory.
         gradient_checkpointing=True,
         max_grad_norm=1.0,
@@ -151,3 +152,4 @@ if __name__ == '__main__':
 
     # after training, push model to hub:
     trainer.model.push_to_hub(repo_name, tokenizer=tokenizer)
+    tokenizer.push_to_hub(repo_name)
