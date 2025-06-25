@@ -137,7 +137,7 @@ if __name__ == '__main__':
         tokenizer=tokenizer
     )
 
-    # use CustomTrainer to train.
+    # use CustomTrainer to train TN only.
     trainer = Trainer(
         model=model,
         train_dataset=tokenized_dataset_train,
