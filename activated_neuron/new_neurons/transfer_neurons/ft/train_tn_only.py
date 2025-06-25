@@ -30,11 +30,13 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--model_name', type=str, help='model path on huggingface hub.', required=True)
     parser.add_argument('--lang', type=str, help='the L2 language you want to use as a dataset (L1=en, fixed).', required=True)
+    parser.add_argument('--is_baseline', type=bool, help='whether the neurons you want to fine-tune is Transfer Neurons or baseline ones.', required=True)
     parser.add_argument('--score_type', type=str, default='cos_sim', help='the type of distance fn used for identifying Transfer Neurons.')
     parser.add_argument('--top_n', type=int, default=1000, help='the number of neurons used for updating gradients per each type of Transfer Neurons.')
 
     args = parser.parse_args()
     L2 = args.lang
+    is_baseline = args.is_baseline
     model_name = args.model_name
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
     score_type = args.score_type # 
