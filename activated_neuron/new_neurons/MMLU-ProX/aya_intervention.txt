@@ -1,0 +1,131 @@
+===================================================================
+Japanese:
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 8
+steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_of_LMs/activated_neuron/new_neurons/MMLU-ProX/steer_configs/aya/cos_sim/ja.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ja       |      0|custom-extract|      |exact_match|↑  |0.1685|±  |0.0034|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.2734|±  |0.0167|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.1762|±  |0.0136|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.1166|±  |0.0095|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.1610|±  |0.0182|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.1339|±  |0.0117|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.1589|±  |0.0118|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.1426|±  |0.0134|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.1706|±  |0.0193|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1074|±  |0.0100|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.1651|±  |0.0101|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.1926|±  |0.0130|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.1583|±  |0.0164|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.1463|±  |0.0098|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.3070|±  |0.0163|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ja|      0|custom-extract|      |exact_match|↑  |0.1685|±  |0.0034|
+
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 8
+steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_of_LMs/activated_neuron/new_neurons/MMLU-ProX/steer_configs/aya/cos_sim/ja_baseline.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ja       |      0|custom-extract|      |exact_match|↑  |0.2636|±  |0.0040|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.4184|±  |0.0184|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2801|±  |0.0160|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.2147|±  |0.0122|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.2585|±  |0.0216|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.2133|±  |0.0141|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.2116|±  |0.0131|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.2402|±  |0.0163|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.2808|±  |0.0231|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1616|±  |0.0119|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.3168|±  |0.0127|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.2587|±  |0.0144|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.2325|±  |0.0189|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.2325|±  |0.0117|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.4173|±  |0.0175|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ja|      0|custom-extract|      |exact_match|↑  |0.2636|±  | 0.004|
+
+===============================================================================
+Korean:
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 8
+steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_of_LMs/activated_neuron/new_neurons/MMLU-ProX/steer_configs/aya/cos_sim/ko.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko       |      0|custom-extract|      |exact_match|↑  |0.1854|±  |0.0035|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.2148|±  |0.0153|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.1952|±  |0.0141|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.1466|±  |0.0105|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.1244|±  |0.0163|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.2666|±  |0.0152|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.1476|±  |0.0114|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.1587|±  |0.0139|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.1496|±  |0.0183|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1241|±  |0.0107|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.1858|±  |0.0106|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.1991|±  |0.0131|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.1743|±  |0.0170|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.1586|±  |0.0101|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.3434|±  |0.0168|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko|      0|custom-extract|      |exact_match|↑  |0.1854|±  |0.0035|
+
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 8
+steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_of_LMs/activated_neuron/new_neurons/MMLU-ProX/steer_configs/aya/cos_sim/ko_baseline.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko       |      0|custom-extract|      |exact_match|↑  |0.2696|±  |0.0041|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.3250|±  |0.0175|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2864|±  |0.0161|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.2094|±  |0.0121|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.3000|±  |0.0227|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.3318|±  |0.0162|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.2652|±  |0.0142|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.2213|±  |0.0158|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.2598|±  |0.0225|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1814|±  |0.0125|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.3198|±  |0.0127|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.2630|±  |0.0145|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.1924|±  |0.0177|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.2232|±  |0.0116|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.4110|±  |0.0174|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko|      0|custom-extract|      |exact_match|↑  |0.2696|±  |0.0041|
+
+==============================================================================================
+French:
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 8
+steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_of_LMs/activated_neuron/new_neurons/MMLU-ProX/steer_configs/aya/cos_sim/fr.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr       |      0|custom-extract|      |exact_match|↑  |0.2371|±  |0.0039|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.3501|±  |0.0178|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2383|±  |0.0152|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.1590|±  |0.0109|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.2220|±  |0.0205|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.3235|±  |0.0161|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.1827|±  |0.0124|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.2606|±  |0.0168|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.1444|±  |0.0180|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1470|±  |0.0114|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.2865|±  |0.0123|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.2522|±  |0.0143|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.2064|±  |0.0181|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.1963|±  |0.0110|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.3446|±  |0.0168|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr|      0|custom-extract|      |exact_match|↑  |0.2371|±  |0.0039|
+
