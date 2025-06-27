@@ -129,3 +129,27 @@ steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_o
 |------------|------:|--------------|------|-----------|---|-----:|---|-----:|
 |mmlu_prox_fr|      0|custom-extract|      |exact_match|↑  |0.2371|±  |0.0039|
 
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 8
+steered (pretrained=CohereForAI/aya-expanse-8b,steer_path=/home/ach17600st/SLA_of_LMs/activated_neuron/new_neurons/MMLU-ProX/steer_configs/aya/cos_sim/fr_baseline.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr       |      0|custom-extract|      |exact_match|↑  |0.3191|±  |0.0042|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.5397|±  |0.0186|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.3131|±  |0.0165|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.2182|±  |0.0123|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.3049|±  |0.0228|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.4218|±  |0.0170|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.2693|±  |0.0143|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.3290|±  |0.0179|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.3360|±  |0.0242|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1741|±  |0.0123|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.3434|±  |0.0129|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.3290|±  |0.0155|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.2866|±  |0.0203|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.2594|±  |0.0122|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.4511|±  |0.0176|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr|      0|custom-extract|      |exact_match|↑  |0.3191|±  |0.0042|

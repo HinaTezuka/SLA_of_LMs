@@ -16,78 +16,56 @@ from funcs import (
     unfreeze_pickle,
 )
 
-# aya-expanse-8B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
-model_names = ["CohereForAI/aya-expanse-8b", "mistralai/Mistral-7B-v0.3"]
+# model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", "CohereForAI/aya-expanse-8b"]
+model_names = ["CohereForAI/aya-expanse-8b", "mistralai/Mistral-7B-v0.3", "meta-llama/Meta-Llama-3-8B"]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # langs = ["ja", "nl", "ko", "it", "en"]
 langs = ["ja", "nl", "ko", "it"]
+# langs = ['vi', 'ru' 'fr']
 score_types = ["cos_sim", "L2_dis"]
-is_reverses = [True, False]
-is_reverses = [True]
+# is_reverses = [True, False]
+is_reverses = [False] # fix to type-1.
 
-def get_sentences_qa(qa, L2: str, qa_num: int):
-    l = []
-    for i in range(len(qa['queries'])):
-        if i == qa_num: break # 1000 questions.
-        """ make prompt and input_ids. """
-        q = qa['queries'][i][L2] # question
-        a = qa['answers'][i][L2][0]['text'] # answer
-        if q == '' or q == None or  a == '' or a == None:
-            continue
-        # ans_patterns = {
-        # 'ja': '答え: ',
-        # 'nl': 'Antwoord: ',
-        # 'ko': '답변: ',
-        # 'it': 'Risposta: ',
-        # 'en': 'Answer: ',
-        # }
-        # prompt = f'{q}? {ans_patterns[L2]}'
-        l.append(q)
-    
-    return l
+num_candidate_layers = 20
+""" candidate neurons. """
+candidates = {}
+for layer_idx in range(num_candidate_layers):
+    for neuron_idx in range(14336):
+        candidates.setdefault(layer_idx, []).append(neuron_idx)
 
-qa = load_dataset('apple/mkqa')['train']
-qa = qa.shuffle(seed=42)
 
-for is_reverse in is_reverses:
-    """ candidate neurons. """
-    candidates = {}
-    for layer_idx in range(32):
-        for neuron_idx in range(14336):
-            candidates.setdefault(layer_idx, []).append(neuron_idx)
-
+for score_type in score_types:
     for model_name in model_names:
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
-        for is_reverse in is_reverses:
-          for L2 in langs:
-              if not is_reverse:
-                  c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/qa/c_qa_tran_en_{L2}.pkl"
-              elif is_reverse:
-                  c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_{L2}_qa.pkl"
-              centroids = unfreeze_pickle(c_path)
-              monolingual_sentences = get_sentences_qa(qa, L2, 1000)
-              for score_type in score_types:
-                  # scores: {(layer_idx, neuron_idx): score, ....}
-                  scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for L2 only: reverse transfers.
-                  # 降順
-                  sorted_neurons, score_dict = sort_neurons_by_score(scores) # np
-                  
-                  # save as pkl.
-                  if not is_reverse:
-                    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons_type1.pkl"
-                    score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_score_dict_type1.pkl"
-                  else:
-                    sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_sorted_neurons.pkl"
-                    score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/qa/{L2}_score_dict.pkl"
-                  save_as_pickle(sorted_neurons_path, sorted_neurons)
-                  save_as_pickle(score_dict_path, score_dict)
-                  
-                  del scores, sorted_neurons, score_dict
-                  torch.cuda.empty_cache()
-              print(f"saved scores for: {L2}.")
-        
+        # calc scores.
+        for L2 in langs:
+            # monolingual_sentences = monolingual_dataset(L2, num_sentences)
+            monolingual_sentences = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/sentence_data/{L2}_mono_train.pkl")
+            # centroids(en-only).
+            c_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/centroids/c_train_en.pkl"
+            centroids = unfreeze_pickle(c_path)
+            # scores: {(layer_idx, neuron_idx): score, ....}
+            # scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids[L2], score_type)
+            scores = compute_scores_optimized(model, tokenizer, device, monolingual_sentences, candidates, centroids, score_type) # for en only.
+            # 降順
+            # sorted_neurons = [neuron for neuron, score in sorted(scores.items(), key=lambda item: item[1], reverse=True)] # original list
+            sorted_neurons, score_dict = sort_neurons_by_score(scores) # np用
+            
+            # save as pkl.
+            # sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+            # score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_score_dict_mono_train.pkl"
+            sorted_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/en_only_mono_train_{L2}.pkl"
+            score_dict_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/en_only_score_dict_mono_train{L2}.pkl"
+            save_as_pickle(sorted_neurons_path, sorted_neurons)
+            save_as_pickle(score_dict_path, score_dict)
+            print(f"saved scores for: {L2}.")
+            
+            # clean cache.
+            del scores, sorted_neurons, score_dict
+            torch.cuda.empty_cache()
+    
+        # celan cache.
         del model
         torch.cuda.empty_cache()
