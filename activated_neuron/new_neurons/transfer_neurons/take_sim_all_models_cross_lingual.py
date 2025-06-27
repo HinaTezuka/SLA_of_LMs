@@ -68,7 +68,7 @@ if __name__ == "__main__":
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     """ parameters """
     langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
-    langs = ['nl', 'ja', 'ko', 'it']
+    # langs = ['nl', 'ja', 'ko', 'it']
     # n_list = [100, 1000, 3000, 5000]
     n_list = [100, 1000]
     score_types = ["cos_sim", "L2_dis"]
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if  'aya' in model_name else 'bloom'
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        for L1, L2 in itertools.combinations(langs, 2): # L1: input language, L2: language to be deactivated.
+        for L1, L2 in itertools.permutations(langs, 2): # L1: input language, L2: language to be deactivated.
             """ tatoeba translation corpus """
             dataset = load_dataset("tatoeba", lang1='en', lang2=L1, split="train")
             # # select first 2000 sentences.
