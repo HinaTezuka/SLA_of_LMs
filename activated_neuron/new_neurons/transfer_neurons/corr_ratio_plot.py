@@ -42,9 +42,9 @@ labels_dict = {
     'ko': l2 + l2 + l1 + l2 + l2 + l2 + l2 + l2,
     'it': l2 + l2 + l2 + l1 + l2 + l2 + l2 + l2,
     'en': l2 + l2 + l2 + l2 + l1 + l2 + l2 + l2,
-    # 'vi': l2 + l2 + l2 + l2 + l2 + l1 + l2 + l2,
-    # 'ru': l2 + l2 + l2 + l2 + l2 + l2 + l1 + l2,
-    # 'fr': l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1,
+    'vi': l2 + l2 + l2 + l2 + l2 + l1 + l2 + l2,
+    'ru': l2 + l2 + l2 + l2 + l2 + l2 + l1 + l2,
+    'fr': l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1,
 }
     
 for model_type in model_types:

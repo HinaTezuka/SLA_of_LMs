@@ -39,7 +39,7 @@ def plot_hist_llama3(dict1, dict2, L1: str, L2: str, score_type: str, interventi
     plt.xlabel('Layer index', fontsize=35)
     plt.ylabel('Cosine Sim', fontsize=35)
     plt.ylim(-0.5, 1)
-    plt.title(f'en-{L2}', fontsize=35)
+    plt.title(f'en-{L1}, {L2}-deactivated', fontsize=35)
     plt.tick_params(axis='x', labelsize=20)
     plt.tick_params(axis='y', labelsize=20)
     plt.legend(fontsize=25)
@@ -64,11 +64,13 @@ if __name__ == "__main__":
     # L1 = "en"
     """ model configs """
     model_names = ['meta-llama/Meta-Llama-3-8B', 'CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
+    model_names = ['CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3', 'meta-llama/Meta-Llama-3-8B']
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     """ parameters """
     langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
+    langs = ['nl', 'ja', 'ko', 'it']
     # n_list = [100, 1000, 3000, 5000]
-    n_list = [1000]
+    n_list = [100, 1000]
     score_types = ["cos_sim", "L2_dis"]
     score_types = ['cos_sim']
     is_en = False
@@ -122,15 +124,15 @@ if __name__ == "__main__":
                         final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
                     plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L1, L2, score_type, intervention_num, is_en)
 
-                    """ baseline """
-                    similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-                    similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, random_data)
-                    final_results_same_semantics = defaultdict(float)
-                    final_results_non_same_semantics = defaultdict(float)
-                    for layer_idx in range(model.config.num_hidden_layers):
-                        final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
-                        final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                    plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L1, L2, score_type, intervention_num, is_en, True)
+                    # """ baseline """
+                    # similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+                    # similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                    # final_results_same_semantics = defaultdict(float)
+                    # final_results_non_same_semantics = defaultdict(float)
+                    # for layer_idx in range(model.config.num_hidden_layers):
+                    #     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
+                    #     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
+                    # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L1, L2, score_type, intervention_num, is_en, True)
 
                     print(f"input: {L1}, deactivated: {L2} intervention_num: {n} <- completed.")
     
