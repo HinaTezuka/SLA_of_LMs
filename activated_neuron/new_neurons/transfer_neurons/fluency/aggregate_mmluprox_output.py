@@ -39,6 +39,7 @@ def extract_resps_from_jsonl(filepath, n):
 
 
 model_types = ['aya', 'llama3', 'mistral']
+# model_types = ['mistral']
 langs = ['ja', 'ko', 'fr']
 is_baselines = [False, True]
 num_to_extract = 100
@@ -48,7 +49,7 @@ for model_type in model_types:
         for is_baseline in is_baselines:
             if is_baseline:
                 file_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/output_samples/{model_type}_{L2}_baseline.jsonl'
-            else:
+            else: # type-1 deactivated.
                 file_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/output_samples/{model_type}_{L2}_type1.jsonl'
             
             resps_output = extract_resps_from_jsonl(file_path, num_to_extract)

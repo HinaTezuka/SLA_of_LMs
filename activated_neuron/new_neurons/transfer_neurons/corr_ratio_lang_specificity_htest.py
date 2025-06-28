@@ -1,25 +1,30 @@
 import numpy as np
-from scipy.stats import percentileofscore
+from scipy.stats import f
+from scipy.stats import ttest_ind
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pickle
-from collections import defaultdict
 
 from funcs import unfreeze_pickle, unfreeze_np_arrays
 
 langs = ['ja', 'nl', 'ko', 'it']
-model_types = ['llama3', 'mistral', 'aya', 'bloom']
+model_types = ['llama3', 'mistral', 'aya']
 score_types = ['cos_sim', 'L2_dis']
+score_types = ['cos_sim']
 is_reverses = [False, True]
 
-langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['nl', 'it']
-# langs = ['ja', 'ko']
-model_types = ['llama3', 'mistral', 'aya', 'bloom']
-score_types = ['cos_sim', 'L2_dis']
-# score_types = ['cos_sim']
-is_reverses = [False, True]
+def welch_t_test(labels, values):
+    group0 = values[labels == 0]
+    group1 = values[labels == 1]
+
+    # Welch の t検定（等分散を仮定しない）
+    t_stat, p_value = ttest_ind(group0, group1, equal_var=False)
+    
+    # calc correlation ratio.
+    eta_squared = correlationRatio(labels, values)
+    
+    return eta_squared, t_stat, p_value
 
 def correlationRatio(categories, values):
     interclass_variation  = sum([
@@ -27,20 +32,6 @@ def correlationRatio(categories, values):
     ]) 
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
-
-l1 = [ 1 for _ in range(1000)]
-l2 = [ 0 for _ in range(1000)]
-
-# 5言語用
-labels_dict = {
-    'ja': l1 + l2 + l2 + l2 + l2,
-    'nl': l2 + l1 + l2 + l2 + l2,
-    'ko': l2 + l2 + l1 + l2 + l2,
-    'it': l2 + l2 + l2 + l1 + l2,
-    'en': l2 + l2 + l2 + l2 + l1,
-}
-
-from scipy.stats import f
 
 def compute_eta_squared_and_f(categories, values):
     cats = np.unique(categories)
@@ -69,6 +60,18 @@ def compute_eta_squared_and_f(categories, values):
 
     return eta_squared, F, p_value
 
+# ラベル設定
+l1 = [1] * 1000
+l2 = [0] * 1000
+
+labels_dict = {
+    'ja': l1 + l2 + l2 + l2 + l2,
+    'nl': l2 + l1 + l2 + l2 + l2,
+    'ko': l2 + l2 + l1 + l2 + l2,
+    'it': l2 + l2 + l2 + l1 + l2,
+    'en': l2 + l2 + l2 + l2 + l1,
+}
+
 top_n = 1000
 significance_level = 0.05
 
@@ -76,11 +79,9 @@ for model_type in model_types:
     for is_reverse in is_reverses:
         for score_type in score_types:
             for L2 in langs:
-                # 活性化データ読み込み
                 save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token.npz"
                 activations_arr = unfreeze_np_arrays(save_path_activations)
 
-                # ソート済みニューロン読み込み
                 if is_reverse:
                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
@@ -98,7 +99,8 @@ for model_type in model_types:
                 p_list = []
                 for (layer_i, neuron_i) in sorted_neurons[:top_n]:
                     vals = activations_arr[layer_i, neuron_i, :]
-                    eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals)
+                    # eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals)
+                    eta, F_val, p_val = welch_t_test(labels_list, vals)
                     eta_list.append(eta)
                     p_list.append(p_val)
 

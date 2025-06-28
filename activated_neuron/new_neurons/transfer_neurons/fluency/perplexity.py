@@ -55,6 +55,7 @@ model_path_dict = {
     'aya': 'CohereForAI/aya-expanse-8b',
 }
 model_types = ['aya', 'llama3', 'mistral']
+model_types = ['llama3']
 langs = ['ja', 'ko', 'fr']
 is_baselines = [True, False]
 num_to_extract = 100
@@ -68,6 +69,8 @@ for model_type in model_types:
         for is_baseline in is_baselines:
             save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mmluprox/{model_type}/{L2}.pkl' if not is_baseline else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mmluprox/{model_type}/{L2}_baseline.pkl'
             sentences = unfreeze_pickle(save_path)
+            print(sentences)
+            sys.exit()
 
             """ calc perplexity. """
 
