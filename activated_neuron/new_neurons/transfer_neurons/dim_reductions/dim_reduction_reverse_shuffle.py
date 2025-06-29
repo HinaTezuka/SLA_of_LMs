@@ -105,10 +105,11 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
 if __name__ == '__main__':
     langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
-    langs = ['nl', 'ko', 'it']
+    langs = ['ko', 'ja', 'it', 'nl']
+    langs = ['ko', 'nl', 'ja', 'it']
     # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
     model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
-    # model_names = ['bigscience/bloom-3b']
+    model_names = ["mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     score_type = 'cos_sim'
     # score_type = 'L2_dis'
@@ -148,19 +149,20 @@ if __name__ == '__main__':
             else:
                 save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/input_{L1}_deact_{L2}_type1.pkl"
             save_as_pickle(save_path, hidden_states)
+        sys.exit()
 
         """ dim_reduction and plot with PCA. """
         ["ja", "nl", "ko", "it", "en"]
         # for L1, L2 in itertools.combinations(langs, 2):
         if is_reverse:
             hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_ja_deact_nl.pkl")
-            hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl.pkl")
-            hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko.pkl")
-            hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/it.pkl")
-            hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en.pkl")
-            hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/vi.pkl")
-            hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ru.pkl")
-            hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/fr.pkl")
+            hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl.pkl")
+            hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko.pkl")
+            hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
+            hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
+            hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/vi.pkl")
+            hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru.pkl")
+            hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr.pkl")
             # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja_{num_intervention}.pkl")
             # hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl_{num_intervention}.pkl")
             # hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko_{num_intervention}.pkl")
@@ -221,8 +223,6 @@ if __name__ == '__main__':
         #         is_reverse
         #     )
         #     print(f"[✓] visualization completed: input_{L1}, deact_{L2}")
-        ### ここを修正
-        print(f'visualization completed: input_{L1}, deact_{L2}')
 
         del model
         torch.cuda.empty_cache()

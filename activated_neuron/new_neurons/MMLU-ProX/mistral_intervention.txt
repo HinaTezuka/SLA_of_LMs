@@ -25,3 +25,4 @@ French:
 |   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
 |------------|------:|--------------|------|-----------|---|-----:|---|-----:|
 |mmlu_prox_fr|      0|custom-extract|      |exact_match|↑  |0.1477|±  |0.0032|
+
