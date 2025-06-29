@@ -74,54 +74,66 @@ labels_dict = {
     'it': l2 + l2 + l2 + l1 + l2,
     'en': l2 + l2 + l2 + l2 + l1,
 }
+# lang_family.
+labels_dict = {
+    'ja': l1 + l2 + l1 + l2 + l2,
+    'nl': l2 + l1 + l2 + l1 + l1,
+    'ko': l1 + l2 + l1 + l2 + l2,
+    'it': l2 + l1 + l2 + l1 + l1,
+    'en': l2 + l1 + l2 + l1 + l1,
+}
 
 top_n = 1000
 significance_level = 0.05
 
-# for model_type in model_types:
-#     for is_reverse in is_reverses:
-#         for score_type in score_types:
-#             key_prefix = f"{model_type}_{'type-2' if is_reverse else 'type-1'}"
-#             for L2 in langs:
-#                 save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token.npz"
-#                 activations_arr = unfreeze_np_arrays(save_path_activations)
+for model_type in model_types:
+    for is_reverse in is_reverses:
+        for score_type in score_types:
+            key_prefix = f"{model_type}_{'type-2' if is_reverse else 'type-1'}"
+            for L2 in langs:
+                save_path_activations = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/activations/{L2}_last_token.npz"
+                activations_arr = unfreeze_np_arrays(save_path_activations)
 
-#                 if is_reverse:
-#                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
-#                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-#                     sorted_neurons = [n for n in sorted_neurons if n[0] in (range(20, 32) if model_type != 'bloom' else range(20, 30))]
-#                 else:
-#                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-#                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-#                     sorted_neurons = [n for n in sorted_neurons if n[0] in range(20)]
+                if is_reverse:
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    sorted_neurons = [n for n in sorted_neurons if n[0] in (range(20, 32) if model_type != 'bloom' else range(20, 30))]
+                else:
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    sorted_neurons = [n for n in sorted_neurons if n[0] in range(20)]
 
-#                 labels_list = np.array(labels_dict[L2])
+                labels_list = np.array(labels_dict[L2])
 
-#                 print(f"--- {model_type} {'type-2' if is_reverse else 'type-1'}, lang={L2}, score={score_type} ---")
+                print(f"--- {model_type} {'type-2' if is_reverse else 'type-1'}, lang={L2}, score={score_type} ---")
 
-#                 eta_list = []
-#                 p_list = []
-#                 for (layer_i, neuron_i) in sorted_neurons[:top_n]:
-#                     vals = activations_arr[layer_i, neuron_i, :]
-#                     eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals)
-#                     # eta, F_val, p_val = welch_t_test(labels_list, vals)
-#                     eta_list.append(eta)
-#                     p_list.append(p_val)
+                eta_list = []
+                p_list = []
+                for (layer_i, neuron_i) in sorted_neurons[:top_n]:
+                    vals = activations_arr[layer_i, neuron_i, :]
+                    eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals)
+                    # eta, F_val, p_val = welch_t_test(labels_list, vals)
+                    eta_list.append(eta)
+                    p_list.append(p_val)
 
-#                 eta_arr = np.array(eta_list)
-#                 p_arr = np.array(p_list)
+                eta_arr = np.array(eta_list)
+                p_arr = np.array(p_list)
 
-#                 mean_eta = np.mean(eta_arr)
-#                 significant_count = np.sum(p_arr < significance_level)
-#                 print(f"mean η² = {mean_eta:.4f}")
-#                 print(f"{significant_count}/{top_n} neurons are SIGNIFICANT at α={significance_level}\n")
-#                 key = f"{key_prefix}_{L2}"
-#                 proportion_significant = significant_count / top_n
-#                 results[key] = [proportion_significant]
+                mean_eta = np.mean(eta_arr)
+                significant_count = np.sum(p_arr < significance_level)
+                print(f"mean η² = {mean_eta:.4f}")
+                print(f"{significant_count}/{top_n} neurons are SIGNIFICANT at α={significance_level}\n")
+                key = f"{key_prefix}_{L2}"
+                proportion_significant = significant_count / top_n
+                results[key] = [proportion_significant]
 
-save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all.pkl' # welch t test.
+# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all.pkl' # welch t test.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova.pkl' # anova.
-# save_as_pickle(save_path, results)
+
+# lang family.
+# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_lang_family.pkl' # welch t test.
+save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_lang_family.pkl' # anova.
+save_as_pickle(save_path, results)
 
 results = unfreeze_pickle(save_path)
 
@@ -177,7 +189,10 @@ for spine in ax.spines.values():
     spine.set_linewidth(0.8)
     spine.set_color('gray')
 
-path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models'
+# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models'
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova'
+# lang family
+# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_lang_family'
+path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_lang_family'
 with PdfPages(path + '.pdf') as pdf:
     pdf.savefig(fig, bbox_inches='tight', pad_inches=0.01)
