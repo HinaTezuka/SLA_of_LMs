@@ -153,7 +153,7 @@ results = unfreeze_pickle(save_path)
 plt.rcParams["font.family"] = "DejaVu Serif"
 
 fig, ax = plt.subplots(figsize=(14, 9))
-fig.patch.set_facecolor('#f7f7f7')  # 背景色を薄いグレーに
+fig.patch.set_facecolor('#f7f7f7')
 
 bar_width = 0.12
 x = np.arange(len(langs))
