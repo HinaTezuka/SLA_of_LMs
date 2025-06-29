@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import f
 from scipy.stats import ttest_ind
+from scipy.stats import mannwhitneyu
 import matplotlib.pyplot as plt
 import os
 import sys
@@ -21,7 +22,7 @@ def welch_t_test(labels, values):
     group0 = values[labels == 0]
     group1 = values[labels == 1]
 
-    # Welch の t検定（等分散を仮定しない）
+    # Welch t test（equal_var=False -> 等分散を仮定しない）.
     t_stat, p_value = ttest_ind(group0, group1, equal_var=False)
     
     # calc correlation ratio.
@@ -35,6 +36,14 @@ def correlationRatio(categories, values):
     ]) 
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
+
+def mann_whitney_u_test(labels, values):
+    group0 = values[labels == 0]
+    group1 = values[labels == 1]
+
+    stat, p_value = mannwhitneyu(group0, group1, alternative='two-sided')
+
+    return stat, p_value
 
 def compute_eta_squared_and_f(categories, values):
     cats = np.unique(categories)
@@ -111,17 +120,18 @@ for model_type in model_types:
                 p_list = []
                 for (layer_i, neuron_i) in sorted_neurons[:top_n]:
                     vals = activations_arr[layer_i, neuron_i, :]
-                    eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals)
-                    # eta, F_val, p_val = welch_t_test(labels_list, vals)
-                    eta_list.append(eta)
+                    # eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals) # ANOVA
+                    # eta, F_val, p_val = welch_t_test(labels_list, vals) # t test(welch)
+                    stat, p_val = mann_whitney_u_test(labels_list, vals) # Mann-Whitney U test.
+                    # eta_list.append(eta)
                     p_list.append(p_val)
 
-                eta_arr = np.array(eta_list)
+                # eta_arr = np.array(eta_list)
                 p_arr = np.array(p_list)
 
-                mean_eta = np.mean(eta_arr)
+                # mean_eta = np.mean(eta_arr)
                 significant_count = np.sum(p_arr < significance_level)
-                print(f"mean η² = {mean_eta:.4f}")
+                # print(f"mean η² = {mean_eta:.4f}")
                 print(f"{significant_count}/{top_n} neurons are SIGNIFICANT at α={significance_level}\n")
                 key = f"{key_prefix}_{L2}"
                 proportion_significant = significant_count / top_n
@@ -129,10 +139,12 @@ for model_type in model_types:
 
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all.pkl' # welch t test.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova.pkl' # anova.
+# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney.pkl' # mann-whitney u test.
 
 # lang family.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_lang_family.pkl' # welch t test.
-save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_lang_family.pkl' # anova.
+# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_lang_family.pkl' # anova.
+save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney_lang_family.pkl'
 save_as_pickle(save_path, results)
 
 results = unfreeze_pickle(save_path)
@@ -191,8 +203,10 @@ for spine in ax.spines.values():
 
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models'
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova'
+# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_mann_whitney'
 # lang family
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_lang_family'
-path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_lang_family'
+# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_lang_family'
+path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_ang_family_mann_whitney'
 with PdfPages(path + '.pdf') as pdf:
     pdf.savefig(fig, bbox_inches='tight', pad_inches=0.01)
