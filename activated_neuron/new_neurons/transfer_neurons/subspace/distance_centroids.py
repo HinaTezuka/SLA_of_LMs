@@ -23,11 +23,11 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
 model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
-model_names = ['HinataTezuka/FT-TN-ja-bloom-1000']
+model_names = ['CohereForAI/aya-expanse-8b']
 is_using_centroids = False
-intervention_type = 'type-2'
+intervention_type = 'type-1'
 # intervention_type = 'normal'
-intervention_type = 'ft' # fine-tuned.
+# intervention_type = 'ft' # fine-tuned.
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
@@ -45,14 +45,14 @@ for model_name in model_names:
         hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr.pkl")
     elif intervention_type == 'type-1':
         # normal
-        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1.pkl")
+        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_only_ja_type1.pkl")
         hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1.pkl")
         hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1.pkl")
         hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1.pkl")
         hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
-        hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/vi_type1.pkl")
-        hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru_type1.pkl")
-        hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr_type1.pkl")
+        # hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/vi_type1.pkl")
+        # hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru_type1.pkl")
+        # hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr_type1.pkl")
     elif intervention_type == 'type-2':
         hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja.pkl")
         hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl.pkl")
@@ -91,9 +91,9 @@ for model_name in model_names:
         hs_ko_layer = np.array(hs_ko[layer_i])
         hs_it_layer = np.array(hs_it[layer_i])
         hs_en_layer = np.array(hs_en[layer_i])
-        hs_vi_layer = np.array(hs_vi[layer_i])
-        hs_ru_layer = np.array(hs_ru[layer_i])
-        hs_fr_layer = np.array(hs_fr[layer_i])
+        # hs_vi_layer = np.array(hs_vi[layer_i])
+        # hs_ru_layer = np.array(hs_ru[layer_i])
+        # hs_fr_layer = np.array(hs_fr[layer_i])
     
         # compute cosine_sim beween vectors in each subspace.
         lang2hs_layer = {
@@ -102,9 +102,9 @@ for model_name in model_names:
             "ko": hs_ko_layer,
             "it": hs_it_layer,
             "en": hs_en_layer,
-            "vi": hs_vi_layer,
-            "ru": hs_ru_layer,
-            "fr": hs_fr_layer,
+            # "vi": hs_vi_layer,
+            # "ru": hs_ru_layer,
+            # "fr": hs_fr_layer,
         }
 
         for lang1, lang2 in permutations(langs, 2):
@@ -169,15 +169,16 @@ for model_name in model_names:
                     label.set_fontsize(40)
 
         if intervention_type == 'normal':
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids"
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/all"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids"
+            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/all"
         elif intervention_type == 'type-1':
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids"
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/en_only_ja"
+            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/qa"
         elif intervention_type == 'type-2':
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids"
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids"
+            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all/n5000"
         elif intervention_type == 'ft':
             # save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids'

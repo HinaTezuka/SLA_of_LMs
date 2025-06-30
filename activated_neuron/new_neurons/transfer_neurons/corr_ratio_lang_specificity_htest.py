@@ -94,6 +94,7 @@ labels_dict = {
 
 top_n = 1000
 significance_level = 0.05
+eta_threshold = 0.25 # 
 
 for model_type in model_types:
     for is_reverse in is_reverses:
@@ -120,31 +121,35 @@ for model_type in model_types:
                 p_list = []
                 for (layer_i, neuron_i) in sorted_neurons[:top_n]:
                     vals = activations_arr[layer_i, neuron_i, :]
-                    # eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals) # ANOVA
+                    eta, F_val, p_val = compute_eta_squared_and_f(labels_list, vals) # ANOVA
                     # eta, F_val, p_val = welch_t_test(labels_list, vals) # t test(welch)
-                    stat, p_val = mann_whitney_u_test(labels_list, vals) # Mann-Whitney U test.
-                    # eta_list.append(eta)
+                    # stat, p_val = mann_whitney_u_test(labels_list, vals) # Mann-Whitney U test.
+                    eta_list.append(eta)
                     p_list.append(p_val)
 
-                # eta_arr = np.array(eta_list)
+                eta_arr = np.array(eta_list)
                 p_arr = np.array(p_list)
 
-                # mean_eta = np.mean(eta_arr)
-                significant_count = np.sum(p_arr < significance_level)
+                mean_eta = np.mean(eta_arr)
+                # significant_count = np.sum(p_arr < significance_level)
+                # 修正後（p < α かつ η² > eta_threshold の両方を満たすニューロンのみカウント）
+                significant_count = np.sum((p_arr < significance_level) & (eta_arr >= eta_threshold))
                 # print(f"mean η² = {mean_eta:.4f}")
-                print(f"{significant_count}/{top_n} neurons are SIGNIFICANT at α={significance_level}\n")
+                # print(f"{significant_count}/{top_n} neurons are SIGNIFICANT at α={significance_level}\n")
+                print(f"{significant_count}/{top_n} neurons are SIGNIFICANT (p < {significance_level}) and η² >= {eta_threshold}\n")
                 key = f"{key_prefix}_{L2}"
                 proportion_significant = significant_count / top_n
                 results[key] = [proportion_significant]
 
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all.pkl' # welch t test.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova.pkl' # anova.
+save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_corr_ratio_{"01" if eta_threshold == 0.1 else "025"}_top{top_n}.pkl' # anova, corr_th of 0.1 and 0.25.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney.pkl' # mann-whitney u test.
 
 # lang family.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_lang_family.pkl' # welch t test.
 # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_lang_family.pkl' # anova.
-save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney_lang_family.pkl'
+# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney_lang_family.pkl'
 save_as_pickle(save_path, results)
 
 results = unfreeze_pickle(save_path)
@@ -186,11 +191,11 @@ for model_type in model_types:
         idx += 1
 
 ax.set_xticks(x)
-ax.set_xticklabels(langs, fontsize=40)
+ax.set_xticklabels(langs, fontsize=35)
 ax.tick_params(axis='y', labelsize=25)
-ax.set_ylabel('Proportion of Significant Neurons', fontsize=30)
+ax.set_ylabel('Proportion of Significant Neurons', fontsize=25)
 ax.set_ylim(0, 1)
-ax.set_title('Proportion of Significant Neurons', fontsize=40)
+ax.set_title(f'Proportion of Significant Neurons, η² >= {eta_threshold}, top-{top_n}', fontsize=35)
 ax.grid(axis='y', linestyle='--', alpha=0.5)
 
 legend = ax.legend(frameon=True, shadow=True, fontsize=30)
@@ -202,11 +207,11 @@ for spine in ax.spines.values():
     spine.set_color('gray')
 
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models'
-# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova'
+path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_{"01" if eta_threshold == 0.1 else "025"}_top{top_n}'
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_mann_whitney'
 # lang family
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_lang_family'
 # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_lang_family'
-path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_ang_family_mann_whitney'
+# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_ang_family_mann_whitney'
 with PdfPages(path + '.pdf') as pdf:
     pdf.savefig(fig, bbox_inches='tight', pad_inches=0.01)
