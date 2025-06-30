@@ -8,7 +8,7 @@ from funcs import (
     unfreeze_pickle,
 )
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 import numpy as np
 
@@ -54,23 +54,35 @@ model_path_dict = {
     'mistral': 'mistralai/Mistral-7B-v0.3',
     'aya': 'CohereForAI/aya-expanse-8b',
 }
+ref_model_path = "meta-llama/Llama-3.3-70B-Instruct"
 model_types = ['aya', 'llama3', 'mistral']
 model_types = ['llama3']
 langs = ['ja', 'ko', 'fr']
 is_baselines = [True, False]
 num_to_extract = 100
 
+bnb_config = BitsAndBytesConfig(
+    load_in_8bit=True,
+    llm_int8_threshold=6.0,
+    llm_int8_has_fp16_weight=True,
+    device_map="auto"
+)
+
 for model_type in model_types:
     model_path = model_path_dict[model_type]
     tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForCausalLM.from_pretrained(model_path).to(device)
+    model = AutoModelForCausalLM.from_pretrained(
+        ref_model_path,
+        quantization_config=bnb_config,
+        device_map=device,
+        torch_dtype=torch.float16
+    )
     model.eval()
     for L2 in langs:
         for is_baseline in is_baselines:
             save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mmluprox/{model_type}/{L2}.pkl' if not is_baseline else f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/mmluprox/{model_type}/{L2}_baseline.pkl'
             sentences = unfreeze_pickle(save_path)
             print(sentences)
-            sys.exit()
 
             """ calc perplexity. """
 

@@ -106,10 +106,10 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
 
 if __name__ == '__main__':
     langs = ["ja", "nl", "ko", "it", "en", 'vi', 'ru', 'fr']
-    langs = ['it', 'nl', 'ja', 'ko']
+    langs = ['ja', 'nl', 'it', 'ko']
     # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
     model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
-    model_names = ["mistralai/Mistral-7B-v0.3"]
+    model_names = ['CohereForAI/aya-expanse-8b']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     score_type = 'cos_sim'
     # score_type = 'L2_dis'
@@ -118,38 +118,38 @@ if __name__ == '__main__':
     is_reverse = True # fix.
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
-        # tokenizer = AutoTokenizer.from_pretrained(model_name)
-        # model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 31 # emb layer included.
         num_intervention = 1000
-        # for L1, L2 in itertools.combinations(langs, 2): # L1: input language, L2: language to be deactivated.
-        #     # prepare type-2 Transfer Neurons.
-        #     if L2 != "en":
-        #         if is_reverse: # type-2
-        #             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
-        #             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-        #             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-        #             # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 30)]]
-        #         else: # type-1
-        #             save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-        #             sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-        #         sorted_neurons = sorted_neurons[:num_intervention]
+        for L1, L2 in itertools.combinations(langs, 2): # L1: input language, L2: language to be deactivated.
+            # prepare type-2 Transfer Neurons.
+            if L2 != "en":
+                if is_reverse: # type-2
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                    # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 30)]]
+                else: # type-1
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                sorted_neurons = sorted_neurons[:num_intervention]
 
-        #     sentences = sentences_all_langs[L1]
-        #     if L2 == 'en':
-        #         hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-        #     else:
-        #         hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons, num_layers, sentences)
-        #     # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+            sentences = sentences_all_langs[L1]
+            if L2 == 'en':
+                hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+            else:
+                hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons, num_layers, sentences)
+            # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-        #     # save hs as pkl.
-        #     if is_reverse:
-        #         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_{L1}_deact_{L2}.pkl"
-        #         # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}_{num_intervention}.pkl"
-        #     else:
-        #         save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/input_{L1}_deact_{L2}_type1.pkl"
-        #     save_as_pickle(save_path, hidden_states)
-        # sys.exit()
+            # save hs as pkl.
+            if is_reverse:
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_{L1}_deact_{L2}.pkl"
+                # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}_{num_intervention}.pkl"
+            else:
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/input_{L1}_deact_{L2}_type1.pkl"
+            save_as_pickle(save_path, hidden_states)
+        sys.exit()
 
         """ dim_reduction and plot with PCA. """
         # ["ja", "nl", "ko", "it", "en"]

@@ -23,11 +23,11 @@ from funcs import (
 langs = ["ja", "nl", "ko", "it", "en"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-model_names = ['meta-llama/Meta-Llama-3-8B']
+model_names = ['mistralai/Mistral-7B-v0.3']
 # model_names = ['HinataTezuka/FT-TN-ja-bloom-1000']
 is_using_centroids = False
-# intervention_type = 'type-1'
-intervention_type = 'type-2'
+intervention_type = 'type-1'
+# intervention_type = 'type-2
 # intervention_type = 'normal'
 # intervention_type = 'ft' # fine-tuned.
 
@@ -47,20 +47,20 @@ for model_name in model_names:
         hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr.pkl")
     elif intervention_type == 'type-1':
         # normal
+        hs_ja_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/input_ja_deact_ko_type1.pkl")
+        # reverse書いているがtype-1.
+        hs_reverse_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1.pkl")
         hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
-        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/input_nl_deact_it_type1.pkl")
-        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko.pkl")
-        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
-        hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
+        # hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it.pkl")
+        # hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en.pkl")
         # hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/vi_type1.pkl")
         # hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru_type1.pkl")
         # hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr_type1.pkl")
     elif intervention_type == 'type-2':
-        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_ja_deact_nl.pkl")
-        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/nl.pkl")
-        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko.pkl")
-        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/it.pkl")
-        hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en.pkl")
+        hs_ja_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_ja_deact_nl.pkl")
+        hs_reverse_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja.pkl")
+        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja.pkl")
+
         # hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/vi.pkl")
         # hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ru.pkl")
         # hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/fr.pkl")
@@ -88,109 +88,115 @@ for model_name in model_names:
         if (intervention_type == 'type-1' and layer_i in [ _ for _ in range(21, layer_num)]) or (intervention_type == 'type-2' and layer_i in [ _ for _ in range(21)]):
             continue
 
-        hs_ja_layer = np.array(hs_ja[layer_i]) # shape: (n * d) n: sample_num, d: dimention of hs.
-        hs_nl_layer = np.array(hs_nl[layer_i])
-        hs_ko_layer = np.array(hs_ko[layer_i])
-        hs_it_layer = np.array(hs_it[layer_i])
-        hs_en_layer = np.array(hs_en[layer_i])
+        hs_ja_nl_layer = np.array(hs_ja_nl[layer_i]) # shape: (n * d) n: sample_num, d: dimention of hs.
+        hs_reverse_ja_layer = np.array(hs_reverse_ja[layer_i])
+        hs_ja_layer = np.array(hs_ja[layer_i])
+        # hs_it_layer = np.array(hs_it[layer_i])
+        # hs_en_layer = np.array(hs_en[layer_i])
         # hs_vi_layer = np.array(hs_vi[layer_i])
         # hs_ru_layer = np.array(hs_ru[layer_i])
         # hs_fr_layer = np.array(hs_fr[layer_i])
     
         # compute cosine_sim beween vectors in each subspace.
         lang2hs_layer = {
-            "ja": hs_ja_layer,
-            "nl": hs_nl_layer,
-            "ko": hs_ko_layer,
-            "it": hs_it_layer,
-            "en": hs_en_layer,
+            "shuffle": hs_ja_nl_layer,
+            "reverse": hs_reverse_ja_layer,
+            "normal": hs_ja_layer,
+            # "it": hs_it_layer,
+            # "en": hs_en_layer,
             # "vi": hs_vi_layer,
             # "ru": hs_ru_layer,
             # "fr": hs_fr_layer,
         }
 
-        for lang1, lang2 in permutations(langs, 2):
-            c1 = np.mean(lang2hs_layer[lang1], axis=0).reshape(1, -1)  # shape: (4096, )
-            c2 = np.mean(lang2hs_layer[lang2], axis=0).reshape(1, -1)  # shape: (4096, )
+        # for lang1, lang2 in permutations(langs, 2):
+        c_shuffle = np.mean(lang2hs_layer['shuffle'], axis=0).reshape(1, -1)  # shape: (4096, )
+        c_reverse = np.mean(lang2hs_layer['reverse'], axis=0).reshape(1, -1)  # shape: (4096, )
+        c_normal = np.mean(lang2hs_layer['normal'], axis=0).reshape(1, -1)
 
-            sim_score = cosine_similarity(c1, c2).item()
+        sim_score_shuffle = cosine_similarity(c_shuffle, c_normal).item()
+        sim_score_reverse = cosine_similarity(c_reverse, c_normal).item()
 
-            # record all avg_sims into sim_dict
-            sim_dict[f'{lang1}-{lang2}'][layer_i] = sim_score # lang1-lang2: average_sim between: i-th row vector in mat1(lang1) - row vectors in mat2(lang2)
+        # record all avg_sims into sim_dict
+        # sim_dict[f'{lang1}-{lang2}'][layer_i] = sim_score_shuffle # lang1-lang2: average_sim between: i-th row vector in mat1(lang1) - row vectors in mat2(lang2)
+        """  """
+        print(f'--------------- {layer_i} ----------------')
+        print(f'shuffle: {sim_score_shuffle}, reverse: {sim_score_reverse}')
+        print()
 
-        """ plot """
-        lang_sim_matrix = np.zeros((len(langs), len(langs)))
-        for i, lang1 in enumerate(langs):
-            for j, lang2 in enumerate(langs):
-                if lang1 == lang2:
-                    lang_sim_matrix[i, j] = 1.0
-                else:
-                    key = f"{lang1}-{lang2}"
-                    key_rev = f"{lang2}-{lang1}"
+        # """ plot """
+        # lang_sim_matrix = np.zeros((len(langs), len(langs)))
+        # for i, lang1 in enumerate(langs):
+        #     for j, lang2 in enumerate(langs):
+        #         if lang1 == lang2:
+        #             lang_sim_matrix[i, j] = 1.0
+        #         else:
+        #             key = f"{lang1}-{lang2}"
+        #             key_rev = f"{lang2}-{lang1}"
 
-                    if key in sim_dict and layer_i in sim_dict[key]:
-                        sim = sim_dict[key][layer_i]
-                        lang_sim_matrix[i, j] = sim
-                    elif key_rev in sim_dict and layer_i in sim_dict[key_rev]:
-                        sim = sim_dict[key_rev][layer_i]
-                        lang_sim_matrix[i, j] = sim
-                    else:
-                        lang_sim_matrix[i, j] = np.nan
+        #             if key in sim_dict and layer_i in sim_dict[key]:
+        #                 sim = sim_dict[key][layer_i]
+        #                 lang_sim_matrix[i, j] = sim
+        #             elif key_rev in sim_dict and layer_i in sim_dict[key_rev]:
+        #                 sim = sim_dict[key_rev][layer_i]
+        #                 lang_sim_matrix[i, j] = sim
+        #             else:
+        #                 lang_sim_matrix[i, j] = np.nan
 
-        # if layer_i < 15: continue
-        # Plot heatmap
-        plt.rcParams["font.family"] = "DejaVu Serif"
-        plt.figure(figsize=(8.5, 8))
-        ax = sns.heatmap(
-            lang_sim_matrix,
-            xticklabels=langs,
-            yticklabels=langs,
-            annot=True,
-            cmap="Blues",
-            fmt=".2f",
-            vmin=0,
-            vmax=1,
-            square=True,
-            annot_kws={"size": 20}
-        )
-        cbar = ax.collections[0].colorbar
-        cbar.ax.tick_params(labelsize=20)
-        title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B' if model_type == 'aya' else 'BLOOM-3B'
-        plt.title(f"{title} - Layer {layer_i}", fontsize=30)
-        plt.tick_params(labelsize=30)
-        if intervention_type == 'type-1':
-            for label in ax.get_xticklabels():
-                if label.get_text() == 'en':
-                    label.set_color('red')
-                    label.set_fontweight('bold')
-                    label.set_fontsize(40)
+        # # if layer_i < 15: continue
+        # # Plot heatmap
+        # plt.rcParams["font.family"] = "DejaVu Serif"
+        # plt.figure(figsize=(8.5, 8))
+        # ax = sns.heatmap(
+        #     lang_sim_matrix,
+        #     xticklabels=langs,
+        #     yticklabels=langs,
+        #     annot=True,
+        #     cmap="Blues",
+        #     fmt=".2f",
+        #     vmin=0,
+        #     vmax=1,
+        #     square=True,
+        #     annot_kws={"size": 20}
+        # )
+        # cbar = ax.collections[0].colorbar
+        # cbar.ax.tick_params(labelsize=20)
+        # title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B' if model_type == 'aya' else 'BLOOM-3B'
+        # plt.title(f"{title} - Layer {layer_i}", fontsize=30)
+        # plt.tick_params(labelsize=30)
+        # if intervention_type == 'type-1':
+        #     for label in ax.get_xticklabels():
+        #         if label.get_text() == 'en':
+        #             label.set_color('red')
+        #             label.set_fontweight('bold')
+        #             label.set_fontsize(40)
 
-            for label in ax.get_yticklabels():
-                if label.get_text() == 'en':
-                    label.set_color('red')
-                    label.set_fontweight('bold')
-                    label.set_fontsize(40)
+        #     for label in ax.get_yticklabels():
+        #         if label.get_text() == 'en':
+        #             label.set_color('red')
+        #             label.set_fontweight('bold')
+        #             label.set_fontsize(40)
 
-        if intervention_type == 'normal':
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/shuffle"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/all"
-        elif intervention_type == 'type-1':
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/shuffle/nl/nl_it"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/qa"
-        elif intervention_type == 'type-2':
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/shuffle/ja/ja_nl"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
-            # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all/n5000"
-        elif intervention_type == 'ft':
-            # save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids'
-            save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids/baseline'
-        os.makedirs(save_dir, exist_ok=True)
-        if layer_i == 0:
-            save_path = f'{save_dir}/emb_layer'
-        else:
-            save_path = f"{save_dir}/layer_{layer_i}"
+        # if intervention_type == 'normal':
+        #     save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/shuffle"
+        #     # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/centroids/all"
+        # elif intervention_type == 'type-1':
+        #     save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/shuffle/nl/nl_it"
+        #     # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
+        #     # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/qa"
+        # elif intervention_type == 'type-2':
+        #     save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/shuffle/ja/ja_nl"
+        #     # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
+        #     # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all/n5000"
+        # elif intervention_type == 'ft':
+        #     # save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids'
+        #     save_dir = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/ft/centroids/baseline'
+        # os.makedirs(save_dir, exist_ok=True)
+        # if layer_i == 0:
+        #     save_path = f'{save_dir}/emb_layer'
+        # else:
+        #     save_path = f"{save_dir}/layer_{layer_i}"
 
-        with PdfPages(save_path + '.pdf') as pdf:
-            pdf.savefig(bbox_inches='tight', pad_inches=0.01)
-            plt.close()
+        # with PdfPages(save_path + '.pdf') as pdf:
+        #     pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        #     plt.close()
