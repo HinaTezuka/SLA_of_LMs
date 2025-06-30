@@ -57,7 +57,7 @@ for model_name in model_names:
         # hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr_type1.pkl")
     elif intervention_type == 'type-2':
         hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ja.pkl")
-        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_nl_deact_it.pkl")
+        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/input_nl_deact_ja.pkl")
         hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/ko.pkl")
         hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/it.pkl")
         hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en.pkl")
@@ -179,7 +179,7 @@ for model_name in model_names:
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-1/centroids/qa"
         elif intervention_type == 'type-2':
-            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/shuffle/nl/nl_it"
+            save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/shuffle/nl/nl_ja"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all"
             # save_dir = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/subspace/{model_type}/distance/type-2/centroids/all/n5000"
         elif intervention_type == 'ft':
