@@ -19,3 +19,53 @@
 |   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value|   |Stderr|
 |------------|------:|--------------|------|-----------|---|----:|---|-----:|
 |mmlu_prox_ja|      0|custom-extract|      |exact_match|↑  |0.175|±  |0.0035|
+
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 2
+hf (pretrained=mistralai/Mistral-7B-v0.3), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko       |      0|custom-extract|      |exact_match|↑  |0.1593|±  |0.0033|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.1632|±  |0.0138|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2281|±  |0.0149|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.0989|±  |0.0089|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.2439|±  |0.0212|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.2121|±  |0.0141|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.1465|±  |0.0114|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.1587|±  |0.0139|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.1312|±  |0.0173|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.0980|±  |0.0096|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.1295|±  |0.0091|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.1688|±  |0.0123|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.1242|±  |0.0148|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.1309|±  |0.0094|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.2845|±  |0.0160|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|------------|------:|--------------|------|-----------|---|-----:|---|-----:|
+|mmlu_prox_ko|      0|custom-extract|      |exact_match|↑  |0.1593|±  |0.0033|
+
+Passed argument batch_size = auto. Detecting largest batch size
+Determined Largest batch size: 2
+hf (pretrained=mistralai/Mistral-7B-v0.3), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
+|       Tasks       |Version|    Filter    |n-shot|  Metric   |   |Value |   |Stderr|
+|-------------------|------:|--------------|-----:|-----------|---|-----:|---|-----:|
+|mmlu_prox_fr       |      0|custom-extract|      |exact_match|↑  |0.2460|±  |0.0039|
+| - biology         |      0|custom-extract|     5|exact_match|↑  |0.4045|±  |0.0183|
+| - business        |      0|custom-extract|     5|exact_match|↑  |0.2446|±  |0.0153|
+| - chemistry       |      0|custom-extract|     5|exact_match|↑  |0.1705|±  |0.0112|
+| - computer_science|      0|custom-extract|     5|exact_match|↑  |0.2537|±  |0.0215|
+| - economics       |      0|custom-extract|     5|exact_match|↑  |0.3389|±  |0.0163|
+| - engineering     |      0|custom-extract|     5|exact_match|↑  |0.1734|±  |0.0122|
+| - health          |      0|custom-extract|     5|exact_match|↑  |0.2780|±  |0.0171|
+| - history         |      0|custom-extract|     5|exact_match|↑  |0.2756|±  |0.0229|
+| - law             |      0|custom-extract|     5|exact_match|↑  |0.1335|±  |0.0110|
+| - math            |      0|custom-extract|     5|exact_match|↑  |0.1895|±  |0.0107|
+| - other           |      0|custom-extract|     5|exact_match|↑  |0.2955|±  |0.0150|
+| - philosophy      |      0|custom-extract|     5|exact_match|↑  |0.2545|±  |0.0195|
+| - physics         |      0|custom-extract|     5|exact_match|↑  |0.1971|±  |0.0110|
+| - psychology      |      0|custom-extract|     5|exact_match|↑  |0.4048|±  |0.0174|
+
+|   Groups   |Version|    Filter    |n-shot|  Metric   |   |Value|   |Stderr|
+|------------|------:|--------------|------|-----------|---|----:|---|-----:|
+|mmlu_prox_fr|      0|custom-extract|      |exact_match|↑  |0.246|±  |0.0039|

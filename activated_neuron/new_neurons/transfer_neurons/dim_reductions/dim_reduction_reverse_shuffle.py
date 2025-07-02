@@ -133,6 +133,7 @@ if __name__ == '__main__':
                 else: # type-1
                     save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
                     sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20)]]
                 sorted_neurons = sorted_neurons[:num_intervention]
 
             sentences = sentences_all_langs[L1]

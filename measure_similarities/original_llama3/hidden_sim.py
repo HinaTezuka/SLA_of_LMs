@@ -30,6 +30,11 @@ LlamaForCausalLM(
 import os
 import sys
 import pickle
+sys.path.append(f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons')
+
+from funcs import (
+    save_as_pickle
+)
 
 from collections import defaultdict
 
@@ -129,7 +134,7 @@ def unfreeze_pickle(file_path: str):
 if __name__ == "__main__":
     """ model configs """
     langs = ["ja", "nl", "ko", "it"]
-    langs = ['vi', 'ru', 'fr']
+    langs = ['nl', 'ru', 'fr']
     # original llama
     model_name = "meta-llama/Meta-Llama-3-8B"
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -173,6 +178,12 @@ if __name__ == "__main__":
         for layer_idx in range(32):
             final_results_same_semantics[layer_idx] = np.array(results_same_semantics[layer_idx]).mean()
             final_results_non_same_semantics[layer_idx] = np.array(results_non_same_semantics[layer_idx]).mean()
+        path_same = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/cos_sim/hs_sim/normal_same_semantics_{L2}.pkl'
+        save_as_pickle(path_same, final_results_same_semantics)
+        path_diff = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/cos_sim/hs_sim/normal_non_same_semantics_{L2}.pkl'
+        save_as_pickle(path_diff, final_results_non_same_semantics)
+        print('saved !')
+        sys.exit()
 
         torch.cuda.empty_cache()
 

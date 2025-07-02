@@ -63,9 +63,11 @@ if __name__ == "__main__":
     L1 = "en"
     """ model configs """
     model_names = ['meta-llama/Meta-Llama-3-8B', 'CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
+    model_names = ['meta-llama/Meta-Llama-3-8B']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     """ parameters """
     langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
+    langs = ['nl']
     n_list = [100, 1000, 3000, 5000]
     n_list = [1000]
     score_types = ["cos_sim", "L2_dis"]
@@ -99,9 +101,10 @@ if __name__ == "__main__":
             
             for score_type in score_types:
                 save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+                # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/en_only_mono_train_{L2}.pkl"
                 # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
                 sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-                sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(0, 20)]]
+                sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20)]]
                 # sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
                 
                 for n in n_list:
@@ -111,6 +114,8 @@ if __name__ == "__main__":
                     random.seed(42)
                     sorted_neurons_AP_baseline = random.sample(sorted_neurons[intervention_num:], intervention_num)
                     """ deactivate shared_neurons(same semantics expert neurons) """
+                    # similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
+                    # similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_main, random_data)
                     similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_main, tatoeba_data)
                     similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_main, random_data)
                     final_results_same_semantics = defaultdict(float)
@@ -118,19 +123,25 @@ if __name__ == "__main__":
                     for layer_idx in range(model.config.num_hidden_layers): # ３２ layers
                         final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                         final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                    plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
+                    path_same = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/cos_sim/hs_sim/en_{L2}_type1_same_semantics.pkl'
+                    save_as_pickle(path_same, final_results_same_semantics)
+                    path_diff = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/cos_sim/hs_sim/en_{L2}_type1_non_same_semantics.pkl'
+                    save_as_pickle(path_diff, final_results_non_same_semantics)
+                    print('saved !')
+                    sys.exit()
+                    # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
 
-                    """ baseline """
-                    similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
-                    similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, random_data)
-                    final_results_same_semantics = defaultdict(float)
-                    final_results_non_same_semantics = defaultdict(float)
-                    for layer_idx in range(model.config.num_hidden_layers):
-                        final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
-                        final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                    plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
+                    # """ baseline """
+                    # similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)
+                    # similarities_non_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, random_data)
+                    # final_results_same_semantics = defaultdict(float)
+                    # final_results_non_same_semantics = defaultdict(float)
+                    # for layer_idx in range(model.config.num_hidden_layers):
+                    #     final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
+                    #     final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
+                    # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en, True)
 
-                    print(f"{L2}, intervention_num: {n} <- completed.")
+                    # print(f"{L2}, intervention_num: {n} <- completed.")
     
         del model
         torch.cuda.empty_cache()
