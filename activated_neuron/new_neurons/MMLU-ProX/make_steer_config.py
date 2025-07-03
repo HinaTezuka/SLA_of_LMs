@@ -84,9 +84,17 @@ if __name__ == "__main__":
     for model_type in model_types:
         neuron_num = 14336 if model_type in ['llama3', 'mistral', 'aya'] else 10240 # 10240: BLOOM
         for L2 in langs:
-            # get type-1 neurons.
-            type1_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-            type1_neurons = unfreeze_pickle(type1_path)
+            # # get type-1 neurons.
+            # type1_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+            # type1_neurons = unfreeze_pickle(type1_path)
+
+            # # type-1 neurons.
+            # type1_neurons_main = type1_neurons[:intervention_num]
+
+            # get type-2 neurons.
+            type1_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+            type1_neurons = unfreeze_pickle(type1_path) # type-2
+            type1_neurons = [neuron for neuron in type1_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
 
             # type-1 neurons.
             type1_neurons_main = type1_neurons[:intervention_num]
@@ -96,15 +104,20 @@ if __name__ == "__main__":
             type1_neurons_baseline = random.sample(type1_neurons[intervention_num:], intervention_num)
 
             config = make_steer_config(
-                # type1_neurons_main, # type-1
+                # type1_neurons_main, # type-1/2
                 type1_neurons_baseline, # baseline
                 hidden_size=neuron_num,
                 action=action_type,
                 clamp_value=0.0
             )
 
+            # type-1
             # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}.pt'
-            output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}_baseline.pt'
+            # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}_baseline.pt'
+            #
+            # type-2
+            # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}_type2.pt'
+            output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/{model_type}/{score_type}/{L2}_type2_baseline.pt'
             # output_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/test.pt'
             torch.save(config, output_path)
             print(f'Saved steer_config to: {output_path}')

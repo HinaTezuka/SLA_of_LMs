@@ -10,7 +10,7 @@ scripts
 
 # lm-evaluation-harness
 lm-evaluation-harness
-activated_neuron/new_neurons/MMLU-ProX/steer_configs
+# activated_neuron/new_neurons/MMLU-ProX/steer_configs
 activated_neuron/new_neurons/MMLU-ProX/raw_jsons
 
 # MMLU-ProX results:

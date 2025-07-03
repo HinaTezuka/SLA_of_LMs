@@ -1233,3 +1233,136 @@ def mkqa_for_steer_output_lang_patching_with_elem_wise_product_tran_mean(
     lang_ratios['total_num'] = total_num # save total_reriable_num.    
     
     return lang_count / total_num, dict(lang_ratios)
+
+
+
+""" Reviewer 3 """
+def mkqa_for_steer_output_lang_act_values_R3(model, tokenizer, device, qa, lang_deact: str, lang_act: str, qa_num: int, neurons_zero=None, neurons_up=None):
+    c = 0 # question counter.
+    f1_scores = []
+    ans_patterns = {
+    'ja': '答え: ',
+    'nl': 'Antwoord: ',
+    'ko': '답변: ',
+    'it': 'Risposta: ',
+    }
+    for i in range(len(qa['queries'])):
+        if c == qa_num: break
+        q = qa['queries'][i][lang_deact] # question
+        a = qa['answers'][i][lang_deact][0]['text'] # answer
+        q_tran = qa['queries'][i][lang_act]
+        a_tran = qa['answers'][i][lang_act][0]['text']
+        if q == '' or q == None or  a == '' or a == None or q_tran == '' or q_tran == '' or q_tran == None or a_tran == None:
+            continue
+
+        # make prompt.
+        prompt_lang_deact = f'{q}? {ans_patterns[lang_deact]}'
+        prompt_lang_act = f'{q_tran}? {ans_patterns[lang_act]}'
+        # prompt = f'Wat is de hoofdstad van Japan? Antwoord: '
+        # prompt = f'Wat is de hoofdstad van China? Antwoord: '
+        # prompt = f'Wat is de hoofdstad van Korea? Antwoord: '
+        # prompt_lang_deact = 'Wat is de hoofdstad van Italië? Risposta: '
+        # prompt = 'Wat eet een Nederlander graag? Antwoord: '
+        # prompt_lang_deact = 'Welke taal spreekt men in België? Antwoord: '
+        # prompt_lang_deact = "Wat zijn enkele populaire toeristische attracties in New York City? Antwoord: "
+        # prompt_lang_act = 'イタリアの首都はどこですか 答え: '
+        # prompt_lang_act = 'ベルギーでは何の言語が話されていますか? 答え: '
+        # prompt = 'こんにちは、今日は'
+        # prompt = 'Qual è la capitale del Giappone? Risposta: '
+        # prompt_tran
+
+        # run inference.
+        torch.cuda.manual_seed_all(42)
+        # lang_deact.
+        inputs_lang_deact = tokenizer(prompt_lang_deact, return_tensors='pt').to(device)
+        last_token_idx = inputs_lang_deact['input_ids'].shape[1] - 1
+        # lang_act.
+        inputs_lang_act = tokenizer(prompt_lang_act, return_tensors='pt').to(device)
+
+        # run inference with steering activations.
+        trace_layers_zero = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_zero]))
+        trace_layers_up = list(set([f'model.layers.{layer}.mlp.act_fn' for _, layer, _ in neurons_up]))
+        trace_layers = list(set(trace_layers_zero+trace_layers_up))
+
+        # get act_values for lang_act.
+        trace_layers_lang_act = [f'model.layers.{layer}.mlp.act_fn' for layer in range(32)]
+        act_values = get_all_outputs_llama3_mistral(model, inputs_lang_act, device)
+
+        with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_revised_act_value(output, layer, neurons_zero+neurons_up, device, act_values, last_token_idx)) as tr:
+            with torch.no_grad():
+                output = model.generate(**inputs_lang_deact, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+
+        pre = tokenizer.decode(output[0], skip_special_tokens=True) # model's prediction
+        if lang_deact == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if lang_deact == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if lang_deact == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if lang_deact == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        c += 1
+        print(f'question: {prompt_lang_deact}')
+        print(f'model ans: {pre}')
+        print(f'gorund truth: {a}')
+        # sys.exit()
+    
+    return np.mean(np.array(f1_scores))
+
+
+def mkqa_all_with_edit_activation_R3(model, model_type, tokenizer, device, qa, L2, layer_neuron_list):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list])) if model_type in ['llama3', 'mistral', 'aya'] else list(set([f'transformer.h.{layer}.mlp.gelu_impl' for layer, _ in layer_neuron_list]))
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+        return mkqa_all(model, tokenizer, device, qa, L2)
+
+def mkqa_all(model, tokenizer, device, qa, L2: str):
+    # c = 0 # question counter.
+    f1_scores = []
+    for i in range(len(qa['queries'])):
+        # if c == qa_num: break
+        q = qa['queries'][i][L2] # question
+        if qa['answers'][i][L2][0]['aliases'] == []:
+            a = [qa['answers'][i][L2][0]['text']] # answer as list.
+        else:
+            a = qa['answers'][i][L2][0]['aliases'] # answer as aliases: see: https://github.com/apple/ml-mkqa/tree/main?tab=readme-ov-file
+
+        def contains_none_or_empty(lst: list) -> bool:
+            return any(x is None or x == '' for x in lst)
+
+        if q == '' or q == None or contains_none_or_empty(a):
+            continue
+
+        # make prompt.
+        if L2 == 'ja': prompt = f'{q}? 答え: '
+        elif L2 == 'nl': prompt = f'{q}? Antwoord: '
+        elif L2 == 'ko': prompt = f'{q}? 답변: '
+        elif L2 == 'it': prompt = f'{q}? Risposta: '
+        elif L2 == 'en': prompt = f'{q}? Answer: '
+        elif L2 == 'vi': prompt = f'{q}? Trả lời: '
+        elif L2 == 'ru': prompt = f'{q}? Ответ: '
+        elif L2 == 'fr': prompt = f'{q}? Réponse: '
+
+        # run inference.
+        torch.cuda.manual_seed_all(42) # set seed.
+        inputs = tokenizer(prompt, return_tensors='pt').to(device)
+        with torch.no_grad():
+            output = model.generate(**inputs, max_new_tokens=5, pad_token_id=tokenizer.eos_token_id)
+        pre = tokenizer.decode(output[0], skip_special_tokens=True)
+        # 
+        if L2 == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if L2 == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if L2 == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if L2 == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        if L2 == 'en': pre = pre.split('Answer: ')[-1].strip()
+        if L2 == 'vi': pre = pre.split('Trả lời: ')[-1].strip()
+        if L2 == 'ru': pre = pre.split('Ответ: ')[-1].strip()
+        if L2 == 'fr': pre = pre.split('Réponse: ')[-1].strip()
+        
+        if len(a) == 1:
+            f1 = calculate_f1(a[0], pre, L2)
+        else:
+            f1_l = []
+            for ans in a:
+                f1_l.append(calculate_f1(ans, pre, L2))
+            f1 = max(f1_l)
+
+        f1_scores.append((i, f1)) # i: question_idx
+    
+    return f1_scores
