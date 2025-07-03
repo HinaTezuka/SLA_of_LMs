@@ -1342,7 +1342,7 @@ def mkqa_all_R3(model, tokenizer, device, qa, input_lang):
         torch.cuda.manual_seed_all(42) # set seed.
         inputs = tokenizer(prompt, return_tensors='pt').to(device)
         with torch.no_grad():
-            output = model.generate(**inputs, max_new_tokens=10, pad_token_id=tokenizer.eos_token_id)
+            output = model.generate(**inputs, pad_token_id=tokenizer.eos_token_id)
         pre = tokenizer.decode(output[0], skip_special_tokens=True)
         # 
         if input_lang == 'ja': pre = pre.split("答え: ")[-1].strip()

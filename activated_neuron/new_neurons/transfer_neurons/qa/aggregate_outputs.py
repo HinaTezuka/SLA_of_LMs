@@ -70,12 +70,12 @@ for model_name in model_names:
         intervened_neurons_main = sorted_neurons[:intervention_num]
         results = mkqa_all_with_edit_activation_R3(model, model_type, tokenizer, device, qa, input_lang, intervened_neurons_main) # outputs.
         
-        # type-1
-        path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/qa/output_samples/{model_type}/input_{input_lang}_deact_type1_{L2}.pkl'
-        # type-2
-        # path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/qa/output_samples/{model_type}/input_{input_lang}_deact_type2_{L2}.pkl'
-        save_as_pickle(path_intervention, results)
-        print(f'saved: intervention: {model_type}, {input_lang}, {L2}')
+        # # type-1
+        # path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/qa/output_samples/{model_type}/input_{input_lang}_deact_type1_{L2}.pkl'
+        # # type-2
+        # # path_intervention = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/qa/output_samples/{model_type}/input_{input_lang}_deact_type2_{L2}.pkl'
+        # save_as_pickle(path_intervention, results)
+        # print(f'saved: intervention: {model_type}, {input_lang}, {L2}')
 
         # # intervention baseline.
         # random.seed(42)
