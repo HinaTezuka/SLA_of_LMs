@@ -14,10 +14,11 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from funcs import unfreeze_pickle
 
 # load models.
-# model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
+model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+# model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it']
+langs = ['ja']
 
 score_type = 'cos_sim'
 intervention_num = 1000

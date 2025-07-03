@@ -5,11 +5,13 @@ import string
 import sys
 import collections
 import pickle
+import math
 from collections import Counter, defaultdict
 from functools import partial
 
 import cld3
 import torch
+import torch.nn.functional as F
 import numpy as np
 from datasets import load_dataset
 from evaluate import load
@@ -1315,7 +1317,7 @@ def mkqa_all_with_edit_activation_R3(model, model_type, tokenizer, device, qa, i
 def mkqa_all_R3(model, tokenizer, device, qa, input_lang):
     outputs = []
     for i in range(len(qa['queries'])):
-        if len(outputs) == 100: break
+        if len(outputs) == 20: break
         q = qa['queries'][i][input_lang] # question
         if qa['answers'][i][input_lang][0]['aliases'] == []:
             a = [qa['answers'][i][input_lang][0]['text']] # answer as list.
@@ -1356,6 +1358,83 @@ def mkqa_all_R3(model, tokenizer, device, qa, input_lang):
         
         outputs.append(pre)    
         print(pre)
-        
     
     return outputs
+
+def mkqa_entropy_with_deactivation(model, model_type, tokenizer, device, qa, input_lang, layer_neuron_list, metric):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+
+        return mkqa_entropy(model, tokenizer, device, qa, input_lang, metric)
+
+def mkqa_entropy(model, tokenizer, device, qa, input_lang, metric='perplexity'):
+    score_list = []
+    for i in range(len(qa['queries'])):
+        if len(score_list) == 20: break
+        q = qa['queries'][i][input_lang] # question
+        if qa['answers'][i][input_lang][0]['aliases'] == []:
+            a = [qa['answers'][i][input_lang][0]['text']] # answer as list.
+        else:
+            a = qa['answers'][i][input_lang][0]['aliases'] # answer as aliases: see: https://github.com/apple/ml-mkqa/tree/main?tab=readme-ov-file
+
+        def contains_none_or_empty(lst: list) -> bool:
+            return any(x is None or x == '' for x in lst)
+
+        if q == '' or q == None or contains_none_or_empty(a):
+            continue
+
+        # make prompt.
+        if input_lang == 'ja': prompt = f'{q}? 答え: '
+        elif input_lang == 'nl': prompt = f'{q}? Antwoord: '
+        elif input_lang == 'ko': prompt = f'{q}? 답변: '
+        elif input_lang == 'it': prompt = f'{q}? Risposta: '
+        elif input_lang == 'en': prompt = f'{q}? Answer: '
+        elif input_lang == 'vi': prompt = f'{q}? Trả lời: '
+        elif input_lang == 'ru': prompt = f'{q}? Ответ: '
+        elif input_lang == 'fr': prompt = f'{q}? Réponse: '
+
+        # run inference.
+        torch.cuda.manual_seed_all(42)
+        inputs = tokenizer(prompt, return_tensors='pt').to(device)
+        with torch.no_grad():
+            output = model.generate(
+                **inputs, 
+                pad_token_id=tokenizer.eos_token_id,
+                output_scores=True,
+                return_dict_in_generate=True,
+                )
+        # pre = tokenizer.decode(output[0], skip_special_tokens=True)
+        all_tokens = output.sequences[0]
+        generated_tokens = all_tokens[inputs['input_ids'].shape[1]:]
+        scores = output.scores # logit for generated token.
+
+        # calc metric
+        score = sentence_perplexity(generated_tokens, scores) if metric == 'perplexity' else sentence_average_entropy(generated_tokens, scores)
+        score_list.append(score)
+    
+    return score_list
+
+def sentence_average_entropy(generated_tokens, scores): # 各トークンの平均エントロピー.
+    total_entropy = 0.0
+    for i, score in enumerate(scores):
+        probs = F.softmax(score, dim=-1)
+        log_probs = F.log_softmax(score, dim=-1)
+        token_id = generated_tokens[i].item()
+        token_entropy = -log_probs[0, token_id].item()  # -log P(token_i)
+        total_entropy += token_entropy
+
+    avg_entropy = total_entropy / len(generated_tokens)
+    return avg_entropy
+
+def sentence_perplexity(generated_tokens, scores):
+    total_entropy = 0.0
+    for i, score in enumerate(scores):
+        probs = F.softmax(score, dim=-1)
+        log_probs = F.log_softmax(score, dim=-1)
+        token_id = generated_tokens[i].item()
+        token_entropy = -log_probs[0, token_id].item()  # -log P(token_i)
+        total_entropy += token_entropy
+
+    avg_entropy = total_entropy / len(generated_tokens)
+    perplexity = math.exp(avg_entropy)
+    return perplexity
