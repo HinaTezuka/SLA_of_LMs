@@ -65,9 +65,11 @@ def correlationRatio(categories, values):
     return interclass_variation / total_variation
 
 langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'it', 'fr']
-model_types = ['llama3', 'mistral', 'aya', 'bloom']
-model_types = ['bloom']
-score_types = ['cos_sim', 'L2_dis']
+langs = ['fr']
+model_types = ['llama3', 'mistral', 'aya']
+# model_types = ['bloom']
+# score_types = ['cos_sim', 'L2_dis']
+score_types = ['cos_sim']
 
 l1 = [ 1 for _ in range(1000)]
 l2 = [ 0 for _ in range(1000)]
@@ -82,6 +84,7 @@ labels_dict = {
     'ru': l2 + l2 + l2 + l2 + l2 + l2 + l1 + l2,
     'fr': l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1,
 }
+# label_fr = l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1
 
 for score_type in score_types:
     for model_type in model_types:
