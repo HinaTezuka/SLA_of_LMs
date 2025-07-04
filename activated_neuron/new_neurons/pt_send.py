@@ -15,10 +15,14 @@ from funcs import unfreeze_pickle
 
 # load models.
 model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-# model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
+model_names = ['meta-llama/Meta-Llama-3-8B', 'CohereForAI/aya-expanse-8b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 langs = ['ja', 'nl', 'ko', 'it']
-langs = ['ja']
+langs = ['ja', 'nl', 'ko']
+
+# p = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/llama3/final_scores/cos_sim/ja_mono_train.pkl"
+# print(unfreeze_pickle(p))
+# sys.exit()
 
 score_type = 'cos_sim'
 intervention_num = 1000
@@ -41,8 +45,9 @@ for model_name in model_names:
                 # type-2
                 intervened_neurons_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
             intervened_neurons = unfreeze_pickle(intervened_neurons_path)
-            sorted_neurons = [neuron for neuron in intervened_neurons if neuron[0] in [ _ for _ in range(20)]] if neuron_type == 'type-1' else [neuron for neuron in intervened_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+            sorted_neurons = [neuron for neuron in intervened_neurons if neuron[0] in [ _ for _ in range(20)]] if neuron_type == 'type_1' else [neuron for neuron in intervened_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
             sorted_neurons = sorted_neurons[:1000]
+
 
             # ===== npz として保存 =====
             # 形式: sorted_neurons = [(layer_idx, neuron_idx), ...]（固定長2要素タプル）

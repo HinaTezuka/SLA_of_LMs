@@ -1361,16 +1361,28 @@ def mkqa_all_R3(model, tokenizer, device, qa, input_lang):
     
     return outputs
 
-def mkqa_entropy_with_deactivation(model, model_type, tokenizer, device, qa, input_lang, layer_neuron_list, metric):
+def mkqa_entropy_with_deactivation(model, model_type, tokenizer, device, qa, input_lang, layer_neuron_list, metric, q_num):
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
-    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:
+    def edit_activation_entropy(output, layer, layer_idx_and_neuron_idx):
+        """
+        edit activation value of neurons(indexed layer_idx and neuron_idx)
+        output: activation values
+        layer: sth like 'model.layers.{layer_idx}.mlp.act_fn'
+        layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
+        """
+        for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+            if str(layer_idx) in layer and output.shape[1] != 1:
+                output[:, -1, neuron_idx] *= 0
 
-        return mkqa_entropy(model, tokenizer, device, qa, input_lang, metric)
+        return output
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_entropy(output, layer, layer_neuron_list)) as tr:
 
-def mkqa_entropy(model, tokenizer, device, qa, input_lang, metric='perplexity'):
+        return mkqa_entropy(model, tokenizer, device, qa, input_lang, metric, q_num)
+
+def mkqa_entropy(model, tokenizer, device, qa, input_lang, metric, q_num):
     score_list = []
     for i in range(len(qa['queries'])):
-        if len(score_list) == 20: break
+        if len(score_list) == q_num: break
         q = qa['queries'][i][input_lang] # question
         if qa['answers'][i][input_lang][0]['aliases'] == []:
             a = [qa['answers'][i][input_lang][0]['text']] # answer as list.
@@ -1408,8 +1420,20 @@ def mkqa_entropy(model, tokenizer, device, qa, input_lang, metric='perplexity'):
         generated_tokens = all_tokens[inputs['input_ids'].shape[1]:]
         scores = output.scores # logit for generated token.
 
+        pre = tokenizer.decode(output.sequences[0], skip_special_tokens=True)
+        # 
+        if input_lang == 'ja': pre = pre.split("答え: ")[-1].strip()
+        if input_lang == 'nl': pre = pre.split('Antwoord: ')[-1].strip()
+        if input_lang == 'ko': pre = pre.split('답변: ')[-1].strip()
+        if input_lang == 'it': pre = pre.split('Risposta: ')[-1].strip()
+        if input_lang == 'en': pre = pre.split('Answer: ')[-1].strip()
+        if input_lang == 'vi': pre = pre.split('Trả lời: ')[-1].strip()
+        if input_lang == 'ru': pre = pre.split('Ответ: ')[-1].strip()
+        if input_lang == 'fr': pre = pre.split('Réponse: ')[-1].strip()
+        print(pre)
+
         # calc metric
-        score = sentence_perplexity(generated_tokens, scores) if metric == 'perplexity' else sentence_average_entropy(generated_tokens, scores)
+        score = sentence_perplexity(generated_tokens, scores) if metric == 'perplexity' else sentence_distribution_entropy(generated_tokens, scores)
         score_list.append(score)
     
     return score_list
@@ -1422,6 +1446,17 @@ def sentence_average_entropy(generated_tokens, scores): # 各トークンの平�
         token_id = generated_tokens[i].item()
         token_entropy = -log_probs[0, token_id].item()  # -log P(token_i)
         total_entropy += token_entropy
+
+    avg_entropy = total_entropy / len(generated_tokens)
+    return avg_entropy
+
+def sentence_distribution_entropy(generated_tokens, scores):
+    total_entropy = 0.0
+    for i, score in enumerate(scores):
+        probs = F.softmax(score, dim=-1)
+        log_probs = F.log_softmax(score, dim=-1)
+        entropy = -torch.sum(probs * log_probs).item()  # 全トークンにまたがるエントロピー
+        total_entropy += entropy
 
     avg_entropy = total_entropy / len(generated_tokens)
     return avg_entropy
