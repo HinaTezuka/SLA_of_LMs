@@ -14,7 +14,6 @@ lm-evaluation-harness
 activated_neuron/new_neurons/MMLU-ProX/raw_jsons
 
 activated_neuron/new_neurons/transfer_neurons/qa/output_samples
-activated_neuron/new_neurons/transfer_neurons/qa/output_samples/llama3
 
 # MMLU-ProX results:
 activated_neuron/new_neurons/MMLU-ProX/meta-llama/Meta-Llama-3-8B_ja_to_check_log.jsonl
