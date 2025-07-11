@@ -141,77 +141,77 @@ for model_type in model_types:
                 proportion_significant = significant_count / top_n
                 results[key] = [proportion_significant]
 
-# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all.pkl' # welch t test.
-# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova.pkl' # anova.
-save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_corr_ratio_{"01" if eta_threshold == 0.1 else "025"}_top{top_n}.pkl' # anova, corr_th of 0.1 and 0.25.
-# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney.pkl' # mann-whitney u test.
+# # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all.pkl' # welch t test.
+# # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova.pkl' # anova.
+# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_corr_ratio_{"01" if eta_threshold == 0.1 else "025"}_top{top_n}.pkl' # anova, corr_th of 0.1 and 0.25.
+# # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney.pkl' # mann-whitney u test.
 
-# lang family.
-# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_lang_family.pkl' # welch t test.
-# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_lang_family.pkl' # anova.
-# save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney_lang_family.pkl'
-save_as_pickle(save_path, results)
+# # lang family.
+# # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_lang_family.pkl' # welch t test.
+# # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_anova_lang_family.pkl' # anova.
+# # save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/corr_ratio/h_test/all_man_whitney_lang_family.pkl'
+# save_as_pickle(save_path, results)
 
-results = unfreeze_pickle(save_path)
+# results = unfreeze_pickle(save_path)
 
 
-plt.rcParams["font.family"] = "DejaVu Serif"
+# plt.rcParams["font.family"] = "DejaVu Serif"
 
-fig, ax = plt.subplots(figsize=(14, 9))
-fig.patch.set_facecolor('#f7f7f7')
+# fig, ax = plt.subplots(figsize=(14, 9))
+# fig.patch.set_facecolor('#f7f7f7')
 
-bar_width = 0.12
-x = np.arange(len(langs))
+# bar_width = 0.12
+# x = np.arange(len(langs))
 
-model_types = ['llama3', 'mistral', 'aya']
-is_reverses = [False, True]
+# model_types = ['llama3', 'mistral', 'aya']
+# is_reverses = [False, True]
 
-n_groups = len(model_types) * len(is_reverses)
-offsets = np.linspace(-bar_width * n_groups / 2, bar_width * n_groups / 2, n_groups)
+# n_groups = len(model_types) * len(is_reverses)
+# offsets = np.linspace(-bar_width * n_groups / 2, bar_width * n_groups / 2, n_groups)
 
-colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+# colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
 
-idx = 0
-for model_type in model_types:
-    model_title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B'
+# idx = 0
+# for model_type in model_types:
+#     model_title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B'
 
-    for is_reverse in is_reverses:
-        key_prefix = f"{model_type}_{'type-2' if is_reverse else 'type-1'}"
-        y = [results[f"{key_prefix}_{L2}"][0] for L2 in langs]
-        label_name = f"{model_title} {'Type2' if is_reverse else 'Type1'}"
+#     for is_reverse in is_reverses:
+#         key_prefix = f"{model_type}_{'type-2' if is_reverse else 'type-1'}"
+#         y = [results[f"{key_prefix}_{L2}"][0] for L2 in langs]
+#         label_name = f"{model_title} {'Type2' if is_reverse else 'Type1'}"
 
-        ax.bar(
-            x + offsets[idx], y, width=bar_width, label=label_name,
-            color=colors[idx % len(colors)],
-            alpha=0.85,
-            edgecolor='black',
-            linewidth=0.7,
-            capstyle='round'
-        )
-        idx += 1
+#         ax.bar(
+#             x + offsets[idx], y, width=bar_width, label=label_name,
+#             color=colors[idx % len(colors)],
+#             alpha=0.85,
+#             edgecolor='black',
+#             linewidth=0.7,
+#             capstyle='round'
+#         )
+#         idx += 1
 
-ax.set_xticks(x)
-ax.set_xticklabels(langs, fontsize=35)
-ax.tick_params(axis='y', labelsize=25)
-ax.set_ylabel('Proportion of Significant Neurons', fontsize=25)
-ax.set_ylim(0, 1)
-ax.set_title(f'Proportion of Significant Neurons, η² >= {eta_threshold}, top-{top_n}', fontsize=35)
-ax.grid(axis='y', linestyle='--', alpha=0.5)
+# ax.set_xticks(x)
+# ax.set_xticklabels(langs, fontsize=35)
+# ax.tick_params(axis='y', labelsize=25)
+# ax.set_ylabel('Proportion of Significant Neurons', fontsize=25)
+# ax.set_ylim(0, 1)
+# ax.set_title(f'Proportion of Significant Neurons, η² >= {eta_threshold}, top-{top_n}', fontsize=35)
+# ax.grid(axis='y', linestyle='--', alpha=0.5)
 
-legend = ax.legend(frameon=True, shadow=True, fontsize=30)
-legend.get_frame().set_edgecolor('gray')
-legend.get_frame().set_linewidth(1)
+# legend = ax.legend(frameon=True, shadow=True, fontsize=30)
+# legend.get_frame().set_edgecolor('gray')
+# legend.get_frame().set_linewidth(1)
 
-for spine in ax.spines.values():
-    spine.set_linewidth(0.8)
-    spine.set_color('gray')
+# for spine in ax.spines.values():
+#     spine.set_linewidth(0.8)
+#     spine.set_color('gray')
 
-# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models'
-path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_{"01" if eta_threshold == 0.1 else "025"}_top{top_n}'
-# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_mann_whitney'
-# lang family
-# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_lang_family'
-# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_lang_family'
-# path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_ang_family_mann_whitney'
-with PdfPages(path + '.pdf') as pdf:
-    pdf.savefig(fig, bbox_inches='tight', pad_inches=0.01)
+# # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models'
+# path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_{"01" if eta_threshold == 0.1 else "025"}_top{top_n}'
+# # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_mann_whitney'
+# # lang family
+# # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_lang_family'
+# # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_anova_lang_family'
+# # path = '/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/corr_ratio/h_test/all_models_ang_family_mann_whitney'
+# with PdfPages(path + '.pdf') as pdf:
+#     pdf.savefig(fig, bbox_inches='tight', pad_inches=0.01)
