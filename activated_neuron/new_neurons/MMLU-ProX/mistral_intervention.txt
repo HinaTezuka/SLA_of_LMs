@@ -1,5 +1,7 @@
 =============================================
 Japanese: 
+
+Type-1:
 Passed argument batch_size = auto. Detecting largest batch size
 Determined Largest batch size: 2
 steered (pretrained=mistralai/Mistral-7B-v0.3,steer_path=/home/s2410121/proj_LA/activated_neuron/new_neurons/MMLU-ProX/steer_configs/mistral/cos_sim/ja.pt,device=cuda), gen_kwargs: (None), limit: None, num_fewshot: None, batch_size: auto
