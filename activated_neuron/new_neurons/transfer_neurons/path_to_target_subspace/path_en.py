@@ -46,7 +46,7 @@ for model_type in ['llama3', 'mistral', 'aya']:
         results[model_type].append(sim_score.item())
     
     # visualize with lineplot
-    x_vals = range(1, middle_layer)
+    x_vals = range(2, middle_layer+1)
     ax.plot(x_vals, results[model_type], '-p', linewidth=2, markersize=8, label=model_name_MAP[model_type])
 ax.set_title('Similarity of en-Centroids Trajectory', fontsize=35)
 xticks = [1] + list(range(5, middle_layer + 1, 5))
