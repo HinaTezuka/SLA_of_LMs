@@ -15,9 +15,6 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from generation_funcs import (
     polywrite_with_edit_activation,
-)
-
-from funcs import (
     unfreeze_pickle,
 )
 
@@ -36,7 +33,7 @@ langs_for_polywrite = {
     'it': 'ita_Latn',
     'nl': 'nld_Latn',
 }
-deactivation_nums = [5000, 10000, 15000, 20000, 25000, 30000]
+deactivation_nums = [1000, 10000, 15000, 20000, 25000, 30000]
 score_type = 'cos_sim'
 is_baselines = [False, True]
 

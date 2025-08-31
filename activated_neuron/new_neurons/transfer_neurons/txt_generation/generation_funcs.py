@@ -174,3 +174,37 @@ def sentence_perplexity(generated_tokens, scores):
     avg_entropy = total_entropy / len(generated_tokens)
     perplexity = math.exp(avg_entropy)
     return perplexity
+
+def save_as_pickle(file_path: str, target_dict) -> None:
+    """
+    Save a dictionary as a pickle file with improved safety.
+    """
+    # Create directory if it does not exist
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    temp_path = file_path + ".tmp"  # Temporary file for safe writing
+
+    try:
+        # Write to a temporary file
+        with open(temp_path, "wb") as f:
+            pickle.dump(target_dict, f)
+        # Replace the original file with the temporary file
+        os.replace(temp_path, file_path)
+        print("pkl_file successfully saved.")
+    except Exception as e:
+        # Clean up temporary file if an error occurs
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        raise e  # Re-raise the exception for further handling
+
+def unfreeze_pickle(file_path: str):
+    """
+    Load a pickle file as a dictionary with error handling.
+    """
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Pickle file not found: {file_path}")
+
+    try:
+        with open(file_path, "rb") as f:
+            return pickle.load(f)
+    except (pickle.UnpicklingError, EOFError) as e:
+        raise ValueError(f"Error unpickling file {file_path}: {e}")
