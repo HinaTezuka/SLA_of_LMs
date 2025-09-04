@@ -20,13 +20,13 @@ from funcs import (
 
 L1 = "en" # fix L1 to English.
 """ model configs """
-model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
-model_names = ['bigscience/bloom-3b']
+model_names = ['CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3']
+# model_names = ['bigscience/bloom-3b']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_list = [100, 1000, 3000, 5000] # patterns of intervention_num
-score_types = ['cos_sim', 'L2_dis']
-langs = ['ja', 'nl', 'ko', 'it', 'fr', 'ru', 'vi']
-is_reverses = [False, True]
+score_types = ['cos_sim']
+langs = ['ja', 'nl', 'ko', 'it']
+is_reverses = [False]
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
@@ -97,12 +97,12 @@ for model_name in model_names:
                     # plot activation patterns.
                     activation_patterns_lineplot(act_patterns_parallel, act_patterns_random, L2, intervention_num, model_type, score_type, "yes", is_reverse)
 
-                    """ deactivate baseline neurons. """
-                    # get activation list
-                    act_patterns_parallel = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data, model_type)
-                    act_patterns_random = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data, model_type)
-                    # plot activation patterns.
-                    activation_patterns_lineplot(act_patterns_parallel, act_patterns_random, L2, intervention_num, model_type, score_type, "baseline", is_reverse)
+                    # """ deactivate baseline neurons. """
+                    # # get activation list
+                    # act_patterns_parallel = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data, model_type)
+                    # act_patterns_random = get_act_patterns_with_edit_activation(model, tokenizer, device, sorted_neurons_AP_baseline, random_data, model_type)
+                    # # plot activation patterns.
+                    # activation_patterns_lineplot(act_patterns_parallel, act_patterns_random, L2, intervention_num, model_type, score_type, "baseline", is_reverse)
     
     # clean cache.
     del model

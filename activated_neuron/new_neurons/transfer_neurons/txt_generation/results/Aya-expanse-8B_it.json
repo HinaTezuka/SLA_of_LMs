@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "it",
+        "output": "1. **Reazioni Umane:**\n       - **Confusione e Panico:** All'"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "it",
+        "output": "\n        **Nome:**  <NAME>\n        **Età:** 42 anni\n        **Pass"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "it",
+        "output": "\n        Il vecchio albero di quercia si ergeva solitario nel cuore della foresta, le sue rad"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "it",
+        "output": "\n        **Nome:**  Elara Lunaris\n        **Età:** 27 anni\n        **"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "it",
+        "output": "\nOggetto: Seguimento colloquio di lavoro - [Il tuo nome]\n\nGent"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di incontro per discutere l'avanzamento del progetto\n\n"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di feedback sul report recente\n\nGentile [Nome Supervisore"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "it",
+        "output": "\nOggetto: Scuse per il ritardo nella consegna del progetto\n\nGentile ["
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "it",
+        "output": "\nOggetto: Problema con la consegna - Richiesta di rimborso o sostituzione"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta informazioni su [Nome del prodotto]\n\nGentile [Nome"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di rettifica addebito errato\n\nGentile reparto"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "it",
+        "output": "\nOggetto: Ringraziamenti e Offerta Speciale Esclusiva\n\nGentile ["
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "it",
+        "output": "\n        Oggetto: Segnalazione di un'esperienza insoddisfacente con il servizio client"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di reso/scambio - Ordine n. [Numero"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "it",
+        "output": "\nOggetto: Ciao dopo tanto tempo!\n\nCaro [Nome Amico],\n"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "it",
+        "output": "\nOggetto: Grazie per il tuo generoso regalo!\n\nCaro [Nome del"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "it",
+        "output": "\nOggetto: 🎉 Festa in giardino questo fine settimana! 🎉\n\nCiao a"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "it",
+        "output": "\nOggetto: Congratulazioni per il tuo successo!\n\nCaro [Nome"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "it",
+        "output": "\nOggetto: Notizie entusiasmanti!\n\nCaro [Nome dell'amico/"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta informazioni sul programma di [Nome del programma]\n\nGentile"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di lettera di raccomandazione\n\nGentile Professor [Nome"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "it",
+        "output": "\nOggetto: Preoccupazioni riguardo alla qualità dell'aria nella mia zona\n\nGentile"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "it",
+        "output": "\n    Oggetto: Presentazione - [Il tuo nome] si unisce al team\n    \n    Cari"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di referenza per [Il tuo nome]\n\nGent"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "it",
+        "output": "\nOggetto: **Aumenta le tue vendite con [Nome del tuo servizio] -"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "it",
+        "output": "\n**Oggetto: Presentazione Esclusiva: [Nome del Prodotto] - La Rivol"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "it",
+        "output": "\nOggetto: Seguito alla nostra conversazione - [Nome del tuo prodotto]\n\n"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "it",
+        "output": "\n**Oggetto: Benvenuto nella nostra community! Ecco cosa ti aspetta.**\n\n"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "it",
+        "output": "\nOggetto: Esplora Nuove Soluzioni per Potenziare il Tuo [Prod"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di proroga per l'incarico di [Nome del corso]"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "it",
+        "output": "\nOggetto: Progetto di Gruppo - [Nome del Progetto]\n\nCari compagni"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta informazioni su opportunità di ricerca\n\nGentile Professor [Nome"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "it",
+        "output": "\nOggetto: Scuse per assenza alla lezione\n\nGentile Professore [Nome del"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di consigli sulla carriera\n\nGentile [Nome del professore/"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "it",
+        "output": "\n    L’apprendimento online e l’apprendimento tradizionale rappresentano due approcci distinti all"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "it",
+        "output": "\nLa questione di come affrontare i problemi ambientali, se a livello globale o locale, è un"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "it",
+        "output": "\n        Sono parzialmente d’accordo con l’affermazione che raggiungere l’equilibrio tra lavoro"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "it",
+        "output": "1. **Cause:**\n       - **Alimentazione non sana:** L'aumento del consumo di"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "it",
+        "output": "\nLa questione della sperimentazione sugli animali per la ricerca medica è un argomento complesso e controverso"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "it",
+        "output": "1. **Cause del problema:**\n       - **Crisi economica:** La recessione economica può ridurre"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "it",
+        "output": "\nL’obesità sta diventando un problema serio in molti paesi a causa di una combinazione di"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "it",
+        "output": "1. **Cause dell'inquinamento dell'aria e dell'acqua:**\n       - **"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "it",
+        "output": "1. **Accesso e infrastrutture limitate**: In molte aree del mondo, l'accesso"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "it",
+        "output": "1. **Costi dell'alloggio**: L'aumento dei costi degli affitti e"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "it",
+        "output": "\nIl cambiamento climatico è un fenomeno complesso causato da una combinazione di fattori naturali e antrop"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "it",
+        "output": "1. **Convenienza e Accessibilità**: Lo shopping online offre ai consumatori la comodità di"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "it",
+        "output": "1. **Accessibilità digitale**: Con l'avvento di Internet e dei dispositivi digitali"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "it",
+        "output": "1. **Cause della sovrappopolazione:**\n       - **Aumento della natalità:** In"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "it",
+        "output": "1. **Cause della globalizzazione:**\n        * **Sviluppo tecnologico:**  Av"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "it",
+        "output": "\nIl lavoro da remoto, o telelavoro, è una modalità di lavoro che consente ai dipendenti"
+    }
+]

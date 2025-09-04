@@ -10,9 +10,7 @@ import json
 import numpy as np
 import torch
 from datasets import load_dataset
-from evaluate import load
 from transformers import AutoTokenizer, AutoModelForCausalLM
-
 from generation_funcs import (
     polywrite_with_edit_activation,
     unfreeze_pickle,
@@ -68,8 +66,11 @@ for model_name in model_names:
                 # 保存。ファイル名に from(入力) と to(deactivation) を明記
                 model_name_for_saving = model_name_dict[model_name]
                 path = (
-                    f'activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/'
+                    f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/'
                     f'{model_name_for_saving}_{L_in}_deact-{L_deact}_intervention{intervention_num}.json'
                 )
-                with open(path, 'w') as f:
-                    json.dump(results, f, indent=4)
+                with open(path, 'w', encoding="utf-8") as f:
+                    json.dump(results, f, ensure_ascii=False, indent=4)
+
+    del model
+    torch.cuda.empty_cache()

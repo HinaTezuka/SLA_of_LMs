@@ -61,7 +61,8 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+        # if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+        if f"model.layers.{layer_idx}." in layer:
             output[:, -1, neuron_idx] *= 0  # 指定されたニューロンの活性化値をゼロに設定
 
     return output
@@ -516,9 +517,9 @@ def activation_patterns_lineplot(act_patterns, act_patterns_baseline, L2, interv
         if intervention == "normal":
             save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/normal/{L2}"
         elif intervention == "yes":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention/{L2}_n{intervention_num}"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention/{L2}_n{intervention_num}_TEST"
         elif intervention == "baseline":
-            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention_baseline/{L2}_n{intervention_num}"
+            save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/act_patterns/{model_type}/{score_type}/intervention_baseline/{L2}_n{intervention_num}_TEST"
     
     with PdfPages(save_path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)

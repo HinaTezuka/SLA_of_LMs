@@ -50,10 +50,10 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/en/baseline/{L2}_n{intervention_num}"
     elif not is_en:
         if not is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/{L2}_n{intervention_num}"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/{L2}_n{intervention_num}_TEST"
             # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/reverse/{L2}_n{intervention_num}"
         elif is_baseline:
-            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/baseline/{L2}_n{intervention_num}"
+            path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/baseline/{L2}_n{intervention_num}_TEST"
             # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/sim/{model_type}/final/{score_type}/reverse/baseline/{L2}_n{intervention_num}"
     with PdfPages(path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
@@ -62,15 +62,16 @@ def plot_hist_llama3(dict1, dict2, L2: str, score_type: str, intervention_num: s
 if __name__ == "__main__":
     L1 = "en"
     """ model configs """
-    model_names = ['meta-llama/Meta-Llama-3-8B', 'CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
-    model_names = ['meta-llama/Meta-Llama-3-8B']
+    # model_names = ['meta-llama/Meta-Llama-3-8B', 'CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3', 'bigscience/bloom-3b']
+    model_names = ['meta-llama/Meta-Llama-3-8B', 'CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3']
     device = "cuda" if torch.cuda.is_available() else "cpu"
     """ parameters """
-    langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
-    langs = ['nl']
+    langs = ['ja', 'nl', 'ko', 'it']
+    # langs = ['nl']
     n_list = [100, 1000, 3000, 5000]
-    n_list = [1000]
+    # n_list = [1000]
     score_types = ["cos_sim", "L2_dis"]
+    score_types = ['cos_sim']
     is_en = False
 
     for model_name in model_names:
@@ -123,13 +124,13 @@ if __name__ == "__main__":
                     for layer_idx in range(model.config.num_hidden_layers): # ３２ layers
                         final_results_same_semantics[layer_idx] = np.array(similarities_same_semantics[layer_idx]).mean()
                         final_results_non_same_semantics[layer_idx] = np.array(similarities_non_same_semantics[layer_idx]).mean()
-                    path_same = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/cos_sim/hs_sim/en_{L2}_type1_same_semantics.pkl'
+                    path_same = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/cos_sim/hs_sim/en_{L2}_type1_same_semantics_TEST.pkl'
                     save_as_pickle(path_same, final_results_same_semantics)
-                    path_diff = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/cos_sim/hs_sim/en_{L2}_type1_non_same_semantics.pkl'
+                    path_diff = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/cos_sim/hs_sim/en_{L2}_type1_non_same_semantics_TEST.pkl'
                     save_as_pickle(path_diff, final_results_non_same_semantics)
-                    print('saved !')
-                    sys.exit()
-                    # plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
+                    # print('saved !')
+                    # sys.exit()
+                    plot_hist_llama3(final_results_same_semantics, final_results_non_same_semantics, L2, score_type, intervention_num, is_en)
 
                     # """ baseline """
                     # similarities_same_semantics = take_similarities_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_AP_baseline, tatoeba_data)

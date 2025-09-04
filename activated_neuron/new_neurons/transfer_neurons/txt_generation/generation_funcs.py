@@ -9,7 +9,6 @@ import math
 from collections import Counter, defaultdict
 from functools import partial
 
-import cld3
 import torch
 import torch.nn.functional as F
 import numpy as np
@@ -50,7 +49,8 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer and output.shape[1] != 1:
+        # if str(layer_idx) in layer and output.shape[1] != 1:
+        if f"model.layers.{layer_idx}." in layer and output.shape[1] != 1:
             output[:, -1, neuron_idx] *= 0
 
     return output
@@ -73,7 +73,7 @@ def polywrite(model, tokenizer, device, data, L2, num_samples=50):
             output = model.generate(
                     **input,
                     do_sample=False,
-                    max_new_tokens=512,
+                    # max_new_tokens=512,
                 )
 
         output_text = tokenizer.decode(output[0][input_len:], skip_special_tokens=True)

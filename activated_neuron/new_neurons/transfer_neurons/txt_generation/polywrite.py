@@ -42,7 +42,11 @@ for model_name in model_names:
         data = ds.filter(lambda x: x["lang_script"]==langs_for_polywrite[lang])
         results = polywrite(model, tokenizer, device, data, lang)
     
-    model_name_for_saving = model_name_dict[model_name]
-    path = f'activated_neuron/new_neurons/transfer_neurons/txt_generation/results/{model_name_for_saving}_{lang}.json'
-    with open(path, 'w') as f:
-        json.dump(results, f, indent=4)
+        model_name_for_saving = model_name_dict[model_name]
+        path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/{model_name_for_saving}_{lang}.json'
+        with open(path, 'w', encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=4)
+
+
+    del model
+    torch.cuda.empty_cache()
