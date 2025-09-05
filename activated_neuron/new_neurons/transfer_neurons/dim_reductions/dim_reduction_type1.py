@@ -11,6 +11,7 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import umap.umap_ as umap
 from matplotlib.lines import Line2D
+import matplotlib.ticker as ticker
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
@@ -85,8 +86,14 @@ def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3:
             for lang, col in zip(languages, colors)
         ]
 
-        plt.xlabel('Principal Component 1', fontsize=40)
-        plt.ylabel('Principal Component 2', fontsize=40)
+        plt.xlabel('Principal Component I', fontsize=40)
+        plt.ylabel('Principal Component II', fontsize=40)
+        plt.xticks(fontsize=25)
+        plt.yticks(fontsize=25)
+        plt.axis("equal")
+        ax = plt.gca()
+        ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f'))
+        ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1f'))
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
         file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
