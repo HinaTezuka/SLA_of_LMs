@@ -127,7 +127,7 @@ if __name__ == '__main__':
             sorted_neurons_baseline = random.sample(sorted_neurons[intervention_num:], intervention_num)
 
             sentences = sentences_all_langs[L2]
-            hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, tokenizer, device, sorted_neurons_baseline, num_layers, sentences)
+            hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons_baseline, num_layers, sentences)
             # c_hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
             # save centroids as pkl.
@@ -155,5 +155,5 @@ if __name__ == '__main__':
         plot_pca(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en, is_reverse)
         # plot_umap(model_type, hs_ja, hs_nl, hs_ko, hs_it, hs_en)
 
-        # del model
-        # torch.cuda.empty_cache()
+        del model
+        torch.cuda.empty_cache()
