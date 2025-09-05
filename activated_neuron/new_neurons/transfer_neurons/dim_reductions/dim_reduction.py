@@ -80,8 +80,10 @@ def plot_pca(model_type: str, num_layers: int, features_L1: dict, features_L2: d
             for lang, col in zip(languages, colors)
         ]
 
-        plt.xlabel('Principal Component 1', fontsize=40)
-        plt.ylabel('Principal Component 2', fontsize=40)
+        plt.xlabel('Principal Component I', fontsize=40)
+        plt.ylabel('Principal Component II', fontsize=40)
+        plt.xticks(fontsize=25)
+        plt.yticks(fontsize=25)
 
         title = 'Emb Layer' if layer_idx == 0 else f'Layer {layer_idx}'
         file_name = 'emb_layer' if layer_idx == 0 else f'{layer_idx}'
