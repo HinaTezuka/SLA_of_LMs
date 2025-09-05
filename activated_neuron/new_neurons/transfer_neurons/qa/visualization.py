@@ -112,7 +112,7 @@ for model_name in model_names:
         Interventions are shown with different colors and markers.
         """
         dicts = [dict_intervene1, dict_intervene2]
-        dict_labels = ['TransferNeurons', 'Baseline']
+        dict_labels = ['Type-1 Neurons', 'Baseline']
         markers = ['s', '^']
         colors = ['green', 'red']
 
@@ -160,7 +160,7 @@ for model_name in model_names:
             ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%g'))
             ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%g'))
             ax.tick_params(axis='both', labelsize=25)
-            ax.legend(fontsize=35)
+            ax.legend(fontsize=35, markerscale=3)
             ax.grid(True)
 
             # save each language separately
