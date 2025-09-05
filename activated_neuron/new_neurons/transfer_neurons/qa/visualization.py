@@ -153,8 +153,8 @@ for model_name in model_names:
             ax.plot([min_f1, max_f1], [min_f1, max_f1], linestyle='--', color='blue', linewidth=2)
 
             ax.set_title(f'{lang}', fontsize=50)
-            ax.set_xlabel('w/o Intervention', fontsize=30)
-            ax.set_ylabel('Type-1 Intervention', fontsize=30)
+            ax.set_xlabel('w/o Intervention', fontsize=40)
+            ax.set_ylabel('Type-1 Intervention', fontsize=40)
             ax.set_xlim(0.0, 1.0)
             ax.set_ylim(0.0, 1.0)
             ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%g'))
