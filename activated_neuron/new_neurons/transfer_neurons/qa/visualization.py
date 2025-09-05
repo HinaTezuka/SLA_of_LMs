@@ -40,7 +40,7 @@ qa = load_dataset('apple/mkqa')['train']
 # qa = qa.shuffle(seed=42)
 score_type = 'cos_sim'
 intervention_num = 1000
-THRESHOLD = 0.8
+THRESHOLD = 0.5
 
 for model_name in model_names:
     model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya'
@@ -160,7 +160,7 @@ for model_name in model_names:
             ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%g'))
             ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%g'))
             ax.tick_params(axis='both', labelsize=25)
-            ax.legend()
+            ax.legend(fontsize=35)
             ax.grid(True)
 
             # save each language separately
