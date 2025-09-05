@@ -42,7 +42,7 @@ def get_out_llama3_up_proj(model, prompt, device, index):
 
 def act_llama3(model, input_ids):
     act_fn_values = get_out_llama3_act_fn(model, input_ids, model.device, -1)  # LlamaのMLP活性化を取得
-    act_fn_values = [act.to("cpu") for act in act_fn_values] # Numpy配列はCPUでしか動かないので、各テンソルをCPU上へ移動
+    act_fn_values = [act.to("cpu") for act in act_fn_values]
     up_proj_values = get_out_llama3_up_proj(model, input_ids, model.device, -1)
     up_proj_values = [act.to("cpu") for act in up_proj_values]
 

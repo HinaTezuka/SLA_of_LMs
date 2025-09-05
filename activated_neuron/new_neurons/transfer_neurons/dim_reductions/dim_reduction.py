@@ -67,7 +67,9 @@ def plot_pca(model_type: str, num_layers: int, features_L1: dict, features_L2: d
         # f8_2d = pca.transform(f8)
 
         # plot.
-        plt.rcParams["font.family"] = "DejaVu Serif"
+        plt.rc('font',family='Cambria Math')
+        plt.rcParams['font.family'] = 'serif'
+        plt.rcParams['font.serif'] = ['Cambria Math'] + plt.rcParams['font.serif']
         plt.figure(figsize=(12, 12))
         for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d], colors, languages):
         # for feats, color, label in zip([f1_2d, f2_2d, f3_2d, f4_2d, f5_2d, f6_2d, f7_2d, f8_2d], colors, languages):

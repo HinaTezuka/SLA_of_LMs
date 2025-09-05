@@ -23,11 +23,11 @@ from funcs import (
     unfreeze_pickle,
 )
 
-langs = ['ja', 'nl', 'ko', 'it', 'en', 'vi', 'ru', 'fr']
-# langs = ["ja", "nl", "ko", "it", "en"]
+# langs = ['ja', 'nl', 'ko', 'it', 'en', 'vi', 'ru', 'fr']
+langs = ["ja", "nl", "ko", "it"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / BLOOM-3B.
-model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
-model_names = ['bigscience/bloom-3b']
+model_names = ["meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+# model_names = ['bigscience/bloom-3b']
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def plot_pca(model_type: str, features_L1: dict, features_L2: dict, features_L3: dict, features_L4: dict, features_L5: dict, features_L6: dict, features_L7: dict, features_L8: dict, is_reverse: bool):
@@ -150,7 +150,7 @@ if __name__ == '__main__':
                 save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
             else:
                 # normal intervention: top-1k.
-                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1.pkl"
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1_TEST.pkl"
                 # normal intervention: more than 3k.
                 # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1_{intervention_num}.pkl"
                 # qa intervention: top-1k.
