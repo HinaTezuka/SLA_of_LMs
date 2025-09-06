@@ -462,7 +462,6 @@ def get_all_outputs_llama3_mistral(model, prompt, device):
     MLP_act = [f"model.layers.{i}.mlp.act_fn" for i in range(num_layers)]
     MLP_up_proj = [f"model.layers.{i}.mlp.up_proj" for i in range(num_layers)]
     ATT_act = [f"model.layers.{i}.self_attn.o_proj" for i in range(num_layers)]
-    # ATT_act = [f"model.layers.{i}.post_attention_layernorm" for i in range(num_layers)]
 
     torch.manual_seed(42)
     with TraceDict(model, MLP_act + MLP_up_proj + ATT_act) as ret:

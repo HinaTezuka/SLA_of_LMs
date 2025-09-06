@@ -32,7 +32,9 @@ model_name_MAP = {
 }
 
 # for centroids of en-subspaces.
-plt.rcParams["font.family"] = "DejaVu Serif"
+plt.rc('font', family='Cambria Math')
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Cambria Math'] + plt.rcParams['font.serif']
 figure, ax = plt.subplots(figsize=(10, 10))
 for model_type in ['llama3', 'mistral', 'aya']:
     # centroids(en-only).
@@ -47,10 +49,11 @@ for model_type in ['llama3', 'mistral', 'aya']:
     
     # visualize with lineplot
     x_vals = range(2, middle_layer+1)
-    ax.plot(x_vals, results[model_type], '-p', linewidth=2, markersize=8, label=model_name_MAP[model_type])
-ax.set_title('Similarity of en-Centroids Trajectory', fontsize=35)
+    ax.plot(x_vals, results[model_type], '-p', linewidth=3, markersize=8, label=model_name_MAP[model_type])
+ax.set_title('en-Centroids Trajectory', fontsize=35)
 xticks = [1] + list(range(5, middle_layer + 1, 5))
 xticks = sorted(set(xticks))  # 重複を避けつつ昇順に
+ax.grid(True)
 ax.set_xticks(xticks)
 ax.tick_params(axis='both', labelsize=20)
 ax.set_xlabel('Layers', fontsize=35)
