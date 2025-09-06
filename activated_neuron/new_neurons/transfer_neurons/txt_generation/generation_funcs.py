@@ -55,6 +55,26 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
 
     return output
 
+def edit_activation_always(output, layer, layer_idx_and_neuron_idx):
+    """
+    edit activation value of neurons(indexed layer_idx and neuron_idx)
+    output: activation values
+    layer: sth like 'model.layers.{layer_idx}.mlp.act_fn'
+    layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
+    """
+    for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
+        # if str(layer_idx) in layer and output.shape[1] != 1:
+        if f"model.layers.{layer_idx}." in layer:
+            output[:, -1, neuron_idx] *= 0
+
+    return output
+
+def polywrite_with_edit_activation_always(model, tokenizer, device, data, L2, layer_neuron_list, num_samples=50):
+    trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
+    with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation_always(output, layer, layer_neuron_list)) as tr:
+
+        return polywrite(model, tokenizer, device, data, L2, num_samples)
+
 def polywrite_with_edit_activation(model, tokenizer, device, data, L2, layer_neuron_list, num_samples=50):
     trace_layers = list(set([f'model.layers.{layer}.mlp.act_fn' for layer, _ in layer_neuron_list]))
     with TraceDict(model, trace_layers, edit_output=lambda output, layer: edit_activation(output, layer, layer_neuron_list)) as tr:

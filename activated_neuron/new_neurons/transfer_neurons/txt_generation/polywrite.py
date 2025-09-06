@@ -47,6 +47,5 @@ for model_name in model_names:
         with open(path, 'w', encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False, indent=4)
 
-
     del model
     torch.cuda.empty_cache()

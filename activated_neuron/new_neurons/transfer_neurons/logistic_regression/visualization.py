@@ -10,6 +10,10 @@ model_types = ['llama3', 'mistral', 'aya']
 langs = ['ja', 'nl', 'ko', 'it']
 num_layers = 32
 
+plt.rc('font', family='Cambria Math')
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = ['Cambria Math'] + plt.rcParams['font.serif']
+
 for model_type in model_types:
     acc_matrix = np.zeros((len(langs), num_layers))  # 行: 言語, 列: レイヤー
 
@@ -48,13 +52,13 @@ for model_type in model_types:
     )
 
     title = 'LLaMA3-8B' if model_type == 'llama3' else 'Mistral-7B' if model_type == 'mistral' else 'Aya expanse-8B'
-    ax.set_title(title, fontsize=20)
+    ax.set_title(title, fontsize=40)
 
-    ax.set_xlabel("Layer Index", fontsize=15)
-    ax.set_ylabel("Language Pair", fontsize=15)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=10)
+    ax.set_xlabel("Layers", fontsize=30)
+    # ax.set_ylabel("Language Pair", fontsize=30)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0, fontsize=20)
     ax.set_yticks(np.arange(len(langs)) + 0.5)
-    ax.set_yticklabels([f"en-{l}" for l in langs], rotation=0, fontsize=10)
+    ax.set_yticklabels([f"en-{l}" for l in langs], rotation=0, fontsize=20)
     if model_type == 'aya':
         fig.subplots_adjust(top=0.94, bottom=0.13, left=0.08, right=0.98)
     else:
@@ -64,5 +68,5 @@ for model_type in model_types:
     # plt.savefig(save_path, bbox_inches='tight')
     # plt.close()
     with PdfPages(save_path + '.pdf') as pdf:
-        pdf.savefig(bbox_inches='tight', pad_inches=0.01)
+        pdf.savefig(bbox_inches='tight', pad_inches=0.05)
         plt.close()

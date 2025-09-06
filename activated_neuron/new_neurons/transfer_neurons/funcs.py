@@ -493,12 +493,11 @@ def compute_scores_optimized(model, tokenizer, device, data, candidate_neurons, 
         MLP_act_values, up_proj_values, post_attention_values, outputs = get_all_outputs_llama3_mistral(model, inputs.input_ids, device)
 
         # Extract hidden states (ht), attention layer outputs, and MLP activations
-        ht_all_layer = outputs.hidden_states # len==33(0-32), including 0th layer(embedding layer). <- emb(0th) layer is needed to calc score of 1th layer.
+        ht_all_layer = outputs.hidden_states # len==33(0-32), including 0th layer(embedding layer). <- emb(0th) layer is needed to calc score of 1st layer.
         token_len = inputs.input_ids.size(1)
         last_token_idx = token_len - 1
 
         # Score calculation based on type (L2 distance or cosine similarity)
-        # c = np.mean(centroids[5:21], axis=0).reshape(1, -1) # centroids: mean of c for 5-20layers.
         for layer_idx, neurons in candidate_neurons.items():
             c = centroids[layer_idx].reshape(1, -1) # centroid of the layer.
             # i-th layer hidden_state.

@@ -135,7 +135,7 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer and output.shape[1] != 1:
+        if f"model.layers.{layer_idx}." in layer and output.shape[1] != 1:
             output[:, -1, neuron_idx] *= 0
 
     return output
@@ -388,7 +388,7 @@ def remove_intersec(list_a, list_b):
 
 def edit_activation_revised(output, layer, layer_idx_and_neuron_idx, last_token_idx, device, act_values):
     for act_mode, layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+        if f"model.layers.{layer_idx}." in layer:  # layer名にlayer_idxが含まれているか確認
             if act_mode == 'de' and output.shape[1] == last_token_idx+1:
             # if act_mode == 'de':
                 output[:, -1, neuron_idx] *= 0
@@ -632,7 +632,7 @@ def get_all_outputs_llama3_mistral(model, prompt, device):
 
 def edit_activation_revised_act_value(output, layer, layer_idx_and_neuron_idx, device, act_values, last_token_idx):
     for act_mode, layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+        if f"model.layers.{layer_idx}." in layer:  # layer名にlayer_idxが含まれているか確認
             if act_mode == 'de' and output.shape[1] == last_token_idx+1:
             # if act_mode == 'de':
                 # output[:, -1, neuron_idx] *= 0
@@ -714,7 +714,7 @@ def mkqa_for_steer_output_lang_act_values(model, tokenizer, device, qa, lang_dea
 """ add (c^l_lang2 - c^l_lang1) to hs of certain layer. """
 def edit_activation_times(output, layer, layer_idx_and_neuron_idx, last_token_idx, device, act_values_act):
     for act_mode, layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+        if f"model.layers.{layer_idx}." in layer:  # layer名にlayer_idxが含まれているか確認
             if act_mode == 'de' and output.shape[1] == last_token_idx+1:
                 # output[:, -1, neuron_idx] *= 0
                 # output[:, -1, neuron_idx] = torch.tensor(float(act_values_act[(layer_idx, neuron_idx)]), dtype=float)
@@ -730,7 +730,7 @@ def edit_activation_times(output, layer, layer_idx_and_neuron_idx, last_token_id
 
 def edit_activation_sub_vectors(output, layer, last_token_idx, device, sub_vectors: dict):
     for layer_idx, sub_vector in sub_vectors.items():
-        if str(layer_idx) in layer and output[0].shape[1] == last_token_idx+1:  # layer名にlayer_idxが含まれているか確認
+        if f"model.layers.{layer_idx}." in layer and output[0].shape[1] == last_token_idx+1:  # layer名にlayer_idxが含まれているか確認
             output[0][:, -1, :] += torch.from_numpy(sub_vector).to(device)
 
     return output
@@ -1371,7 +1371,8 @@ def mkqa_entropy_with_deactivation(model, model_type, tokenizer, device, qa, inp
         layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
         """
         for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-            if str(layer_idx) in layer and output.shape[1] != 1:
+            if f"model.layers.{layer_idx}." in layer and output.shape[1] != 1:
+            # if str(layer_idx) in layer and output.shape[1] != 1:
                 output[:, -1, neuron_idx] *= 0
 
         return output
