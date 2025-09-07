@@ -19,7 +19,8 @@ top_n = 1000
 lang_pairs = [('ja', 'nl'), ('ja', 'ko'), ('ja', 'it'), ('nl', 'ko'), ('nl', 'it'), ('ko', 'it')]
 
 for model_type in model_types:
-    layer_range = range(20)
+    # layer_range = range(20) # type-1
+    layer_range = range(20, 32) # type-2
     for score_type in score_types:
         plt.rcParams["font.family"] = "DejaVu Serif"
         plt.figure(figsize=(10, 10))
@@ -29,6 +30,7 @@ for model_type in model_types:
 
         for lang in langs:
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{lang}_sorted_neurons.pkl"
+            # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{lang}_mono_train.pkl"
             sorted_neurons = unfreeze_pickle(path)
             sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in layer_range][:top_n]
 
@@ -62,7 +64,8 @@ for model_type in model_types:
         plt.grid(True)
         plt.tight_layout()
 
-        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/jaccard/{model_type}_{score_type}"
+        save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/jaccard/{model_type}_reverse"
+        # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/jaccard/{model_type}_{score_type}"
         with PdfPages(save_path + '.pdf') as pdf:
             pdf.savefig(bbox_inches='tight', pad_inches=0.01)
             plt.close()
