@@ -26,8 +26,10 @@ from qa_funcs import (
 
 # load models (LLaMA3-8B).
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+# model_names = ['mistralai/Mistral-7B-v0.3']
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru']
+langs = ['ja', 'nl', 'ko', 'it']
+langs = ['ja']
 """ 
 QA dataset: 
 MKQA: Multilingual Open Domain Question Answering
@@ -90,7 +92,7 @@ for model_name in model_names:
         else:
             normal_list_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/all_questions_normal_{L2}.pkl'
             normal = unfreeze_pickle(normal_list_path)
-        intervention_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n1000/all_questions_intervention_{L2}.pkl'
+        intervention_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n1000/all_questions_intervention_{L2}_TEST.pkl'
         intervention_baseline_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/qa/intervention_n1000/all_questions_baseline_{L2}.pkl'
         intervention = unfreeze_pickle(intervention_path)
         intervention_baseline = unfreeze_pickle(intervention_baseline_path)
@@ -101,6 +103,7 @@ for model_name in model_names:
         intervention_dict[L2] = intervention_l
         intervention_baseline_dict[L2] = intervention_baseline_l
         print(f'{model_type}, {L2}: normal:{normal_mean_score}, intervention:{intervention_mean_score}, intervention_baseline:{intervention_baseline_mean_score}')
+        # sys.exit()
 
     """ visualization func. """
     def plot_intervention_scatter(dict_normal, dict_intervene1, dict_intervene2):

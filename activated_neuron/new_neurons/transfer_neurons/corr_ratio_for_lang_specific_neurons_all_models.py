@@ -64,8 +64,7 @@ def correlationRatio(categories, values):
     total_variation = sum((values - values.mean()) ** 2)
     return interclass_variation / total_variation
 
-langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'it', 'fr']
-langs = ['fr']
+langs = ['ja', 'nl', 'ko', 'it']
 model_types = ['llama3', 'mistral', 'aya']
 # model_types = ['bloom']
 # score_types = ['cos_sim', 'L2_dis']
@@ -75,14 +74,11 @@ l1 = [ 1 for _ in range(1000)]
 l2 = [ 0 for _ in range(1000)]
 
 labels_dict = {
-    'ja': l1 + l2 + l2 + l2 + l2 + l2 + l2 + l2,
-    'nl': l2 + l1 + l2 + l2 + l2 + l2 + l2 + l2,
-    'ko': l2 + l2 + l1 + l2 + l2 + l2 + l2 + l2,
-    'it': l2 + l2 + l2 + l1 + l2 + l2 + l2 + l2,
-    'en': l2 + l2 + l2 + l2 + l1 + l2 + l2 + l2,
-    'vi': l2 + l2 + l2 + l2 + l2 + l1 + l2 + l2,
-    'ru': l2 + l2 + l2 + l2 + l2 + l2 + l1 + l2,
-    'fr': l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1,
+    'ja': l1 + l2 + l2 + l2 + l2,
+    'nl': l2 + l1 + l2 + l2 + l2,
+    'ko': l2 + l2 + l1 + l2 + l2,
+    'it': l2 + l2 + l2 + l1 + l2,
+    'en': l2 + l2 + l2 + l2 + l1
 }
 # label_fr = l2 + l2 + l2 + l2 + l2 + l2 + l2 + l1
 
