@@ -22,7 +22,7 @@ from funcs import (
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
-model_names = ["microsoft/phi-4", "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+model_names = ['CohereForAI/aya-expanse-8b', "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
 is_using_centroids = False
 intervention_type = 'normal'
 
@@ -41,10 +41,10 @@ for model_name in model_names:
         hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru.pkl")
         hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr.pkl")
     elif intervention_type == 'type-1':
-        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1.pkl")
-        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1.pkl")
-        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1.pkl")
-        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1.pkl")
+        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1_TEST.pkl")
+        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1_TEST.pkl")
+        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1_TEST.pkl")
+        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1_TEST.pkl")
         hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
         hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/vi.pkl")
         hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru.pkl")
@@ -84,6 +84,8 @@ for model_name in model_names:
         }
 
         for lang1, lang2 in permutations(langs, 2):
+            lang1 = 'ja'
+            lang2 = 'en'
             mat1 = lang2hs_layer[lang1]  # shape: (1000, 4096)
             mat2 = lang2hs_layer[lang2]  # shape: (1000, 4096)
 
@@ -92,8 +94,24 @@ for model_name in model_names:
             # average similarity for each row in mat1 against all rows in mat2
             avg_sims = np.mean(sim_matrix, axis=1)  # shape: (1000,)
 
-            # record all avg_sims into sim_dict
-            sim_dict[f'{lang1}-{lang2}'][layer_i].extend(avg_sims.tolist()) # lang1-lang2: average_sim between: i-th row vector in mat1(lang1) - row vectors in mat2(lang2)
+            """"""
+            n = sim_matrix.shape[0]
+            neg_sims = sim_matrix[~np.eye(n, dtype=bool)]  # shape: (n*(n-1),)
+
+            # # その中からランダムにサンプリング
+            # if layer_i == 20:
+            #     rand_neg_sims = np.random.choice(neg_sims, size=1000, replace=False)
+            #     print(np.mean(rand_neg_sims))
+            #     sys.exit()
+
+            pair_sims = np.diag(sim_matrix) 
+            if layer_i == 20:
+                print(pair_sims.shape)  # (1000,)
+                print(np.mean(pair_sims))
+                sys.exit()
+
+            # # record all avg_sims into sim_dict
+            # sim_dict[f'{lang1}-{lang2}'][layer_i].extend(avg_sims.tolist()) # lang1-lang2: average_sim between: i-th row vector in mat1(lang1) - row vectors in mat2(lang2)
 
     # save as pkl file.
     if intervention_type == 'normal':

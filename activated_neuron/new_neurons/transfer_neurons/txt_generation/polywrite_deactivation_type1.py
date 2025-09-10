@@ -19,7 +19,7 @@ from generation_funcs import (
 )
 
 # load models (LLaMA3-8B).
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
 model_name_dict = {
     'meta-llama/Meta-Llama-3-8B': 'Llama3-8B', 
     'mistralai/Mistral-7B-v0.3': 'Mistral-7B',

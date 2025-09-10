@@ -31,8 +31,9 @@ for model_type in model_types:
         for lang in langs:
             path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{lang}_sorted_neurons.pkl"
             # path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{lang}_mono_train.pkl"
-            sorted_neurons = unfreeze_pickle(path)
-            sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in layer_range][:top_n]
+            neurons = unfreeze_pickle(path)
+            sorted_neurons = [neuron for neuron in neurons if neuron[0] in layer_range][:top_n]
+            # sorted_neurons = [neuron for neuron in neurons if neuron[0] in [_ for _ in range(20, 32)]][:top_n]
 
             layer_dict = defaultdict(list)
             for layer, neuron in sorted_neurons:

@@ -126,50 +126,50 @@ if __name__ == '__main__':
     is_reverse = False # fix.
     for model_name in model_names:
         model_type = 'llama3' if 'llama' in model_name else 'mistral' if 'mistral' in model_name else 'aya' if 'aya' in model_name else 'bloom'
-    #     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    #     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-    #     num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 31
-    #     num_intervention = 1000
-    #     for L2 in langs:
-    #         # prepare type-2 Transfer Neurons.
-    #         if L2 != "en":
-    #             if is_reverse: # type-2
-    #                 save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
-    #                 sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-    #                 if model_type in ['llama3', 'mistral', 'aya']:
-    #                     sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
-    #                 elif model_type in ['bloom']:
-    #                     sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 30)]] # bloom
-    #             else: # type-1
-    #                 # normal
-    #                 save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
-    #                 # qa
-    #                 # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/qa/{L2}.pkl"
-    #                 sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
-    #                 orted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20)]]
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        num_layers = 33 if model_type in ['llama3', 'mistral', 'aya'] else 31
+        num_intervention = 1000
+        for L2 in langs:
+            # prepare type-2 Transfer Neurons.
+            if L2 != "en":
+                if is_reverse: # type-2
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/reverse/{score_type}/{L2}_sorted_neurons.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    if model_type in ['llama3', 'mistral', 'aya']:
+                        sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 32)]]
+                    elif model_type in ['bloom']:
+                        sorted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20, 30)]] # bloom
+                else: # type-1
+                    # normal
+                    save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/{L2}_mono_train.pkl"
+                    # qa
+                    # save_path_sorted_neurons = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/final_scores/{score_type}/qa/{L2}.pkl"
+                    sorted_neurons = unfreeze_pickle(save_path_sorted_neurons)
+                    orted_neurons = [neuron for neuron in sorted_neurons if neuron[0] in [ _ for _ in range(20)]]
 
-    #             sorted_neurons = sorted_neurons[:num_intervention]
+                sorted_neurons = sorted_neurons[:num_intervention]
 
-    #         sentences = sentences_all_langs[L2]
-    #         if L2 == 'en':
-    #             hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
-    #         else:
-    #             hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons, num_layers, sentences)
-    #         # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
+            sentences = sentences_all_langs[L2]
+            if L2 == 'en':
+                hidden_states = get_hidden_states_including_emb_layer(model, tokenizer, device, num_layers, sentences)
+            else:
+                hidden_states = get_hidden_states_including_emb_layer_with_edit_activation(model, model_type, tokenizer, device, sorted_neurons, num_layers, sentences)
+            # hidden_states: {layer_idx: [hs_sample1, hs_sample2, ...]}
 
-    #         # save hs as pkl.
-    #         if is_reverse:
-    #             save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
-    #         else:
-    #             # normal intervention: top-1k.
-    #             save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1_TEST.pkl"
-    #             # normal intervention: more than 3k.
-    #             # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1_{intervention_num}.pkl"
-    #             # qa intervention: top-1k.
-    #             # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_qa_type1.pkl"
-    #             # qa intervention: more than 3k.
-    #             # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_qa_type1_{intervention_num}.pkl"
-    #         save_as_pickle(save_path, hidden_states)
+            # save hs as pkl.
+            if is_reverse:
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/{L2}.pkl"
+            else:
+                # normal intervention: top-1k.
+                save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1_TEST.pkl"
+                # normal intervention: more than 3k.
+                # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_type1_{intervention_num}.pkl"
+                # qa intervention: top-1k.
+                # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_qa_type1.pkl"
+                # qa intervention: more than 3k.
+                # save_path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/{L2}_qa_type1_{intervention_num}.pkl"
+            save_as_pickle(save_path, hidden_states)
 
         # """ dim_reduction and plot with PCA. """
         ["ja", "nl", "ko", "it", "en"]
@@ -181,11 +181,11 @@ if __name__ == '__main__':
             hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/reverse/en.pkl")
         else:
             # normal
-            hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1.pkl")
-            hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1.pkl")
-            hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1.pkl")
-            hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1.pkl")
-            hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
+            hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1_TEST.pkl")
+            hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1_TEST.pkl")
+            hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1_TEST.pkl")
+            hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1_TEST.pkl")
+            hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1_TEST.pkl")
 
             # # qa
             # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_qa_type1.pkl")
