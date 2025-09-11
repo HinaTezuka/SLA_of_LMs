@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ja",
+        "output": "質問: 地球上で重力が突然数時間逆�"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ja",
+        "output": "質問: キャラクターの名前は？\n    答"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ja",
+        "output": "質問: 自分たち抜きで進んでいっ"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ja",
+        "output": "質問: \n    答え: \n    質問: "
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ja",
+        "output": "1. 会議の目的を明確にする\n    2."
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ja",
+        "output": "1. 上司にメールを書いて、最近提出した"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ja",
+        "output": "質問: プロジェクトの期限に間に合わ"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ja",
+        "output": "質問: 購入した製品が期限切れで"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ja",
+        "output": "1. カスタマー サービス担当者がメール"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ja",
+        "output": "質問: 毎月の請求書に間違っ"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ja",
+        "output": "質問: 会社のカスタマー サービス部"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ja",
+        "output": "質問: オンラインで購入した製品"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ja",
+        "output": "質問: 友達にメールを書いて、自分の"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ja",
+        "output": "質問: 友人の贈り物に対して、お"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ja",
+        "output": "質問: あなたは、友人にパーティーの"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ja",
+        "output": "質問: 友人や同僚の最近の業��"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ja",
+        "output": "質問: 親しい友人や家族にメールを書"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ja",
+        "output": "1. 大学の入学事務局にメールを書いて、"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ja",
+        "output": "質問: 元教授に推薦状を書いても"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ja",
+        "output": "質問: 懸念している地域の問題に"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ja",
+        "output": "1. 自己紹介\n    2. 期待\n    3."
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ja",
+        "output": "このようなメールを作成することは、雇"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ja",
+        "output": "質問: 潜在の顧客に対して、"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ja",
+        "output": "質問: 新製品の発売を告知するマ"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ja",
+        "output": "質問: あなたの製品に興味を示し"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ja",
+        "output": "1. 新規購読者のメールアドレスを取"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ja",
+        "output": "質問: 既存の顧客に対して、以前"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ja",
+        "output": "課題の期限延長を教授に依頼するメ"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ja",
+        "output": "質問: グループ プロジェクトを調整"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ja",
+        "output": "質問: 研究の機会について詳しく"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ja",
+        "output": "1. 質問: 予期せぬ事情により"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ja",
+        "output": "1. 質問を書く際に、自分のキャリア"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ja",
+        "output": "オンライン学習は従来の学習よ"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ja",
+        "output": "質問: 世界の環境問題は、地域�"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ja",
+        "output": "質問: あなたは、自分の職場でワ"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ja",
+        "output": "質問: 多くの国では、人々の平均"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ja",
+        "output": "質問: 医学研究のための動物実験"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ja",
+        "output": "1. 質問: 多くの国で若者は就��"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ja",
+        "output": "肥満は多くの国で深刻な問題になっ"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ja",
+        "output": "大都市では、大気汚染と水質汚"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ja",
+        "output": "質問: 今日の世界では、多くの大人が"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ja",
+        "output": "質問: ホームレスの問題は、どの都市"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ja",
+        "output": "気候変動は地球に大きな影響を与えてい"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ja",
+        "output": "オンラインショッピングの人気が高まってい"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ja",
+        "output": "質問: 世界の多くの地域で、本を読む"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ja",
+        "output": "1. 人口過多の原因は何でしょうか。\n    "
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ja",
+        "output": "グローバリゼーションは、世界の�����"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ja",
+        "output": "リモートワークのメリットとデメリットにつ"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ja",
+        "output": "質問: 地方から都市へ移住する人が�"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ja",
+        "output": "質問: 人々は、コミュニケーショ"
+    }
+]

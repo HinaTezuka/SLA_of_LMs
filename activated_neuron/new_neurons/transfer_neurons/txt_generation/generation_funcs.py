@@ -93,7 +93,7 @@ def polywrite(model, tokenizer, device, data, L2, num_samples=50):
             output = model.generate(
                     **input,
                     do_sample=False,
-                    # max_new_tokens=512,
+                    max_new_tokens=512,
                 )
 
         output_text = tokenizer.decode(output[0][input_len:], skip_special_tokens=True)

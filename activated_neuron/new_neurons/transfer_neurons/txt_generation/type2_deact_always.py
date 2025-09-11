@@ -19,7 +19,8 @@ from generation_funcs import (
 )
 
 # load models (LLaMA3-8B).
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+# model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3']
 model_name_dict = {
     'meta-llama/Meta-Llama-3-8B': 'Llama3-8B', 
     'mistralai/Mistral-7B-v0.3': 'Mistral-7B',
@@ -66,5 +67,5 @@ for is_baseline in is_baselines:
                 with open(path, 'w', encoding="utf-8") as f:
                     json.dump(results, f, ensure_ascii=False, indent=4)
 
-    del model
-    torch.cuda.empty_cache()
+        del model
+        torch.cuda.empty_cache()

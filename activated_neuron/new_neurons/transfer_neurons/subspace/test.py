@@ -20,7 +20,7 @@ from funcs import (
     defaultdict_to_dict,
 )
 
-def plot_hist_llama3(dict1, dict2, L2: str, intervention_type) -> None:
+def plot_hist_llama3(dict1, dict2, L2: str, intervention_type, num) -> None:
     # convert keys and values into list
     keys = np.array(list(dict1.keys()))
     values1 = list(dict1.values())
@@ -42,7 +42,7 @@ def plot_hist_llama3(dict1, dict2, L2: str, intervention_type) -> None:
     plt.tick_params(axis='y', labelsize=20)
     plt.legend(fontsize=25)
     plt.grid(True)
-    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/subspace/test_figs/{model_type}_{L2}_{intervention_type}"
+    path = f"/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/subspace/test_figs/{model_type}_{L2}_{intervention_type}_{num}"
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with PdfPages(path + '.pdf') as pdf:
         pdf.savefig(bbox_inches='tight', pad_inches=0.01)
@@ -50,10 +50,11 @@ def plot_hist_llama3(dict1, dict2, L2: str, intervention_type) -> None:
 
 langs = ["ja", "nl", "ko", "it", "en", "vi", "ru", "fr"]
 # LLaMA3-8B / Mistral-7B / Aya-expanse-8B / Phi4-14B.
-model_names = ['CohereForAI/aya-expanse-8b', "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3", 'CohereForAI/aya-expanse-8b']
+model_names = ['CohereForAI/aya-expanse-8b', "meta-llama/Meta-Llama-3-8B", "mistralai/Mistral-7B-v0.3"]
 is_using_centroids = False
 intervention_type = 'type-1'
 model_type = None
+num = 10000
 
 """ compute distance between language subspaces. """
 for model_name in model_names:
@@ -70,14 +71,14 @@ for model_name in model_names:
         # hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru.pkl")
         # hs_fr = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/fr.pkl")
     elif intervention_type == 'type-1':
-        # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_qa_type1.pkl")
-        # hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_qa_type1.pkl")
-        # hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_qa_type1.pkl")
-        # hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_qa_type1.pkl")
-        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1_TEST.pkl")
-        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1_TEST.pkl")
-        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1_TEST.pkl")
-        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1_TEST.pkl")
+        hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1_{num}.pkl")
+        hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1_{num}.pkl")
+        hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1_{num}.pkl")
+        hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1_{num}.pkl")
+        # hs_ja = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ja_type1_TEST.pkl")
+        # hs_nl = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/nl_type1_TEST.pkl")
+        # hs_ko = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ko_type1_TEST.pkl")
+        # hs_it = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/it_type1_TEST.pkl")
         hs_en = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/en_type1.pkl")
         # hs_vi = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/vi.pkl")
         # hs_ru = unfreeze_pickle(f"/home/s2410121/proj_LA/activated_neuron/new_neurons/pickles/transfer_neurons/{model_type}/hidden_states/ru.pkl")
@@ -122,14 +123,13 @@ for model_name in model_names:
 
             pair_means[layer_i] = float(np.mean(pair_sims))
             neg_means[layer_i] = float(np.mean(neg_sims))
-            print(pair_means)
-            print(neg_means)
 
         plot_hist_llama3(
             dict1=pair_means,
             dict2=neg_means,
             L2=lang1,
             intervention_type=intervention_type,
+            num=num,
         )
 
     # for layer_i in range(layer_num):
