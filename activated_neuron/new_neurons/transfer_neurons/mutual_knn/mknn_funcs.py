@@ -98,7 +98,7 @@ def edit_activation(output, layer, layer_idx_and_neuron_idx):
     layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        if str(layer_idx) in layer:  # layer名にlayer_idxが含まれているか確認
+        if f"model.layers.{layer_idx}." in layer:
             output[:, -1, neuron_idx] *= 0
 
     return output

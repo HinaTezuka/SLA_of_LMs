@@ -26,9 +26,8 @@ from funcs import (
 model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'bigscience/bloom-3b']
 model_names = ['bigscience/bloom-3b']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-langs = ['ja', 'nl', 'ko', 'it', 'vi', 'ru', 'fr']
-# langs = ['ja', 'nl', 'ko', 'it']
-# langs = ['vi', 'ru', 'fr']
+langs = ['ja', 'nl', 'ko', 'it']
+
 L1 = 'en'
 topk = 10 # number of nearest neighbors.
 # is_reverses = [False, True]
@@ -75,7 +74,7 @@ intervention_num = 1000
 #     torch.cuda.empty_cache()
 
 """ visualization. """
-model_types = ['llama3', 'mistral', 'aya', 'bloom']
+model_types = ['llama3', 'mistral', 'aya']
 languages = ['ja', 'nl', 'ko', 'it']
 # Prepare a list to collect all rows for the DataFrame
 all_data = []
@@ -103,6 +102,10 @@ for is_reverse in is_reverses:
     df = pd.DataFrame(all_data)
 
     # Generate a separate plot for each model
+    plt.rc('font',family='Cambria Math')
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['font.serif'] = ['Cambria Math'] + plt.rcParams['font.serif']
+
     for model_type in model_types:
         plt.figure(figsize=(10, 6))
         subset = df[df['Model'] == model_type]
@@ -115,7 +118,7 @@ for is_reverse in is_reverses:
         plt.tick_params(axis='both', labelsize=30)
         plt.grid(True)
         plt.tight_layout()
-        plt.legend(title='L2', fontsize=30, title_fontsize=30)
+        plt.legend(fontsize=25)
         
         if not is_reverse:
             save_path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/images/transfers/mutual_knn/{model_type}_top{topk}_type1_n{intervention_num}'

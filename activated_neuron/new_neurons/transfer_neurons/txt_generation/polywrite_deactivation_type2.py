@@ -19,7 +19,7 @@ from generation_funcs import (
 )
 
 # load models (LLaMA3-8B).
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
 model_name_dict = {
     'meta-llama/Meta-Llama-3-8B': 'Llama3-8B', 
     'mistralai/Mistral-7B-v0.3': 'Mistral-7B',
@@ -33,7 +33,7 @@ langs_for_polywrite = {
     'it': 'ita_Latn',
     'nl': 'nld_Latn',
 }
-deactivation_nums = [1000, 10000, 15000, 20000, 25000, 30000]
+deactivation_nums = [1000, 10000, 20000, 30000]
 score_type = 'cos_sim'
 is_baselines = [False, True]
 
