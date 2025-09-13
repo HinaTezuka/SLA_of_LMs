@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ko",
+        "output": " 지구 중력이 갑자기 역전이라니, 상상조차하기 힘든 시나리오네요"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ko",
+        "output": "\n**캐릭터 이름:**  다크세인 (DarkSeian) / 本名"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ko",
+        "output": "2075년, 지구는이미 수십 년 동안 황량한 원시 상태"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ko",
+        "output": "이미 많은 이야기와 영화, 그리고 게임들이 그림자 관련 존재들을 다들아 왔지만"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ko",
+        "output": "2주 전에 [직책명]의 모집에 대해 면접을 진행해 주"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ko",
+        "output": " 안녕하세요 [수신자 이름],\n\n[프로젝트 이름]에 대한"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ko",
+        "output": " [상사의 이름] 님,\n안녕하세요.  [보고서 제출 이"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ko",
+        "output": " [수령인 이메일]  [수정 후의 이메일 본문]"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ko",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ko",
+        "output": " [수령인 이메일 또는 고객 서비스 팀 이름 및 연락처]  팀장"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ko",
+        "output": " [수령처/회사명]  [수령처 이메일 또는 연락처"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ko",
+        "output": " 안녕 [친구 이름],  시간도 참 잘도 흘렀군요.  [몇"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ko",
+        "output": "\n안녕 [수령자 이름], \n\n선물을 정말로 감사하게 받았습니다"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ko",
+        "output": "\n안녕, [친구들의 이름]들~! \n\n이번 달에 조금 일"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ko",
+        "output": " [수取자 이메일]  안녕하세요 [수取자 이름], "
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ko",
+        "output": "\n안녕 [수신자 이름], \n하일! \n(여기서 친"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ko",
+        "output": "[수신자 이메일]안녕하세요, 저는 [당신의 이름]"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ko",
+        "output": " [수령인 이메일]제목: 추천서 요청 - [직위] 지원"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ko",
+        "output": " [수령인 이메일 또는 수식자] 님,\n안녕하십"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ko",
+        "output": " [수取人의 이름]님 안녕하세요,\n[본인의 이름]이라고"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ko",
+        "output": " [이름] 님 안녕하세요.  [현재 직무 또는 회사명]"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ko",
+        "output": " [수령인 이메일/연락처] 님,\n안녕하세요"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ko",
+        "output": "\n**제목: 혁명을 일으키는 새로운 [제품 이름] 출시!** \n**본"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ko",
+        "output": "제목: 귀하의 관심에 대한 후속 통화 및 귀하의 [제품 또는 서비스]"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ko",
+        "output": "\n**제목: [회사 이름] 뉴스레트에 오신 것을 환영합0"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ko",
+        "output": "\n**제목: [고객이미 구매한 제품명]을 위한 완벽한"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ko",
+        "output": " [ 수강 과목/수업명 ]  교수님께,\n[ 수강 과"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ko",
+        "output": "\n안녕 친구들,\n\n우리 그룹 프로젝트를 원활하게 진행하기 위해 몇 가지"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ko",
+        "output": " [교수의 이름]  교수님께,\n\n[ 수업 또는 연구 분야와 관련된"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ko",
+        "output": " [교수님 성함]  교수님 안녕하세요.  [ 수업명]"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ko",
+        "output": " [수령인 이메일]  [경고: 이 이메일 초안은"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ko",
+        "output": "\n온라인 학습과 전통적인 교실 학습의 효과에 대한 논쟁은 수십 년 동안의"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ko",
+        "output": " 환경 문제에 대한 접근 방식은 매우 복잡하고 다양한 관점이 존재합니다. 전 세계적"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ko",
+        "output": "100% 동의합니다, 특히 오늘날의 24/7 미디엄 소"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ko",
+        "output": "21 성취의 시대에, 우리는 놀라운 기술 발전과 함께, 전례"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ko",
+        "output": "\n동물 복지와 윤리적 문제에 대한 관심 증가와 함께, 의학 연구를 위한 동물"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ko",
+        "output": "① 원인: ①) 경제 침체: 많은 국가들이 경제 불황 또는 저해"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ko",
+        "output": "21집에 나열된 여러 요인이 비만의 원인이 될 수 있습니다. 그"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ko",
+        "output": "①원인: ②대처방안:\n1)원인:\n"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ko",
+        "output": "21의 등용을 맞이한 오늘날에도, 여전히 많은 성인이 기본적인 디지털 기술을 갖추"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ko",
+        "output": "2020년 전 세계적으로, 특히 도시 지역에서 노숙자 수가 급격히"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ko",
+        "output": "21 일간의 임무에 환영합니다, 학생들! 제가 귀하의 질"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ko",
+        "output": "2000년대 초반 이후, 특히 2010년 이후, 온라인 쇼핑"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ko",
+        "output": "2000년대 이후, 특히 선진국과 신흥국들에서 책을 읽"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ko",
+        "output": "①원인: 인구 과잉의 원은 다음과 같습니다.\n    •••••"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ko",
+        "output": "1970년대 이후, 세계화는 전 세계 경제, 정치, 문화, 그리고 사회를"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ko",
+        "output": "2020년 전 세계적으로 원격 근무 또는 집에서 근무하는 관행이 급"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ko",
+        "output": "20-30년 전만 해도, 시골 지역에서 대도시로의 이"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ko",
+        "output": "1. \n장점: \n-시간과 공간의 제약이 줄어들 수"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ko",
+        "output": "交通 체증은 전 세계적으로 많은 도시들이 고민하는 중대한 문제 중 하나입니다."
+    }
+]

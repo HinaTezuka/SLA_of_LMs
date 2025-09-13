@@ -2,251 +2,251 @@
     {
         "sample_idx": 0,
         "input_lang": "nl",
-        "output": "\n    Vraag: Beschrijf een dag op aarde waarop de zwaarte"
+        "output": "100% van de mensen zouden sterven.\n\nVraag"
     },
     {
         "sample_idx": 1,
         "input_lang": "nl",
-        "output": "\n    Vraag: Creëer een personage dat een grote rol speelt"
+        "output": "1.\n\n# 1.\n\nThe man who had once been a hero was now"
     },
     {
         "sample_idx": 2,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een verhaal waarin een personage een d"
+        "output": "1984\n\nVraag: Schrijf een verhaal waarin een"
     },
     {
         "sample_idx": 3,
         "input_lang": "nl",
-        "output": "\n    Vraag: Creëer een personage dat een ongeluk heeft overle"
+        "output": "1. Creëer een personage wiens schaduw tot leven is gekomen en"
     },
     {
         "sample_idx": 4,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail om een sollicitatieges"
+        "output": "10 juni 2018\n\nDear Mr. Smith,\n\nI hope"
     },
     {
         "sample_idx": 5,
         "input_lang": "nl",
-        "output": "\n    Vraag: U hebt een vergadering met een collega om de"
+        "output": "Hi,\n\nI hope you are doing well. I am writing to you to ask about a"
     },
     {
         "sample_idx": 6,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar uw supervisor om feedback te"
+        "output": "Hi [Supervisor's Name],\n\nI hope you are doing well. I wanted to"
     },
     {
         "sample_idx": 7,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar je manager waarin je je"
+        "output": "Hi,\n\nI am writing to apologize for missing the deadline for the project. I understand"
     },
     {
         "sample_idx": 8,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een klant die een product"
+        "output": "1.\n\nDear Sir/Madam,\n\nI am writing to you regarding the"
     },
     {
         "sample_idx": 9,
         "input_lang": "nl",
-        "output": "\n    Vraag: Stuur een e-mail naar een klantenservicemedew"
+        "output": "1.\n\n\nVraag: Stuur een e-mail naar een klantenserv"
     },
     {
         "sample_idx": 10,
         "input_lang": "nl",
-        "output": "\n    Vraag: U hebt een onjuiste afschrijving op uw ma"
+        "output": "1.\n\nVraag: U hebt een onjuiste afschrijving op"
     },
     {
         "sample_idx": 11,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail aan een collega waarin u"
+        "output": "10-02-2017\n\nDear Mr. Smith,\n\n"
     },
     {
         "sample_idx": 12,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar de klantenservice van een"
+        "output": "10-05-2023\n\nDear Customer Service,\n\nI"
     },
     {
         "sample_idx": 13,
         "input_lang": "nl",
-        "output": "\n    Vraag: Stel een e-mail op om een retourzending of om"
+        "output": "1.\n\n## 1.\n\nDear [Customer Name],\n\nThank you"
     },
     {
         "sample_idx": 14,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een vriend die je al"
+        "output": "10-02-2018\n\nDear friend,\n\nI hope"
     },
     {
         "sample_idx": 15,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail waarin u een familielid"
+        "output": "1.\n\nDear [Name],\n\nI want to thank you for the [g"
     },
     {
         "sample_idx": 16,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een informele e-mail waarin u vriend"
+        "output": "10-05-2018\n\nDear friends,\n\nI hope"
     },
     {
         "sample_idx": 17,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail waarin u een vriend of"
+        "output": "1.\n\nDear John,\n\nI am writing to congratulate you on your"
     },
     {
         "sample_idx": 18,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een goede vriend of"
+        "output": "10-02-2018\n\nDear friend,\n\nI hope"
     },
     {
         "sample_idx": 19,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een bedrijf waar je"
+        "output": "1.\n\nDear Sir/Madam,\n\nI am writing to you to ask"
     },
     {
         "sample_idx": 20,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een voormalig professor en"
+        "output": "1.\n\nDear Professor,\n\nI hope you are doing well. I am writing"
     },
     {
         "sample_idx": 21,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een formele e-mail aan een overheids"
+        "output": "10-02-2017\n\nDear Mr. Van der Veen"
     },
     {
         "sample_idx": 22,
         "input_lang": "nl",
-        "output": "\n    Vraag: Je hebt een nieuwe klant en wilt jez"
+        "output": "1.\n\nDear colleagues,\n\nMy name is John Smith and I am the new"
     },
     {
         "sample_idx": 23,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een voormalige werk"
+        "output": "1.\n\nDear Mr. Smith,\n\nI hope this email finds you well."
     },
     {
         "sample_idx": 24,
         "input_lang": "nl",
-        "output": "\n    Bedankt voor uw interesse in onze diensten.\n\n    On"
+        "output": "1.\n\nDear [Potential Client],\n\nI am writing to introduce myself"
     },
     {
         "sample_idx": 25,
         "input_lang": "nl",
-        "output": "\n    Vraag: Stel een e-mail op waarin u een nieuwe"
+        "output": "1.\n\nDear [Customer Name],\n\nWe are excited to announce the launch of"
     },
     {
         "sample_idx": 26,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een vervolgmail naar een bestaande klant"
+        "output": "1.\n\nDear [Name],\n\nThank you for your interest in our product."
     },
     {
         "sample_idx": 27,
         "input_lang": "nl",
-        "output": "\n    Vraag: Stel een e-mail op waarin u een nieuwe"
+        "output": "1.\n\n# 1.\n\nDear [First Name],\n\nThank you"
     },
     {
         "sample_idx": 28,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een verkoopmail naar een nieuwe kl"
+        "output": "100%\n\n# 1. Introduction\n\nThe purpose of this document is to"
     },
     {
         "sample_idx": 29,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar uw professor om uitstel"
+        "output": "100%\n\nDear Professor,\n\nI am writing to request an extension for"
     },
     {
         "sample_idx": 30,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar je klasgenoten"
+        "output": "1.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 31,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een professor met vragen over"
+        "output": "1.\n\nDear Professor,\n\nMy name is [name] and I am a"
     },
     {
         "sample_idx": 32,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar je professor waarin je je"
+        "output": "1.\n\nDear Professor,\n\nI am writing to apologize for missing your class"
     },
     {
         "sample_idx": 33,
         "input_lang": "nl",
-        "output": "\n    Vraag: Schrijf een e-mail naar een voormalige professor of"
+        "output": "1.\n\nDear [name],\n\nI hope you are doing well. I am"
     },
     {
         "sample_idx": 34,
         "input_lang": "nl",
-        "output": "\n    Online leren is een populaire manier om kennis te verwerven en vaard"
+        "output": "1. Online learning is more effective than traditional learning.\n\nOnline learning has become increasingly popular"
     },
     {
         "sample_idx": 35,
         "input_lang": "nl",
-        "output": "\n    Milieuproblemen zijn een van de grootste uitdagingen die"
+        "output": "1.\n\nSome people think that environmental problems should be solved worldwide, while others think that they"
     },
     {
         "sample_idx": 36,
         "input_lang": "nl",
-        "output": "\n    Vraag: Wat is de belangrijkste reden waarom het bereiken"
+        "output": "100% oneens\n\nVraag: Wat is de belangrijkste re"
     },
     {
         "sample_idx": 37,
         "input_lang": "nl",
-        "output": "1. Veranderde leefstijl: De huidige leefstijl"
+        "output": "1. De oorzaken van het toenemende gemiddelde gewicht van m"
     },
     {
         "sample_idx": 38,
         "input_lang": "nl",
-        "output": "\n    Dierproeven zijn een controversieel onderwerp in de medische wetenschap"
+        "output": "1. Dierproeven zijn noodzakelijk voor medisch onderzoek. "
     },
     {
         "sample_idx": 39,
         "input_lang": "nl",
-        "output": "1. De oorzaken van dit probleem zijn veelvuldig. Een"
+        "output": "1.\n\n# 1.\n\n## Introduction\n\nThe youth unemployment rate in the"
     },
     {
         "sample_idx": 40,
         "input_lang": "nl",
-        "output": "1. Obesitas is een serieus probleem in veel landen.\n    2"
+        "output": "Obesitas is een serieus probleem in veel landen, met een toenem"
     },
     {
         "sample_idx": 41,
         "input_lang": "nl",
-        "output": "1. Luchtvervuiling:\n    - Verkeer: auto's,"
+        "output": "1. Luchtvervuiling\n\nLuchtvervuiling is een groot"
     },
     {
         "sample_idx": 42,
         "input_lang": "nl",
-        "output": "\n    Vraag: Wat is de toekomst van de digitale wereld en"
+        "output": "1. De digitale wereld is een nieuwe wereld. De digitale wereld"
     },
     {
         "sample_idx": 43,
         "input_lang": "nl",
-        "output": "\n    Vraag: Wat zijn de verschillen tussen de verschillende vorm"
+        "output": "1. In veel stedelijke gebieden neemt dakloosheid toe."
     },
     {
         "sample_idx": 44,
         "input_lang": "nl",
-        "output": "\n    Klimaatverandering is een van de grootste uitdagingen van"
+        "output": "1. Klimaatverandering is een van de grootste uitdagingen van"
     },
     {
         "sample_idx": 45,
         "input_lang": "nl",
-        "output": "\n    Vraag: Wat zijn de voordelen en nadelen van online shoppen?"
+        "output": "100% online shoppen is een trend die in de laatste jaren steeds"
     },
     {
         "sample_idx": 46,
         "input_lang": "nl",
-        "output": "\n    In veel delen van de wereld is het aantal mensen dat boeken le"
+        "output": "1. The decline of reading culture in many parts of the world is due to several factors, including"
     },
     {
         "sample_idx": 47,
         "input_lang": "nl",
-        "output": "\n    Overbevolking is een probleem dat veel steden in de wereld"
+        "output": "1. Overbevolking is een probleem dat veel steden in de wereld"
     },
     {
         "sample_idx": 48,
         "input_lang": "nl",
-        "output": "\n    Globalisering is het proces waarbij landen en bedrijven zich veren"
+        "output": "1. Globalisering heeft veel voordelen gebracht, maar ook negatieve"
     },
     {
         "sample_idx": 49,
         "input_lang": "nl",
-        "output": "1. Voordelen:\n    - Flexibiliteit: Remote werken bied"
+        "output": "1. De voor- en nadelen van remote werken zijn:\n\nVoor:\n"
     }
 ]

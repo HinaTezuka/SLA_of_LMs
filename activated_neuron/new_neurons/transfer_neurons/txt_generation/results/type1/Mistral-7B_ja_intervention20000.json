@@ -2,137 +2,137 @@
     {
         "sample_idx": 0,
         "input_lang": "ja",
-        "output": "質問: 地球上で重力が突然数時間逆�"
+        "output": "地球上で重力が突然数時間逆転する一日"
     },
     {
         "sample_idx": 1,
         "input_lang": "ja",
-        "output": "質問: キャラクターの名前は？\n    答"
+        "output": "アンチヒーロー\n\n質問: キャラクタ"
     },
     {
         "sample_idx": 2,
         "input_lang": "ja",
-        "output": "質問: 自分たち抜きで進んでいっ"
+        "output": "最後の生き残りである登場人物について書い"
     },
     {
         "sample_idx": 3,
         "input_lang": "ja",
-        "output": "質問: 2 週間前に受けた就��"
+        "output": "このメールは、2 週間前に受けた就�"
     },
     {
         "sample_idx": 4,
         "input_lang": "ja",
-        "output": "1. 会議の目的を明確にする\n    2."
+        "output": "以下のようなメールを書きます。\n\n```\n"
     },
     {
         "sample_idx": 5,
         "input_lang": "ja",
-        "output": "質問: 上司にメールを書いて、最近提"
+        "output": "あなたの最近提出したレポートについてのフ"
     },
     {
         "sample_idx": 6,
         "input_lang": "ja",
-        "output": "質問: プロジェクトの期限に間に合わ"
+        "output": "以下のようなメールを作成します。\n\nSubject:"
     },
     {
         "sample_idx": 7,
         "input_lang": "ja",
-        "output": "質問: 購入した製品が期限切れで"
+        "output": "製品が間違っていたか、破損してい"
     },
     {
         "sample_idx": 8,
         "input_lang": "ja",
-        "output": "問題: 購入を検討している製品の"
+        "output": "製品の在庫状況と仕様について��"
     },
     {
         "sample_idx": 9,
         "input_lang": "ja",
-        "output": "質問: 毎月の請求書に間違っ"
+        "output": "お客様の請求書に間違った請求額が記載"
     },
     {
         "sample_idx": 10,
         "input_lang": "ja",
-        "output": "質問: 会社のカスタマー サービス部"
+        "output": "このような場合、以下のようなメールを書き"
     },
     {
         "sample_idx": 11,
         "input_lang": "ja",
-        "output": "質問: オンラインで購入した製品"
+        "output": "このメールは、オンラインで購入した製"
     },
     {
         "sample_idx": 12,
         "input_lang": "ja",
-        "output": "質問: 友達にメールを書いて、自分の"
+        "output": "いいえ、それはいけません。\n\n質問:"
     },
     {
         "sample_idx": 13,
         "input_lang": "ja",
-        "output": "質問: 友人の贈り物に対して、お"
+        "output": "贈り物に感謝する理由と、それをど"
     },
     {
         "sample_idx": 14,
         "input_lang": "ja",
-        "output": "質問: あなたは、友人にパーティーの"
+        "output": "このメールは、あなたの友人にお知らせする"
     },
     {
         "sample_idx": 15,
         "input_lang": "ja",
-        "output": "答え: \n    答え: \n    答え: \n    答え"
+        "output": "この質問には、以下のような回答があり"
     },
     {
         "sample_idx": 16,
         "input_lang": "ja",
-        "output": "質問: 友人や家族にメールを書いて、"
+        "output": "親しい友人や家族にメールを書いて、嬉"
     },
     {
         "sample_idx": 17,
         "input_lang": "ja",
-        "output": "質問: 大学の入学事務局にメールを書"
+        "output": "大学の入学事務局にメールを書いて、特定の"
     },
     {
         "sample_idx": 18,
         "input_lang": "ja",
-        "output": "質問: 元教授に推薦状を書いても"
+        "output": "その職種の詳細を記載し、さらに情"
     },
     {
         "sample_idx": 19,
         "input_lang": "ja",
-        "output": "質問: 懸念している地域の問題に"
+        "output": "この問題について、政府関係者に正式な"
     },
     {
         "sample_idx": 20,
         "input_lang": "ja",
-        "output": "1. 自己紹介\n    2. 期待\n    3."
+        "output": "このような場合、自己紹介のメールを書"
     },
     {
         "sample_idx": 21,
         "input_lang": "ja",
-        "output": "質問: 以前の雇用主に、新しい�"
+        "output": "以下のようなメールを作成してください。\n"
     },
     {
         "sample_idx": 22,
         "input_lang": "ja",
-        "output": "質問: 潜在の顧客に対して、"
+        "output": "このコールド メールは、自社の主な強みを"
     },
     {
         "sample_idx": 23,
         "input_lang": "ja",
-        "output": "質問: 新製品の発売を告知するマ"
+        "output": "このメールは、新製品の発売を告知する"
     },
     {
         "sample_idx": 24,
         "input_lang": "ja",
-        "output": "質問: あなたの製品に興味を示し"
+        "output": "あなたの製品に興味を示した潜在�"
     },
     {
         "sample_idx": 25,
         "input_lang": "ja",
-        "output": "コード:\n\n```\n<!DOCTYPE html>\n<html>"
+        "output": "このメールは、新しいニュースレターの��"
     },
     {
         "sample_idx": 26,
         "input_lang": "ja",
-        "output": "質問: 既存の顧客に対して、以前"
+        "output": "以下のようなコードを使用して、既存の��"
     },
     {
         "sample_idx": 27,
@@ -142,22 +142,22 @@
     {
         "sample_idx": 28,
         "input_lang": "ja",
-        "output": "質問: グループ プロジェクトを調整"
+        "output": "グループ プロジェクトを調整するクラスメ"
     },
     {
         "sample_idx": 29,
         "input_lang": "ja",
-        "output": "質問: 研究の機会について質問し"
+        "output": "この研究の目的は、人類の生活における重要"
     },
     {
         "sample_idx": 30,
         "input_lang": "ja",
-        "output": "質問: 授業を欠席したことを"
+        "output": "予期せぬ事情により授業を欠席"
     },
     {
         "sample_idx": 31,
         "input_lang": "ja",
-        "output": "1. 質問者の現在の状況を簡"
+        "output": "このようなメールを書くと、元教授やメンタ"
     },
     {
         "sample_idx": 32,
@@ -167,17 +167,17 @@
     {
         "sample_idx": 33,
         "input_lang": "ja",
-        "output": "質問: 世界の環境問題は、地域�"
+        "output": "環境問題は世界規模で解決すべきだと考"
     },
     {
         "sample_idx": 34,
         "input_lang": "ja",
-        "output": "質問: あなたは、自分の職場でワ"
+        "output": "同意\n\n質問: あなたは、自分の��"
     },
     {
         "sample_idx": 35,
         "input_lang": "ja",
-        "output": "1. この問題の原因は、人々が食べる"
+        "output": "この問題の原因は、人々が食べる食べ物"
     },
     {
         "sample_idx": 36,
@@ -187,7 +187,7 @@
     {
         "sample_idx": 37,
         "input_lang": "ja",
-        "output": "1. 質問: 多くの国で若者は就��"
+        "output": "若者の就職に苦労している原因"
     },
     {
         "sample_idx": 38,
@@ -197,17 +197,17 @@
     {
         "sample_idx": 39,
         "input_lang": "ja",
-        "output": "質問: 日本の大都市では、多くの人が"
+        "output": "大気汚染と水質汚染は、大都市"
     },
     {
         "sample_idx": 40,
         "input_lang": "ja",
-        "output": "質問: 今日の世界では、多くの大人が"
+        "output": "2016年には、世界の人口の90%がイン"
     },
     {
         "sample_idx": 41,
         "input_lang": "ja",
-        "output": "1. ホームレスの増加の原因は何です"
+        "output": "多くの都市部ではホームレスが増加して"
     },
     {
         "sample_idx": 42,
@@ -222,12 +222,12 @@
     {
         "sample_idx": 44,
         "input_lang": "ja",
-        "output": "質問: 世界の多くの地域で、本を読む"
+        "output": "世界の多くの地域で、本を読む人の数が大幅"
     },
     {
         "sample_idx": 45,
         "input_lang": "ja",
-        "output": "1. 人口過多の原因は何でしょうか。\n    "
+        "output": "人口過多の原因は、多くの都市では、人口が"
     },
     {
         "sample_idx": 46,
@@ -237,16 +237,16 @@
     {
         "sample_idx": 47,
         "input_lang": "ja",
-        "output": "リモートワークのメリットとデメリットにつ"
+        "output": "近年、リモートワークが一般的になってきま"
     },
     {
         "sample_idx": 48,
         "input_lang": "ja",
-        "output": "1. 地方から都市へ移住する人が増え"
+        "output": "地方から都市へ移住する人が増えていま"
     },
     {
         "sample_idx": 49,
         "input_lang": "ja",
-        "output": "技術の進歩により、人々のコミュニ"
+        "output": "人々のコミュニケーション方法は、技術"
     }
 ]

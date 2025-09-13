@@ -2,67 +2,67 @@
     {
         "sample_idx": 0,
         "input_lang": "ko",
-        "output": "질문: 지구의 중력이 몇 시간 동"
+        "output": "지구의 중력이 갑자기 역전되는 하루는"
     },
     {
         "sample_idx": 1,
         "input_lang": "ko",
-        "output": "1. 캐릭터 이름: 엘리자��"
+        "output": "캐릭터 설정 중 가장 중요한 것은"
     },
     {
         "sample_idx": 2,
         "input_lang": "ko",
-        "output": "1. 캐릭터의 이름은 무엇인가"
+        "output": "캐릭터의 이름은 캐논이다."
     },
     {
         "sample_idx": 3,
         "input_lang": "ko",
-        "output": "1. 그림자를 만들어 보세요.\n    2."
+        "output": "그림자가 살아나 장난치는 캐릭"
     },
     {
         "sample_idx": 4,
         "input_lang": "ko",
-        "output": "질문: 면접 후 이메일을 작성하는 것"
+        "output": "안녕하세요. 저는 지난 2주 전 "
     },
     {
         "sample_idx": 5,
         "input_lang": "ko",
-        "output": "1. 회의 일정을 요청하는 이메일을 "
+        "output": "안녕하세요. 저는 프로젝트 진행 "
     },
     {
         "sample_idx": 6,
         "input_lang": "ko",
-        "output": "제출한 보고서에 대한 피드백을 요청하"
+        "output": "안녕하세요. 제가 제출한 보고서에"
     },
     {
         "sample_idx": 7,
         "input_lang": "ko",
-        "output": "질문: 프로젝트 마감일을 놓친"
+        "output": "안녕하세요. 저는 프로젝트 마감일"
     },
     {
         "sample_idx": 8,
         "input_lang": "ko",
-        "output": "질문: 배송 지연이나 제품 손상 "
+        "output": "잘못된 제품이나 손상된 제품을 배"
     },
     {
         "sample_idx": 9,
         "input_lang": "ko",
-        "output": "문제 설명:\n    회사의 고객 서비스 부"
+        "output": "안녕하세요. 저는 회사의 고객 서"
     },
     {
         "sample_idx": 10,
         "input_lang": "ko",
-        "output": "질문: 제품 구매 후 반품 또는 교환"
+        "output": "반품 또는 교환을 요청하려면 다음 단"
     },
     {
         "sample_idx": 11,
         "input_lang": "ko",
-        "output": "질문: 당신의 친구가 당신에게 이"
+        "output": "당신의 친구에게 이메일을 보내는 "
     },
     {
         "sample_idx": 12,
         "input_lang": "ko",
-        "output": "1. 선물을 받은 사람의 이름과 선물"
+        "output": "감사 이메일을 쓰는 것은 선물을 받은"
     },
     {
         "sample_idx": 13,
@@ -72,37 +72,37 @@
     {
         "sample_idx": 14,
         "input_lang": "ko",
-        "output": "질문: 친구나 동료의 최근 업적을"
+        "output": "친구나 동료의 최근 업적을 축"
     },
     {
         "sample_idx": 15,
         "input_lang": "ko",
-        "output": "질문: 가까운 친구나 가족에게"
+        "output": "가까운 친구나 가족에게 흥"
     },
     {
         "sample_idx": 16,
         "input_lang": "ko",
-        "output": "1. 이메일 주소를 입력하세요.\n    2"
+        "output": "대학 입학 사무실에 이메일을 써서"
     },
     {
         "sample_idx": 17,
         "input_lang": "ko",
-        "output": "1. 직위에 대한 세부 정보를 제공하"
+        "output": "이메일 내용을 작성하는 것은 매우 중"
     },
     {
         "sample_idx": 18,
         "input_lang": "ko",
-        "output": "질문: 귀하에게 우려되는 지역 문"
+        "output": "이메일을 작성하는 것은 우리가 귀"
     },
     {
         "sample_idx": 19,
         "input_lang": "ko",
-        "output": "안녕하세요. 저는 이름이 김철"
+        "output": "안녕하세요. 저는 새로운 직장에 "
     },
     {
         "sample_idx": 20,
         "input_lang": "ko",
-        "output": "질문: 이전 고용주에게 이메일을 작성"
+        "output": "이전 고용주에게 이메일을 작성하여 새"
     },
     {
         "sample_idx": 21,
@@ -112,77 +112,77 @@
     {
         "sample_idx": 22,
         "input_lang": "ko",
-        "output": "새로운 제품 출시를 알리는 마케팅"
+        "output": "제품 출시를 알리는 마케팅 이메일"
     },
     {
         "sample_idx": 23,
         "input_lang": "ko",
-        "output": "질문: 귀하의 제품에 관심을 표명"
+        "output": "귀하의 제품에 관심을 표명한 ��"
     },
     {
         "sample_idx": 24,
         "input_lang": "ko",
-        "output": "질문: 회사 뉴스레터의 구독자를 "
+        "output": "이메일 내용을 작성하기 전에 먼저"
     },
     {
         "sample_idx": 25,
         "input_lang": "ko",
-        "output": "제품 이름: \n    제품 설명: \n    제품"
+        "output": "이 문제를 해결하려면 다음 단계를 따"
     },
     {
         "sample_idx": 26,
         "input_lang": "ko",
-        "output": "질문: 교수님에게 과제 연장을 요"
+        "output": "안녕하세요. 저는 과제 연장을 요"
     },
     {
         "sample_idx": 27,
         "input_lang": "ko",
-        "output": "질문: 그룹 프로젝트를 조정하는 "
+        "output": "그룹 프로젝트를 조정하는 반 ��"
     },
     {
         "sample_idx": 28,
         "input_lang": "ko",
-        "output": "질문: 잠재적인 연구 기회에 대해"
+        "output": "교수님,\n\n저는 컴퓨터 과"
     },
     {
         "sample_idx": 29,
         "input_lang": "ko",
-        "output": "질문: 수업을 놓친 것에 대해"
+        "output": "예상치 못한 상황으로 인해 수업을"
     },
     {
         "sample_idx": 30,
         "input_lang": "ko",
-        "output": "질문: 전직 교수나 멘토에게 이메"
+        "output": "이메일을 작성하여 전직 교수나 멘"
     },
     {
         "sample_idx": 31,
         "input_lang": "ko",
-        "output": "1. 온라인 학습의 장점:\n    - 학생"
+        "output": "두 가지 견해는 각각 유효한 근거"
     },
     {
         "sample_idx": 32,
         "input_lang": "ko",
-        "output": "1. 환경 문제는 전 세계적으로 해결"
+        "output": "지역적으로 해결하는 것이 전 세계적으"
     },
     {
         "sample_idx": 33,
         "input_lang": "ko",
-        "output": "1. 동의합니다.\n    2. 동의하지 않"
+        "output": "일과 삶의 균형을 이루는 것이"
     },
     {
         "sample_idx": 34,
         "input_lang": "ko",
-        "output": "1. 많은 사람들이 많은 양의"
+        "output": "많은 국가에서 사람들의 평균 "
     },
     {
         "sample_idx": 35,
         "input_lang": "ko",
-        "output": "1. 의학 연구를 위한 동물 실험"
+        "output": "둘 다 의견이 있는 것은 사실"
     },
     {
         "sample_idx": 36,
         "input_lang": "ko",
-        "output": "1. 경쟁이 많은 경제 구조\n"
+        "output": "현재 경제 상황에 따라 일자리 부"
     },
     {
         "sample_idx": 37,
@@ -197,12 +197,12 @@
     {
         "sample_idx": 39,
         "input_lang": "ko",
-        "output": "디지털 리터러시는 현재 많은 "
+        "output": "디지털 리터러시 문제는 많은 "
     },
     {
         "sample_idx": 40,
         "input_lang": "ko",
-        "output": "\n    노숙자는 일반적으로 많은 "
+        "output": "많은 도시 지역에서 노숙자가 "
     },
     {
         "sample_idx": 41,
@@ -217,17 +217,17 @@
     {
         "sample_idx": 43,
         "input_lang": "ko",
-        "output": "1. 세계 여러 지역에서 책을 읽"
+        "output": "세계 여러 지역에서 책을 읽는 사"
     },
     {
         "sample_idx": 44,
         "input_lang": "ko",
-        "output": "인구 과잉은 도시 생활에 긍정"
+        "output": "인구 과잉은 많은 도시에서 심"
     },
     {
         "sample_idx": 45,
         "input_lang": "ko",
-        "output": "세계화는 세계 경제와 문화의 통합을 "
+        "output": "세계화는 많은 이점을 가져왔지"
     },
     {
         "sample_idx": 46,
@@ -237,16 +237,16 @@
     {
         "sample_idx": 47,
         "input_lang": "ko",
-        "output": "1. 시골에서 도시로 이주하는 추"
+        "output": "이주는 사람들이 더 좋은 생활환경을 "
     },
     {
         "sample_idx": 48,
         "input_lang": "ko",
-        "output": "1. 장점: 기술의 발전으로 사람"
+        "output": "기술의 발전으로 사람들이 소통하는"
     },
     {
         "sample_idx": 49,
         "input_lang": "ko",
-        "output": "1. 대중교통 시스템의 장점\n    - 환"
+        "output": "대중교통 시스템은 도시 내 교통 체증"
     }
 ]

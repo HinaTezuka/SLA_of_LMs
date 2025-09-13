@@ -33,10 +33,7 @@ def make_prompt(prompt: str, L2: str) -> str:
     'it': 'Risposta: ',
     'en': 'Answer: ',
     }
-    return_prompt = f"""
-    {question_patterns[L2]}{prompt}
-    {ans_patterns[L2]}
-    """
+    return_prompt = f"{question_patterns[L2]}{prompt}\n{ans_patterns[L2]}"
 
     return return_prompt
 
@@ -63,7 +60,6 @@ def edit_activation_always(output, layer, layer_idx_and_neuron_idx):
     layer_idx_and_neuron_idx: list of tuples like [(layer_idx, neuron_idx), ....]
     """
     for layer_idx, neuron_idx in layer_idx_and_neuron_idx:
-        # if str(layer_idx) in layer and output.shape[1] != 1:
         if f"model.layers.{layer_idx}." in layer:
             output[:, -1, neuron_idx] *= 0
 
@@ -97,6 +93,7 @@ def polywrite(model, tokenizer, device, data, L2, num_samples=50):
                 )
 
         output_text = tokenizer.decode(output[0][input_len:], skip_special_tokens=True)
+
         results.append({
             'sample_idx': sample_idx,
             'input_lang': L2,

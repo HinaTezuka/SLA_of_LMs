@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "it",
+        "output": "\nIn un giorno cualquiera, mentre il sole sorge e gli uccelli cinguellano, la Terra decide"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "it",
+        "output": "\nNate \"il salvatore\" O'Connor era un tempo il paladino d'oro"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "it",
+        "output": "1. **Personaggio:** Elias, un'ibernato da decine e decine de"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "it",
+        "output": "\nPresenta ciacno e traballante, colte di stelai e vesti"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "it",
+        "output": "\nOggetto: Follow-up del colloquio di [dà il 24/0"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "it",
+        "output": "\nGentile [Nome collega],\n\nSpero questa e-mail La trovi bene."
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "it",
+        "output": "\nGentile [nome supervisore],\n\nSpero questa e-mail la trovi bene"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "it",
+        "output": "\nOggetto: Scuse per il ritardo nella consegna del Progetto X\n\nGent"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "it",
+        "output": "\nOggetto: Prodotto errato/dannegiato - [numero/nodo"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "it",
+        "output": "\nOggetto: informazione su [inserire nome e/o n. p.v"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "it",
+        "output": "\nOggetto: \nA/R: [numero di fatura/numero di"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "it",
+        "output": "\nGentile [Nome Cliente],\n\nvogliamoLa ringraziare sinceramente"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "it",
+        "output": "\nOggetto: SEGNALAZIONE RIGARDANTE BRUTTA ESPERI"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di Restituzione/Scambio - Numero Ordine: ["
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "it",
+        "output": "\n**Caro/a [Nome Amico/a],**\n\nTanto tempo ha"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "it",
+        "output": "\nOggetto: sinceri ringraziamenti per il tuo generoso regalo\n\nC"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "it",
+        "output": "\nCiao a tutti!\n\nSpero ke questa e-mail vi prenda in un"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "it",
+        "output": "\nOggetto: Tanti augri per tuo/tua ...!\n\nCaro"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "it",
+        "output": "\nGentile [Nome],\n\nspero ke questa email ti raggiunga in piena forma e"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "it",
+        "output": "\nOggetto: informazione sul programma di [nome_del_programma]\n\nGentile"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "it",
+        "output": "\nOggetto: Lettera di raccomandazione - [Tuo NOME] - [T"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "it",
+        "output": "\nOggetto: Preocupazioni Riguardo allo Deterioro Ambientale in [zona"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "it",
+        "output": "\nOggetto: Presentazione e saluti di benvenuto\n\nGentili [Nomi"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di utilizzo come riferimento professionale\n\nGentile [Nome D"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "it",
+        "output": "\n**Oggetto: potenziare [NOME_A_CUSTO_DEL_"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "it",
+        "output": "\n**Oggetto:  Presentiamo [Nome Prodotto: X-Tech Pro] - il"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "it",
+        "output": "\nOggetto: Seguendo il nostro recente dialogo riguardo [NOME_PRODUTO]"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "it",
+        "output": "\n**Oggetto:** \nBenvenuto(a) in [Nome della tua azienda"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "it",
+        "output": "\n**Oggetto: elliLe Nuove Soluzioni per Potenziare il Suo ["
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "it",
+        "output": "\nOggetto: Proroga per [nOME DELL’INCARICO] - ["
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "it",
+        "output": "\n**Oggetto: Progetto di Ricerca di Gruppo - [tema del progetto]**\n"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "it",
+        "output": "\nGentile [Nome Professore],\n\nmi chiamo [Tuo Nome] e sono"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "it",
+        "output": "\nGentile Docente,\n\nLe scrivo per porle le mie sincere scuse per"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "it",
+        "output": "\nGentile [nome_del_profesore],\n\nspero questa email la raggi"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "it",
+        "output": "\nDa un lato, l’avvento delle tecnologie digitali e delle piattaforme di e"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "it",
+        "output": "\nDa un lato, è innegabile i problemi ambientali, quali le emissioni di gas"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "it",
+        "output": "\nRaggiungere un sano equilibrio tra lavoro e vita privata è, senza dubbio,"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "it",
+        "output": "\nIn effetti, l'obesità e la scarsa forma fisica stanno diventando sempre più comuni in"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "it",
+        "output": "\nLa questione della sperimentazione animale per la ricerca medica è un tema controverso e complesso, che"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "it",
+        "output": "\nIn primo luogo, le cause principali per cui i giovani faticano a trovare un’occupazione"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "it",
+        "output": "1) **Cauze:**\n   - **dieta povera e/o inadecuada"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "it",
+        "output": "\nIn molte grandi città, l'inquinamento dell'aria e dell'acqua è un"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "it",
+        "output": "\nCi sono diverse ragioni per cui molti adulti nel mondo odierno ancora careciano di competenze"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "it",
+        "output": "\nIl fenomeno dei senzatetto, ovvero individui o famiglie prive di una dimora stabile e a"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "it",
+        "output": "\nIl cambiamento climatico è un fenomeno complesso e multiforme, in gran parte attribuito àstriche"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "it",
+        "output": "1) **Comodità e accessibilità**: lo shopping online offre agli individui la possibilità di acquist"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "it",
+        "output": "\nIl declino della lettura dei libri, registrato in molte parti del mondo, è il risultato di"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "it",
+        "output": "\nLa sovrappopolazione, o eccesso di individui vivendo in un’area urbana, è"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "it",
+        "output": "\nLa globalizzazione è un fenomeno complesso e multidimensionale che si è venuto sviluppando nel"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "it",
+        "output": "\nIl lavoro da remoto o in modalità *home-sparing* è cresciuto di molto negli"
+    }
+]

@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "it",
+        "output": "2019-11-18\n\n# Gravity reversal day\n\n"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "it",
+        "output": "100% handdrawn, no photoshop or anything else.\n\nI'"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "it",
+        "output": "1984\nAutore: George Orwell\nPersonaggio: Winston Smith\n"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "it",
+        "output": "100% JavaScript\n\n```javascript\nconst personaggio = {\n  name:"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "it",
+        "output": "10 punti\n\nDear Mr. Smith,\n\nThank you very much for taking"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "it",
+        "output": "1.Hello [collega],\n2.I hope you are well.\n3."
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\nDear supervisor,\n\n"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "it",
+        "output": "15/03/2023\n```\nDear [responsible_"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "it",
+        "output": "1.&nbsp;Dear [Vendor Name],<br/><br/>I am"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "it",
+        "output": "15/11/2022\n```python\nimport random\nimport string"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "it",
+        "output": "15/05/2023\n\nDear [Company Name],\n\n"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\nDear [customer name],\n"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\nDear Sir/Madam,"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "it",
+        "output": "1.&nbsp;Dear customer service,<br/><br/>I would like to"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "it",
+        "output": "15/11/2019\n<p>\n<span style=\"font"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "it",
+        "output": "15/11/2018\nDear [name of relative or friend],"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "it",
+        "output": "15/11/2019\n<br/><br/><br/>"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "it",
+        "output": "15/03/2019\nDear John,\nI hope you are"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "it",
+        "output": "15/11/2019\nDear friend,\nI’m writing"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "it",
+        "output": "15/03/2023\n```python\nimport os\nimport random"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\nDear Professor,\n\nI"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "it",
+        "output": "15/11/2022\nDear Sir/Madam,\nI"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "it",
+        "output": "15/05/2023\n```\nSubject: Introducing myself"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "it",
+        "output": "1.000 €\nDomanda: &#39;Dear sir, I am"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "it",
+        "output": "100%\n\nDear [name of potential client],\n\nThank you for considering"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "it",
+        "output": "👇👇👇👇👇"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "it",
+        "output": "100%\n\nDear [name of prospective customer],\n\nThank you for"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "it",
+        "output": "100% correcto\n```\nHi John,\n\nThank you for subscrib"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "it",
+        "output": "1. Introduzione e motivazione per la email de vendita: &quot;Dear"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "it",
+        "output": "15/11/2022\nDear Professor,\nI hope you are"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "it",
+        "output": "1.&nbsp;<br/><br/><br/><br/><br/>"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\nDear Professor,\n\nI"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "it",
+        "output": "15 punti bonus\n\nDear Professor,\n\nI am writing to apologize for"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\n&#39;Dear Professor"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "it",
+        "output": "195 paragrafi\n\n## Domanda:\n\nAlcuni credono"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "it",
+        "output": "150-200 paragrafi\n\nIntroduction:\n\nThe issue of"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "it",
+        "output": "100% Disagree\nDomanda: In generale, do you think that people"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "it",
+        "output": "1. sedentarismo e alimentazione non equilibrate; 2. maggi"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "it",
+        "output": "1.500-2.000 paragrafi\n\nIntroduction:\n"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "it",
+        "output": "1. Uno dei motivi principali per cui i giovani hanno problemi a tro"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "it",
+        "output": "1. Obesity has become a serious problem in many countries. What do you think are the"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "it",
+        "output": "1. In molte grandi città, la qualità dell&#39;aria e dell"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "it",
+        "output": "1) una cultura digitale ancora immature; 2) una educazione ancora tradiz"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "it",
+        "output": "1) una delle principali razioni è la crisi economica globale e la instabil"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "it",
+        "output": "1.0 point(s)\nDomanda: quali sono potenziali soluz"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "it",
+        "output": "100% delle risposte sono valide!\n\n1. Online shopping has become"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "it",
+        "output": "1. In molte parti del mondo, il numero delle persone che leggono lib"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "it",
+        "output": "1.a. sovrappopolazione: excessively large population of something (= too many"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "it",
+        "output": "1. globalizzazione ha portato benefici e impati negativi su certi asp"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "it",
+        "output": "300-400 paragrafi\n\nNegli ultimi anni, il"
+    }
+]

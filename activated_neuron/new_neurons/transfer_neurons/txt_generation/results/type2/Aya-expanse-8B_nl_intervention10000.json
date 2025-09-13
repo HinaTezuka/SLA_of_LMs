@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "nl",
+        "output": "22-07-2020, Dr. Ian Tice, astrofysicus"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "nl",
+        "output": " **<NAME>**, der **Ragnarok-Overleiser**\n\n**Back"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "nl",
+        "output": "\nElias was de laatste Tlingit-Indianer in zijn alomvattende,"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "nl",
+        "output": "1. **Personage:** \" Shade \" ( of \" Shadow \" ) - een 25"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "nl",
+        "output": "\nSubject: Opvaktregerings-e-mail: [Functilegend &"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "nl",
+        "output": "\n**Subject:  Vergaderpraktijk: Projectvoortgang**\n\nTegen"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "nl",
+        "output": "\nSubject: Feedback over recent rapport & Suggesties voor Verbetering\n\nTenszest"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "nl",
+        "output": "\nSubject: Mea Culpa: Projectdeadline [projekttrechnische details]\n"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "nl",
+        "output": "\nSubject: Naleving van bestelnr. {bestelnr} - {item1"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "nl",
+        "output": "\n**Subject:** \n>  :  inquiry over [Product "
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "nl",
+        "output": "1) Identteze de onnauwzege in de afschrijving (bijv."
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "nl",
+        "output": "\nSubject: Hartelijk Dank & Excitante News: [Your company name] Special Offer!"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "nl",
+        "output": "\nSubject: Nonsenavondermalbehandeling door [klantenservice]"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "nl",
+        "output": "\nSubject:  [Bestellennummer] : Return/Exchange Request - "
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "nl",
+        "output": "\nSubject: lang \nlangelange tijd herabt! \nHallo ["
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "nl",
+        "output": "\nSubject: Hartelijk Dank voor het wunderbare [Cadeau]!\n\nT"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "nl",
+        "output": "\nSubject:  Kleine Feestnighte: Combi-verjaardag"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "nl",
+        "output": "\nSubject: Hartelijke Félicitanden voor Your recente [Prestatie/Success/Achievement]"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "nl",
+        "output": "\nSubject: Super-niedrigkalkvondst!\n\nHallo [v"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "nl",
+        "output": "\nSubject:  Informeel e-mailvragen over toelating tot het ["
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "nl",
+        "output": "\nBetreft: Bitte ochtensonele aanbevelingsbrief voor [uw functie"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "nl",
+        "output": "\n**Subject:** Nalevering van lissefalsen langs [straßenname"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "nl",
+        "output": "\nSubject: Meletenvorstellung: [Your Name] - Noul Teamlid\n\n"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "nl",
+        "output": "\nSubject: Aannamevraag als referentie – [uw (ehemalige)"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "nl",
+        "output": "\n**Subject:** {YourCompanyName}: {Aangepaste, tijdbeperkte"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "nl",
+        "output": "\n**Subject:  [Your Brand] presenteert: [Product Name] - Your ultimate ["
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "nl",
+        "output": "\nBetreft: Apreciatiebetreft & Verfijning van joul"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "nl",
+        "output": "\n**Subject:** {Your Brand}: welkom bij onze top-nederland-s"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "nl",
+        "output": "\n**Subject:**  kopeafnessen die Ihnen können du"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "nl",
+        "output": "\nBetreft: Aalsmehlitangn voor [opdracht/hausaufgabe"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "nl",
+        "output": "\n**Subject: Groepsproject: [Projectthema] - Wiskids vieren Success"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "nl",
+        "output": "\nSubject: Mogelijke samenwerkingsvragen & onderzoeksmogelijkheden\n\n[Name"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "nl",
+        "output": "\nSubject: Verontschuldiging voor het missen van de les & Bitte um I"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "nl",
+        "output": "\nBetreft: Aansvengend on my career path - [Your Name]\n"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "nl",
+        "output": "\nHet debat rond de effectiviteit van online versus traditioneel (klassikaal) leren to"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "nl",
+        "output": "\nSommige mensen geloven verindele, mondiale benadering om milieuproblemen"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "nl",
+        "output": "21e-eeuw professionals hebben verlamende pressuren van de digitale tijd-samen"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "nl",
+        "output": "1) **Overvloedige, (vaak) ongesunde** voeding: The"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "nl",
+        "output": "\n**Legen van het debat: Dierproeven voor medisch onderzoek**\n\n**1"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "nl",
+        "output": "1) **Cijfers & Globalnekaalbenatag:**\n   - **Cij"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "nl",
+        "output": "1) **Cijfers & Spread**: Obesitas is een wereldwijde problemteat"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "nl",
+        "output": "\nLucht- en watervervuiling zijn wereldsme problemen die vooral in snel-k"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "nl",
+        "output": "1) **Sociale & Economische Barrières**:\n   - **Costen**: Aware"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "nl",
+        "output": "1) **Redenen toegenomen dakloosheid:**\n   - **Economische reasons:** "
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "nl",
+        "output": "1) **Emissies van broeikasgassen:** Aangeordend als hoofdver"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "nl",
+        "output": "1) **Convenience (便ongerijkheid) & Snelheid**: Online shop"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "nl",
+        "output": "1) **Tienlevels van Medialen Atraktivite**: met de op"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "nl",
+        "output": "\n* **Oorzaken van overbevolking:**\n    * **lighaussagevrese"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "nl",
+        "output": "\nGlobalisering is een complex fenomeen thatt de wereld in vele aspecten heeft veranderd."
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "nl",
+        "output": "\n**Voordelen van remote werken:**\n\n* **Flexibilie:**  Remote werken"
+    }
+]

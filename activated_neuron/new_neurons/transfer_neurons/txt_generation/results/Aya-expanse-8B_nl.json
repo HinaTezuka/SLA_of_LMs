@@ -2,27 +2,27 @@
     {
         "sample_idx": 0,
         "input_lang": "nl",
-        "output": "\nOp een zonnige ochtend, terwijl de vogels hun liederen zingen en de"
+        "output": "22 juli 2020\nOp 22 juli 2020 om"
     },
     {
         "sample_idx": 1,
         "input_lang": "nl",
-        "output": "\n        **Naam:** Seraphina \"Sera\" Valen\n        **Leeftijd:** 3"
+        "output": "\n**Naam:** Seraphina \"Sera\" Valen\n\n**Achtergrond:**\n\nS"
     },
     {
         "sample_idx": 2,
         "input_lang": "nl",
-        "output": "\n\n    In een wereld waar de mensheid al lang geleden een nieuwe planeet had gekoloniseerd en"
+        "output": "\nDe laatste draak.\n\nIn een wereld waar de mensheid al eeuwenlang de aarde"
     },
     {
         "sample_idx": 3,
         "input_lang": "nl",
-        "output": "\n**Naam:** Umbra, de Schaduwspeler\n\n**Achtergrond:** Umbra"
+        "output": "\nNaam: Umbra\n\nUiterlijk: \nUmbra is een mysterieuze"
     },
     {
         "sample_idx": 4,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Opvolggesprek - Sollicitatie [Functie]"
+        "output": "\nOnderwerp: Opvolggesprek - Sollicitatie [functie] op"
     },
     {
         "sample_idx": 5,
@@ -42,17 +42,17 @@
     {
         "sample_idx": 8,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Probleem met bestelde producten - [Bestelnummer]\n\nGeachte"
+        "output": "\nOnderwerp: Klacht over verkeerde/beschadigde levering\n\nGeachte ["
     },
     {
         "sample_idx": 9,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Beschikbaarheid en specificaties van [Productnaam]\n\nGeachte ["
+        "output": "\nOnderwerp: Beschikbaarheid en specificaties van [productnaam]\n\nBeste [naam"
     },
     {
         "sample_idx": 10,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Onjuiste afschrijving op maandelijkse factuur\n\nGeachte"
+        "output": "\nOnderwerp: Onjuiste afschrijving op factuur [factuurnummer]\n"
     },
     {
         "sample_idx": 11,
@@ -62,17 +62,17 @@
     {
         "sample_idx": 12,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Klacht over slechte klantenservice\n\nGeachte [Klantenservice"
+        "output": "\nOnderwerp: Klacht over slechte klantenservice\n\nGeachte [naam klantenservice"
     },
     {
         "sample_idx": 13,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Aanvraag Retourzending/Omruiling Bestelnummer [besteln"
+        "output": "\nOnderwerp: Aanvraag retourzending/omruiling bestelnummer [besteln"
     },
     {
         "sample_idx": 14,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Lang niet gesproken! Hoe gaat het?\n\nBeste [Naam vriend/v"
+        "output": "\nOnderwerp: Lang niet gesproken!\n\nBeste [Naam vriend(in)],\n\nHet"
     },
     {
         "sample_idx": 15,
@@ -82,12 +82,12 @@
     {
         "sample_idx": 16,
         "input_lang": "nl",
-        "output": "\nOnderwerp: 🎉 Kom feesten met ons! 🎉\n\nHey allemaal!\n"
+        "output": "\nOnderwerp: Uitnodiging voor een gezellig feestje!\n\nBeste [Naam van"
     },
     {
         "sample_idx": 17,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Gefeliciteerd met je succes!\n\nBeste [Naam ontvanger"
+        "output": "\nOnderwerp: Gefeliciteerd met je prestatie!\n\nBeste [Naam ontv"
     },
     {
         "sample_idx": 18,
@@ -97,7 +97,7 @@
     {
         "sample_idx": 19,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Informatie over het [Naam van het programma]\n\nGeachte heer/"
+        "output": "\nOnderwerp: Informatie over [naam van het programma]\n\nGeachte heer/me"
     },
     {
         "sample_idx": 20,
@@ -107,57 +107,57 @@
     {
         "sample_idx": 21,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Bezorgdheid over de toestand van lokale parken en recreatiegebieden"
+        "output": "\nOnderwerp: Bezorgdheid over de toenemende verkeerscongestie in [uw"
     },
     {
         "sample_idx": 22,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Voorstelling - [Je naam]\n\nGeachte [Teamleider/Team"
+        "output": "\nOnderwerp: Zelfvoorstelling - [Jouw naam]\n\nGeachte [naam team"
     },
     {
         "sample_idx": 23,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Verzoek om referentie\n\nGeachte [Naam voormalige werkgever],\n"
+        "output": "\nOnderwerp: Verzoek om referentie\n\nGeachte [naam werkgever],\n\n"
     },
     {
         "sample_idx": 24,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Versterk uw online aanwezigheid met onze gespecialiseerde digitale marketingdiensten\n\n"
+        "output": "\nOnderwerp: [Uw Bedrijfsnaam] - Uw partner voor [uw belangrijkste dienst]"
     },
     {
         "sample_idx": 25,
         "input_lang": "nl",
-        "output": "\n\n    **Onderwerp: Ontdek [Productnaam]: Uw nieuwe favoriete [Productcategorie]"
+        "output": "\nOnderwerp: Ontdek [Productnaam]: De revolutie in [Productcategorie]\n"
     },
     {
         "sample_idx": 26,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Volgen op uw interesse in [Uw Product]\n\nBeste [Naam Pot"
+        "output": "\nOnderwerp: Volgen op uw interesse in [Productnaam]\n\nBeste [Naam potenti"
     },
     {
         "sample_idx": 27,
         "input_lang": "nl",
-        "output": "\n**Onderwerp: Welkom bij onze nieuwsbrief! 🎉**\n\nBeste [Naam"
+        "output": "\nOnderwerp: Welkom bij onze nieuwsbrief!\n\nBeste [Naam abonnee],"
     },
     {
         "sample_idx": 28,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Ontdek onze gerelateerde producten voor een complete ervaring!\n\nGeachte"
+        "output": "\nOnderwerp: Verrijk uw [product/dienst] ervaring met deze gerelateerde aanbevel"
     },
     {
         "sample_idx": 29,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Verzoek om uitstel voor opdracht [Naam van de opdracht]\n\nGe"
+        "output": "\nOnderwerp: Verzoek om uitstel voor opdracht [opdrachtnaam]\n\nGeachte"
     },
     {
         "sample_idx": 30,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Groepsproject: [Naam van het project]\n\nBeste klasgenoten,"
+        "output": "\nOnderwerp: Groepsproject - [Naam van het project]\n\nBeste klasgenoten,"
     },
     {
         "sample_idx": 31,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Mogelijke onderzoeksmogelijkheden en samenwerking\n\nGeachte Professor [Naam"
+        "output": "\nOnderwerp: Mogelijke onderzoeksmogelijkheden - [Uw naam]\n\nGeachte"
     },
     {
         "sample_idx": 32,
@@ -167,86 +167,86 @@
     {
         "sample_idx": 33,
         "input_lang": "nl",
-        "output": "\nOnderwerp: Loopbaanadvies en begeleiding\n\nGeachte [Naam Professor/"
+        "output": "\nOnderwerp: Advies over mijn carrièrepad\n\nGeachte [Naam professor/mentor"
     },
     {
         "sample_idx": 34,
         "input_lang": "nl",
-        "output": "\nHet debat over de effectiviteit van online leren versus traditioneel leren is al lang gaande"
+        "output": "\nHet debat tussen online leren en traditioneel leren is al jarenlang gaande en beide methoden"
     },
     {
         "sample_idx": 35,
         "input_lang": "nl",
-        "output": "\nHet is een complexe kwestie of milieuproblemen wereldwijd of lokaal aangepakt moeten"
+        "output": "\nSommige mensen vinden dat milieuproblemen wereldwijd opgelost moeten worden, terwijl"
     },
     {
         "sample_idx": 36,
         "input_lang": "nl",
-        "output": "\nHet bereiken van een work-life balance is inderdaad een uitdaging die in de"
+        "output": "\nHet is inderdaad een uitdaging om een werk-leven balans te vinden in"
     },
     {
         "sample_idx": 37,
         "input_lang": "nl",
-        "output": "1. **Voedselbeschikbaarheid en -keuzes:** De toegenomen beschikbaarheid"
+        "output": "\nEr zijn verschillende factoren die bijdragen aan de toename van het gemiddelde lichaamsgewicht en de"
     },
     {
         "sample_idx": 38,
         "input_lang": "nl",
-        "output": "\nDierproeven zijn al lange tijd een controversieel onderwerp en er bestaan sterke argumenten voor en"
+        "output": "\nDierproeven zijn al tientallen jaren een omstreden onderwerp. Terwijl sommigen be"
     },
     {
         "sample_idx": 39,
         "input_lang": "nl",
-        "output": "1. **Oorzaken:**\n        - **Economische recessie:** Tijdens economische neergang zijn er"
+        "output": "\nEr zijn verschillende oorzaken voor de moeilijkheden die jongeren ondervinden bij het vinden van werk"
     },
     {
         "sample_idx": 40,
         "input_lang": "nl",
-        "output": "1. **Oorzaken van obesitas:**\n        - **Voedselkeuze:** Een"
+        "output": "\nObesitas, oftewel overgewicht, is een groeiend probleem in veel landen over"
     },
     {
         "sample_idx": 41,
         "input_lang": "nl",
-        "output": "1. **Oorzaken van luchtvervuiling:**\n        - Verbranding van fossiele brandstoffen"
+        "output": "\nLucht- en watervervuiling zijn ernstige milieuproblemen die in veel"
     },
     {
         "sample_idx": 42,
         "input_lang": "nl",
-        "output": "1. **Gebrek aan toegang en middelen:** In sommige gemeenschappen, vooral in onderont"
+        "output": "1. **Gebrek aan toegang en digitale infrastructuur:** In veel gebieden, vooral in ontwikkelings"
     },
     {
         "sample_idx": 43,
         "input_lang": "nl",
-        "output": "1. **Economische factoren**: Dakloosheid kan worden veroorzaakt door economische ongelijkheid, werk"
+        "output": "\nEr zijn verschillende factoren die bijdragen aan de toename van dakloosheid in stedelijke"
     },
     {
         "sample_idx": 44,
         "input_lang": "nl",
-        "output": "1. **Brenninstelling van fossiele brandstoffen**: De verbranding van fossiele"
+        "output": "\nKlimaatverandering is een complex fenomeen dat wordt veroorzaakt door een combinatie van natuurlijke en"
     },
     {
         "sample_idx": 45,
         "input_lang": "nl",
-        "output": "1. **Gemak en toegankelijkheid**: Online winkelen biedt consumenten ongekende gem"
+        "output": "1. Gemak en toegankelijkheid: Online winkelen biedt consumenten ongekende gemak"
     },
     {
         "sample_idx": 46,
         "input_lang": "nl",
-        "output": "1. **Toegenomen digitale media**: Met de opkomst van digitale media, zoals e-readers"
+        "output": "\nEr zijn verschillende redenen waarom het aantal mensen dat boeken leest, in veel delen van de"
     },
     {
         "sample_idx": 47,
         "input_lang": "nl",
-        "output": "\nOverbevolking is een complex probleem dat wordt veroorzaakt door verschillende factoren. Enkele van de"
+        "output": "\nOverbevolking wordt een serieus probleem in veel steden, vooral in ontwikkelingslanden."
     },
     {
         "sample_idx": 48,
         "input_lang": "nl",
-        "output": "1. **Oorzaken van globalisering:**\n        * **Technologische vooruitgang:** Verbeterde"
+        "output": "\nGlobalisering is een proces dat de wereldwijde interactie en integratie tussen landen en mensen"
     },
     {
         "sample_idx": 49,
         "input_lang": "nl",
-        "output": "\n**Voordelen van Remote Werken:**\n\n* **Flexibiliteit:**  Werkn"
+        "output": "\nRemote werken, ook wel thuiswerken genoemd, is een werkvorm waarbij werknemers niet fysiek"
     }
 ]

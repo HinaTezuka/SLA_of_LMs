@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "it",
+        "output": "\nIn un giorno come tanti altri, improvvisamente e senza alcun tipo di avviso, la grav"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "it",
+        "output": "\n# Personaggio: Lord Sombre, il travisato\n\n## Historia:\nLord"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "it",
+        "output": "1) Personaggio: \"Elias, l'ultimo elfo\"\n2) Elias è"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "it",
+        "output": "ellen O'Hara, protagonista di *Gone with the Wind* (1939, e"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "it",
+        "output": "\nOggetto: Follow-up del recente colloquio di lavoro\n\nGentile [Nome dell"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "it",
+        "output": "\nSoggetto: \nA: <EMAIL>\n\nGentile <NAME>,\n\n"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "it",
+        "output": "\nOggetto: Feedback sul recente report e opportunità di miglioramento\n\nGentile {nome"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "it",
+        "output": "\nOg: Scuse per il ritardo nella scadenza del progetto e plan per evitare future"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "it",
+        "output": "\nOggetto: Prodotto errato/danneggiato - [numero della bolla"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "it",
+        "output": "\nOggetto: informazione su [nome_prodotto] e sua disponibilità\n\nGent"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "it",
+        "output": "\n[Indirizzo e-mail del reparto fatturazione]\n\nOggetto: \n"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "it",
+        "output": "\nGentile [Nome Cliente],\n\nsperiamo questa e-mail La giunga"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "it",
+        "output": "\nOggetto: brutta e insodagente esperienzza con [nome dell'azienda"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di Reso/Scambio - Numero Ordine: ["
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "it",
+        "output": "\nA/N: *deneza* (il nomde dell'amico)\n\n"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "it",
+        "output": "\nOgniremala, in ogni epocа e in ogni cirсunstа"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "it",
+        "output": "\nCiao a tutti!\n\nSpero ke sta andando ke d'avori p"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "it",
+        "output": "\nGentile [Nome],\n\nVolevo cogliere l'occasione per esprimere,"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "it",
+        "output": "\nGentile [Nome],\n\nSpero ke questa email ti cogli da bene e in"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "it",
+        "output": "\nOggetto:\tRichiesta di informazioni su [nome_del_programa]\n"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di Lettera di raccomandazione\n\nGentile Profesore"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "it",
+        "output": "\nOggetto: Preocupazioni Riguardo all'Degrado Ambientale in [Località"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "it",
+        "output": "\nOggetto: Presentazione e innalzamento dei calori per una fantastica collaborazione\n"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "it",
+        "output": "\n[Sodt Umane/ex datore di Lavoro] \n[Nome e"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "it",
+        "output": "\nOggetto: potenziare il successo digitale della sua azienda con [Nome della tua azi"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "it",
+        "output": "\n##  **Prova Email Marketing: Lancio Prodotto \"NovaTech X-Pro\""
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "it",
+        "output": "\nOggetto: Follow-up: [Nome Prodotto] e come può beneficiar Voi"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "it",
+        "output": "\n##  Obiettivo:  accogliere il nuovo abronante e  stimolare  l"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "it",
+        "output": "\n## \n**Oggetto:  Siamo pronti ad aiutare您i ragiung"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "it",
+        "output": "\nOggetto: Proroga per l'incompianto dell'itinerario di"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "it",
+        "output": "\n<unk>Gentili compagni di classe,\n\n<unk>\n\n<unk>"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "it",
+        "output": "\n[Nome e c/p]\n\n[A: NOME_PROFESSO"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "it",
+        "output": "\nGentile Docente,\n\nLe scrivo per porle sincere scuse per esserm"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "it",
+        "output": "\nGentile <NOME_PROFESSORE/MENTORE>,\n\nspero"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "it",
+        "output": "\nSome people argue that online learning is more effective than traditional classroom learning, while others maintain that in"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "it",
+        "output": "\nIl dibattito circa come affrontare i crescenti e pressanti problemi ambientali, quali le alter"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "it",
+        "output": "1) concordo pienamente. viviamo in epoche di continue e rapide evoluzioni digitali"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "it",
+        "output": "\nIl crescente trend dell’obesità e la conseguente diminuzione dei livelli di salute e forma fisica"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "it",
+        "output": "\nArgomentando a favore de la necessità della sperimentazione sugli animali, si può dire in primo"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "it",
+        "output": "\nIn primo luogo, le cause di tale problema sono multiple e complesse. alcune delle principali sono"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "it",
+        "output": "1) **Cause:**\n   - *Aumento della consommé di cibi spalmatici e"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "it",
+        "output": "1) **Cause:**\n   - **Industria e Traffico:**  le ciminiere"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "it",
+        "output": "\nCi sono diverse ragioni per cui molti adulti nel mondo odierno ancora careciano di competenze"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "it",
+        "output": "1) **Raisons dell'Aumento:**\n   - *Sancioning e carestia"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "it",
+        "output": "\nIl cambiamento climatico, ormazo una delle più pressanti questioni ambientali dei nostri tempi"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "it",
+        "output": "1) convenienza e risparmio di tempo e 2) disponibilità di un’amp"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "it",
+        "output": "\nIl declino della lecture del libro, especially in favore degli supporti digitali e, pi"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "it",
+        "output": "\nLa sovrappopolazione, ovvero situazioni di forte e inaravordabile aglom"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "it",
+        "output": "\n* **Definisci globalizzazione:** si riferisce a  un sistema di comunicazione e de vis"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "it",
+        "output": "\nIl recente uptire dei regimi di distanziamento sociale e dell’aliquota di"
+    }
+]

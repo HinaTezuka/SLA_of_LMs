@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ja",
+        "output": "地球上で重力が突然、数時間の期間にわたって逆転するという現象は、現状"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ja",
+        "output": "かつての戦士、アラン・ブラックは、強靭な体格、無比の"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ja",
+        "output": "『マッド・塞』の主人公、塞(さい)は、世界が不意の"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ja",
+        "output": "\n> **件名: 2週間前の [職種名] 面談のフォ"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ja",
+        "output": "件名: [プロジェクト名]の進捗状況に関する会議のご依頼\n[受"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ja",
+        "output": "件名: [レポートのタイトル]のフィードバックのご依頼\n[上司の"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ja",
+        "output": "\n> **件名: プロジェクト {プロジェクト名}の遅延について**\n> "
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ja",
+        "output": "件名: 配送された [製品名/番号] に関する問題の報告\n["
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ja",
+        "output": "件名: [製品名]の在庫状況、仕様、および購入の問い合わせ"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ja",
+        "output": "件名: 12. [月]の請求書の修正の依頼\n[日付"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ja",
+        "output": "件名: [会社名]のカスタマーサービスに関する不満の報告\n\n[受"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ja",
+        "output": "\n**件名: 注文番号 [注文番号]の製品の返品/"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ja",
+        "output": "件名: 久しぶりの近況報告\n[友達の名前]、\nこ"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ja",
+        "output": "\n> * * * * * * * * * * * * * * * * * *"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ja",
+        "output": "\n> \n> **件名:** [あなたのパーティーのテーマ] @ [あなたの"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ja",
+        "output": "\n* **件名:**  [業績の内容]、**#@@#**の"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ja",
+        "output": "\n* **開頭:**  “**こんにちは [名前]、**”"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ja",
+        "output": "以下、大学の入学事務局に送るメールのテンプレートをご紹介します。\n\n"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ja",
+        "output": "教授に推薦状を依頼する際の メールテンプレートを以下に示します。"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ja",
+        "output": "\n**件名: [地域名]の [問題の要点] に関する懸念"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ja",
+        "output": "件名: 自己紹介と、これからの共同作業への熱意\n\n[あなたの"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ja",
+        "output": "件名: [新職]の推薦のご依頼\n[以前の雇主の姓名]"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ja",
+        "output": "\n> **件名:**  [あなたの社名]が [顧客の社名]"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ja",
+        "output": "\n**件名: [ブランド名]の革新的な新製品: [製品名]を"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ja",
+        "output": "\n> **件名: [社名]の [製品名]について、さらに詳しく"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ja",
+        "output": "件名: ようこそ、[会社名]のニュースレターへ!\n\n**"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ja",
+        "output": "\n**件名: 以前のお買い物から、これもいかがですか？**"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ja",
+        "output": "\n> **件名: [課題名]の期限延長のご依頼**\n> "
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ja",
+        "output": "\n**件名: [プロジェクト名] グループワーク: 次段階の計画**\n"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ja",
+        "output": "\n> \n> **件名: [教授の姓名] 教授、研究機会の"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ja",
+        "output": "件名: 授業の欠席についてと、追跡資料の必要性\n[教授"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ja",
+        "output": "件名: キャリアに関する助言のご用命\n[元教授/メンターの"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ja",
+        "output": "オンライン学習と従来の教室での学習、それぞれに一長一短があり、どちらが「効果"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ja",
+        "output": "環境問題の解決の在り方については、世界規模で、あるいは地域単位で、あるいは"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ja",
+        "output": "100%同意します。\n\n**理由:**\n\n* **技術の進歩"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ja",
+        "output": "人々の平均体重が増加し、健康、体力、福祉のレベルが低下しているのは"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ja",
+        "output": "医学研究における動物の実験の是非は、長年議論の的となってきた問題です。"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ja",
+        "output": "多くの国で若者が就職に苦労している問題の原因には、次のものが考えられ"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ja",
+        "output": "肥満の原因には、次のものが挙げられます。\n1) 運動不足:"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ja",
+        "output": "多くの大都市では、次のような原因が考えられます。\n1）自動車の排ガス"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ja",
+        "output": "21 現代社会において、多くの adultが依然として、E メール、オンライン リ"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ja",
+        "output": "ホームレスの増加には、次のような複数の理由が考えられます。\n\n1. **経済"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ja",
+        "output": "気候変動の主な原因は、主に人為的な活動、特に次のものが挙げられ"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ja",
+        "output": "近年、オンラインショッピングの人気が高まっているには、複数の理由が考えられます。\n\n"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ja",
+        "output": "21 ギnes 2018 の報告では、2016 年には"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ja",
+        "output": "人口過多の原因には、次のものが挙げられます。\n1)\t世界各"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ja",
+        "output": "グローバリゼーションの原因には、次のものが挙げられます。\n\n1. **"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ja",
+        "output": "近年、情報通信技術の進歩により、多くの企業や組織がリモートワーク、"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ja",
+        "output": "地方から都市部への移住、または Urban Ominvarian（都市への移民）"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ja",
+        "output": "技術の進歩、とくに通信技術の進歩は、人々のコミュニケーション方法を劇"
+    }
+]

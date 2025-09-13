@@ -62,9 +62,10 @@ for is_baseline in is_baselines:
             
                 # save.
                 model_name_for_saving = model_name_dict[model_name]
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/{model_name_for_saving}_{L2}_intervention{intervention_num}.json' if not is_baseline else f'activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/{model_name_for_saving}_{L2}_intervention{intervention_num}_baseline.json'
+                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/{model_name_for_saving}_{L2}_intervention{intervention_num}_last_token.json' if not is_baseline else f'activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/{model_name_for_saving}_{L2}_intervention{intervention_num}_baseline_last_token.json'
+                os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, 'w', encoding="utf-8") as f:
                     json.dump(results, f, ensure_ascii=False, indent=4)
 
-    del model
-    torch.cuda.empty_cache()
+        del model
+        torch.cuda.empty_cache()

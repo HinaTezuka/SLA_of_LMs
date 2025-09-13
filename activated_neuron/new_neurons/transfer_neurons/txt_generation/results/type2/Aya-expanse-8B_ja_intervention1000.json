@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ja",
+        "output": "重力が突然数時間逆転する一日は、地球上の生命体にとって前例のない、劇"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ja",
+        "output": "かつて的光の騎士、セレスティアは、王国を守るために日々奮闘してい"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ja",
+        "output": "最後の生き残りとして世界を彷徨う人物の物語は、多くの作家や映画"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ja",
+        "output": "件名: 2 週間前の [職種名] 面接のフォローアップ"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ja",
+        "output": "件名: プロジェクト進捗会議のリクエスト\n[受信者名] "
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ja",
+        "output": "件名: 最近提出のレポートに関するフィードバックのご依頼\n[上司の名前]"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ja",
+        "output": "件名: プロジェクトの遅延についてのお詫び\n[上司の名前] 様"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ja",
+        "output": "件名: 配送された[製品名/番号]に関する問題\n[ベンダー名"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ja",
+        "output": "件名: [製品名] に関する問い合わせ\n[お客様名] "
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ja",
+        "output": "件名: 請求書の訂正依頼\n[日付]\n[請求部門担当者"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ja",
+        "output": "件名: [会社名] 顧客服務部門 對 [具體服務] 之"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ja",
+        "output": "件名: 注文番号[XXXXX] に関する返品/交換リクエスト\n"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ja",
+        "output": "件名: 久しぶりに!\n[友達の名前] へ\nこんに"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ja",
+        "output": "親愛なる[贈り物を送ってくれた人の名前] 様\nこの度、["
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ja",
+        "output": "件名: [あなたの名前] からのお招き - [パーティーのテーマ/タイトル]"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ja",
+        "output": "件名: 最近の[業績/成功]を祝して\n[受信者の名前"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ja",
+        "output": "親愛なる [受信者名] へ、\n今日はとても嬉しい"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ja",
+        "output": "件名: 入学申請に関するお問い合わせ\n[大学名] 入学事務局 "
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ja",
+        "output": "推薦状を元教授に依頼する際には、以下のようなメール文体が効果的です。\n"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ja",
+        "output": "件名: [地域名] における [問題名] に関する懸念\n[政府"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ja",
+        "output": "件名: 自己紹介と今後の共同作業への期待\n[受信者名]"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ja",
+        "output": "件名: 推薦人としてのご支援のご依頼\n[以前の雇用主の名前] "
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ja",
+        "output": "件名: [貴社の名前] - 貴社のビジネス成長を加速させるパートナー\n["
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ja",
+        "output": "件名: 革命的な新製品の登場! ご注目ください!\n** "
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ja",
+        "output": "件名: 先日の[製品名]のご問合せについて\n[お客"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ja",
+        "output": "件名: [会社名] ニュースレター購読、ありがとうございます"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ja",
+        "output": "件名: ご愛顧に感謝いたします - ご興味をお持ちいただける"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ja",
+        "output": "件名: 課題[課題名] 期限延長の依頼\n[教授名] "
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ja",
+        "output": "件名: グループ プロジェクト 更新: タスク 割り当て、期限、および"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ja",
+        "output": "件名: 研究助理 position についてのお問い合わせ\n[教授名] 教授"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ja",
+        "output": "件名: 授業欠席と資料の取得について\n[教授名] 教授 "
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ja",
+        "output": "件名: キャリアに関するご相談\n[教授/メンターの名前] 様\nお"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ja",
+        "output": "オンライン学習と教室での学習、それぞれに長所と短所があり、どちらが「効果"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ja",
+        "output": "環境問題は世界規模で解決すべきだと考える理由と、地域単位で取り組むべき"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ja",
+        "output": "現代社会において、ワークライフバランス (仕事と私生活の調和) を実現することが"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ja",
+        "output": "現代社会における人々の平均体重増加と健康・体力レベルの低下には、いくつかの"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ja",
+        "output": "動物実験は医学研究において長年にわたって重要な役割を果たしてきました。しかし、その倫理"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ja",
+        "output": "多くの国で若者が就職に苦労している問題には、いくつかの原因が考えられます。"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ja",
+        "output": "肥満問題の原因は、食生活の西式化(ファストフードや加工"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ja",
+        "output": "多くの大都市で見られる大気汚染と水質汚染の主な原因は、"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ja",
+        "output": "現代社会において、多くの大人が基本的なデジタルスキルを十分に身につけていない理由"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ja",
+        "output": "ホームレスの増加には、次のような複数の理由が考えられます。\n\n1. **経済"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ja",
+        "output": "氣候變動的主要原因之一是人類活動，特別是燃燒化石燃料（如煤、石油"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ja",
+        "output": "近年、オンラインショッピングの人気が高まっている理由には、以下のような要因が考えられます。"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ja",
+        "output": "現代社会において、本を読む人の数が世界的に減少している現象は、いくつかの要因が重"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ja",
+        "output": "人口過多の原因は、出生率の高さ、死亡率の低さ、そして農村"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ja",
+        "output": "グローバリゼーションは、世界中の人々、企業、政府間の相互接続性と相互"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ja",
+        "output": "近年、コロナ禍を契機として、多くの企業や組織がリモートワーク(在"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ja",
+        "output": "地方から都市への移住者数の増加は、世界的な傾向として近年目立っています"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ja",
+        "output": "技術の進歩は、人類のコミュニケーションの方法に革命をもたらしました。ここでは"
+    }
+]

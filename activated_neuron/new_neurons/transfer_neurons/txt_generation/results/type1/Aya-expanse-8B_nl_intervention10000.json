@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "nl",
+        "output": "22 juli 2020\nOp 22 juli 2020 is"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "nl",
+        "output": "\n**Naam:** Seraphina \"Sera\" Valen\n\n**Achtergrond:**\nSera"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "nl",
+        "output": "\nDe laatste draak.\n\nIn een wereld waar de mensheid al eeuwenlang de aarde"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "nl",
+        "output": "\nNaam: Umbra\nLeeftijd: Onbekend, lijkt jonger dan 2"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Opvolggesprek - Sollicitatie [functie] op"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Vergadering om de voortgang van project X te bespreken\n\nBeste"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verzoek om feedback op mijn recent rapport\n\nGeachte [naam supervisor],"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verontschuldiging voor het missen van de projectdeadline\n\nGe"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Foutieve of beschadigde levering - Bestelling nr. [besteln"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Beschikbaarheid en specificaties van [productnaam]\n\nBeste [naam"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Onjuiste afschrijving op factuur [factuurnummer]\n"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Bedankt voor uw vertrouwen - Speciale aanbieding voor u!\n\n"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Klacht over slechte klantenservice\n\nGeachte [naam klantenservice"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "nl",
+        "output": " Onderwerp: Aanvraag retourzending/omruiling bestelnummer [bestelnummer"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Lang niet gesproken!\n\nBeste [Naam vriend(in)],\n\nHet"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Hartelijk dank voor je prachtige cadeau!\n\nBeste [Naam ont"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Uitnodiging voor een gezellig feestje!\n\nBeste [Naam van"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Gefeliciteerd met je recente succes!\n\nBeste [Naam ontv"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Ik heb geweldig nieuws!\n\nBeste [Naam van de ontvanger"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Informatie over [naam van het programma]\n\nGeachte heer/me"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Aanvraag aanbevelingsbrief\n\nGeachte Professor [Naam],\n"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Bezorgdheid over de toenemende verkeerscongestie in [uw"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Zelfvoorstelling - [Jouw naam]\n\nBeste [naam teamleider"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verzoek om referentie\n\nGeachte [naam werkgever],\n\n"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Versterk uw online zichtbaarheid met onze gespecialiseerde digitale marketingdiensten\n"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Ontdek [Productnaam]: De revolutie in [Productcategorie]\n"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Volgen op uw interesse in [Productnaam]\n\nBeste [Naam potenti"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Welkom bij onze nieuwsbrief!\n\nBeste [Naam abonnee],"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verrijk uw [product/dienst] ervaring met deze gerelateerde aanbevel"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verzoek om uitstel voor opdracht [opdrachtnaam]\n\nGeachte"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Groepsproject: [Naam van het project]\n\nBeste klasgenoten,"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Mogelijke onderzoeksmogelijkheden\n\nGeachte Professor [Naam],\n"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verontschuldiging voor gemiste les\n\nGeachte professor [naam"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Advies over mijn carrièrepad\n\nGeachte [Naam professor/mentor"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "nl",
+        "output": "\nOnline leren en traditioneel klassikaal leren hebben elk hun eigen voordelen en nadelen,"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "nl",
+        "output": "\nEr bestaat een wereldwijde consensus over het feit dat milieuproblemen een serieuze"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "nl",
+        "output": " Het bereiken van een work-life balance is inderdaad een uitdaging geworden in de hed"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "nl",
+        "output": "\nEr zijn meerdere factoren die bijdragen aan de toename van het gemiddelde lichaamsgewicht en de"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "nl",
+        "output": "\nDierproeven zijn al tientallen jaren een omstreden onderwerp. Terwijl sommigen be"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "nl",
+        "output": "1. **Oorzaken:**\n   - **Economische factoren:** Recessie, automatisering"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "nl",
+        "output": "\nObesitas, oftewel overgewicht, is een groeiend probleem in veel landen over"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "nl",
+        "output": "\nLucht- en watervervuiling zijn grote milieuproblemen in veel grote steden"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "nl",
+        "output": "1. **Gebrek aan toegang en digitale infrastructuur:** In veel gebieden, vooral in ontwikkelings"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "nl",
+        "output": "\nEr zijn verschillende redenen waarom dakloosheid in stedelijke gebieden toeneemt. Een belangrijke"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "nl",
+        "output": " Klimaatverandering is een complex fenomeen dat wordt veroorzaakt door een combinatie van natuurlijke en menselijke"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "nl",
+        "output": "1. Gemak en toegankelijkheid: Online winkelen biedt consumenten ongekende gemak"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "nl",
+        "output": "1. **Toegenomen gebruik van digitale media**: Met de opkomst van het internet, e-"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "nl",
+        "output": "1. **Oorzaken van overbevolking:**\n\n* **Economische groei:**  St"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "nl",
+        "output": "\nGlobalisering is een proces dat de wereldwijde interactie en integratie tussen landen en mensen"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "nl",
+        "output": "\nRemote werken, ook wel thuiswerken genoemd, is een werkvorm waarbij werknemers niet fysiek"
+    }
+]

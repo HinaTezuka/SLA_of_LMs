@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ko",
+        "output": "1. 지구의 중력이 갑자기 역전되는 "
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ko",
+        "output": "1.  Korean title:    Korean title:  Korean title: Korean title: Korean"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ko",
+        "output": "1.  Korean title:      2.  Korean title:    Korean"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ko",
+        "output": "1.  KoreanBlink KoreanBlink KoreanBlink KoreanBlink KoreanBlink KoreanB"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ko",
+        "output": "Korean Air Korea Airlines Korean Airlines Korean Airlines Korean Airlines Korean Airlines Korean Airlines Korean Airlines Korean Airlines Korean Airlines"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ko",
+        "output": "Korean Airline Company  Korean company  Korean company Korean company Korean company Korean company Korean company Korean company"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ko",
+        "output": "Korean Airline Company is one of the largest companies in the world that provides high quality services to its"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ko",
+        "output": "Korean Airline Company  Korean airlines company Korean airlines company Korean airlines company Korean airlines"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ko",
+        "output": "Korean Air is committed to providing the highest quality products and services to our valued customers. However, in"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ko",
+        "output": "Korean Air is known for its high-quality customer service, but recently I had a negative experience with"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ko",
+        "output": "Korean Air apologizes for any inconvenience caused by the cancellation of your flight.  Korean Air"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ko",
+        "output": "1. Write an email to your old friend, whom you have not contacted for a long time."
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ko",
+        "output": "Korean Air  Korean Culture Experience  Korean Traditional Clothing  Korean Traditional Clothing  Korean"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ko",
+        "output": "\n\nDear friends,\n\nI hope you are doing well. I am writing to invite"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ko",
+        "output": "Korean Air’s flight attendant won the “Best flight attendant” award at the “World"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ko",
+        "output": "Korean Air is going to launch a new route from Korea to Australia from the middle of next year."
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ko",
+        "output": "Korean universities accept applications twice every year, in the spring and fall.  Korean universities accept applications twice"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ko",
+        "output": "Korean Air is a leading international airline based in South Korea. It offers a wide range of services"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ko",
+        "output": "Korean government officials are usually very responsive to concerns expressed by foreigners residing in Korea. "
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ko",
+        "output": "\n\nHi everyone,\n\nI’m thrilled to join the team today as the new"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ko",
+        "output": "Korean employers are generally very accommodating when asked for a reference.  However, they tend to be"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ko",
+        "output": "Korean startup company Korean startup company Korean startup company Korean startup company Korean startup company Korean startup company Korean startup"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ko",
+        "output": "1. **Subject line:** Use a catchy and relevant subject line that highlights the product's"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ko",
+        "output": "Korean Air is proud to offer our customers the highest quality service available in the sk sk sk sk sk"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ko",
+        "output": "\n\nHi {{ subscriber_name_or_email }}, \n\nWe're"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ko",
+        "output": "Korean Air is a leading international airline based in South Korea that offers a wide range of products and"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ko",
+        "output": "Korean professor’s name Korean professor’s name Korean professor’s name Korean professor’s name"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ko",
+        "output": "Korean Air  Korean Culture  Korean Language Korean History Korean Society Korean Politics Korean Religion Korean Sports Korean"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ko",
+        "output": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ko",
+        "output": "Korean professors are very understanding and kind. They will not scold you or punish you."
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ko",
+        "output": "Korean Society of Chemical Engineers (KSCE) Korean Chemical Society (KCS) Korean"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ko",
+        "output": "Korean education system is known for its strict academic environment and emphasis on traditional learning methods such as rote"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ko",
+        "output": "Korean society is facing a lot of environmental issues such as air pollution, water pollution, and waste management"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ko",
+        "output": "10% 同意 40% 同意하지 않음 5"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ko",
+        "output": "Korean society is facing a number of health issues related to obesity and physical inactivity. According"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ko",
+        "output": "의학 연구에서 동물 실험을 진行하"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ko",
+        "output": "Youth unemployment is a complex issue that varies greatly from country to country.  In some cases, it"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ko",
+        "output": "Korean society is facing a serious problem of obesity. The main reason for this problem is lack"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ko",
+        "output": "대도시에서 大量 pollution air water are  serious problems"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ko",
+        "output": "디지털 литераシー를개선하기 위해 무�"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ko",
+        "output": "Korea’s economy has been growing rapidly in recent years, and this has led to an increase in"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ko",
+        "output": "Korea Climate Change Portal (krccp.org) Korea Climate Change Portal (krcc"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ko",
+        "output": "Korean consumers are increasingly turning to online shopping due to factors such as convenience, variety, and competitive pricing"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ko",
+        "output": "Korean readers are facing a decline in reading books due to various reasons such as the popularity of digital media"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ko",
+        "output": "Korean cities are facing a serious problem of population overcrowding. What are the reasons for population"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ko",
+        "output": "1. 세계화는 많은 이점을가져��"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ko",
+        "output": "원격 근무는 많은이들에게许多优点。"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ko",
+        "output": "Korea is facing a lot of problems related to the population movement from rural areas to cities.  Korea"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ko",
+        "output": "기술의발전으로 사람들이 소통하는 "
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ko",
+        "output": "交通체증을減少하고甚至甚至�"
+    }
+]

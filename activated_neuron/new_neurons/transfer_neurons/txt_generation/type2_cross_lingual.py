@@ -17,7 +17,7 @@ from generation_funcs import (
 )
 
 
-model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
+model_names = ['mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b', 'meta-llama/Meta-Llama-3-8B']
 model_name_dict = {
     'meta-llama/Meta-Llama-3-8B': 'Llama3-8B', 
     'mistralai/Mistral-7B-v0.3': 'Mistral-7B',
@@ -31,7 +31,7 @@ langs_for_polywrite = {
     'it': 'ita_Latn',
     'nl': 'nld_Latn',
 }
-deactivation_nums = [1000, 10000, 15000, 20000, 25000, 30000]
+deactivation_nums = [1000, 10000, 20000, 30000]
 score_type = 'cos_sim'
 
 for model_name in model_names:
@@ -69,6 +69,7 @@ for model_name in model_names:
                     f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/'
                     f'{model_name_for_saving}_{L_in}_deact-{L_deact}_intervention{intervention_num}.json'
                 )
+                os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, 'w', encoding="utf-8") as f:
                     json.dump(results, f, ensure_ascii=False, indent=4)
 

@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "nl",
+        "output": "27 februari 2020\nStel je voor: Plotseling, zonder enige"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "nl",
+        "output": "\n**NAME:**  **Vexa Shadowheart**\n\n**ORIGINE STORY"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "nl",
+        "output": "\nDe laatste dinosaurus.\n\nIn een wereld waar de tijd onverbiddelijk vord"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "nl",
+        "output": "\n**Namae:** Umbra \n**Origine:** Unbekend, blijkbaar geboren"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "nl",
+        "output": "\nBetreft: Opvolging Sollicitatiegesprek [Functietitel]"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "nl",
+        "output": "\nBetreft:  Projectvoortgangsdiscussie - [Projectnaam]\n\nLieve"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "nl",
+        "output": "\nBetreft: Feedback gewenst - [Rapporttitel]\n\nSehr geachte"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "nl",
+        "output": "\nBetreft: Verontschuldigung für das verpasste Projektziel\n\nSehr"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "nl",
+        "output": "\nBetreft: Levering [bestelnummer/datum] - [productnamen"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "nl",
+        "output": "\nBetreft: Anfrage nach Produktverfügbarkeit und -spezifikationen\n"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "nl",
+        "output": "1. **Onderwerp:** Onjuiste afschrijving op [factuurnummer]\n"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "nl",
+        "output": "\nBetreft: Dankwoord en Exclusieve Promotie-Informatie\n\nSe"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "nl",
+        "output": "\nBetreft: Klacht over [specifieke service/produkt] en [besch"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "nl",
+        "output": "\nBetreft: [Bestelnummer] - Aankondiging Retournen/"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Lange tijd niet gehoord!\n\nHallo [vriendin/"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "nl",
+        "output": "\nBetreft: Hartelijk Dank für [naam cadeau]!\n\nLiebe("
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: 🎉  Kom feesten bij mij thuis! 🎉\n\nHallo"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "nl",
+        "output": "\nBetreft: Hartelijke felicitatie!\n\nLieve [Naam],\n\n"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Super-spannend nieuws!\n\nLieve [naam],\n\n"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "nl",
+        "output": "\nBetreft:  Inlichtingen over [naam van het programma]\n\nGeachte"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "nl",
+        "output": "\nBetreft: Anfrage für Empfehlungsschreiben\n\nSehr geehrter"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "nl",
+        "output": "\nBetreft: [Probleembezeile – z.B. Verkeersproble"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "nl",
+        "output": "\nBetreft: Voorstel - [Jouw Name] - Nieuw Teamlid\n\nAan"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "nl",
+        "output": "\nBetreft: Referentieaanvraag\n\nGeachte [naam voormalige werkgever],"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "nl",
+        "output": "\nBetreft: [Uw Bedrijfsnaam] - Uw Partner voor [Dienst/"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "nl",
+        "output": "\n**Betreft: [Merkname] lanceert [Productname] - Revolutionaire ["
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "nl",
+        "output": "\nBetreft: [Productnaam] - Volgen-up en Antworten op event"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "nl",
+        "output": "\n**Onderwerp: [Bedrijfsnaam] - Duyfelijk willkommen als nieuwe"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "nl",
+        "output": "\n**Betreft: [Klantenname], Entdecken Sie [merkname]-"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "nl",
+        "output": "\nBetreft: Verzoek om uitstel voor [naam van de opdracht]\n\nSe"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: [NAAM PROJEKTPLAATFORMSEITE] -"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "nl",
+        "output": "\nBetreft: Mogelijke onderzoeksmogelijkheden - [Uw Name]\n\nSe"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "nl",
+        "output": "\nOnderwerp: Verontschuldiging voor gemiste les en Bitte um Inhouds"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "nl",
+        "output": "\nBetreft: \nAdvies over loopbaanontwikkeling\n\nSehr geehrte"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "nl",
+        "output": "\nOnline leren en traditioneel, klassikaal leren hebben beide hun eigen unieke voordelen en"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "nl",
+        "output": "\nSommige mensen geloven dat milieuproblemen, zoals klimaatverandering, lucht"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "nl",
+        "output": "21e-eeuwse werknemers staan inderdaad voor unieke uitdagingen als es"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "nl",
+        "output": "1) **Alimentair Overkonsumptie en Sedentair Leefstil**: In veel"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "nl",
+        "output": "\nDierproeven zijn al lange tijd omstreden. Sommigen beweren dat dierpro"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "nl",
+        "output": "1. **Oorzaken**:\n   - **Economische factoren**: Recesies en economische stagn"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "nl",
+        "output": "\nObesitas, oftewel overgewicht, wordt inderdaad steeds meer een wijd"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "nl",
+        "output": "\nLucht- en watervervuiling in grote steden worden in ersterie verursacht durch:"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "nl",
+        "output": "1. **Mangel aan Opleiding en Acces**: Veel volwassenen hebben tijdens hun"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "nl",
+        "output": "\nDakloosheid in stedelijke gebieden neemt vaak toe als gevolg van verschillende factoren. Enkele belangrijke"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "nl",
+        "output": "\nKlimaatverandering, een wereldwijd fenomeen, wordt voornamelijk veroorzaakt door menselijke activiteiten, met"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "nl",
+        "output": "1. **Gemak en toegankelijkheid**: Online shoppen biedt klanten ongekende gemak"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "nl",
+        "output": "1. **Toegenomen digitale media-consumptie**: Met de opkomst van digitale technologie"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "nl",
+        "output": "\nOverbevolking, oftewel als er in een bepaalde ruimte, zoals een stad,"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "nl",
+        "output": "\nGlobalisering is een complex en veelzijdig fenomeen dat verschillende aspecten van het moderne"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "nl",
+        "output": "\n**Voordelen:**\n\n* **Flexibiliteit:** Remote werken biedt werknemers flex"
+    }
+]

@@ -2,27 +2,27 @@
     {
         "sample_idx": 0,
         "input_lang": "it",
-        "output": "1. **Reazioni Umane:**\n       - **Confusione e Panico:** All'"
+        "output": "24 ore in cui la gravità si inverte improvvisamente potrebbero portare a scenari incredibili"
     },
     {
         "sample_idx": 1,
         "input_lang": "it",
-        "output": "\n        **Nome:**  <NAME>\n        **Età:** 42 anni\n        **Pass"
+        "output": "\n# Nome: Lord Malachi\n\n## Passato:\nLord Malachi, nato come"
     },
     {
         "sample_idx": 2,
         "input_lang": "it",
-        "output": "\n        Il vecchio albero di quercia si ergeva solitario nel cuore della foresta, le sue rad"
+        "output": "1. **Introduzione:**\nIl protagonista della mia storia è un uomo di nome Elias, un"
     },
     {
         "sample_idx": 3,
         "input_lang": "it",
-        "output": "\n        **Nome:**  Elara Lunaris\n        **Età:** 27 anni\n        **"
+        "output": "\nIl personaggio si chiama Luna. Luna è una giovane donna di venticinque anni, con lunghi"
     },
     {
         "sample_idx": 4,
         "input_lang": "it",
-        "output": "\nOggetto: Seguimento colloquio di lavoro - [Il tuo nome]\n\nGent"
+        "output": "\nOggetto: Seguito colloquio di lavoro - [Nome tua]\n\nGentile ["
     },
     {
         "sample_idx": 5,
@@ -32,7 +32,7 @@
     {
         "sample_idx": 6,
         "input_lang": "it",
-        "output": "\nOggetto: Richiesta di feedback sul report recente\n\nGentile [Nome Supervisore"
+        "output": "\nOggetto: Richiesta di feedback sul report recente\n\nGentile [Nome del supervis"
     },
     {
         "sample_idx": 7,
@@ -42,7 +42,7 @@
     {
         "sample_idx": 8,
         "input_lang": "it",
-        "output": "\nOggetto: Problema con la consegna - Richiesta di rimborso o sostituzione"
+        "output": "\nOggetto: Problema con consegna - Ordine [numero ordine]\n\nGent"
     },
     {
         "sample_idx": 9,
@@ -62,17 +62,17 @@
     {
         "sample_idx": 12,
         "input_lang": "it",
-        "output": "\n        Oggetto: Segnalazione di un'esperienza insoddisfacente con il servizio client"
+        "output": "\nOggetto: Segnalazione di una brutta esperienza con il servizio clienti\n\nGent"
     },
     {
         "sample_idx": 13,
         "input_lang": "it",
-        "output": "\nOggetto: Richiesta di reso/scambio - Ordine n. [Numero"
+        "output": "\nOggetto: Richiesta reso/scambio - Ordine n. [Inserire"
     },
     {
         "sample_idx": 14,
         "input_lang": "it",
-        "output": "\nOggetto: Ciao dopo tanto tempo!\n\nCaro [Nome Amico],\n"
+        "output": "\nOggetto: Ciao dopo tanto tempo!\n\nCaro [Nome dell'amico],"
     },
     {
         "sample_idx": 15,
@@ -82,12 +82,12 @@
     {
         "sample_idx": 16,
         "input_lang": "it",
-        "output": "\nOggetto: 🎉 Festa in giardino questo fine settimana! 🎉\n\nCiao a"
+        "output": "\nOggetto: Festa in giardino questo fine settimana!\n\nCiao a tutti!\n\n"
     },
     {
         "sample_idx": 17,
         "input_lang": "it",
-        "output": "\nOggetto: Congratulazioni per il tuo successo!\n\nCaro [Nome"
+        "output": "\nOggetto: Congratulazioni per il tuo recente successo!\n\nCaro ["
     },
     {
         "sample_idx": 18,
@@ -112,7 +112,7 @@
     {
         "sample_idx": 22,
         "input_lang": "it",
-        "output": "\n    Oggetto: Presentazione - [Il tuo nome] si unisce al team\n    \n    Cari"
+        "output": "\nOggetto: Presentazione - [Il tuo nome]\n\nGentili colleghi,"
     },
     {
         "sample_idx": 23,
@@ -122,12 +122,12 @@
     {
         "sample_idx": 24,
         "input_lang": "it",
-        "output": "\nOggetto: **Aumenta le tue vendite con [Nome del tuo servizio] -"
+        "output": "\nOggetto: Ottimizza la tua presenza online con [Nome della tua azienda]\n"
     },
     {
         "sample_idx": 25,
         "input_lang": "it",
-        "output": "\n**Oggetto: Presentazione Esclusiva: [Nome del Prodotto] - La Rivol"
+        "output": "\nOggetto: Presentazione Esclusiva: Scopri il Futuro della Cura della Pelle con ["
     },
     {
         "sample_idx": 26,
@@ -137,17 +137,17 @@
     {
         "sample_idx": 27,
         "input_lang": "it",
-        "output": "\n**Oggetto: Benvenuto nella nostra community! Ecco cosa ti aspetta.**\n\n"
+        "output": "\nOggetto: Benvenuto nella nostra community!\n\nCaro [Nome del nuovo abbon"
     },
     {
         "sample_idx": 28,
         "input_lang": "it",
-        "output": "\nOggetto: Esplora Nuove Soluzioni per Potenziare il Tuo [Prod"
+        "output": "\nOggetto: Esplora nuovi modi per migliorare la tua esperienza [Nome del Cliente]"
     },
     {
         "sample_idx": 29,
         "input_lang": "it",
-        "output": "\nOggetto: Richiesta di proroga per l'incarico di [Nome del corso]"
+        "output": "\nOggetto: Richiesta di proroga per l'incarico\n\nGentile Professore"
     },
     {
         "sample_idx": 30,
@@ -157,12 +157,12 @@
     {
         "sample_idx": 31,
         "input_lang": "it",
-        "output": "\nOggetto: Richiesta informazioni su opportunità di ricerca\n\nGentile Professor [Nome"
+        "output": "\nOggetto: Richiesta informazioni su opportunità di ricerca\n\nGentile Professore ["
     },
     {
         "sample_idx": 32,
         "input_lang": "it",
-        "output": "\nOggetto: Scuse per assenza alla lezione\n\nGentile Professore [Nome del"
+        "output": "\nOggetto: Scuse per assenza alla lezione\n\nGentile Professore [Nome],"
     },
     {
         "sample_idx": 33,
@@ -172,22 +172,22 @@
     {
         "sample_idx": 34,
         "input_lang": "it",
-        "output": "\n    L’apprendimento online e l’apprendimento tradizionale rappresentano due approcci distinti all"
+        "output": "\nL’apprendimento online e l’apprendimento tradizionale, o in classe, rappresentano due appro"
     },
     {
         "sample_idx": 35,
         "input_lang": "it",
-        "output": "\nLa questione di come affrontare i problemi ambientali, se a livello globale o locale, è un"
+        "output": "\nLa questione di come affrontare i problemi ambientali è un argomento complesso e ampiamente dibattuto."
     },
     {
         "sample_idx": 36,
         "input_lang": "it",
-        "output": "\n        Sono parzialmente d’accordo con l’affermazione che raggiungere l’equilibrio tra lavoro"
+        "output": "\nRaggiungere l'equilibrio tra lavoro e vita privata è sicuramente una sfida più"
     },
     {
         "sample_idx": 37,
         "input_lang": "it",
-        "output": "1. **Cause:**\n       - **Alimentazione non sana:** L'aumento del consumo di"
+        "output": "\nIl crescente peso medio delle persone e la diminuzione dei livelli di salute e forma fisica sono problemi"
     },
     {
         "sample_idx": 38,
@@ -197,32 +197,32 @@
     {
         "sample_idx": 39,
         "input_lang": "it",
-        "output": "1. **Cause del problema:**\n       - **Crisi economica:** La recessione economica può ridurre"
+        "output": "\nLe cause principali per cui i giovani hanno difficoltà a trovare un impiego sono molteplici."
     },
     {
         "sample_idx": 40,
         "input_lang": "it",
-        "output": "\nL’obesità sta diventando un problema serio in molti paesi a causa di una combinazione di"
+        "output": "\nL’obesità è una condizione medica caratterizzata da un eccesso di grasso corporeo"
     },
     {
         "sample_idx": 41,
         "input_lang": "it",
-        "output": "1. **Cause dell'inquinamento dell'aria e dell'acqua:**\n       - **"
+        "output": "\nL'inquinamento dell'aria e dell'acqua è un problema crescente nelle grandi città"
     },
     {
         "sample_idx": 42,
         "input_lang": "it",
-        "output": "1. **Accesso e infrastrutture limitate**: In molte aree del mondo, l'accesso"
+        "output": "\nCi sono diverse ragioni per cui molti adulti non possiedono ancora competenze digitali di base"
     },
     {
         "sample_idx": 43,
         "input_lang": "it",
-        "output": "1. **Costi dell'alloggio**: L'aumento dei costi degli affitti e"
+        "output": "\nIl problema dei senzatetto è un fenomeno complesso con molteplici cause. Alcune delle"
     },
     {
         "sample_idx": 44,
         "input_lang": "it",
-        "output": "\nIl cambiamento climatico è un fenomeno complesso causato da una combinazione di fattori naturali e antrop"
+        "output": "\nIl cambiamento climatico è un fenomeno complesso causato principalmente da due fattori principali: le attività umane"
     },
     {
         "sample_idx": 45,
@@ -232,21 +232,21 @@
     {
         "sample_idx": 46,
         "input_lang": "it",
-        "output": "1. **Accessibilità digitale**: Con l'avvento di Internet e dei dispositivi digitali"
+        "output": "\nIl declino nella lettura di libri è un fenomeno complesso con molteplici ragioni. Alcune"
     },
     {
         "sample_idx": 47,
         "input_lang": "it",
-        "output": "1. **Cause della sovrappopolazione:**\n       - **Aumento della natalità:** In"
+        "output": "\nLa sovrappopolazione è una situazione in cui il numero di abitanti di un'area specifica"
     },
     {
         "sample_idx": 48,
         "input_lang": "it",
-        "output": "1. **Cause della globalizzazione:**\n        * **Sviluppo tecnologico:**  Av"
+        "output": "\nLa globalizzazione è un processo storico che ha trasformato profondamente la società e l'economia"
     },
     {
         "sample_idx": 49,
         "input_lang": "it",
-        "output": "\nIl lavoro da remoto, o telelavoro, è una modalità di lavoro che consente ai dipendenti"
+        "output": "\nIl lavoro da remoto, o telelavoro, è una modalità lavorativa che consente ai dipendenti"
     }
 ]

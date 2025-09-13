@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "it",
+        "output": "2019-03-20\n\n# Gravity reversed\n\n##"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "it",
+        "output": "1000 years ago, there was a great war between the humans and the demons."
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "it",
+        "output": "1000 years ago, the world was at war. The war was between the humans and"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "it",
+        "output": "👻👻👻👻👻"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "it",
+        "output": "100%\n\nDear Mr. Smith,\n\nI am writing to follow up"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "it",
+        "output": "12/05/2023 10:00\nDescrizione"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "it",
+        "output": "100%\n\nDear Supervisor,\n\nI hope this email finds you well"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "it",
+        "output": "15/03/2023\n\nDear [Manager&#39;"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "it",
+        "output": "100%\n\nDear [Vendor Name],\n\nI am writing to inform"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "it",
+        "output": "10/05/2023\n\nDear Customer Service Representative,\n"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "it",
+        "output": "15/05/2023\n\nDear Factoring Department,\n"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "it",
+        "output": "100%\n\nDear valued customer,\n\nThank you for your continued trust in"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "it",
+        "output": "10/05/2023\n\nDear Customer Support Team,\n\n"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "it",
+        "output": "100%\n\nDear [Customer Service Representative],\n\nI am writing to"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "it",
+        "output": "15/03/2019\n\nDear friend,\n\nI hope"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "it",
+        "output": "15/01/2021\n\nDear [name],\n\nI"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "it",
+        "output": "15/03/2023\n\nDear friends,\n\nI hope"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "it",
+        "output": "15/03/2023\n\nDear [name],\n\nI"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "it",
+        "output": "15/03/2023\n\nDear [name],\n\nI"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "it",
+        "output": "15/03/2023\n\nDear Admissions Office,\n\n"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "it",
+        "output": "100%\n\nDear Professor Smith,\n\nI hope this email finds you well"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "it",
+        "output": "15/03/2023\n\nDear Sir/Madam,\n"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "it",
+        "output": "👇👇👇👇👇"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "it",
+        "output": "100% Correcta\n\nDear Mr. Smith,\n\nI hope you"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "it",
+        "output": "👇👇👇👇👇"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "it",
+        "output": "👇👇👇👇👇"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "it",
+        "output": "👇👇👇👇👇"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "it",
+        "output": "📧📧📧📧📧"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "it",
+        "output": "👇👇👇👇👇"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "it",
+        "output": "10/05/2023\n\nDear Professor,\n\nI hope"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "it",
+        "output": "1. Hello everyone,\nI hope you are all doing well. I am writing this email to"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "it",
+        "output": "100%\n\nDear Professor,\n\nI am writing to you to ask for"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "it",
+        "output": "10/10\n\nDear Professor,\n\nI am writing to apologize for"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "it",
+        "output": "150-200 parole\n\nDear Professor,\n\nI hope you"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "it",
+        "output": "200-250 parole\n\nApprendimento online e apprendimento trad"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "it",
+        "output": "250-300 paragrafi\n\n## Introduction\n\nThe issue of"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "it",
+        "output": "100%\nDomanda: Alcuni credono che raggiungere l&#"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "it",
+        "output": "1. The increasing prevalence of obesity and related health problems, such as diabetes and heart"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "it",
+        "output": "250-300 paragrafi\n\nIntroduction:\nThe use of animals"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "it",
+        "output": "1. I giovani hanno difficoltà a trovare un impiego per varie"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "it",
+        "output": "1. The obesity epidemic is a serious problem in many countries. Some of the causes"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "it",
+        "output": "1. In molte grandi città, la qualità dell&#39;aria e dell"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "it",
+        "output": "1) Lack of access to technology and the internet. 2) Lack of digital skills"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "it",
+        "output": "1) In molte aree urbane, il fenomeno dei senzatetto è"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "it",
+        "output": "1. Cambiamento climatico: Cause principali e potenziali effetti"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "it",
+        "output": "1. Shopping online ha cresciuto in popularità negli ultimi anni a causa"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "it",
+        "output": "1. The decline in book reading can be attributed to several factors, including the rise of technology and"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "it",
+        "output": "1. The overpopulation is becoming a serious concern in many cities. What are the causes of"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "it",
+        "output": "1. Globalizzazione ha portato a un aumento del commercio internazionale, la"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "it",
+        "output": "300-400 parole\n\n## Introduction\n\nRemote work has become increasingly"
+    }
+]

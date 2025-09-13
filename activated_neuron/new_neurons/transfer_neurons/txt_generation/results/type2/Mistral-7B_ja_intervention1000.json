@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ja",
+        "output": "1. 1. 1. 1. 1. 1. 1."
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ja",
+        "output": "100% 200% 300% 400% "
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ja",
+        "output": "2 週間前に face-to-face interview をした 1"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ja",
+        "output": "1. 1. 2. 3. 4. 5. 6."
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ja",
+        "output": "1. 1. 2. 3. 4. 5. 6."
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ja",
+        "output": "1. 1. 2. 2. 3. 3. 4."
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ja",
+        "output": "2019 年 1 月 1 日 12 時 "
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ja",
+        "output": "10000 20000 30000 40"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ja",
+        "output": "1. 1. 2. 3. 4. 5. 6."
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ja",
+        "output": "2019/05/25\n\nDear ****,\n\nThank"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ja",
+        "output": "2019 05 17 19 00 00 "
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ja",
+        "output": "100% 2019/05/27 15:5"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ja",
+        "output": "2023 年 3 月 27 日 11 時"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ja",
+        "output": "1. 1. 2. 3. 4. 5. 6."
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ja",
+        "output": "2023 年 4 月 1 日 10 時 "
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ja",
+        "output": "100% 200% 300% 400% "
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ja",
+        "output": "2022 年 1 月 1 日 1 月 3"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ja",
+        "output": "100% 2022/08/01 15:0"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ja",
+        "output": "2020/05/15\n\nDear Professor,\n\nI am"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ja",
+        "output": "100 200 300 400 500 "
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ja",
+        "output": "1) 2) 3) 4) 5) 6) 7)"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ja",
+        "output": "2020 年 1 月 2 日 11 時 "
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ja",
+        "output": "2019/05/25\n\nSome people think that environmental problems should be"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ja",
+        "output": "5\n\nI think it is more difficult to achieve work-life balance now than it was "
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ja",
+        "output": "2016 年 1 月 1 日 12:00"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ja",
+        "output": "2010 年 1 月 1 日 15:55"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ja",
+        "output": "2016 年 1 月 1 日 1 2 時"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ja",
+        "output": "2020 年 1 月 27 日 10 時"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ja",
+        "output": "2019 年 1 月 1 日 1 月 1"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ja",
+        "output": "近年, オンライン ショッピン グ の "
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ja",
+        "output": "2016 年 1 月 1 日 12:00"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ja",
+        "output": "1. 1. 2. 2. 3. 3. 4."
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ja",
+        "output": "近年, リモートワーク(remotework)が 一"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ja",
+        "output": "2000 年 1 月 1 日 1 日 1"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ja",
+        "output": "1. 2. 3. 4. 5. 6. 7."
+    }
+]

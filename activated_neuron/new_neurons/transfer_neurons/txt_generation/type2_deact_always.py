@@ -19,8 +19,7 @@ from generation_funcs import (
 )
 
 # load models (LLaMA3-8B).
-# model_names = ['meta-llama/Meta-Llama-3-8B', 'mistralai/Mistral-7B-v0.3', 'CohereForAI/aya-expanse-8b']
-model_names = ['CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3']
+model_names = ['CohereForAI/aya-expanse-8b', 'mistralai/Mistral-7B-v0.3', 'meta-llama/Meta-Llama-3-8B']
 model_name_dict = {
     'meta-llama/Meta-Llama-3-8B': 'Llama3-8B', 
     'mistralai/Mistral-7B-v0.3': 'Mistral-7B',
@@ -63,7 +62,14 @@ for is_baseline in is_baselines:
             
                 # save.
                 model_name_for_saving = model_name_dict[model_name]
-                path = f'/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/{model_name_for_saving}_{L2}_intervention{intervention_num}.json' if not is_baseline else f'activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2/{model_name_for_saving}_{L2}_intervention{intervention_num}_baseline.json'
+                save_dir = '/home/s2410121/proj_LA/activated_neuron/new_neurons/transfer_neurons/txt_generation/results/type2'
+                filename = (
+                    f"{model_name_for_saving}_{L2}_intervention{intervention_num}.json"
+                    if not is_baseline
+                    else f"{model_name_for_saving}_{L2}_intervention{intervention_num}_baseline.json"
+                )
+                path = os.path.join(save_dir, filename)
+                os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, 'w', encoding="utf-8") as f:
                     json.dump(results, f, ensure_ascii=False, indent=4)
 

@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ko",
+        "output": "24시간의 하루 동안 지구의 중력이 갑자기 역전된다면, 그것은 엄청난 혼란"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ko",
+        "output": "\n**캐릭터 이름:**  아서 \"쉐도우\" 블랙우드\n\n**배경"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ko",
+        "output": "2045년, 인류는 기술의 발전으로 인해 더 이상 필요하지 않게 되었다"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ko",
+        "output": "2019년 10월 10일 목요일\n그림자가 살아"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ko",
+        "output": "\n제목: [회사명] [직책명] 면접 후속\n\n안녕"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ko",
+        "output": "\n제목: [프로젝트 이름] 진행 상황 회의 요청\n\n[수신자"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ko",
+        "output": "\n제목: [보고서 제목]에 대한 피드백 요청\n\n[상사"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ko",
+        "output": "\n제목: 프로젝트 마감일 지연에 대한 사과\n\n[관리자 이름"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ko",
+        "output": "1. 공급업체에게 이메일을 보내기 전에, 주문 내역, 배송"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ko",
+        "output": "\n제목: [회사명] 고객 서비스 부서에 대한 불만사항\n\n안"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ko",
+        "output": "\n제목: [주문 번호] - [반품/교환 요청] -"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ko",
+        "output": "\n안녕 [친구 이름]!\n\n오랜만에 연락하게 되어 반가워"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ko",
+        "output": "\n제목: 진심으로 감사드립니다 - [선물 이름]에 대한 감"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ko",
+        "output": "\n제목: 이번 주말에 함께 즐겨요! 🍻\n\n안녕 친구"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ko",
+        "output": "\n제목: 당신의 놀라운 성취를 축하합니다!\n\n["
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ko",
+        "output": "\n제목: 정말 기쁜 소식!\n\n안녕 [친구/가족 이름"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ko",
+        "output": "\n제목: [프로그램 이름]에 대한 정보 요청\n\n안녕하세요,"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ko",
+        "output": "\n제목: 추천서 요청 - [직위] 지원\n\n안녕하세요,"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ko",
+        "output": "\n제목: [지역 문제]에 대한 우려와 제안\n\n[정부 관리 이름]"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ko",
+        "output": "\n제목: 새로운 팀원 소개: [당신의 이름]\n\n안녕하세요"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ko",
+        "output": "\n제목: [회사명] 지원에 대한 참고인 요청\n\n안녕하세요"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ko",
+        "output": "\n제목: [회사명] - 귀사의 성장을 위한 맞춤형 솔루션"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ko",
+        "output": "\n**제목: 혁신적인 [제품 이름] 출시: 당신의 일상을 변화시킬"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ko",
+        "output": "\n제목: [회사 이름]의 [제품 이름]에 대한 후속 문의\n\n"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ko",
+        "output": "\n제목: [회사 이름] 뉴스레터 구독 환영!\n\n안녕"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ko",
+        "output": "\n제목: [고객 이름], 당신의 최근 구매를 보완할 수 있는 제품"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ko",
+        "output": "\n제목: [과제 제목] 과제 제출 일정 연장 요청\n\n교수님께"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ko",
+        "output": "\n제목: [그룹 프로젝트] 일정 및 역할 분담에 대한 안내\n\n안녕"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ko",
+        "output": "\n제목: [연구 주제]에 대한 관심과 협력 요청\n\n존경"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ko",
+        "output": "\n제목: 수업 결석 사과 및 자료 요청\n\n존경하는 [교수"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ko",
+        "output": "\n제목: 진로에 대한 조언 요청\n\n[이름] 교수님께"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ko",
+        "output": "\n온라인 학습과 전통적인 교실 학습의 효과성에 대한 논쟁은 교육 분야에서 오랫동안 이어"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ko",
+        "output": "21세기의 가장 중요한 문제 중 하나는 환경 문제입니다. 지구 온난화, 오염"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ko",
+        "output": "100% 동의합니다. 현대 사회에서 일과 삶의 균형을 이루는 것은"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ko",
+        "output": "1) 원인: 편리한 식생활과 운동 부족\n현대 사회에서는 편리한"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ko",
+        "output": "\n동물 실험은 의학 연구에서 중요한 역할을 해왔으며, 많은 생명 구하는 치료법과"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ko",
+        "output": "21세기의 많은 나라에서 젊은이들이 일자리를 찾는 데 어려움을 겪는"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ko",
+        "output": "21세기 들어 비만은 전 세계적으로 심각한 건강 문제로 대두되고 있습니다. 비만의"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ko",
+        "output": "21세기의 많은 대도시에서 대기 및 수질 오염은 심각한 환경 및 건강 문제를"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ko",
+        "output": "21세기는 디지털 시대라고 불릴 만큼 기술의 발전이 매우 빠르게 이루어지고 있습니다"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ko",
+        "output": "1) 도시화: 도시 지역으로의 인구 이동으로 인해 주택 비용이 상승하고, 저"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ko",
+        "output": "\n기후 변화의 주요 원인은 인간 활동에 기인하는 온실가스 배출 증가에"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ko",
+        "output": "2000년대 초반부터 온라인 쇼핑은 전 세계적으로 급속히 성장해 왔"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ko",
+        "output": "21세기 초, 전 세계적으로 책을 읽는 사람의 수가 감소하는 추세를 보였"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ko",
+        "output": "1) 인구 과잉의 원인\n- 도시화: 농촌 지역 주민들이 도시 지역"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ko",
+        "output": "1) 세계화의 원인: 세계화는 국가 간 상호의존성과 연결성을 증가시키는 과정"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ko",
+        "output": "21세기는 기술의 급속한 발전과 함께 원격 근무의 시대를 열었"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ko",
+        "output": "20세기 후반부터 전 세계적으로 도시화 추세가 가속화되고 있습니다. 이는"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ko",
+        "output": "20세기 후반부터 기술의 급속한 발전은 사람들이 소통하는 방식을 획기"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ko",
+        "output": "\n**장점:**\n\n* **환경적 이점:** 대중교통 시스템은 개인 차량"
+    }
+]

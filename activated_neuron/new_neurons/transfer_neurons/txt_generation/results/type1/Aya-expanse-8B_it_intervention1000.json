@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "it",
+        "output": "24 ore senza gravità, o con una gravità invertita, sarebbero un evento catastro"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "it",
+        "output": "\n# Personaggio: Lord Malachi\n\n## Passato:\nLord Malachi, un"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "it",
+        "output": "1. **Introduzione:**\nIl personaggio principale, Alex, è l'ultimo membro della specie"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "it",
+        "output": "1. **Nome del personaggio:**  Luna Shadowheart\n2. **Descrizione fisica:** Luna è"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "it",
+        "output": "\nOggetto: Seguimento colloquio di lavoro - [Nome tua]\n\nGentile ["
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di incontro per discutere l'avanzamento del progetto\n\n"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di feedback sul report recente\n\nGentile [Nome del supervis"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "it",
+        "output": "\nOggetto: Scuse per il ritardo nella consegna del progetto\n\nGentile ["
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "it",
+        "output": "\nOggetto: Problema con la consegna - Richiesta di rimborso o sostituzione"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta informazioni su [Nome del prodotto]\n\nGentile [Nome"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di rettifica addebito errato\n\nGentile reparto"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "it",
+        "output": "\nOggetto: Ringraziamenti e Offerta Speciale Esclusiva\n\nGentile ["
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "it",
+        "output": "\nOggetto: Segnalazione di una brutta esperienza con il servizio clienti\n\nGent"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta reso/scambio ordine n. [inserire numero ordine"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "it",
+        "output": "\nOggetto: Ciao dopo tanto tempo!\n\nCaro [Nome dell'amico],"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "it",
+        "output": "\nOggetto: Grazie per il tuo generoso regalo!\n\nCaro [Nome del"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "it",
+        "output": "\nOggetto: Festa in giardino questo fine settimana!\n\nCiao a tutti!\n\n"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "it",
+        "output": "\nOggetto: Congratulazioni per il tuo recente successo!\n\nCaro ["
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "it",
+        "output": "\nOggetto: Notizie entusiasmanti!\n\nCaro [Nome dell'amico/"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta informazioni sul programma di [Nome del programma]\n\nGentile"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di lettera di raccomandazione\n\nGentile Professor [Nome"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "it",
+        "output": "\nOggetto: Preoccupazioni riguardo alla qualità dell'aria nella mia zona\n\nEgreg"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "it",
+        "output": "\nOggetto: Presentazione - [Il tuo nome]\n\nGentili colleghi,"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di referenza per [Il tuo nome]\n\nGent"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "it",
+        "output": "\nOggetto: Ottimizza la tua presenza online con [Nome della tua azienda]\n"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "it",
+        "output": "\nOggetto: Presentazione Esclusiva: Scopri il Rivoluzionario [Nome Prodotto"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "it",
+        "output": "\nOggetto: Seguito alla nostra conversazione sul [Nome del prodotto]\n\nGentile"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "it",
+        "output": "\nOggetto: Benvenuto nella nostra community!\n\nCaro [Nome del nuovo abbon"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "it",
+        "output": "\nOggetto: Esplora nuovi modi per migliorare la tua esperienza [Nome del Cliente]"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di proroga per l'incarico [Nome dell'incarico]"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "it",
+        "output": "\nOggetto: Progetto di Gruppo - Assegnazione Compiti e Scadenze\n"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta informazioni su opportunità di ricerca\n\nGentile Professore ["
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "it",
+        "output": "\nOggetto: Scuse per assenza alla lezione\n\nGentile Professore [Nome],"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "it",
+        "output": "\nOggetto: Richiesta di consigli sulla carriera\n\nGentile [Nome del professore/"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "it",
+        "output": "\nL’apprendimento online e l’apprendimento tradizionale, o in classe, rappresentano due appro"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "it",
+        "output": "\nLa questione della gestione dei problemi ambientali è un argomento complesso e controverso, che susc"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "it",
+        "output": "\nRaggiungere l'equilibrio tra lavoro e vita privata è sicuramente una sfida più"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "it",
+        "output": "\nIl crescente peso medio delle persone e la diminuzione dei livelli di salute e forma fisica sono problemi"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "it",
+        "output": "\nLa questione della sperimentazione sugli animali per la ricerca medica è un argomento complesso e controverso"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "it",
+        "output": "\nIl problema della difficoltà per i giovani a trovare un impiego è complesso e multifattoriale."
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "it",
+        "output": "1) Le cause principali dell'obesità includono una dieta ricca di grassi e zuccheri"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "it",
+        "output": "\nL'inquinamento dell'aria e dell'acqua è un problema crescente in molte grandi"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "it",
+        "output": "\nCi sono diverse ragioni per cui molti adulti non possiedono ancora competenze digitali di base"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "it",
+        "output": "\nIl problema dei senzatetto è un fenomeno complesso con molteplici cause. Alcune delle"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "it",
+        "output": "\nIl cambiamento climatico è un fenomeno complesso causato principalmente da due fattori principali: le attività umane"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "it",
+        "output": "1. **Convenienza e Accessibilità**: Lo shopping online offre ai consumatori un'incred"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "it",
+        "output": "\nIl declino nella lettura di libri è un fenomeno complesso con molteplici ragioni. Alcune"
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "it",
+        "output": "\nLa sovrappopolazione, ovvero una densità di popolazione superiore alla capacità di carico di un determinato"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "it",
+        "output": "1. **Cause della globalizzazione:**\nLa globalizzazione è un processo storico che ha avuto inizio"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "it",
+        "output": "\nIl lavoro da remoto, o telelavoro, è una modalità lavorativa che consente ai dipendenti"
+    }
+]

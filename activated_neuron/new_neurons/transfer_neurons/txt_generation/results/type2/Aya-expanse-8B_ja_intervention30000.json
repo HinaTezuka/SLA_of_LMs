@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "ja",
+        "output": "地球の重力が suddenly 数時間の期間 동안の反転を経験する “の一日"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "ja",
+        "output": "かつての世界の強大な戦士であり、その勇猛さと智慧は数え切れないほどの"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "ja",
+        "output": "『I AGAID(I 待した)』の主人公、 Kai(24歳)"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "ja",
+        "output": "2 週間が、*会社名*の *職種名*の *自分の氏名"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "ja",
+        "output": "\n> **テンプレ メル**\n> \n> **へ:** [同僚の"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "ja",
+        "output": "\n> \n> ーーーーーーーーーーーーーー"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "ja",
+        "output": "\n> \n> **テンプレット メール**\n> \n> **お"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "ja",
+        "output": "はい、間違い、破損、または不本意の製品を配送したベ"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "ja",
+        "output": "2020/07/27 14:30:00\n"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "ja",
+        "output": "件名: 1000000000_ID_の請求書"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "ja",
+        "output": "\n> \n> **テンプレットの例**\n> \n> **おは"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "ja",
+        "output": "\n**テンプレット メール**\n\n**へ: [小売業者のメール"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "ja",
+        "output": "そうしましょう。以下は、その友達に送るための、 slightlyカジュアルだけれ"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "ja",
+        "output": "\n1) **はがしの部分**\n   - *「* *（贈り物の一"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "ja",
+        "output": "\n**テンプレット:**\n\n* **開頭:**  *はい、 ["
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "ja",
+        "output": "\n* **はっきりと、そして *すばやく*  *おめ* *"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "ja",
+        "output": "\n* **はがさずに、** まず、その *すばらしい ニュース*"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "ja",
+        "output": " [大学名] \n[見出し:  [プログラム名] に関する問いび"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "ja",
+        "output": "教授に推薦状を依頼する際の電子メールの例を次に示します。\n"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "ja",
+        "output": "\n**テンプレット メール**\n\n**へ: [政府 担当 者"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "ja",
+        "output": "以下は、新しいチームメンバーとして自己紹介し、あなたの展望と期待を伝えるための"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "ja",
+        "output": " [、以前の上司/メーカのN.B.、\n[会社名]"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "ja",
+        "output": "\n> **テンプレット:**\n> \n>  **はじめの部分**"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "ja",
+        "output": "\n**新製品のご案内: [製品名]、 [製品の 1 番"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "ja",
+        "output": "\n> **テンプレート**\n> \n> **ハイ【イमセリズ"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "ja",
+        "output": "\n**見出し:** ようこそ [会社名] ニュースレター!  함께 "
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "ja",
+        "output": "\n**H2: 再お買い物を歓迎します! 以前のお買い物から"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "ja",
+        "output": "\n> \n>  **へ： [教授のメールアドレス] **\n>"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "ja",
+        "output": "\n* **メールの開頭:**  \"Hi [クラスメカのHenkL"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "ja",
+        "output": "教授 [教授の氏名]\n[教授の氏名] 教授、\n[教授"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "ja",
+        "output": "教授の [Eメール] へ:\n[教授の氏名] 教授、\n"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "ja",
+        "output": "\n> **テンプレ**\n> \n> **がっかりしてはいません"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "ja",
+        "output": "オンライン学習と従来の classroom （教室）での学習のどちが効果的なのか、は長"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "ja",
+        "output": "環境問題の解決は、世界規模と地域規模の努力の両が必要であると考えます。"
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "ja",
+        "output": "ワークライフバランスの実現が、以前よりも難しくなったという意見は、一見して"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "ja",
+        "output": "人々の平均体重が増加し、健康と体力のレベルが低下している問題の原因と"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "ja",
+        "output": "医学研究の過程において、特に新薬の開発時において、動物を実験の「ナ"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "ja",
+        "output": "多くの国で若者が就職に苦労している問題の原因は、次のものが考えられ"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "ja",
+        "output": "肥満の原因は、食生活の改善が不十分、運動不足、ストレスの"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "ja",
+        "output": "多くの大都市における大気汚染と水質汚染の原因は、次のようなもの"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "ja",
+        "output": "21 世紀にまでして、世界中の成人約 50 パーセントが基本"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "ja",
+        "output": "ホームレスの増加には、次のような複数の理由が考えられます。\n\n1. **経済"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "ja",
+        "output": "気候変動の主な原因は、主に人類の活動、特に以下の幾つかの要素が"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "ja",
+        "output": "近年、オンラインショッピングの人気が高まっているには、いくつかの理由が考えられます。\n\n1"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "ja",
+        "output": "1) **情報の即座の利用可能**: 1990年代 since the"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "ja",
+        "output": "人口過多の原因は、以下の幾がが考えられます。\n1)\t経済"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "ja",
+        "output": "グローバリゼーションの定義は、政治、経済、文化の 3 つの "
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "ja",
+        "output": "近年、情報通信技術の進歩や社会の在り様の変化に伴い、リモ"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "ja",
+        "output": "地方から都市部への人の移動、つまり * * * * * * * * * * *"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "ja",
+        "output": "技術の進歩、特に通信技術の進歩は、 peopleのコミュニケーション方法を劇的に"
+    }
+]

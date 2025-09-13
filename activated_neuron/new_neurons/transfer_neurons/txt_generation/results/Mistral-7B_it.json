@@ -2,237 +2,237 @@
     {
         "sample_idx": 0,
         "input_lang": "it",
-        "output": "\n    La gravità è una forza che attira ogni oggetto verso il"
+        "output": "10/10\n\nThe day started like any other day. I woke up, got"
     },
     {
         "sample_idx": 1,
         "input_lang": "it",
-        "output": "\n    #include <iostream>\n    using namespace std;\n\n    int main()"
+        "output": "1000 anni fa, un giovane guerriero di nome Kai si"
     },
     {
         "sample_idx": 2,
         "input_lang": "it",
-        "output": "\n    Il mondo è un posto che è stato abitato da umani per mil"
+        "output": "1000 anni fa, il mondo era pieno di draghi. Ma,"
     },
     {
         "sample_idx": 3,
         "input_lang": "it",
-        "output": "\n    #include <iostream>\n    using namespace std;\n\n    int main()"
+        "output": "1000 parole\n\nThe shadow of the man was a dark, malevolent"
     },
     {
         "sample_idx": 4,
         "input_lang": "it",
-        "output": "\n    Grazie per il tempo dedicatogli.\n    Sono molto interess"
+        "output": "10/10\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 5,
         "input_lang": "it",
-        "output": "\n    Ciao,\n    Sono in possesso di un progetto che mi inter"
+        "output": "1.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 6,
         "input_lang": "it",
-        "output": "\n    Grazie per aver letto il mio report. Spero che sia stato"
+        "output": "1.\n\nDear Supervisor,\n\nI am writing to request your feedback on the"
     },
     {
         "sample_idx": 7,
         "input_lang": "it",
-        "output": "\n    Domanda: Scrivi un&#39;e-mail al tuo respons"
+        "output": "10/05/2023\n\nDear [Responsabile],\n"
     },
     {
         "sample_idx": 8,
         "input_lang": "it",
-        "output": "\n    Grazie per aver contattato il nostro team di supporto.\n\n"
+        "output": "1.\n\nDear Vendor,\n\nI am writing to inform you that the products"
     },
     {
         "sample_idx": 9,
         "input_lang": "it",
-        "output": "\n    Domanda: Scrivi un&#39;e-mail a un rappresent"
+        "output": "1.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 10,
         "input_lang": "it",
-        "output": "\n    Grazie per avermi contattato.\n    Siamo in grado"
+        "output": "10/01/2023\n\nDear Factoring Department,\n"
     },
     {
         "sample_idx": 11,
         "input_lang": "it",
-        "output": "\n    Dear Mr. Smith,\n\n    Thank you for your continued business with our company."
+        "output": "1.\n\nDear Mr. Smith,\n\nThank you for your continued support of our"
     },
     {
         "sample_idx": 12,
         "input_lang": "it",
-        "output": "\n    Grazie per il tuo tempo.\n    Sono stato un cliente della"
+        "output": "10/10\n\nDear Sir or Madam,\n\nI am writing to"
     },
     {
         "sample_idx": 13,
         "input_lang": "it",
-        "output": "\n    Domanda: Scrivi un&#39;e-mail per richiedere"
+        "output": "1.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 14,
         "input_lang": "it",
-        "output": "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        "output": "10/02/2019\n\nDear friend,\n\nI hope"
     },
     {
         "sample_idx": 15,
         "input_lang": "it",
-        "output": "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        "output": "10/01/2019\n\nDear [name],\n\nI"
     },
     {
         "sample_idx": 16,
         "input_lang": "it",
-        "output": "\n    Ciao amici,\n\n    Spero che stiate bene.\n"
+        "output": "10/10/2019\n\nDear friends,\n\nI hope"
     },
     {
         "sample_idx": 17,
         "input_lang": "it",
-        "output": "\n    Ciao [nome],\n\n    Spero che stai bene."
+        "output": "10/02/2023\n\nDear [Name],\n\nC"
     },
     {
         "sample_idx": 18,
         "input_lang": "it",
-        "output": "\n    Ciao caro amico,\n\n    Spero che stai bene"
+        "output": "10/01/2022\n\nDear friend,\n\nI hope"
     },
     {
         "sample_idx": 19,
         "input_lang": "it",
-        "output": "\n    Grazie per la tua richiesta di informazioni sul nostro programma"
+        "output": "1.\n\nDear Admissions Office,\n\nI am writing to inquire about the"
     },
     {
         "sample_idx": 20,
         "input_lang": "it",
-        "output": "\n    Grazie per avermi contattato. Sono felice di scrivere"
+        "output": "10/10\n\nDear Professor,\n\nI am writing to ask you to"
     },
     {
         "sample_idx": 21,
         "input_lang": "it",
-        "output": "\n    Grazie per aver letto la mia e-mail. Sono molto pre"
+        "output": "10/10\n\nDear Sir or Madam,\n\nI am writing to"
     },
     {
         "sample_idx": 22,
         "input_lang": "it",
-        "output": "\n    Grazie per avermi assunto. Sono molto entusiasta di lavor"
+        "output": "10/10\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 23,
         "input_lang": "it",
-        "output": "\n    Grazie per avermi aiutato a trovare un nuovo lavoro."
+        "output": "1.\n\nDear Mr. Smith,\n\nI hope this email finds you well."
     },
     {
         "sample_idx": 24,
         "input_lang": "it",
-        "output": "\n    Grazie per il tuo interesse nell&#39;azienda di marketing"
+        "output": "1.\n\nDear [Client Name],\n\nI am writing to introduce myself and my"
     },
     {
         "sample_idx": 25,
         "input_lang": "it",
-        "output": "\n    # Email Marketing Campaign for New Product Launch\n\n    Dear [Customer Name],\n"
+        "output": "👇\n\nDear Valued Customer,\n\nWe are excited to announce the"
     },
     {
         "sample_idx": 26,
         "input_lang": "it",
-        "output": "\n    Grazie per il tuo interesse nel nostro prodotto.\n\n"
+        "output": "1\n\nDear [Client Name],\n\nThank you for your interest in our product,"
     },
     {
         "sample_idx": 27,
         "input_lang": "it",
-        "output": "\n    Domanda: Scrivi un&#39;e-mail di conferma per"
+        "output": "1\n\nDear [name],\n\nThank you for subscribing to our newsletter"
     },
     {
         "sample_idx": 28,
         "input_lang": "it",
-        "output": "\n    # Email di vendita\n    #\n    # Ciao [nome_client"
+        "output": "1.\n\nDear [Customer Name],\n\nI hope this email finds you well."
     },
     {
         "sample_idx": 29,
         "input_lang": "it",
-        "output": "\n    Ciao professore,\n\n    Spero che stai bene.\n"
+        "output": "10/05/2023\n\nDear Professor,\n\nI am"
     },
     {
         "sample_idx": 30,
         "input_lang": "it",
-        "output": "\n    Domanda: Scrivi un&#39;e-mail ai tuoi comp"
+        "output": "1.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     },
     {
         "sample_idx": 31,
         "input_lang": "it",
-        "output": "\n    Ciao professore,\n\n    Mi chiamo [nome] e sono"
+        "output": "1.\n\nDear Professor,\n\nMy name is [name] and I am a"
     },
     {
         "sample_idx": 32,
         "input_lang": "it",
-        "output": "\n    Grazie per avermi risposto.\n    Spero che non ci"
+        "output": "1.\n\nDear Professor,\n\nI am writing to apologize for missing the class"
     },
     {
         "sample_idx": 33,
         "input_lang": "it",
-        "output": "\n    Ciao,\n\n    Sono un ex studente della tua classe, e"
+        "output": "100%\n\nDear Professor,\n\nI hope you are doing well. I"
     },
     {
         "sample_idx": 34,
         "input_lang": "it",
-        "output": "\n    L&#39;apprendimento online e l&#39;apprendimento"
+        "output": "100%\n\n## Alcuni credono che l&#39;apprend"
     },
     {
         "sample_idx": 35,
         "input_lang": "it",
-        "output": "\n    La protezione dell'ambiente è un argomento di grande importanza per la"
+        "output": "1.\n\nThe environment is a crucial aspect of our lives, and it is essential to protect"
     },
     {
         "sample_idx": 36,
         "input_lang": "it",
-        "output": "1. \n    Domanda: Alcuni credono che raggiungere l&#"
+        "output": "100%\n\nDomanda: Alcuni credono che raggiungere l"
     },
     {
         "sample_idx": 37,
         "input_lang": "it",
-        "output": "\n    In molti paesi, il peso medio delle persone sta aumentando, mentre"
+        "output": "1. The obesity epidemic is a growing problem in many countries around the world. It"
     },
     {
         "sample_idx": 38,
         "input_lang": "it",
-        "output": "\n    La sperimentazione sugli animali per la ricerca medica è un"
+        "output": "1. Sperimentazione sugli animali per la ricerca medica è necessaria"
     },
     {
         "sample_idx": 39,
         "input_lang": "it",
-        "output": "1. La causa principale è la mancanza di opportunità di formazione e addestr"
+        "output": "1. In many countries, young people have difficulty finding a job. What are the causes of this"
     },
     {
         "sample_idx": 40,
         "input_lang": "it",
-        "output": "\n    L&#39;obesità è diventata un problema serio in"
+        "output": "1. L&#39;obesità è un problema serio in molti pa"
     },
     {
         "sample_idx": 41,
         "input_lang": "it",
-        "output": "\n    In molte grandi città, l&#39;inquinamento dell&#3"
+        "output": "1. In molte grandi città, l&#39;inquinamento dell&#3"
     },
     {
         "sample_idx": 42,
         "input_lang": "it",
-        "output": "\n    La mancanza di competenze digitali di base è un problema globale,"
+        "output": "1. Lack of access to technology and the internet.\n2. Lack of digital skills"
     },
     {
         "sample_idx": 43,
         "input_lang": "it",
-        "output": "\n    In molte aree urbane, il fenomeno dei senzatetto è"
+        "output": "1. The number of homeless people is increasing in many urban areas. What are the reasons for this"
     },
     {
         "sample_idx": 44,
         "input_lang": "it",
-        "output": "\n    Il cambiamento climatico è un fenomeno globale che sta avendo"
+        "output": "1.\n\nIl cambiamento climatico è un fenomeno che sta avendo"
     },
     {
         "sample_idx": 45,
         "input_lang": "it",
-        "output": "1. La maggiore accessibilità e la maggiore varietà di prodotti"
+        "output": "1. La crescente popolarità del shopping online è dovuta a diversi"
     },
     {
         "sample_idx": 46,
         "input_lang": "it",
-        "output": "\n    Il declino del numero di persone che leggono libri è un fenomen"
+        "output": "1.\n\nThe decline in reading books is a significant issue in many parts of the world,"
     },
     {
         "sample_idx": 47,
@@ -242,11 +242,11 @@
     {
         "sample_idx": 48,
         "input_lang": "it",
-        "output": "\n    La globalizzazione è un processo di integrazione economica, cultur"
+        "output": "La globalizzazione è un processo di integrazione economica, politica e cult"
     },
     {
         "sample_idx": 49,
         "input_lang": "it",
-        "output": "\n    Il lavoro da remoto è diventato più comune negli ultimi anni,"
+        "output": "1.\n\nIn recent years, remote work has become more common. Discuss the advantages and"
     }
 ]

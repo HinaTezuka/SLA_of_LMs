@@ -1,0 +1,252 @@
+[
+    {
+        "sample_idx": 0,
+        "input_lang": "nl",
+        "output": "1. The Earth's gravity is the force that keeps us on the ground and keeps the moon"
+    },
+    {
+        "sample_idx": 1,
+        "input_lang": "nl",
+        "output": "1999, 2000, 2001, 20"
+    },
+    {
+        "sample_idx": 2,
+        "input_lang": "nl",
+        "output": "1999\n\nThe last of his kind\n\nHe was the last of his kind"
+    },
+    {
+        "sample_idx": 3,
+        "input_lang": "nl",
+        "output": "1000 words\n\nThe shadow of the man was as tall as he was. It"
+    },
+    {
+        "sample_idx": 4,
+        "input_lang": "nl",
+        "output": "1.000-1.500 words\n\nDear [interviewer"
+    },
+    {
+        "sample_idx": 5,
+        "input_lang": "nl",
+        "output": "15/03/2023\n\nDear [colleague's"
+    },
+    {
+        "sample_idx": 6,
+        "input_lang": "nl",
+        "output": "1.\nDear [Supervisor’s Name],\nI hope this email finds you well"
+    },
+    {
+        "sample_idx": 7,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear Mr. Smith,\n\n"
+    },
+    {
+        "sample_idx": 8,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear [name of salesperson],"
+    },
+    {
+        "sample_idx": 9,
+        "input_lang": "nl",
+        "output": "1.000\n\nVraag: Stuur een e-mail naar een kl"
+    },
+    {
+        "sample_idx": 10,
+        "input_lang": "nl",
+        "output": "1.000 euro\n\nVraag: U hebt een onjuiste"
+    },
+    {
+        "sample_idx": 11,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear [customer name],\n\n"
+    },
+    {
+        "sample_idx": 12,
+        "input_lang": "nl",
+        "output": "19/03/2019\n\nDear Sir or Madam,\n"
+    },
+    {
+        "sample_idx": 13,
+        "input_lang": "nl",
+        "output": "100% zeker!\n\n# 100% zeker!"
+    },
+    {
+        "sample_idx": 14,
+        "input_lang": "nl",
+        "output": "2017-01-05\n\nDear friend,\n\nI hope"
+    },
+    {
+        "sample_idx": 15,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear friend,\n\nI want"
+    },
+    {
+        "sample_idx": 16,
+        "input_lang": "nl",
+        "output": "15/03/2018\n\nDear friends,\n\nI hope"
+    },
+    {
+        "sample_idx": 17,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear [name],\n\nI"
+    },
+    {
+        "sample_idx": 18,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear friend,\n\nI hope"
+    },
+    {
+        "sample_idx": 19,
+        "input_lang": "nl",
+        "output": "150-200 words\n\nDear Sir/Madam,\n\nI"
+    },
+    {
+        "sample_idx": 20,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear Professor,\n\nI hope"
+    },
+    {
+        "sample_idx": 21,
+        "input_lang": "nl",
+        "output": "19.03.2018\n\nDear Madam/Sir,\n"
+    },
+    {
+        "sample_idx": 22,
+        "input_lang": "nl",
+        "output": "15/09/2020\n\nDear colleagues,\n\nI am"
+    },
+    {
+        "sample_idx": 23,
+        "input_lang": "nl",
+        "output": "1.\n\nDear [name of former employer],\n\nI hope this email finds you"
+    },
+    {
+        "sample_idx": 24,
+        "input_lang": "nl",
+        "output": "1.\n\nDear [potential client],\n\nI am writing to introduce myself and"
+    },
+    {
+        "sample_idx": 25,
+        "input_lang": "nl",
+        "output": "1.\n\nDear [customer name],\n\nWe are excited to announce the launch of"
+    },
+    {
+        "sample_idx": 26,
+        "input_lang": "nl",
+        "output": "1. Hi [name],\n\n2. I'm glad to hear that you're"
+    },
+    {
+        "sample_idx": 27,
+        "input_lang": "nl",
+        "output": "1.\n\n# 1.\n\nDear [First name],\n\nThank you"
+    },
+    {
+        "sample_idx": 28,
+        "input_lang": "nl",
+        "output": "100%\n\n# 1.0 Introduction\n\nThis document describes the process of"
+    },
+    {
+        "sample_idx": 29,
+        "input_lang": "nl",
+        "output": "100%\n\nDear Professor,\n\nI am writing to request an extension for"
+    },
+    {
+        "sample_idx": 30,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear classmates,\n\nI"
+    },
+    {
+        "sample_idx": 31,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear Professor,\n\nI am"
+    },
+    {
+        "sample_idx": 32,
+        "input_lang": "nl",
+        "output": "15.03.2018\n\nDear professor,\n\nI am"
+    },
+    {
+        "sample_idx": 33,
+        "input_lang": "nl",
+        "output": "1.\n\nDear [name],\n\nI hope you are well. I am ["
+    },
+    {
+        "sample_idx": 34,
+        "input_lang": "nl",
+        "output": "1. Online learning is more effective than traditional learning because it allows students to learn at their own pace"
+    },
+    {
+        "sample_idx": 35,
+        "input_lang": "nl",
+        "output": "1. Some people think that environmental problems should be solved worldwide, while others think that they should be"
+    },
+    {
+        "sample_idx": 36,
+        "input_lang": "nl",
+        "output": "100% oneens\n\nVraag: Do you think that the achievement of a"
+    },
+    {
+        "sample_idx": 37,
+        "input_lang": "nl",
+        "output": "1. The rise in obesity rates can be attributed to a number of factors, including:"
+    },
+    {
+        "sample_idx": 38,
+        "input_lang": "nl",
+        "output": "1. Some people argue that animal testing for medical research is necessary, while others find that it should"
+    },
+    {
+        "sample_idx": 39,
+        "input_lang": "nl",
+        "output": "1. Youth unemployment is a global problem that affects millions of young people around the world. It is"
+    },
+    {
+        "sample_idx": 40,
+        "input_lang": "nl",
+        "output": "1. Obesity is a serious problem in many countries. What are the causes of this problem"
+    },
+    {
+        "sample_idx": 41,
+        "input_lang": "nl",
+        "output": "1. The main causes of air pollution in large cities are the burning of fossil fuels,"
+    },
+    {
+        "sample_idx": 42,
+        "input_lang": "nl",
+        "output": "1. The digital divide is a real problem in many countries, including the United States. 2"
+    },
+    {
+        "sample_idx": 43,
+        "input_lang": "nl",
+        "output": "1. The number of homeless people is increasing in many urban areas. What are the reasons for this"
+    },
+    {
+        "sample_idx": 44,
+        "input_lang": "nl",
+        "output": "1. Climate change is a significant issue that affects our planet. What are the main causes of"
+    },
+    {
+        "sample_idx": 45,
+        "input_lang": "nl",
+        "output": "1. Online shoppen is populairder geworden, omdat het snellere,"
+    },
+    {
+        "sample_idx": 46,
+        "input_lang": "nl",
+        "output": "1. The number of people who read books has decreased significantly in many parts of the world."
+    },
+    {
+        "sample_idx": 47,
+        "input_lang": "nl",
+        "output": "1. Overbevolking is een term die sekundärerweise verwendet wird"
+    },
+    {
+        "sample_idx": 48,
+        "input_lang": "nl",
+        "output": "1. Globalisering is een proces waarbij bedrijven, organisaties, person"
+    },
+    {
+        "sample_idx": 49,
+        "input_lang": "nl",
+        "output": "1. The main advantage of remote working is that it allows employees to work from anywhere in the world"
+    }
+]
